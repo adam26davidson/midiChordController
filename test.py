@@ -28,7 +28,7 @@ class Sliders(tk.Canvas):
             y = 240
             x1 = 115 + (114*i) - 10
             x2 = 115 + (114*i) + 10
-            thumbs.append(self.createLine(x1, y, x2, y))
+            thumbs.append(self.create_line(x1, y, x2, y))
 
         return thumbs
 
