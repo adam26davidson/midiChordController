@@ -22,7 +22,7 @@ class DualShock:
 
   def readLoop(self, sliders):
     while 1:
-      for event in self.motion:
+      for event in self.motion.read():
         if event.type == ecodes.ABS_RX:
           self.values[event.code] = event.value
           if event.value < self.ranges[event.code]["min"]:
@@ -31,8 +31,8 @@ class DualShock:
               self.ranges[event.code]["max"] = event.value
           sliders.positionThumb(self.values, self.ranges, event.code)
 
-      for event in self.buttons:
+      for event in self.buttons.read():
         print(event)
 
-      for event in self.touch:
+      for event in self.touch.read():
         print(event)
