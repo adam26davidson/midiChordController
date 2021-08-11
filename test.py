@@ -4,6 +4,10 @@ import tkinter as tk
 
 gamepad = InputDevice('/dev/input/event1')
 
+devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+for device in devices:
+    print(device.path, device.name, device.phys)
+
 ranges = {0:{"min":0, "max":0},1:{"min":0, "max":0},2:{"min":0, "max":0},3:{"min":0, "max":0},4:{"min":0, "max":0},5:{"min":0, "max":0},}
 values = {}
 
