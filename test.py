@@ -9,7 +9,7 @@ values = {}
 
 class Sliders(tk.Canvas):
     def __init__(self, master=None):
-        super().__init__(master, width=800, height=480, bd=0, relief="flat", bg="#000000")
+        super().__init__(master, width=800, height=480, bd=0, relief="flat", bg="#ffffff")
         self.master = master
         self.thumbs = self.drawSliders()
         self.pack()
