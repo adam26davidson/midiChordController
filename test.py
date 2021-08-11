@@ -1,5 +1,3 @@
-import evdev
-from evdev import InputDevice, categorize, ecodes
 import tkinter as tk
 from dualShock import DualShock
 
