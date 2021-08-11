@@ -43,6 +43,8 @@ window = tk.Tk()
 sliders = Sliders(window)
 window.mainloop()
 
+print("hello there")
+
 for event in gamepad.read_loop():
     if event.type == ecodes.ABS_RX:
         values[event.code] = event.value
