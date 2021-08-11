@@ -7,7 +7,7 @@ gamepad = InputDevice('/dev/input/event1')
 ranges = {0:{"min":0, "max":0},1:{"min":0, "max":0},2:{"min":0, "max":0},3:{"min":0, "max":0},4:{"min":0, "max":0},5:{"min":0, "max":0},}
 values = {}
 
-class AxisViewer(tk.Canvas):
+class Sliders(tk.Canvas):
     def __init__(self, master=None):
         super().__init__(master, width=800, height=480, bd=0, relief="flat", bg="#000000")
         self.master = master
@@ -15,7 +15,7 @@ class AxisViewer(tk.Canvas):
         self.pack()
 
     def drawSliders(self):
-        let thumbs = []
+        thumbs = []
         for i in range(0, 6):
             #draw tracks
             sX = 115 + (114*i)
@@ -40,17 +40,17 @@ class AxisViewer(tk.Canvas):
 
 
 let window = tk.Tk()
-axisViewer = AxisViewer(window)
-    # Did the user click the window close button?
+sliders = Sliders(window)
+window.mainloop()
 
 for event in gamepad.read_loop():
     if event.type == ecodes.ABS_RX:
         values[event.code] = event.value
-
         if event.value < ranges[event.code]["min"]:
             ranges[event.code]["min"] = event.value
         if event.value > ranges[event.code]["max"]:
             ranges[event.code]["max"] = event.value
+        sliders.positionThumb(values, ranges, event.code)
 
 
             
