@@ -39,7 +39,7 @@ class Sliders(tk.Canvas):
         self.coords(self.thumbs[i], x1, y, x2, y)
 
 
-let window = tk.Tk()
+window = tk.Tk()
 sliders = Sliders(window)
 window.mainloop()
 
