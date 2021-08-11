@@ -1,7 +1,7 @@
 import evdev
 from evdev import InputDevice, categorize, ecodes
 import tkinter as tk
-import dualShock.DualShock as DualShock
+from dualShock import DualShock
 
 class Sliders(tk.Canvas):
     def __init__(self, master=None):
