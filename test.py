@@ -1,15 +1,7 @@
 import evdev
 from evdev import InputDevice, categorize, ecodes
 import tkinter as tk
-
-gamepad = InputDevice('/dev/input/event1')
-
-devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-for device in devices:
-    print(device.path, device.name, device.phys)
-
-ranges = {0:{"min":0, "max":0},1:{"min":0, "max":0},2:{"min":0, "max":0},3:{"min":0, "max":0},4:{"min":0, "max":0},5:{"min":0, "max":0},}
-values = {}
+import dualShock.DualShock as DualShock
 
 class Sliders(tk.Canvas):
     def __init__(self, master=None):
@@ -41,22 +33,13 @@ class Sliders(tk.Canvas):
         x1 = 115 + (114*i) - 10
         x2 = 115 + (114*i) + 10
         self.coords(self.thumbs[i], x1, y, x2, y)
-
+        self.master.update()
 
 window = tk.Tk()
 sliders = Sliders(window)
 
-print("hello there")
+let ds = DualShock(sliders)
 
-for event in gamepad.read_loop():
-    if event.type == ecodes.ABS_RX:
-        values[event.code] = event.value
-        if event.value < ranges[event.code]["min"]:
-            ranges[event.code]["min"] = event.value
-        if event.value > ranges[event.code]["max"]:
-            ranges[event.code]["max"] = event.value
-        sliders.positionThumb(values, ranges, event.code)
-        window.update()
 
 
             
