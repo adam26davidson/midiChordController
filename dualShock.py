@@ -4,6 +4,7 @@ import time
 
 class DualShock:
   def __init__(self, sliders):
+    print(evdev.list_devices())
     self.values = {}
     self.ranges = {
       0:{"min":0, "max":0},
