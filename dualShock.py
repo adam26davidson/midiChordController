@@ -1,6 +1,6 @@
 import evdev
 from evdev import InputDevice, categorize, ecodes
-import time
+import asyncio
 
 class DualShock:
   def __init__(self, sliders):
@@ -19,21 +19,25 @@ class DualShock:
       self.touch = InputDevice('/dev/input/event0')
       self.buttons = InputDevice('/dev/input/event2')
 
-      self.readLoop(sliders)
+      asyncio.schedule_task(self.motionLoop())
+      asyncio.schedule_task(self.buttonsLoop())
+      asyncio.schedule_task(self.touchLoop())
 
-  def readLoop(self, sliders):
-    while 1:
-      for event in self.motion.read():
-        if event.type == ecodes.ABS_RX:
-          self.values[event.code] = event.value
-          if event.value < self.ranges[event.code]["min"]:
-              self.ranges[event.code]["min"] = event.value
-          if event.value > self.ranges[event.code]["max"]:
-              self.ranges[event.code]["max"] = event.value
-          sliders.positionThumb(self.values, self.ranges, event.code)
+  async def motionLoop(self, sliders):
+    async for event in self.motion.async_read_loop():
+      self.values[event.code] = event.value
+      if event.value < self.ranges[event.code]["min"]:
+          self.ranges[event.code]["min"] = event.value
+      if event.value > self.ranges[event.code]["max"]:
+          self.ranges[event.code]["max"] = event.value
+      sliders.positionThumb(self.values, self.ranges, event.code)
+  
+  async def buttonsLoop():
+    async for event in self.buttons.async_read_loop():
+      print(event)
 
-      for event in self.buttons.read():
-        print(event)
+  async def touchLoop():
+    async for event in self.touch.async_read_loop():
+      print(event)
+      
 
-      #for event in self.touch.read():
-      #  print(event)
