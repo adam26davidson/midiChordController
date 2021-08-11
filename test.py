@@ -38,7 +38,7 @@ class Sliders(tk.Canvas):
 window = tk.Tk()
 sliders = Sliders(window)
 
-let ds = DualShock(sliders)
+ds = DualShock(sliders)
 
 
 

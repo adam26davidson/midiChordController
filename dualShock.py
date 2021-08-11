@@ -4,7 +4,7 @@ import time
 
 class DualShock:
   def __init__(self, sliders):
-    ranges = {}
+    self.values = {}
     self.ranges = {
       0:{"min":0, "max":0},
       1:{"min":0, "max":0},
