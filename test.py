@@ -41,7 +41,6 @@ class Sliders(tk.Canvas):
 
 window = tk.Tk()
 sliders = Sliders(window)
-window.mainloop()
 
 print("hello there")
 
@@ -53,6 +52,7 @@ for event in gamepad.read_loop():
         if event.value > ranges[event.code]["max"]:
             ranges[event.code]["max"] = event.value
         sliders.positionThumb(values, ranges, event.code)
+        window.update()
 
 
             
