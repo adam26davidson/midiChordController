@@ -19,9 +19,9 @@ class DualShock:
       self.touch = InputDevice('/dev/input/event0')
       self.buttons = InputDevice('/dev/input/event2')
 
-      asyncio.schedule_task(self.motionLoop())
-      asyncio.schedule_task(self.buttonsLoop())
-      asyncio.schedule_task(self.touchLoop())
+      asyncio.create_task(self.motionLoop())
+      asyncio.create_task(self.buttonsLoop())
+      asyncio.create_task(self.touchLoop())
 
   async def motionLoop(self, sliders):
     async for event in self.motion.async_read_loop():
