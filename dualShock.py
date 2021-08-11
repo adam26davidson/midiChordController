@@ -35,5 +35,5 @@ class DualShock:
       for event in self.buttons.read():
         print(event)
 
-      for event in self.touch.read():
-        print(event)
+      #for event in self.touch.read():
+      #  print(event)
