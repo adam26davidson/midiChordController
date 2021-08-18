@@ -40,6 +40,8 @@ window = tk.Tk()
 sliders = Sliders(window)
 ds = DualShock(sliders) 
 
+window.mainloop()
+
 loop = asyncio.get_event_loop()
 loop.run_forever()
 
