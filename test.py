@@ -33,12 +33,14 @@ class Sliders(tk.Canvas):
         x2 = 115 + (114*i) + 10
         self.coords(self.thumbs[i], x1, y, x2, y)
         self.master.update()
-async def main():
-    window = tk.Tk()
-    sliders = Sliders(window)
-    ds = DualShock(sliders) 
 
-asyncio.run(main())
+#async def main():
+
+window = tk.Tk()
+sliders = Sliders(window)
+ds = DualShock(sliders) 
+
+#asyncio.run(main())
 
 
 
