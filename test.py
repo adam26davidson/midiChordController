@@ -38,12 +38,15 @@ class Sliders(tk.Canvas):
 
 window = tk.Tk()
 sliders = Sliders(window)
-ds = DualShock(sliders) 
 
+def startDS():
+    ds = DualShock(sliders) 
+
+    loop = asyncio.get_event_loop()
+    loop.run_forever()
+
+window.after(0, startDS)
 window.mainloop()
-
-loop = asyncio.get_event_loop()
-loop.run_forever()
 
 #asyncio.run(main())
 
