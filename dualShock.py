@@ -38,10 +38,12 @@ class DualShock:
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
-      print("button" + event)
+      print("button")
+      print(event)
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
-      print("touch " + event)
+      print("touch")
+      print(event)
       
 
