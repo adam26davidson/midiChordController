@@ -23,9 +23,6 @@ class DualShock:
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
-      loop = asyncio.get_event_loop()
-      loop.run_forever()
-
 
   async def motionLoop(self, sliders):
     async for event in self.motion.async_read_loop():
