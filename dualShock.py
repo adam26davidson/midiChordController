@@ -23,8 +23,7 @@ class DualShock:
       asyncio.create_task(self.buttonsLoop())
       asyncio.create_task(self.touchLoop())
 
-      loop = asyncio.get_event_loop()
-      loop.run_forever()
+      
 
   async def loop(self, sliders):
     while true:
