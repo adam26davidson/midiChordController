@@ -31,6 +31,8 @@ class DualShock:
           self.ranges[event.code]["min"] = event.value
       if event.value > self.ranges[event.code]["max"]:
           self.ranges[event.code]["max"] = event.value
+      if event.code == 2:
+        print(event.value)
       sliders.positionThumb(self.values, self.ranges, event.code)
   
   async def buttonsLoop(self):

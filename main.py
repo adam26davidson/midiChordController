@@ -1,14 +1,5 @@
-import tkinter as tk
-import ui.keyboard as keyboard
-
-class Display(tk.Frame):
-  def __init__(self, master=None):
-    self.height = 480
-    self.width = 800
-    super().__init__(master=master, height=self.height, width=self.width, bg="#000")
-    self.master = master
-    self.keyboard = keyboard.Keyboard(master=self)
-    self.pack(side="bottom")
+from ui.mainView import MainView
+import MidiShock
 
 
 window = tk.Tk()

@@ -1,6 +1,6 @@
 import chord.Chord as Chord
 
-class App:
+class MidiShock:
   def __init__(self) {
     self.bottomNote = 21,
     self.topNote = 108
@@ -37,8 +37,6 @@ class App:
       scaleNotes.append((note + self.rootKey) % 12)
     
     self.scaleNotes = scaleNotes
-    
-
 
   def allScaleNotes(self) :
     return self.findAllNotes(self.scaleNotes)
