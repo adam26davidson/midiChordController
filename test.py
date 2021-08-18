@@ -1,5 +1,6 @@
 import tkinter as tk
 from dualShock import DualShock
+import asyncio
 
 class Sliders(tk.Canvas):
     def __init__(self, master=None):
