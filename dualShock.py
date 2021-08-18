@@ -19,13 +19,23 @@ class DualShock:
       self.touch = InputDevice('/dev/input/event0')
       self.buttons = InputDevice('/dev/input/event2')
 
-      loop = asyncio.get_event_loop()
-      loop.run_forever()
+      asyncio.create_task(self.loop())
 
-      asyncio.create_task(self.motionLoop(sliders))
-      asyncio.create_task(self.buttonsLoop())
-      asyncio.create_task(self.touchLoop())
+  async def loop(self, sliders):
+    while true:
+      for event in self.motion.read():
+        self.values[event.code] = event.value
+        if event.value < self.ranges[event.code]["min"]:
+            self.ranges[event.code]["min"] = event.value
+        if event.value > self.ranges[event.code]["max"]:
+            self.ranges[event.code]["max"] = event.value
+        sliders.positionThumb(self.values, self.ranges, event.code)
 
+      for event in self.buttons.read():
+        print(event)
+
+      for event in self.buttons.read():
+        print(event)
 
   async def motionLoop(self, sliders):
     async for event in self.motion.async_read_loop():
