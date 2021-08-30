@@ -9,8 +9,8 @@ display = Display()
 midiShock = MidiShock(display)
 
 def test():
-  global dualShock = DualShock(midiShock)
-  global loop = asyncio.get_event_loop()
+  dualShock = DualShock(midiShock)
+  loop = asyncio.get_event_loop()
   loop.run_forever()
 
 display.root.after(0, test)
