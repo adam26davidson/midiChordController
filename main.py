@@ -8,7 +8,6 @@ root = tk.Tk()
 display = Display(root)
 midiShock = MidiShock(display)
 
-
 def test():
   dualShock = DualShock(midiShock)
 

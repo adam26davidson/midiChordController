@@ -1,4 +1,3 @@
-from midiShock import MidiShock
 import evdev
 import asyncio
 
@@ -23,7 +22,7 @@ class DualShock:
       self.touch = evdev.InputDevice('/dev/input/event0')
       self.buttons = evdev.InputDevice('/dev/input/event2')
 
-      #asyncio.ensure_future(self.motionLoop())
+      asyncio.ensure_future(self.motionLoop())
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
