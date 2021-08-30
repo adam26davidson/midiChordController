@@ -48,12 +48,13 @@ class MidiShock:
     self.activeChord = "ex"
 
     chord = self.chords[self.activeChord]
-    
-    # self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
-    # self.display.setChordShadow(self.getChord(self.activeChord))
-    # self.display.setBassShadow(self.getBass())
-
     self.chordType, self.rootType = self.getChordType(self.activeChord)
+    
+    self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
+    self.display.setChordShadow(self.getChord(self.activeChord))
+    self.display.setBassShadow(self.getBass())
+
+    
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
