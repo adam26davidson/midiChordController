@@ -7,6 +7,7 @@ class DualShock:
     print(evdev.list_devices())
     self.values = {}
     self.ranges = {
+      "gyroXRange": {"top": -8050, "bottom": 8050},
       0:{"min":0, "max":0},
       1:{"min":0, "max":0},
       2:{"min":0, "max":0},
@@ -23,7 +24,6 @@ class DualShock:
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
-
   async def motionLoop(self, sliders):
     async for event in self.motion.async_read_loop():
       self.values[event.code] = event.value
@@ -31,7 +31,7 @@ class DualShock:
           self.ranges[event.code]["min"] = event.value
       if event.value > self.ranges[event.code]["max"]:
           self.ranges[event.code]["max"] = event.value
-      if event.code == 2:
+      if event.code == 0:
         print(event.value)
       sliders.positionThumb(self.values, self.ranges, event.code)
   

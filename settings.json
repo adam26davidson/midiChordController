@@ -2,54 +2,76 @@
   {
     "name": "default",
     "scale": [0, 2, 4, 5, 7, 9, 11],
-    "LeftModulation": {
-      "type": "modal",
-      "map": [0,5]
-    },
-    "rightModulation": {
-      "type": "custom",
-      "map": [0, 0, 3, 5, 7, 7, 10]
+    "spreadStepsPerOctave": 6,
+    "modulations": {
+      "left": {
+        "type": "modal",
+        "map": [0, 5]
+      },
+      "right": {
+        "type": "custom",
+        "map": [0, 0, 3, 5, 7, 7, 10]
+      }
     },
     "chords": {
       "ex": {
         "root": 0,
         "main": [0, 2, 4, 6],
-        "alternate": [1, 2, 4, 6]
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 4, 6],
+        "alternateBass": [0, 1, 4]
       },
       "square": {
         "root": 3,
         "main": [0, 2, 4, 6],
-        "alternate": [1, 2, 4, 6]
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 4, 6],
+        "alternateBass": [0, 1, 4]
       },
       "triangle": {
         "root": 1,
         "main": [0, 2, 4, 6],
-        "alternate": [0, 1, 2, 4, 6]
+        "mainBass": [0, 4],
+        "alternate": [0, 1, 2, 4, 6],
+        "alternateBass": [0, 1, 4]
       },
       "circle": {
         "root": 5,
         "main": [0, 2, 4, 6],
-        "alternate": [0, 1, 2, 4, 6]
+        "mainBass": [0, 4],
+        "alternate": [0, 1, 2, 4, 6],
+        "alternateBass": [0, 1, 4]
       }
     },
     "secondaries": {
       "left": {
         "interval": 7,
         "main": [0, 4, 7, 10],
+        "mainBass": [0, 7],
         "alternate": [0, 2, 4, 7, 10],
+        "alternateBass": [0, 7],
         "circle": {
-          "alternate": [0, 1, 4, 7, 10]
+          "default": {
+            "alternate": [0, 1, 4, 7, 10]
+          },
+          "leftModulation": {
+            "root": 5,
+            "main": [0, 4, 7]
+          }
         },
         "triangle": {
-          "alternate": [0, 1, 4, 7, 10]
+          "default": {
+            "alternate": [0, 1, 4, 7, 10]
+          }
         }
       },
       "right": {
         "interval": 1,
-        "chord": [0, 4, 6, 11],
-        "alternate": [0, 2, 4, 9]
+        "main": [0, 4, 6, 11],
+        "mainBass": [0, 6],
+        "alternate": [0, 2, 4, 9],
+        "alternateBass": [0, 7]
       }
     }
-
   }
 ]
