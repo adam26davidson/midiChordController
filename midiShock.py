@@ -51,6 +51,7 @@ class MidiShock:
     chord = self.chords[self.activeChord]
     self.chordType, self.rootType = self.getChordType(self.activeChord)
 
+    print("INITIALIZING DISPLAY")
     self.display = Display()
     
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
