@@ -21,7 +21,7 @@ class DualShock:
       self.touch = evdev.InputDevice('/dev/input/event0')
       self.buttons = evdev.InputDevice('/dev/input/event2')
 
-      asyncio.ensure_future(self.motionLoop())
+      #asyncio.ensure_future(self.motionLoop())
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
@@ -36,7 +36,7 @@ class DualShock:
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
       if event.type == evdev.ecodes.EV_KEY:
-        if event.code == self.buttonCodes["ex"]:
+        if event.code == self.buttonCodes["ex"] and event.value == 1:
           self.midiShock.playChord("ex")
 
   async def touchLoop(self):
