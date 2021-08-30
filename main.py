@@ -1,7 +1,6 @@
 from display.display import Display
 from midiShock import MidiShock
 from dualShock import DualShock
-import threading
 import asyncio
 import time
 

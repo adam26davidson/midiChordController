@@ -1,4 +1,3 @@
-from midiShock import MidiShock
 import evdev
 import asyncio
 
