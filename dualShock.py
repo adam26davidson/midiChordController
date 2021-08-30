@@ -38,7 +38,7 @@ class DualShock:
     async for event in self.buttons.async_read_loop():
       if event.type == evdev.ecodes.EV_KEY:
         if event.code == self.buttonCodes["ex"]:
-          MidiShock.playChord("ex")
+          self.midiShock.playChord("ex")
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
