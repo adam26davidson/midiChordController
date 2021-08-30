@@ -48,9 +48,12 @@ class MidiShock:
     self.activeChord = "ex"
 
     chord = self.chords[self.activeChord]
+    
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
+    
+    self.chordType, self.rootType = self.getChordType(self.activeChord)
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
@@ -95,8 +98,10 @@ class MidiShock:
         modKey = "rightModulation"
       secondary = self.secondaries[self.secondary][button][modKey]
       chordRoot = chord.getRoot(self)
-      root = secondary.getRoot(chordRoot)
-      return secondary.getNoteTypes(self, chordRoot), root
+      rootType = secondary.getRoot(chordRoot)
+      chordType = secondary.getNoteTypes(self, chordRoot)
+      chordType.sort()
+      return chordType, rootType
   
   def getChord(self, button):
     chord = self.chords[button]
@@ -178,7 +183,9 @@ class MidiShock:
 
   def setChordType(self):
     chord, root = self.getChordType(self.activeChord)
-    self.display.setChord(chord, root)
+    if chord != self.chordType or root != self.rootType:
+      self.chordType, self.rootType = chord, root
+      self.display.setChord(chord, root)
 
   def stopChord(self):
     if self.chordIsPlaying:
