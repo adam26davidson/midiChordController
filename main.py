@@ -26,10 +26,11 @@ def test():
   #   midiShock.setSpread(i)
 
 
-t = threading.Thread(target=test)
-t.daemon = True
-t.start()
+# t = threading.Thread(target=test)
+# t.daemon = True
+# t.start()
 
+display.root.after(0, test)
 display.root.mainloop()
 
 # global dualShock = DualShock() 
