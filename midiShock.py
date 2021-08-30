@@ -2,11 +2,12 @@ from chord import Chord
 from modulation import Modulation
 from secondary import parseSecondaries, Secondary
 from constants import *
+from display.display import Display
 
 class MidiShock:
-  def __init__(self, display, settingIndex=0):
+  def __init__(self, settingIndex=0):
 
-    self.display = display
+    #self.display = display
     # constant for each setting
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
@@ -49,12 +50,12 @@ class MidiShock:
 
     chord = self.chords[self.activeChord]
     self.chordType, self.rootType = self.getChordType(self.activeChord)
+
+    self.display = Display()
     
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
-
-    
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
