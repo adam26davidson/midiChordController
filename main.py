@@ -1,8 +1,13 @@
 from midiShock import MidiShock
 from dualShock import DualShock
+from display.display import Display
 import asyncio
+import tkinter as tk
 
-midiShock = MidiShock()
+root = tk.Tk()
+display = Display(root)
+midiShock = MidiShock(display)
+
 
 def test():
   dualShock = DualShock(midiShock)
@@ -10,5 +15,5 @@ def test():
   loop = asyncio.get_event_loop()
   loop.run_forever()
 
-midiShock.display.root.after(0, test)
-midiShock.display.root.mainloop()
+root.after(0, test)
+root.mainloop()

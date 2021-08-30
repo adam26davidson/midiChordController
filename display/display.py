@@ -1,12 +1,11 @@
-import tkinter as tk
 from display.keyboard import Keyboard
 
 class Display():
-  def __init__(self):
+  def __init__(self, root):
     self.height = 480
     self.width = 800
+    self.root = root
 
-    self.root = tk.Tk()
     self.root.geometry("800x480")
     self.root.configure(bg='black')
 
