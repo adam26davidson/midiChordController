@@ -1,11 +1,12 @@
 from display.display import Display
 from midiShock import MidiShock
-#from dualShock import DualShock
+from dualShock import DualShock
 import threading
 import time
 
 display = Display()
 midiShock = MidiShock(display)
+dualShock = DualShock(midiShock)
 sides = ["left", "none", "right"]
 
 def test():
@@ -20,9 +21,9 @@ def test():
     midiShock.setSpread(i)
 
 
-t = threading.Thread(target=test)
-t.daemon = True
-t.start()
+# t = threading.Thread(target=test)
+# t.daemon = True
+# t.start()
 
 display.root.mainloop()
 
