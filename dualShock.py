@@ -23,7 +23,7 @@ class DualShock:
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
       "gyroX": {"top": -8050, "bottom": 8050},
-      "lJoyY": {"top": 255, "bottom": 0},
+      "lJoyY": {"top": 0, "bottom": 255},
     }
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')

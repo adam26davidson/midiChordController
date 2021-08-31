@@ -203,8 +203,9 @@ class MidiShock:
   def stopBass(self):
     if self.BassIsPlaying:
       # TODO send midi note off for playing bass
-      self.display.stopBass(self.playingBassNote)
-      print("NOTE OFF - " + str(self.playingBassNote))
+      if self.playingChordNotes.count(self.playingBassNote) == 0:
+        self.display.stopBass(self.playingBassNote)
+        print("NOTE OFF - " + str(self.playingBassNote))
       self.playingBassNote = None
       self.BassIsPlaying = False 
 
