@@ -230,6 +230,7 @@ class MidiShock:
       self.updateBass()
 
   def setInversion(self, value):
+    print(value)
     inversion = math.floor(value * self.inversionRange)
     if value < 0:
       inversion = math.ceil(value * self.inversionRange)
