@@ -56,7 +56,7 @@ class DualShock:
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
-        value = self.normalize(event.value, "gyroX", self.midiShock.inversionRange)
+        value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(value)
       self.midiShock.updateDisplay()
   
