@@ -7,7 +7,10 @@ class DualShock:
   def __init__(self, midiShock):
     self.midiShock = midiShock
     print(evdev.list_devices())
-    self.values = {}
+    self.state = {
+      "lt": False,
+      "rt": False
+    }
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312}
     self.ranges = {
       "gyroXRange": {"top": -8050, "bottom": 8050},
@@ -50,11 +53,29 @@ class DualShock:
             self.midiShock.playBass()
           else:
             self.midiShock.stopBass()
-        if event.code == self.buttonCodes["rt2"]:
+        elif event.code == self.buttonCodes["rt2"]:
           if event.value == 1:
             self.midiShock.setAlternate(True)
           else:
             self.midiShock.setAlternate(False)
+        elif event.code == self.buttonCodes["lt"]:
+          if event.value == 1:
+            self.state["lt"] = True
+            self.midiShock.setModulation("left")
+          else:
+            if self.state["rt"]:
+              self.midiShock.setModulation("right")
+            else:
+              self.midiShock.setModulation("none")
+        elif event.code == self.buttonCodes["rt"]:
+          if event.value == 1:
+            self.state["rt"] = True
+            self.midiShock.setModulation("right")
+          else:
+            if self.state["lt"]:
+              self.midiShock.setModulation("left")
+            else:
+              self.midiShock.setModulation("none")
       self.midiShock.updateDisplay()
 
 
