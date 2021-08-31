@@ -27,7 +27,7 @@ class DualShock:
 
   def normalize(self, value, range):
     m = 2.0 / (range["top"]- range["bottom"])
-    b = (m*range["bottom"]) - 1
+    b = 1 - (m*range["top"])
       
     return (m*value) + b
 
