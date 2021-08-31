@@ -39,7 +39,9 @@ class Display():
     self.shadowChordNotes = []
 
   def stopBassShadow(self):
-    if self.shadowChordNotes.count(self.shadowBassNote) == 0:
+    noteInPlayingChord = self.playingChordNotes.count(self.shadowBassNote) != 0
+    noteInShadowChord = self.shadowChordNotes.count(self.shadowBassNote) != 0
+    if (not noteInPlayingChord) and (not noteInShadowChord):
       self.keyboard.reset([self.shadowBassNote])
     self.shadowBassNote = None
 
