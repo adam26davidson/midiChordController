@@ -4,21 +4,20 @@ from display.display import Display
 import asyncio
 import tkinter as tk
 
-
-
 midiShock = MidiShock()
 root = tk.Tk()
 display = Display(root)
 midiShock.connectDisplay(display)
+ds = DualShock(midiShock)
 
-def startDS():
-  ds = DualShock(midiShock)
+async def updateDisplay():
+  while True:
+    root.update()
 
-  loop = asyncio.get_event_loop()
-  loop.run_forever()
+asyncio.ensure_future(updateDisplay())
 
-root.after(0, startDS)
-root.mainloop()
+loop = asyncio.get_event_loop()
+loop.run_forever()
 
 # window = tk.Tk()
 # sliders = Sliders(window)
