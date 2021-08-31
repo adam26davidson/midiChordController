@@ -31,7 +31,7 @@ class DualShock:
 
   def processValue(self, rawValue, name, maxSteps):
     range = self.ranges[name]
-    pastValues = self.pastValues[name]
+    pastValues = self.pastValues[name]["values"]
 
     pastValues.append(rawValue)
     if (len(pastValues > self.pastValues[name]["n"])):
