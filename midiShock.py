@@ -31,7 +31,7 @@ class MidiShock:
 
     #state variables
     self.key = 0 # 0 is C, 1 is C# etc
-    self.inversionRange = 12
+    self.inversionRange = 6
     self.bassRange = 14
     self.spread = 0
     self.shift = False
@@ -276,3 +276,6 @@ class MidiShock:
 
   def decrementKey(self):
     self.setKey(self.spread - 1)
+
+  def setShift(self, shift):
+    self.shift = shift
