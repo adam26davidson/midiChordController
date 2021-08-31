@@ -14,7 +14,7 @@ class DualShock:
       "gyroX": 0
     }
     self.pastValues = {"gyroX": {"n": 4, "values": []}}
-    self.gyroSnap = 0.3
+    self.gyroSnap = 0.4
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312}
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
