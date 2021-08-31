@@ -49,7 +49,7 @@ class DualShock:
           if event.value == 1:
             self.midiShock.playBass()
           else:
-            self.MidiShock.stopBass()
+            self.midiShock.stopBass()
       self.midiShock.updateDisplay()
 
 
