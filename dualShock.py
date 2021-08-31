@@ -34,7 +34,7 @@ class DualShock:
     pastValues = self.pastValues[name]["values"]
 
     pastValues.append(rawValue)
-    if (len(pastValues > self.pastValues[name]["n"])):
+    if (len(pastValues) > self.pastValues[name]["n"]):
       pastValues.pop(0)
 
     sum = 0
