@@ -26,14 +26,17 @@ class DualShock:
       asyncio.ensure_future(self.touchLoop())
 
   def normalize(self, value, range):
-      b = (range["top"]- range["bottom"])/2.0
-      m = range["top"] - b
-      return (m*value) + b
+    m = 2.0 / (range["top"]- range["bottom"])
+    b = (m*range["bottom"]) - 1
+      
+    return (m*value) + b
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
+        print(event.value)
         value = self.normalize(event.value, self.ranges["gyroX"])
+        print(value)
         self.midiShock.setInversion(value)
       self.midiShock.updateDisplay()
   
