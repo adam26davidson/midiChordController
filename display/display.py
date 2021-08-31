@@ -24,7 +24,9 @@ class Display():
     self.root.attributes("-fullscreen", True)
 
     self.shadowChordNotes = []
+    self.playingChordNotes = []
     self.shadowBassNote = 48
+    self.playingBassNote = None
 
     self.keyboard = Keyboard(master=self.root)
 
@@ -47,18 +49,23 @@ class Display():
   def playChord(self, notes):
     self.stopChordShadow()
     self.keyboard.play(notes)
+    self.playingChordNotes = notes
   
   def playBass(self, note):
     self.stopBassShadow()
     self.keyboard.play([note])
+    self.playingBassNotes = note
 
   def stopChord(self, notes):
     self.shadowChordNotes = notes
     self.keyboard.setShadow(notes)
+    self.playingChordNotes = []
 
   def stopBass(self, note):
+    if self.playingChordNotes.count(note) == 0:
+      self.keyboard.setShadow([note])
     self.shadowBassNote = note
-    self.keyboard.setShadow([note])
+    self.playingChordNotes = None
 
   def setChordShadow(self, notes):
     self.keyboard.reset(self.shadowChordNotes)
@@ -66,6 +73,7 @@ class Display():
     self.keyboard.setShadow(notes)
 
   def setBassShadow(self, note):
-    self.keyboard.reset([self.shadowBassNote])
+    if self.shadowChordNotes.count(self.shadowBassNote) == 0:
+      self.keyboard.reset([self.shadowBassNote])
     self.shadowBassNote = note
     self.keyboard.setShadow([note])
