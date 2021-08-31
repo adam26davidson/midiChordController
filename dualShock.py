@@ -63,6 +63,7 @@ class DualShock:
             self.state["lt"] = True
             self.midiShock.setModulation("left")
           else:
+            self.state["lt"] = False
             if self.state["rt"]:
               self.midiShock.setModulation("right")
             else:
@@ -72,6 +73,7 @@ class DualShock:
             self.state["rt"] = True
             self.midiShock.setModulation("right")
           else:
+            self.state["rt"] = False
             if self.state["lt"]:
               self.midiShock.setModulation("left")
             else:
