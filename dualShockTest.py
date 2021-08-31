@@ -39,7 +39,7 @@ class DualShock:
         print(evdev.categorize(event))
         print(event)
       elif event.type == evdev.ecodes.EV_ABS:
-        print("event")
+        print(event)
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
