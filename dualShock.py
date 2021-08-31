@@ -13,6 +13,7 @@ class DualShock:
       "rt": False,
       "gyroX": 0
     }
+    self.pastValues = {"gyroX": {"n": 4, "values": []}}
     self.gyroSnap = 0.3
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312}
     self.motionCodes = {"x": 2, "z": 0}
@@ -30,10 +31,20 @@ class DualShock:
 
   def processValue(self, rawValue, name, maxSteps):
     range = self.ranges[name]
+    pastValues = self.pastValues[name]
+
+    pastValues.append(rawValue)
+    if (len(pastValues > self.pastValues[name]["n"])):
+      pastValues.pop(0)
+
+    sum = 0
+    for val in pastValues:
+      sum += val
+    avg = sum / len(pastValues)
 
     m = 2.0 / (range["top"]- range["bottom"])
     b = 1 - (m*range["top"])
-    normalized =  (m*rawValue) + b
+    normalized =  (m*avg) + b
 
     def getValue(n):
       if n > 0:
