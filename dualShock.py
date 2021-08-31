@@ -25,7 +25,7 @@ class DualShock:
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
-  def normalize(value, range):
+  def normalize(self, value, range):
       b = (range["top"]- range["bottom"])/2.0
       m = range["top"] - b
       return (m*value) + b
