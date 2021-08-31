@@ -3,7 +3,6 @@ import evdev
 import asyncio
 import math
 
-
 class DualShock:
   def __init__(self, midiShock):
     self.midiShock = midiShock
@@ -111,11 +110,19 @@ class DualShock:
             else:
               self.midiShock.setModulation("none")
       elif event.type == evdev.ecodes.EV_ABS:
-        if event.code == 17:
-          if event.value == -1:
-            self.midiShock.incrementSpread()
-          elif event.value == 1:
-            self.midiShock.decrementSpread()
+        if not self.midiShock.shift:
+          if event.code == 17:
+            if event.value == -1:
+              self.midiShock.incrementSpread()
+            elif event.value == 1:
+              self.midiShock.decrementSpread()
+          elif event.code == 16:
+            if event.value == -1:
+              self.midiShock.setSecondary("left")
+            elif event.value == 0:
+              self.midiShock.setSecondary("none")
+            elif event.value == 1:
+              self.midiShock.setSecondary("right")
 
       self.midiShock.updateDisplay()
 

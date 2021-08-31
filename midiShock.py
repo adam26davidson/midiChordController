@@ -34,6 +34,7 @@ class MidiShock:
     self.inversionRange = 12
     self.bassRange = 14
     self.spread = 0
+    self.shift = False
 
     self.inversion = 0 
     self.bassPosition = 0 
