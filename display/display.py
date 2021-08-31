@@ -54,7 +54,7 @@ class Display():
   def playBass(self, note):
     self.stopBassShadow()
     self.keyboard.play([note])
-    self.playingBassNotes = note
+    self.playingBassNote = note
 
   def stopChord(self, notes):
     self.shadowChordNotes = notes
@@ -65,7 +65,7 @@ class Display():
     if self.playingChordNotes.count(note) == 0:
       self.keyboard.setShadow([note])
     self.shadowBassNote = note
-    self.playingChordNotes = None
+    self.playingBassNote = None
 
   def setChordShadow(self, notes):
     self.keyboard.reset(self.shadowChordNotes)
