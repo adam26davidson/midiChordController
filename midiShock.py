@@ -31,7 +31,7 @@ class MidiShock:
 
     #state variables
     self.key = 0 # 0 is C, 1 is C# etc
-    self.inversionRange = 20
+    self.inversionRange = 12
     self.bassRange = 14
     self.spread = 0
 
