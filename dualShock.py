@@ -1,3 +1,4 @@
+from main import updateDisplay
 import evdev
 import asyncio
 
@@ -33,6 +34,7 @@ class DualShock:
           self.ranges[event.code]["min"] = event.value
       if event.value > self.ranges[event.code]["max"]:
           self.ranges[event.code]["max"] = event.value
+      self.midiShock.updateDisplay()
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
@@ -43,9 +45,11 @@ class DualShock:
               self.midiShock.playChord(button)
             elif self.midiShock.activeChord == button:
               self.midiShock.stopChord()
+      self.midiShock.updateDisplay()
 
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
       print("touch")
       print(evdev.categorize(event))
+      self.midiShock.updateDisplay()

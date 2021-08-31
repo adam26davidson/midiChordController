@@ -10,12 +10,6 @@ display = Display(root)
 midiShock.connectDisplay(display)
 ds = DualShock(midiShock)
 
-async def updateDisplay():
-  while True:
-    root.update()
-
-asyncio.ensure_future(updateDisplay())
-
 loop = asyncio.get_event_loop()
 loop.run_forever()
 

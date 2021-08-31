@@ -56,6 +56,9 @@ class MidiShock:
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
 
+  def updateDisplay(self):
+    self.display.root.update()
+
   def findScaleNotesForKey(self, key):
     scaleNotes = []
     for note in self.scale:
