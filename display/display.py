@@ -6,8 +6,9 @@ class Display():
     self.width = 800
     self.root = root
 
-    self.root.geometry("800x480")
+    #self.root.geometry("800x480")
     self.root.configure(bg='black')
+    self.root.attributes("-fullscreen", True)
 
     self.shadowChordNotes = []
     self.shadowBassNote = 48
