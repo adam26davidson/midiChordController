@@ -12,14 +12,9 @@ class DualShock:
       "rt": False
     }
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312}
+    self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
-      "gyroXRange": {"top": -8050, "bottom": 8050},
-      0:{"min":0, "max":1},
-      1:{"min":0, "max":1},
-      2:{"min":0, "max":1},
-      3:{"min":0, "max":1},
-      4:{"min":0, "max":1},
-      5:{"min":0, "max":1}
+      "gyroX": {"top": -8050, "bottom": 8050},
     }
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')
@@ -30,13 +25,16 @@ class DualShock:
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
+  def normalize(value, range):
+      b = (range["top"]- range["bottom"])/2.0
+      m = range["top"] - b
+      return (m*value) + b
+
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
-      self.values[event.code] = event.value
-      if event.value < self.ranges[event.code]["min"]:
-          self.ranges[event.code]["min"] = event.value
-      if event.value > self.ranges[event.code]["max"]:
-          self.ranges[event.code]["max"] = event.value
+      if event.code == self.motionCodes["x"]:
+        value = self.normalize(event.value, self.ranges["gyroX"])
+        self.midiShock.setInversion(value)
       self.midiShock.updateDisplay()
   
   async def buttonsLoop(self):

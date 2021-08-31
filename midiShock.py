@@ -2,6 +2,7 @@ from chord import Chord
 from modulation import Modulation
 from secondary import parseSecondaries, Secondary
 from constants import *
+import math
 
 
 class MidiShock:
@@ -228,14 +229,18 @@ class MidiShock:
       self.updateChord()
       self.updateBass()
 
-  def setInversion(self, inversion):
-    if abs(inversion) <= self.inversionRange:
-      self.inversion = inversion
-    elif inversion < 0:
-      self.inversion = -1*self.inversionRange
-    elif inversion > 0:
-      self.inversion = self.inversionRange
-    self.updateChord()
+  def setInversion(self, value):
+    inversion = math.floor(value * self.inversionRange)
+    if value < 0:
+      inversion = math.ceil(value * self.inversionRange)
+    if inversion != self.inversion:
+      if abs(inversion) <= self.inversionRange:
+        self.inversion = inversion
+      elif inversion < 0:
+        self.inversion = -1*self.inversionRange
+      elif inversion > 0:
+        self.inversion = self.inversionRange
+      self.updateChord()
   
   def setBassPosition(self, position):
     if abs(position) <= self.bassRange:
@@ -268,3 +273,9 @@ class MidiShock:
       self.setChordType()
       self.updateChord()
       self.updateBass()
+
+  def incrementKey(self):
+    self.setKey(self.key + 1)
+
+  def decrementKey(self):
+    self.setKey(self.spread - 1)
