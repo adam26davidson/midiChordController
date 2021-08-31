@@ -5,13 +5,11 @@ from constants import *
 
 
 class MidiShock:
-  def __init__(self, display, settingIndex=0):
+  def __init__(self, settingIndex=0):
 
-    self.display = display
     # constant for each setting
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
-    #self.spreadStep = 1.0 / self.setting["spreadStepsPerOctave"]
 
     self.scale = self.setting["scale"]
     self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
@@ -48,9 +46,12 @@ class MidiShock:
     self.BassIsPlaying = False
     self.activeChord = "ex"
 
-    chord = self.chords[self.activeChord]
     self.chordType, self.rootType = self.getChordType(self.activeChord)
-    
+
+  def connectDisplay(self, display):
+    self.display = display
+
+    chord = self.chords[self.activeChord]
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
