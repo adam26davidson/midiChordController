@@ -50,6 +50,11 @@ class DualShock:
             self.midiShock.playBass()
           else:
             self.midiShock.stopBass()
+        if event.code == self.buttonCodes["rt2"]:
+          if event.value == 1:
+            self.midiShock.setAlternate(True)
+          else:
+            self.midiShock.setAlternate(False)
       self.midiShock.updateDisplay()
 
 
