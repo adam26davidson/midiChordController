@@ -78,6 +78,13 @@ class DualShock:
               self.midiShock.setModulation("left")
             else:
               self.midiShock.setModulation("none")
+      elif event.type == evdev.ecodes.EV_ABS:
+        if event.code == 17:
+          if event.value == -1:
+            self.midiShock.incrementSpread()
+          elif event.value == 1:
+            self.midiShock.decrementSpread()
+
       self.midiShock.updateDisplay()
 
 
