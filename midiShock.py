@@ -159,7 +159,6 @@ class MidiShock:
 
     self.playingChordNotes = notes
     self.chordIsPlaying = True
-    
 
   def playBass(self):
     self.stopBass()
@@ -229,11 +228,7 @@ class MidiShock:
       self.updateChord()
       self.updateBass()
 
-  def setInversion(self, value):
-    print(value)
-    inversion = math.floor(value * self.inversionRange)
-    if value < 0:
-      inversion = math.ceil(value * self.inversionRange)
+  def setInversion(self, inversion):
     if inversion != self.inversion:
       if abs(inversion) <= self.inversionRange:
         self.inversion = inversion

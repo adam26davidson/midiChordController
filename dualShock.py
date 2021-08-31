@@ -1,6 +1,7 @@
 from midiShock import MidiShock
 import evdev
 import asyncio
+import math
 
 
 class DualShock:
@@ -9,15 +10,14 @@ class DualShock:
     print(evdev.list_devices())
     self.state = {
       "lt": False,
-      "rt": False
+      "rt": False,
+      "gyroX": 0
     }
+    self.gyroSnap = 0.1
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312}
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
       "gyroX": {"top": -8050, "bottom": 8050},
-    }
-    self.pastValues = {
-      "gyroX": {"n": 5, "values": []}
     }
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')
@@ -28,26 +28,35 @@ class DualShock:
       asyncio.ensure_future(self.buttonsLoop())
       asyncio.ensure_future(self.touchLoop())
 
-  def normalize(self, value, name):
+  def processValue(self, rawValue, name, maxSteps):
     range = self.ranges[name]
-    past = self.pastValues[name]
-    past["values"].append(value)
-    if len(past["values"]) > past["n"]:
-      past["values"].pop(0)
-    sum = 0
-    for v in past["values"]:
-      sum += v
-    average = sum / len(past["values"])
+
     m = 2.0 / (range["top"]- range["bottom"])
     b = 1 - (m*range["top"])
-    return (m*average) + b
+    normalized =  (m*rawValue) + b
 
+    def getValue(n):
+      if n > 0:
+        return math.floor(n * maxSteps)
+      else:
+        return math.ceil(n * maxSteps)
+    
+    value = getValue(normalized)
+    snap = (1.0 / maxSteps) * self.gyroSnap
+    if value == self.state[name] + 1:
+      normalized -= snap
+      value = getValue(normalized)
+    if value == self.state[name] - 1:
+      normalized += snap
+      value = getValue(normalized)
+    
+    self.state[name] = value
+    return value
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
-
-        value = self.normalize(event.value, "gyroX")
+        value = self.normalize(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(value)
       self.midiShock.updateDisplay()
   
