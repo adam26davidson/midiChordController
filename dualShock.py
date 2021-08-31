@@ -10,14 +10,17 @@ class DualShock:
     self.state = {
       "lt": False,
       "rt": False,
-      "gyroX": 0
+      "gyroX": 0,
+      "lJoyY": 127
     }
     self.pastValues = {"gyroX": {"n": 4, "values": []}}
     self.gyroSnap = 0.4
-    self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312}
+    self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315}
+    self.absCodes = {"padX": 16, "padY": 17, "lJoyX": 0, "lJoyY": 1, "rJoyX": 3, "rJoyY": 4}
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
       "gyroX": {"top": -8050, "bottom": 8050},
+      "lJoyY": {"top": 255, "bottom": 0},
     }
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')
@@ -109,13 +112,32 @@ class DualShock:
               self.midiShock.setModulation("left")
             else:
               self.midiShock.setModulation("none")
+        elif event.code == self.buttonCodes["options"]:
+          if event.value == 1:
+            self.midiShock.toggleShift()
       elif event.type == evdev.ecodes.EV_ABS:
+        if event.code == self.absCodes["lJoyY"]:
+          value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
+          self.midiShock.setBassPosition(value)
         if not self.midiShock.shift:
           if event.code == 17:
             if event.value == -1:
               self.midiShock.incrementSpread()
             elif event.value == 1:
               self.midiShock.decrementSpread()
+          elif event.code == 16:
+            if event.value == -1:
+              self.midiShock.setSecondary("left")
+            elif event.value == 0:
+              self.midiShock.setSecondary("none")
+            elif event.value == 1:
+              self.midiShock.setSecondary("right")
+        else:
+          if event.code == 17:
+            if event.value == -1:
+              self.midiShock.incrementKey()
+            elif event.value == 1:
+              self.midiShock.decrementKey()
           elif event.code == 16:
             if event.value == -1:
               self.midiShock.setSecondary("left")

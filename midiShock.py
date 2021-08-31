@@ -277,5 +277,5 @@ class MidiShock:
   def decrementKey(self):
     self.setKey(self.spread - 1)
 
-  def setShift(self, shift):
-    self.shift = shift
+  def toggleShift(self):
+    self.shift = not self.shift
