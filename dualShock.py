@@ -1,4 +1,3 @@
-from main import updateDisplay
 import evdev
 import asyncio
 
