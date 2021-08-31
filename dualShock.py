@@ -1,3 +1,4 @@
+from midiShock import MidiShock
 import evdev
 import asyncio
 
@@ -44,6 +45,11 @@ class DualShock:
               self.midiShock.playChord(button)
             elif self.midiShock.activeChord == button:
               self.midiShock.stopChord()
+        if event.code == self.buttonCodes["lt2"]:
+          if event.value == 1:
+            self.midiShock.playBass()
+          else:
+            self.MidiShock.stopBass()
       self.midiShock.updateDisplay()
 
 
