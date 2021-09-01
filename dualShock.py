@@ -58,7 +58,7 @@ class DualShock:
       if n > 0:
         return math.floor(n * (maxSteps + 1))
       else:
-        return math.ceil(n * (maxSteps))
+        return math.ceil(n * (maxSteps + 1))
     
     value = getValue(snapped)
     snap = (1.0 / (maxSteps + 1)) * self.gyroSnap
