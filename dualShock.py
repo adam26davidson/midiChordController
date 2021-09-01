@@ -53,20 +53,21 @@ class DualShock:
     normalized =  (m*avg) + b
     normalized = max(min(normalized, 0.999), -0.999)
 
+    snapped = normalized
     def getValue(n):
       if n > 0:
         return math.floor(n * (maxSteps + 1))
       else:
         return math.ceil(n * (maxSteps))
     
-    value = getValue(normalized)
+    value = getValue(snapped)
     snap = (1.0 / (maxSteps + 1)) * self.gyroSnap
     if value == self.state[name] + 1:
-      normalized -= snap
-      value = getValue(normalized)
+      snapped -= snap
+      value = getValue(snapped)
     if value == self.state[name] - 1:
-      normalized += snap
-      value = getValue(normalized)
+      snapped += snap
+      value = getValue(snapped)
     
     self.state[name] = value
     return value, normalized
@@ -123,8 +124,8 @@ class DualShock:
             self.midiShock.toggleShift()
       elif event.type == evdev.ecodes.EV_ABS:
         if event.code == self.absCodes["lJoyY"]:
-          value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
-          self.midiShock.setBassPosition(value)
+          intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
+          self.midiShock.setBassPosition(intValue)
         if not self.midiShock.shift:
           if event.code == 17:
             if event.value == -1:
