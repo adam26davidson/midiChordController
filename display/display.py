@@ -45,7 +45,7 @@ class Display():
 
   def setInversionThumb(self, position):
     t = time.time()
-    if self.lastUpdate - t > ANIMATION_STEP:
+    if t - self.lastUpdate > ANIMATION_STEP:
       self.lastUpdate = t
       self.inversion.positionThumb(position)
 
@@ -57,7 +57,7 @@ class Display():
 
   def setBassPositionThumb(self, position):
     t = time.time()
-    if self.lastUpdate - t > ANIMATION_STEP:
+    if t - self.lastUpdate > ANIMATION_STEP:
       self.lastUpdate = t
       self.bassPosition.positionThumb(position)
 
