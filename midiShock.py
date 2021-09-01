@@ -2,7 +2,7 @@ from chord import Chord
 from modulation import Modulation
 from secondary import parseSecondaries, Secondary
 from constants import *
-import math
+import rtmidi 
 
 
 class MidiShock:
@@ -11,6 +11,10 @@ class MidiShock:
     # constant for each setting
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
+    self.midiOut = rtmidi.MidiOut()
+    availablePorts = self.midiOut.get_ports()
+    print(availablePorts)
+
 
     self.scale = self.setting["scale"]
     self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
