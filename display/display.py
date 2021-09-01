@@ -10,8 +10,8 @@ class Display():
     root.overrideredirect(True)
     root.overrideredirect(False)
 
-    root.attributes("-fullscreen", True)
-    root.wm_attributes("-topmost", 1)
+    # root.attributes("-fullscreen", True)
+    # root.wm_attributes("-topmost", 1)
     root.focus_set()
 
     def close_escape(event=None):
@@ -30,6 +30,7 @@ class Display():
 
     self.keyboard = Keyboard(master=self.root)
     self.inversion = Inversion(master=self.root)
+    self.bassPosition = Inversion(master=self.root)
 
   def setInversionRange(self, range, inversion):
     self.inversion.setMax(range, inversion)
@@ -39,6 +40,15 @@ class Display():
 
   def setInversionThumb(self, position):
     self.inversion.positionThumb(position)
+
+  def setBassPositionRange(self, range, position):
+    self.bassPosition.setMax(range, position)
+  
+  def setBassPosition(self, position):
+    self.bassPosition.setActiveRegion(position)
+
+  def setBassPositionThumb(self, position):
+    self.bassPosition.positionThumb(position)
 
   def stopChordShadow(self):
     resetNotes = []

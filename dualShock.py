@@ -126,6 +126,7 @@ class DualShock:
         if event.code == self.absCodes["lJoyY"]:
           intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
           self.midiShock.setBassPosition(intValue)
+          self.midiShock.display.setBassPositionThumb(value)
         if not self.midiShock.shift:
           if event.code == 17:
             if event.value == -1:

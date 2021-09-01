@@ -5,7 +5,7 @@ class Inversion(tk.Canvas):
   width = 50
   height = 380
 
-  bgColor = "#0a0a0a"
+  bgColor = "#1f1f1f"
   separatorColor = "#404040"
   shaderColor = "#2e2e2e"
   thumbColor = "#ffffff"
@@ -18,7 +18,7 @@ class Inversion(tk.Canvas):
     self.thumb = self.create_line(0, self.height/2, self.width, self.height/2, fill = self.thumbColor, width=3)
     self.max = 3
     self.activeRegion = 0
-    self.pack(side="right", padx=20)
+    self.pack(side="right", padx=20, pady=20)
 
   def setMax(self, max, activeRegion):
     self.max = max

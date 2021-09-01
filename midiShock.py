@@ -67,6 +67,7 @@ class MidiShock:
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
     self.display.setInversionRange(self.inversionRange, self.inversion)
+    self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
   def updateDisplay(self):
     self.display.root.update()
@@ -288,6 +289,23 @@ class MidiShock:
     elif position > 0:
       self.bassPosition = self.bassRange
     self.updateBass()
+    self.display.setBassPosition(self.bassPosition)
+
+  def setBassRange(self, range):
+    if range <= MAX_BASS_RANGE and range >= 0:
+      self.bassRange = range
+    elif range < 0:
+      self.bassRange = 0
+    elif range > MAX_BASS_RANGE:
+      self.bassRange = MAX_BASS_RANGE
+
+    if self.bassPosition > self.bassRange:
+      self.bassPosition = self.bassRange
+      self.updateBass()
+    elif self.bassPosition < -1*self.bassRange:
+      self.bassPosition = -1*self.bassRange
+      self.updateBass()
+    self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
   def setSpread(self, spread):
     if spread >= 0 and spread < SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
