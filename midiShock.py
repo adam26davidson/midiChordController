@@ -261,6 +261,23 @@ class MidiShock:
       elif inversion > 0:
         self.inversion = self.inversionRange
       self.updateChord()
+      self.display.setInversion(self.inversion)
+  
+  def setInversionRange(self, range):
+    if range <= MAX_INVERSION_RANGE and range >= 0:
+      self.inversionRange = range
+    elif range < 0:
+      self.inversionRange = 0
+    elif range > MAX_INVERSION_RANGE:
+      self.inversionRange = MAX_INVERSION_RANGE
+
+    if self.inversion > self.inversionRange:
+      self.inversion = self.inversionRange
+      self.updateChord()
+    elif self.inversion < -1*self.inversionRange:
+      self.inversion = -1*self.inversionRange
+      self.updateChord()
+    self.display.setInversionRange(self.inversionRange, self.inversion)
   
   def setBassPosition(self, position):
     if abs(position) <= self.bassRange:

@@ -2,6 +2,7 @@ from midiShock import MidiShock
 import evdev
 import asyncio
 import math
+from constants import *
 
 class DualShock:
   def __init__(self, midiShock):
@@ -17,7 +18,7 @@ class DualShock:
       "gyroX": {"n": 4, "values": []},
       "lJoyY": {"n": 1, "values": []}
       }
-    self.gyroSnap = 0.4
+    self.gyroSnap = INVERSION_SNAP
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315}
     self.absCodes = {"padX": 16, "padY": 17, "lJoyX": 0, "lJoyY": 1, "rJoyX": 3, "rJoyY": 4}
     self.motionCodes = {"x": 2, "z": 0}
@@ -53,12 +54,12 @@ class DualShock:
 
     def getValue(n):
       if n > 0:
-        return math.floor(n * maxSteps)
+        return math.floor(n * (maxSteps + 1))
       else:
-        return math.ceil(n * maxSteps)
+        return math.ceil(n * (maxSteps))
     
     value = getValue(normalized)
-    snap = (1.0 / maxSteps) * self.gyroSnap
+    snap = (1.0 / (maxSteps + 1)) * self.gyroSnap
     if value == self.state[name] + 1:
       normalized -= snap
       value = getValue(normalized)

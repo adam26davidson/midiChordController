@@ -1,4 +1,5 @@
 from display.keyboard import Keyboard
+from display.inversion import Inversion
 
 class Display():
   def __init__(self, root):
@@ -29,6 +30,13 @@ class Display():
     self.playingBassNote = None
 
     self.keyboard = Keyboard(master=self.root)
+    self.inversion = Inversion(master=self.root)
+
+  def setInversionRange(self, range, inversion):
+    self.inversion.setMax(range, inversion)
+  
+  def setInversion(self, inversion):
+    self.inversion.setActiveRegion(inversion)
 
   def stopChordShadow(self):
     resetNotes = []
