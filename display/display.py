@@ -33,9 +33,9 @@ class Display():
     self.playingBassNote = None
 
     self.keyboard = Keyboard(master=self.root)
+    self.spread = Spread(master=self.root)
     self.inversion = Inversion(master=self.root)
     self.bassPosition = Inversion(master=self.root)
-    self.spread = Spread(master=self.root)
 
   def setInversionRange(self, range, inversion):
     self.inversion.setMax(range, inversion)

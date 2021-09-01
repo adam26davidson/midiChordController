@@ -5,11 +5,12 @@ class Spread(tk.Canvas):
   width = 726
   height = 20
   color = "#ffffff"
-  
+
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.value = 12
     self.arrow = self.drawArrow()
+    self.pack(side="bottom")
 
   def drawArrow(self):
     keyWidth = self.width / 88
