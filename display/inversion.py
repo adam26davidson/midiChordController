@@ -52,6 +52,7 @@ class Inversion(tk.Canvas):
   def positionThumb(self, value):
     y = (self.height/2) - value*(self.height/2)
     self.coords(self.thumb, 0, y, self.width, y)
+    self.tag_raise(self.thumb)
 
   def drawSeparators(self):
     slotHeight = self.height / (2 * (self.max + 1))
