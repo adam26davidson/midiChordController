@@ -2,8 +2,8 @@ import tkinter as tk
 from constants import *
 
 class Inversion(tk.Canvas):
-  width = 50
-  height = 380
+  width = 60
+  height = 370
 
   bgColor = "#1f1f1f"
   separatorColor = "#404040"
