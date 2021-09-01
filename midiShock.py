@@ -315,6 +315,7 @@ class MidiShock:
     elif spread >= SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
       self.spread = (SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES) - 1
     self.updateChord()
+    self.display.setSpread(self.spread)
   
   def incrementSpread(self):
     self.setSpread(self.spread + 1)

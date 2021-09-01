@@ -1,6 +1,7 @@
 from constants import ANIMATION_STEP
 from display.keyboard import Keyboard
 from display.inversion import Inversion
+from display.spread import Spread
 import time
 
 class Display():
@@ -34,6 +35,7 @@ class Display():
     self.keyboard = Keyboard(master=self.root)
     self.inversion = Inversion(master=self.root)
     self.bassPosition = Inversion(master=self.root)
+    self.spread = Spread(master=self.root)
 
   def setInversionRange(self, range, inversion):
     self.inversion.setMax(range, inversion)
@@ -52,6 +54,9 @@ class Display():
 
   def setBassPositionThumb(self, position):
     self.bassPosition.positionThumb(position)
+  
+  def setSpread(self, spread):
+    self.spread.setValue(spread)
 
   def stopChordShadow(self):
     resetNotes = []
