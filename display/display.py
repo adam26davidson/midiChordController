@@ -77,4 +77,6 @@ class Display():
   def setBassShadow(self, note):
     self.stopBassShadow()
     self.shadowBassNote = note
-    self.keyboard.setShadow([note])
+    noteInPlayingChord = self.playingChordNotes.count(note) != 0
+    if not noteInPlayingChord:
+      self.keyboard.setShadow([note])
