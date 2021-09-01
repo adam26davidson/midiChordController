@@ -1,11 +1,14 @@
+from constants import ANIMATION_STEP
 from display.keyboard import Keyboard
 from display.inversion import Inversion
+import time
 
 class Display():
   def __init__(self, root):
     self.height = 480
     self.width = 800
     self.root = root
+
 
     root.overrideredirect(True)
     root.overrideredirect(False)
@@ -32,6 +35,8 @@ class Display():
     self.inversion = Inversion(master=self.root)
     self.bassPosition = Inversion(master=self.root)
 
+    self.lastUpdate = time.time()
+
   def setInversionRange(self, range, inversion):
     self.inversion.setMax(range, inversion)
   
@@ -39,7 +44,10 @@ class Display():
     self.inversion.setActiveRegion(inversion)
 
   def setInversionThumb(self, position):
-    self.inversion.positionThumb(position)
+    t = time.time()
+    if self.lastUpdate - t > ANIMATION_STEP:
+      self.lastUpdate = t
+      self.inversion.positionThumb(position)
 
   def setBassPositionRange(self, range, position):
     self.bassPosition.setMax(range, position)
@@ -48,7 +56,10 @@ class Display():
     self.bassPosition.setActiveRegion(position)
 
   def setBassPositionThumb(self, position):
-    self.bassPosition.positionThumb(position)
+    t = time.time()
+    if self.lastUpdate - t > ANIMATION_STEP:
+      self.lastUpdate = t
+      self.bassPosition.positionThumb(position)
 
   def stopChordShadow(self):
     resetNotes = []
