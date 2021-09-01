@@ -74,7 +74,7 @@ class DualShock:
     self.state[name] = value
     return value, normalized
 
-  async def updateDisplay(self):
+  def updateDisplay(self):
     t = time.time()
     if t - self.lastUpdate > ANIMATION_STEP:
       self.midiShock.updateDisplay()
@@ -85,7 +85,7 @@ class DualShock:
         intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(intValue)
         self.midiShock.display.setInversionThumb(value)
-      asyncio.run(self.updateDisplay())
+      self.updateDisplay()
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
@@ -161,11 +161,11 @@ class DualShock:
             elif event.value == 1:
               self.midiShock.setSecondary("right")
 
-      asyncio.run(self.updateDisplay())
+      self.updateDisplay()
 
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
       print("touch")
       print(evdev.categorize(event))
-      asyncio.run(self.updateDisplay())
+      self.updateDisplay()
