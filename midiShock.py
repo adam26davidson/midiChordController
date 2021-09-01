@@ -15,6 +15,11 @@ class MidiShock:
     availablePorts = self.midiOut.get_ports()
     print(availablePorts)
 
+    if availablePorts:
+      self.midiOut.open_port(0)
+    else:
+      self.midiOut.open_virtual_port("virtual output")
+
 
     self.scale = self.setting["scale"]
     self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
@@ -64,6 +69,17 @@ class MidiShock:
 
   def updateDisplay(self):
     self.display.root.update()
+
+  def sendMidi(self, notes, off=False):
+    type = 0x90
+    vel = 122
+    if off:
+      type = 0x80
+      vel = 0
+    with self.midiOut:
+      for note in notes:
+        self.midiOut.send_message([type, note, vel])
+
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
@@ -157,7 +173,7 @@ class MidiShock:
     self.stopChord()
     notes = self.getChord(button)
 
-    # TODO send midi notes on
+    self.sendMidi(notes)
     self.updateBass()
     self.display.playChord(notes)
     print("NOTES ON - " + str(notes))
@@ -170,6 +186,7 @@ class MidiShock:
     bassNote = self.getBass()
 
     # TODO send midi note on
+    self.sendMidi([bassNote])
     self.display.playBass(bassNote)
     print("NOTE ON - " + str(bassNote))
 
@@ -199,6 +216,7 @@ class MidiShock:
   def stopChord(self):
     if self.chordIsPlaying:
       # TODO send midi notes off for playing chord
+      self.sendMidi(self.playingChordNotes, off=True)
       self.display.stopChord(self.playingChordNotes)
       print("NOTES OFF - " + str(self.playingChordNotes))
       self.playingChordNotes = []
@@ -207,6 +225,7 @@ class MidiShock:
   def stopBass(self):
     if self.BassIsPlaying:
       # TODO send midi note off for playing bass
+      self.sendMidi([self.playingBassNote], off=True)
       self.display.stopBass(self.playingBassNote)
       print("NOTE OFF - " + str(self.playingBassNote))
       self.playingBassNote = None
