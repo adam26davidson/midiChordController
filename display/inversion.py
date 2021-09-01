@@ -28,6 +28,7 @@ class Inversion(tk.Canvas):
       self.delete(self.activeShader)
     slotHeight = self.height / (2 * (self.max + 1))
     snap = slotHeight * INVERSION_SNAP
+    yt, yb = 0, 0
     if region >= self.max:
       yt = 0
       yb = slotHeight + snap
