@@ -22,7 +22,7 @@ class Display():
 
     #self.root.geometry("800x480")
     self.root.configure(bg='black')
-    self.root.attributes("-fullscreen", True)
+    #self.root.attributes("-fullscreen", True)
 
     self.shadowChordNotes = []
     self.playingChordNotes = []

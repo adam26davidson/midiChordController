@@ -51,7 +51,6 @@ class Inversion(tk.Canvas):
 
   def positionThumb(self, value):
     y = (self.height/2) - value*(self.height/2)
-
     self.thumb.coords(0, y, self.width, y)
 
   def drawSeparators(self):
