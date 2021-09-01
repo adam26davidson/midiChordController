@@ -2,6 +2,7 @@ from midiShock import MidiShock
 import evdev
 import asyncio
 import math
+import time
 from constants import *
 
 class DualShock:
@@ -26,6 +27,7 @@ class DualShock:
       "gyroX": {"top": -8050, "bottom": 8050},
       "lJoyY": {"top": 0, "bottom": 255},
     }
+    self.lastUpdate = time.time()
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')
       self.touch = evdev.InputDevice('/dev/input/event0')
@@ -72,13 +74,18 @@ class DualShock:
     self.state[name] = value
     return value, normalized
 
+  async def updateDisplay(self):
+    t = time.time()
+    if t - self.lastUpdate > ANIMATION_STEP:
+      self.midiShock.updateDisplay()
+
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
         intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(intValue)
         self.midiShock.display.setInversionThumb(value)
-      self.midiShock.updateDisplay()
+      asyncio.run(self.updateDisplay())
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
@@ -154,11 +161,11 @@ class DualShock:
             elif event.value == 1:
               self.midiShock.setSecondary("right")
 
-      self.midiShock.updateDisplay()
+      asyncio.run(self.updateDisplay())
 
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
       print("touch")
       print(evdev.categorize(event))
-      self.midiShock.updateDisplay()
+      asyncio.run(self.updateDisplay())

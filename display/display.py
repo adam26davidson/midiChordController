@@ -35,8 +35,6 @@ class Display():
     self.inversion = Inversion(master=self.root)
     self.bassPosition = Inversion(master=self.root)
 
-    self.lastUpdate = time.time()
-
   def setInversionRange(self, range, inversion):
     self.inversion.setMax(range, inversion)
   
@@ -44,10 +42,7 @@ class Display():
     self.inversion.setActiveRegion(inversion)
 
   def setInversionThumb(self, position):
-    t = time.time()
-    if t - self.lastUpdate > ANIMATION_STEP:
-      self.lastUpdate = t
-      self.inversion.positionThumb(position)
+    self.inversion.positionThumb(position)
 
   def setBassPositionRange(self, range, position):
     self.bassPosition.setMax(range, position)
@@ -56,10 +51,7 @@ class Display():
     self.bassPosition.setActiveRegion(position)
 
   def setBassPositionThumb(self, position):
-    t = time.time()
-    if t - self.lastUpdate > ANIMATION_STEP:
-      self.lastUpdate = t
-      self.bassPosition.positionThumb(position)
+    self.bassPosition.positionThumb(position)
 
   def stopChordShadow(self):
     resetNotes = []
