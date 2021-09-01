@@ -5,8 +5,9 @@ class Inversion(tk.Canvas):
   width = 50
   height = 380
 
-  bgColor = "#262626"
-  separatorColor = "#9c9c9c"
+  bgColor = "#1a1a1a"
+  separatorColor = "#404040"
+  shaderColor = "#2e2e2e"
   thumbColor = "#ffffff"
 
   def __init__(self, master=None):
@@ -46,7 +47,7 @@ class Inversion(tk.Canvas):
     elif region < 0:
       yt = ((self.height / 2) + ((-1*region)*slotHeight)) - snap
       yb = ((self.height / 2) + (((-1*region)+1)*slotHeight)) + snap
-    self.activeShader = self.create_rectangle(0, yt, self.width, yb, fill="#6b6b6b")
+    self.activeShader = self.create_rectangle(0, yt, self.width, yb, fill=self.shaderColor)
     self.drawSeparators()
 
   def positionThumb(self, value):
