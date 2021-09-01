@@ -66,6 +66,7 @@ class MidiShock:
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
+    self.display.setInversionRange(self.inversionRange, self.inversion)
 
   def updateDisplay(self):
     self.display.root.update()
