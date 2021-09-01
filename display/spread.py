@@ -4,7 +4,7 @@ from constants import *
 class Spread(tk.Canvas):
   width = 726
   height = 20
-  color = "#ffffff"
+  color = "#8a8a8a"
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")

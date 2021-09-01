@@ -24,7 +24,7 @@ class Keyboard(tk.Canvas):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.master = master
     self.keys = self.createKeys()
-    self.pack(side="bottom", pady=20)
+    self.pack(side="bottom", pady=(0,20))
 
     self.root = 0
     self.chord = None
