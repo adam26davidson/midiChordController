@@ -10,8 +10,8 @@ class Display():
     root.overrideredirect(True)
     root.overrideredirect(False)
 
-    root.attributes("-fullscreen", True)
-    root.wm_attributes("-topmost", 1)
+    #root.attributes("-fullscreen", True)
+    #root.wm_attributes("-topmost", 1)
     root.focus_set()
 
     def close_escape(event=None):
@@ -22,7 +22,6 @@ class Display():
 
     #self.root.geometry("800x480")
     self.root.configure(bg='black')
-    #self.root.attributes("-fullscreen", True)
 
     self.shadowChordNotes = []
     self.playingChordNotes = []
