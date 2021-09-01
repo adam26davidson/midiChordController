@@ -51,6 +51,7 @@ class DualShock:
     m = 2.0 / (range["top"]- range["bottom"])
     b = 1 - (m*range["top"])
     normalized =  (m*avg) + b
+    normalized = max(min(normalized, 0.999), -0.999)
 
     def getValue(n):
       if n > 0:
@@ -68,13 +69,14 @@ class DualShock:
       value = getValue(normalized)
     
     self.state[name] = value
-    return value
+    return value, normalized
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
-        value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
-        self.midiShock.setInversion(value)
+        intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
+        self.midiShock.setInversion(intValue)
+        self.midiShock.display.setInversionThumb(value)
       self.midiShock.updateDisplay()
   
   async def buttonsLoop(self):

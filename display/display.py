@@ -38,6 +38,9 @@ class Display():
   def setInversion(self, inversion):
     self.inversion.setActiveRegion(inversion)
 
+  def setInversionThumb(self, position):
+    self.inversion.positionThumb(position)
+
   def stopChordShadow(self):
     resetNotes = []
     for note in self.shadowChordNotes:
