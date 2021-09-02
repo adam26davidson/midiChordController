@@ -21,7 +21,7 @@ class ChordDisplay(tk.Canvas):
     self.master = master
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.positions, self.notes = self.createNotes()
-    self.pack(side="bottom", pady=20)
+    self.pack(side="right", padx=20)
   
   def createNotes(self):
     positions = []
