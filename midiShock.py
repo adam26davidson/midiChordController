@@ -82,7 +82,6 @@ class MidiShock:
       for note in notes:
         self.midiOut.send_message([type, note, vel])
 
-
   def findScaleNotesForKey(self, key):
     scaleNotes = []
     for note in self.scale:
@@ -282,14 +281,15 @@ class MidiShock:
     self.display.setInversionRange(self.inversionRange, self.inversion)
   
   def setBassPosition(self, position):
-    if abs(position) <= self.bassRange:
-      self.bassPosition = position
-    elif position < 0:
-      self.bassPosition = -1*self.bassRange
-    elif position > 0:
-      self.bassPosition = self.bassRange
-    self.updateBass()
-    self.display.setBassPosition(self.bassPosition)
+    if position != self.bassPosition:
+      if abs(position) <= self.bassRange:
+        self.bassPosition = position
+      elif position < 0:
+        self.bassPosition = -1*self.bassRange
+      elif position > 0:
+        self.bassPosition = self.bassRange
+      self.updateBass()
+      self.display.setBassPosition(self.bassPosition)
 
   def setBassRange(self, range):
     if range <= MAX_BASS_RANGE and range >= 0:

@@ -1,3 +1,4 @@
+from display.chordDisplay import ChordDisplay
 from constants import ANIMATION_STEP
 from display.keyboard import Keyboard
 from display.inversion import Inversion
@@ -36,6 +37,13 @@ class Display():
     self.spread = Spread(master=self.root)
     self.inversion = Inversion(master=self.root)
     self.bassPosition = Inversion(master=self.root)
+    self.chordDisplay = ChordDisplay(master=self.root)
+  
+  def setKey(self, key):
+    self.chordDisplay.setKey(key)
+
+  def setScale(self, scale):
+    self.chordDisplay.setScale(scale)
 
   def setInversionRange(self, range, inversion):
     self.inversion.setMax(range, inversion)
@@ -75,11 +83,13 @@ class Display():
 
   def setChord(self, chord, root):
     self.keyboard.setChord(chord, root)
+    self.chordDisplay.setChord(chord, root)
   
   def playChord(self, notes):
     self.stopChordShadow()
     self.keyboard.play(notes)
     self.playingChordNotes = notes
+    self.chordDisplay.playChord()
   
   def playBass(self, note):
     self.stopBassShadow()
@@ -90,6 +100,7 @@ class Display():
     self.shadowChordNotes = notes
     self.keyboard.setShadow(notes)
     self.playingChordNotes = []
+    self.chordDisplay.setChordShadow()
 
   def stopBass(self, note):
     if self.playingChordNotes.count(note) == 0:
@@ -101,6 +112,7 @@ class Display():
     self.keyboard.reset(self.shadowChordNotes)
     self.shadowChordNotes = notes
     self.keyboard.setShadow(notes)
+    self.chordDisplay.setChordShadow()
 
   def setBassShadow(self, note):
     self.stopBassShadow()

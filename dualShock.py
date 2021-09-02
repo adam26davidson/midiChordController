@@ -20,6 +20,8 @@ class DualShock:
       "lJoyY": {"n": 1, "values": []}
       }
     self.gyroSnap = INVERSION_SNAP
+    self.gyroThumbValue = 0
+    self.lJoyYThumbValue = 127
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315}
     self.absCodes = {"padX": 16, "padY": 17, "lJoyX": 0, "lJoyY": 1, "rJoyX": 3, "rJoyY": 4}
     self.motionCodes = {"x": 2, "z": 0}
@@ -78,13 +80,15 @@ class DualShock:
     t = time.time()
     if t - self.lastUpdate > ANIMATION_STEP:
       self.midiShock.updateDisplay()
+      self.midiShock.display.setInversionThumb(self.gyroThumbValue)
+      self.midiShock.display.setBassPositionThumb(self.lJoyYThumbValue)
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
         intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(intValue)
-        self.midiShock.display.setInversionThumb(value)
+        self.gyroThumbValue = value
       self.updateDisplay()
   
   async def buttonsLoop(self):
@@ -133,7 +137,7 @@ class DualShock:
         if event.code == self.absCodes["lJoyY"]:
           intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
           self.midiShock.setBassPosition(intValue)
-          self.midiShock.display.setBassPositionThumb(value)
+          self.lJoyYThumbValue = value
         if not self.midiShock.shift:
           if event.code == 17:
             if event.value == -1:
