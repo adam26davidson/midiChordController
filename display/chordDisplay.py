@@ -32,7 +32,7 @@ class ChordDisplay(tk.Canvas):
       fill = ''
       if self.scale.count(i) != 0:
         fill = self.scaleColor
-      theta = ((i*2*math.pi) / 12) - (0.5*math.pi)
+      theta = ((i*-2*math.pi) / 12) + (0.5*math.pi)
       x = centerX + (self.radius*math.cos(theta))
       y = centerY - (self.radius*math.sin(theta))
       x0, x1 = x - self.noteRadius, x + self.noteRadius
