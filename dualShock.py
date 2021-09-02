@@ -141,7 +141,7 @@ class DualShock:
           intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
           self.midiShock.setBassPosition(intValue)
           self.lJoyYThumbValue = value
-          self.forceUpdate = False
+          forceUpdate = False
         if not self.midiShock.shift:
           if event.code == 17:
             if event.value == -1:
