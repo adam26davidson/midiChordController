@@ -57,10 +57,10 @@ class ChordDisplay(tk.Canvas):
 
   def setChord(self, chordTypes, rootType):
     self.setScale(self.scale)
-    self.root = (rootType + self.key) % 12
+    self.root = (rootType + (12-self.key)) % 12
     chord = []
     for i in chordTypes:
-      chord.append((i + self.key) % 12)
+      chord.append((i + (12-self.key)) % 12)
     self.chord = chord
 
   def setChordShadow(self):
