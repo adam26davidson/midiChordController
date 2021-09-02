@@ -7,7 +7,7 @@ class ChordDisplay(tk.Canvas):
   width = 300
   radius = 120
   noteRadius = 18
-  keyTextOffset = -40
+  keyTextOffset = -60
   keyTextFontSize = 20
 
   noteNames = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"]
@@ -34,7 +34,7 @@ class ChordDisplay(tk.Canvas):
     x = self.width / 2
     y = self.positions[0][1] + self.keyTextOffset
     gap = 5
-    lineY0 = (y + (self.keyTextOffset)) - (self.noteRadius + gap)
+    lineY0 = (y - (self.keyTextOffset)) - (self.noteRadius + gap)
     lineY1 = y + (self.keyTextFontSize/2) + gap
     self.create_line(x, lineY0, x, lineY1, fill=self.keyTextColor)
     return self.create_text(x, y, fill=self.keyTextColor, text=self.noteNames[self.key])
