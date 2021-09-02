@@ -329,10 +329,11 @@ class MidiShock:
     key = key % 12
     if self.key != key:
       self.key = key
+      self.display.setKey(self.key)
       self.setChordType()
       self.updateChord()
       self.updateBass()
-      self.display.setKey(self.key)
+      
 
   def incrementKey(self):
     self.setKey(self.key + 1)
