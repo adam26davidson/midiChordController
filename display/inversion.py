@@ -6,7 +6,7 @@ class Inversion(tk.Canvas):
   height = 370
 
   bgColor = "#1f1f1f"
-  separatorColor = "#404040"
+  separatorColor = "#2e2e2e"
   shaderColor = "#2e2e2e"
   thumbColor = "#ffffff"
 

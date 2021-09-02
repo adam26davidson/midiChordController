@@ -11,14 +11,14 @@ class Keyboard(tk.Canvas):
   blackColor = "#262626"
   whiteColor = "#262626"
 
-  shadowColor = "#5c9199"
-  rootShadowColor = "#998f5c"
+  shadowColor = "#858585"
+  shadowRootColor = "#567e85"
 
-  playedColor = "#33e4ff"
-  rootPlayedColor = "#ffda33"
+  playedColor = "#ffffff"
+  rootPlayedColor = "#00d9ff"
 
-  chordColor = "#414b4d"
-  rootColor = "#4d4b41"
+  chordColor = "#4d4d4d"
+  rootColor = "#414b4d"
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
