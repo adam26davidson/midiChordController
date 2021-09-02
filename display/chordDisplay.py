@@ -33,7 +33,7 @@ class ChordDisplay(tk.Canvas):
   def createKeyText(self):
     x = self.width / 2
     y = self.positions[0][1] + self.keyTextOffset
-    gap = 5
+    gap = 10
     lineY0 = (y - (self.keyTextOffset)) - (self.noteRadius + gap)
     lineY1 = y + (self.keyTextFontSize/2) + gap
     self.create_line(x, lineY0, x, lineY1, fill=self.keyTextColor)
