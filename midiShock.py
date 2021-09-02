@@ -333,7 +333,6 @@ class MidiShock:
       self.setChordType()
       self.updateChord()
       self.updateBass()
-      
 
   def incrementKey(self):
     self.setKey(self.key + 1)
