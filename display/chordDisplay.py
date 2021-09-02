@@ -5,8 +5,8 @@ from constants import *
 class ChordDisplay(tk.Canvas):
   height = 330
   width = 300
-  radius = 140
-  noteRadius = 10
+  radius = 120
+  noteRadius = 20
 
   scaleColor = "#4a4a4a"
 
@@ -21,7 +21,7 @@ class ChordDisplay(tk.Canvas):
     self.master = master
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.positions, self.notes = self.createNotes()
-    self.pack(side="bottom")
+    self.pack(side="bottom", pady=20)
   
   def createNotes(self):
     positions = []
