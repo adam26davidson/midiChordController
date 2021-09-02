@@ -82,6 +82,7 @@ class DualShock:
       self.midiShock.display.setInversionThumb(self.gyroThumbValue)
       self.midiShock.display.setBassPositionThumb(self.lJoyYThumbValue)
       self.midiShock.updateDisplay()
+      self.lastUpdate = t
     elif force:
       self.midiShock.updateDisplay()
 
