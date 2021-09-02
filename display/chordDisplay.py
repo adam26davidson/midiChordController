@@ -3,12 +3,17 @@ import math
 from constants import *
 
 class ChordDisplay(tk.Canvas):
-  height = 330
+  height = 350
   width = 300
   radius = 120
-  noteRadius = 20
+  noteRadius = 18
+  keyTextOffset = -40
+  keyTextFontSize = 20
 
-  scaleColor = "#4a4a4a"
+  noteNames = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"]
+
+  keyTextColor = "#ffffff"
+  scaleColor = "#333333"
 
   playedColor = "#ffffff"
   playedRootColor = "#00d9ff"
@@ -19,9 +24,20 @@ class ChordDisplay(tk.Canvas):
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.master = master
+    self.key = 0
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.positions, self.notes = self.createNotes()
-    self.pack(side="right", pady=(30, 0), padx=(0,50))
+    self.keyText = self.createKeyText()
+    self.pack(side="right", pady=(30, 0), padx=(0,80))
+
+  def createKeyText(self):
+    x = self.width / 2
+    y = self.positions[0][1] + self.keyTextOffset
+    gap = 5
+    lineY0 = (y + (self.keyTextOffset)) - (self.noteRadius + gap)
+    lineY1 = y + (self.keyTextFontSize/2) + gap
+    self.create_line(x, lineY0, x, lineY1, fill=self.keyTextColor)
+    return self.create_text(x, y, fill=self.keyTextColor, text=self.noteNames[self.key])
   
   def createNotes(self):
     positions = []
@@ -46,6 +62,7 @@ class ChordDisplay(tk.Canvas):
 
   def setKey(self, key):
     self.key = key
+    self.itemconfigure(self.keyText, text=self.noteNames[self.key])
 
   def setScale(self, scale):
     self.scale = scale
