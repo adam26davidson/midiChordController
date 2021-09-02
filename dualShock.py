@@ -76,12 +76,14 @@ class DualShock:
     self.state[name] = value
     return value, normalized
 
-  def updateDisplay(self):
+  def updateDisplay(self, force=False):
     t = time.time()
     if t - self.lastUpdate > ANIMATION_STEP:
-      self.midiShock.updateDisplay()
       self.midiShock.display.setInversionThumb(self.gyroThumbValue)
       self.midiShock.display.setBassPositionThumb(self.lJoyYThumbValue)
+      self.midiShock.updateDisplay()
+    elif force:
+      self.midiShock.updateDisplay()
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
@@ -93,6 +95,7 @@ class DualShock:
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
+      forceUpdate = True
       if event.type == evdev.ecodes.EV_KEY:
         for button in ["ex", "circle", "triangle", "square"]:
           if event.code == self.buttonCodes[button]:
@@ -138,6 +141,7 @@ class DualShock:
           intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
           self.midiShock.setBassPosition(intValue)
           self.lJoyYThumbValue = value
+          self.forceUpdate = False
         if not self.midiShock.shift:
           if event.code == 17:
             if event.value == -1:
@@ -165,8 +169,7 @@ class DualShock:
             elif event.value == 1:
               self.midiShock.setSecondary("right")
 
-      self.updateDisplay()
-
+      self.updateDisplay(force=forceUpdate)
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
