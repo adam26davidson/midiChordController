@@ -12,7 +12,7 @@ class Keyboard(tk.Canvas):
   whiteColor = "#262626"
 
   shadowColor = "#858585"
-  shadowRootColor = "#567e85"
+  rootShadowColor = "#567e85"
 
   playedColor = "#ffffff"
   rootPlayedColor = "#00d9ff"
