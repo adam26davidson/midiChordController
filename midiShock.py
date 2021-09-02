@@ -63,6 +63,8 @@ class MidiShock:
     self.display = display
 
     chord = self.chords[self.activeChord]
+    self.display.setKey(self.key)
+    self.display.setScale(self.scale)
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
     self.display.setChordShadow(self.getChord(self.activeChord))
     self.display.setBassShadow(self.getBass())
