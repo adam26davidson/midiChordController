@@ -6,11 +6,13 @@ import rtmidi
 
 
 class MidiShock:
-  def __init__(self, settingIndex=0):
+  def __init__(self, display, settingIndex=1):
 
     # constant for each setting
+    self.display = display
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
+
     self.midiOut = rtmidi.MidiOut()
     availablePorts = self.midiOut.get_ports()
     print(availablePorts)
@@ -19,24 +21,6 @@ class MidiShock:
       self.midiOut.open_port(1)
     else:
       self.midiOut.open_virtual_port("virtual output")
-
-
-    self.scale = self.setting["scale"]
-    self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
-
-    self.chords = {
-      "ex": Chord(self.scale, self.setting["chords"]["ex"]),
-      "square": Chord(self.scale, self.setting["chords"]["square"]),
-      "triangle": Chord(self.scale, self.setting["chords"]["triangle"]),
-      "circle": Chord(self.scale, self.setting["chords"]["circle"])
-    }
-
-    self.secondaries = parseSecondaries(self.setting["secondaries"])
-
-    self.modulations = {
-      "left": Modulation(self.scale, self.setting["modulations"]["left"]),
-      "right": Modulation(self.scale, self.setting["modulations"]["right"])
-    }
 
     #state variables
     self.key = 0 # 0 is C, 1 is C# etc
@@ -57,10 +41,33 @@ class MidiShock:
     self.BassIsPlaying = False
     self.activeChord = "ex"
 
+    self.setSetting(self.settingIndex)
+
     self.chordType, self.rootType = self.getChordType(self.activeChord)
 
-  def connectDisplay(self, display):
-    self.display = display
+  def updateDisplay(self):
+    self.display.root.update()
+
+  def setSetting(self, setting):
+    self.settingIndex = setting
+    self.setting = SETTINGS[setting]
+
+    self.scale = self.setting["scale"]
+    self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
+
+    self.chords = {
+      "ex": Chord(self.scale, self.setting["chords"]["ex"]),
+      "square": Chord(self.scale, self.setting["chords"]["square"]),
+      "triangle": Chord(self.scale, self.setting["chords"]["triangle"]),
+      "circle": Chord(self.scale, self.setting["chords"]["circle"])
+    }
+
+    self.secondaries = parseSecondaries(self.setting["secondaries"])
+
+    self.modulations = {
+      "left": Modulation(self.scale, self.setting["modulations"]["left"]),
+      "right": Modulation(self.scale, self.setting["modulations"]["right"])
+    }
 
     chord = self.chords[self.activeChord]
     self.display.setKey(self.key)
@@ -71,8 +78,7 @@ class MidiShock:
     self.display.setInversionRange(self.inversionRange, self.inversion)
     self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
-  def updateDisplay(self):
-    self.display.root.update()
+    self.chordType, self.rootType = self.getChordType(self.activeChord)
 
   def sendMidi(self, notes, off=False):
     type = 0x90

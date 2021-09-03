@@ -4,10 +4,9 @@ from display.display import Display
 import asyncio
 import tkinter as tk
 
-midiShock = MidiShock()
 root = tk.Tk()
 display = Display(root)
-midiShock.connectDisplay(display)
+midiShock = MidiShock(display)
 ds = DualShock(midiShock)
 
 loop = asyncio.get_event_loop()

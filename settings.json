@@ -73,5 +73,80 @@
         "alternateBass": [0, 7]
       }
     }
+  },
+  {
+    "name": "Nines",
+    "scale": [0, 2, 3, 5, 7, 8, 10],
+    "spreadStepsPerOctave": 6,
+    "modulations": {
+      "left": {
+        "type": "modal",
+        "map": [2, 0]
+      },
+      "right": {
+        "type": "modal",
+        "map": [3, 0]
+      }
+    },
+    "chords": {
+      "ex": {
+        "root": 0,
+        "main": [1, 2, 4, 6],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 3, 6],
+        "alternateBass": [0, 1, 4]
+      },
+      "square": {
+        "root": 5,
+        "main": [1, 2, 4, 6],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 3, 6],
+        "alternateBass": [0, 1, 4]
+      },
+      "triangle": {
+        "root": 3,
+        "main": [1, 2, 4, 6],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 3, 6],
+        "alternateBass": [0, 1, 4]
+      },
+      "circle": {
+        "root": 4,
+        "main": [0, 2, 4, 6],
+        "mainBass": [0, 4],
+        "alternate": [2, 3, 4, 6],
+        "alternateBass": [0, 4]
+      }
+    },
+    "secondaries": {
+      "left": {
+        "interval": 7,
+        "main": [0, 4, 7, 10],
+        "mainBass": [0, 7],
+        "alternate": [0, 2, 4, 7, 10],
+        "alternateBass": [0, 7],
+        "circle": {
+          "default": {
+            "alternate": [0, 1, 4, 7, 10]
+          },
+          "leftModulation": {
+            "root": 5,
+            "main": [0, 4, 7]
+          }
+        },
+        "triangle": {
+          "default": {
+            "alternate": [0, 1, 4, 7, 10]
+          }
+        }
+      },
+      "right": {
+        "interval": 1,
+        "main": [0, 4, 6, 11],
+        "mainBass": [0, 6],
+        "alternate": [0, 2, 4, 9],
+        "alternateBass": [0, 7]
+      }
+    }
   }
 ]
