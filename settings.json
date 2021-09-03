@@ -85,7 +85,7 @@
       },
       "right": {
         "type": "modal",
-        "map": [3, 0]
+        "map": [0, 3]
       }
     },
     "chords": {
@@ -123,9 +123,9 @@
         "interval": 7,
         "main": [0, 4, 7, 10],
         "mainBass": [0, 7],
-        "alternate": [0, 2, 4, 7, 10],
+        "alternate": [1, 4, 7, 10],
         "alternateBass": [0, 7],
-        "circle": {
+        "square": {
           "default": {
             "alternate": [0, 1, 4, 7, 10]
           },
