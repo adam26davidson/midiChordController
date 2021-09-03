@@ -27,6 +27,7 @@ class DualShock:
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
       "gyroX": {"top": -8050, "bottom": 8050},
+      "gyroZ": {"top": -8050, "bottom": 8050},
       "lJoyY": {"top": 0, "bottom": 255},
     }
     self.lastUpdate = time.time()
@@ -92,6 +93,12 @@ class DualShock:
         intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(intValue)
         self.gyroThumbValue = value
+      elif event.code == self.motionCodes["z"]:
+        if event.value != 0:
+          max = self.ranges["gyroZ"]["bottom"]
+          value = math.floor((min(abs(event.value), max) / max)*127)
+          MidiShock.setAfterTouch(value)
+
       self.updateDisplay()
   
   async def buttonsLoop(self):

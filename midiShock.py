@@ -40,7 +40,7 @@ class MidiShock:
 
     #state variables
     self.key = 0 # 0 is C, 1 is C# etc
-    self.inversionRange = 6
+    self.inversionRange = 4
     self.bassRange = 4
     self.spread = 0
     self.shift = False
@@ -80,10 +80,13 @@ class MidiShock:
     if off:
       type = 0x80
       vel = 0
-
     for note in notes:
-      print([type, note, vel])
       self.midiOut.send_message([type, note, vel])
+
+  def setAfterTouch(self, value):
+    for note in range(21, 109):
+      self.midiOut.send_message([0xA0, note, value])
+
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
