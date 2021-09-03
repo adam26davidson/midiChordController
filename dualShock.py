@@ -29,6 +29,8 @@ class DualShock:
       "gyroZ": {"top": -8050, "bottom": 8050},
       "lJoyY": {"top": 0, "bottom": 255},
     }
+    self.midiMessageRate = 1 / 20
+    self.lastMidiUpdate = time.time()
     self.lastUpdate = time.time()
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')
@@ -93,10 +95,12 @@ class DualShock:
         self.midiShock.setInversion(intValue)
         self.gyroThumbValue = value
       elif event.code == self.motionCodes["z"]:
-        if event.value != 0:
+        t = time.time()
+        if event.value != 0 and (t - self.lastMidiUpdate) > self.midiMessageRate:
           max = self.ranges["gyroZ"]["bottom"]
           value = math.floor((min(abs(event.value), max) / max)*127)
           self.midiShock.setAfterTouch(value)
+          self.lastMidiUpdate = t
 
       self.updateDisplay()
   
