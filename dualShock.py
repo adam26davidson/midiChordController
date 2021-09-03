@@ -1,4 +1,3 @@
-from midiShock import MidiShock
 import evdev
 import asyncio
 import math
@@ -97,7 +96,7 @@ class DualShock:
         if event.value != 0:
           max = self.ranges["gyroZ"]["bottom"]
           value = math.floor((min(abs(event.value), max) / max)*127)
-          MidiShock.setAfterTouch(value)
+          self.midiShock.setAfterTouch(value)
 
       self.updateDisplay()
   
