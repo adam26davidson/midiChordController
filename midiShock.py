@@ -15,8 +15,8 @@ class MidiShock:
     availablePorts = self.midiOut.get_ports()
     print(availablePorts)
 
-    if availablePorts:
-      self.midiOut.open_port(0)
+    if len(availablePorts) > 1:
+      self.midiOut.open_port(1)
     else:
       self.midiOut.open_virtual_port("virtual output")
 

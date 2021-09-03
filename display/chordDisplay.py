@@ -7,6 +7,7 @@ class ChordDisplay(tk.Canvas):
   width = 300
   radius = 120
   noteRadius = 18
+  bassRadius = 22
   keyTextOffset = -60
   keyTextFontSize = 20
 
