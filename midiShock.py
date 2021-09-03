@@ -80,10 +80,10 @@ class MidiShock:
     if off:
       type = 0x80
       vel = 0
-    with self.midiOut:
-      for note in notes:
-        print([type, note, vel])
-        self.midiOut.send_message([type, note, vel])
+
+    for note in notes:
+      print([type, note, vel])
+      self.midiOut.send_message([type, note, vel])
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
