@@ -32,6 +32,11 @@ class DualShock:
     self.midiMessageRate = 1 / 20
     self.lastMidiUpdate = time.time()
     self.lastUpdate = time.time()
+
+    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+    for device in devices:
+      print(device.name)
+    
     if (evdev.list_devices().count('/dev/input/event1') == 1):
       self.motion = evdev.InputDevice('/dev/input/event1')
       self.touch = evdev.InputDevice('/dev/input/event0')

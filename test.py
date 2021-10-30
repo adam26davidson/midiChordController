@@ -34,7 +34,6 @@ class Sliders(tk.Canvas):
         self.coords(self.thumbs[i], x1, y, x2, y)
         self.master.update()
 
-#async def main():
 
 window = tk.Tk()
 sliders = Sliders(window)
@@ -46,10 +45,4 @@ def startDS():
     loop.run_forever()
 
 window.after(0, startDS)
-window.mainloop()
-
-#asyncio.run(main())
-
-
-
-            
+window.mainloop()     
