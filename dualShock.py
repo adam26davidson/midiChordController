@@ -37,6 +37,7 @@ class DualShock:
     for device in devices:
       print("\""+device.name+"\"")
       if (device.name == "Wireless Controller"):
+        print("FOUND CONTROLLER")
         self.buttons = evdev.InputDevice(device.path)
       elif (device.name == "Wireless Controller Motion Sensors"):
         self.motion = evdev.InputDevice(device.path)
