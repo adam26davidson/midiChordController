@@ -35,16 +35,15 @@ class DualShock:
 
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     for device in devices:
-      print(device.name)
-    
-    if (evdev.list_devices().count('/dev/input/event1') == 1):
-      self.motion = evdev.InputDevice('/dev/input/event1')
-      self.touch = evdev.InputDevice('/dev/input/event0')
-      self.buttons = evdev.InputDevice('/dev/input/event2')
-
-      asyncio.ensure_future(self.motionLoop())
-      asyncio.ensure_future(self.buttonsLoop())
-      asyncio.ensure_future(self.touchLoop())
+      if (device.name == "Wireless Controller"):
+        self.buttons = device
+        asyncio.ensure_future(self.buttonsLoop())
+      elif (device.name == "Wireless Controller Motion Sensors"):
+        self.motion = device
+        asyncio.ensure_future(self.motionLoop())
+      elif (device.name == "Wireless Controller Touchpad"):
+        self.touch = device
+        asyncio.ensure_future(self.touchLoop())
 
   def processValue(self, rawValue, name, maxSteps):
     range = self.ranges[name]
