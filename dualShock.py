@@ -35,6 +35,7 @@ class DualShock:
 
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     for device in devices:
+      print("\""+device.name+"\"")
       if (device.name == "Wireless Controller"):
         self.buttons = evdev.InputDevice(device.path)
         asyncio.ensure_future(self.buttonsLoop())
