@@ -15,7 +15,7 @@ class Display():
     root.overrideredirect(True)
     root.overrideredirect(False)
 
-    root.attributes("-fullscreen", True)
+    #root.attributes("-fullscreen", True)
     root.wm_attributes("-topmost", 1)
     root.focus_set()
 
