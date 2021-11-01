@@ -58,7 +58,7 @@ class MidiShock:
       self.display.setInversionThumb(self.inversionThumbValue)
       self.display.setBassPositionThumb(self.bassThumbValue)
       self.display.root.update()
-      time.sleep(ANIMATION_STEP)
+      await asyncio.sleep(ANIMATION_STEP)
 
   def updateDisplay(self):
     self.display.root.update()
