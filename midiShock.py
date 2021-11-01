@@ -52,13 +52,10 @@ class MidiShock:
 
   async def displayLoop(self):
     while True:
-      t = time.time()
-      if t - self.lastUpdate > ANIMATION_STEP:
-        self.display.setInversionThumb(self.gyroThumbValue)
-        self.display.setBassPositionThumb(self.lJoyYThumbValue)
-        self.display.root.update()
-        self.lastUpdate = t
-        time.sleep(ANIMATION_STEP)
+      self.display.setInversionThumb(self.gyroThumbValue)
+      self.display.setBassPositionThumb(self.lJoyYThumbValue)
+      self.display.root.update()
+      time.sleep(ANIMATION_STEP)
 
   def updateDisplay(self):
     self.display.root.update()
