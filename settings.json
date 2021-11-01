@@ -84,8 +84,8 @@
         "map": [2, 0]
       },
       "right": {
-        "type": "modal",
-        "map": [3, 0]
+        "type": "custom",
+        "map": [0, 2, 3, 7, 7, 8, 0]
       }
     },
     "chords": {
@@ -127,11 +127,7 @@
         "alternateBass": [0, 7],
         "square": {
           "default": {
-            "alternate": [1, 4, 7, 10]
-          },
-          "leftModulation": {
-            "root": 5,
-            "main": [0, 4, 7]
+            "alternate": [0, 4, 7, 10]
           }
         },
         "triangle": {
