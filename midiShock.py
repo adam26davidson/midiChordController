@@ -113,13 +113,10 @@ class MidiShock:
       self.midiOut.send_message([type, note, vel])
 
   def setAfterTouch(self, value):
-    # if(self.chordIsPlaying):
-    #   for note in self.playingChordNotes:
-    #     self.midiOut.send_message([0xA0, note, value])
-    # if self.BassIsPlaying:
-    #   self.midiOut.send_message([0xA0, self.playingBassNote, value])
-    for note in range(0, 127):
+    for note in self.playingChordNotes:
       self.midiOut.send_message([0xA0, note, value])
+    if self.BassIsPlaying:
+      self.midiOut.send_message([0xA0, self.playingBassNote, value])
 
   def findScaleNotesForKey(self, key):
     scaleNotes = []
