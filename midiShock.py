@@ -45,6 +45,7 @@ class MidiShock:
     self.activeChord = "ex"
     self.inversionThumbValue = 0
     self.bassThumbValue = 0
+    self.afterTouchValue = 0
 
     self.setSetting(self.settingIndex)
 
@@ -110,11 +111,14 @@ class MidiShock:
       type = 0x80
       vel = 0
     for note in notes:
+      self.midiOut.send_message([0xA0, note, self.afterTouchValue])
       self.midiOut.send_message([type, note, vel])
 
   def setAfterTouch(self, value):
-    for note in self.playingChordNotes:
-      self.midiOut.send_message([0xA0, note, value])
+    self.afterTouchValue = value
+    if(self.chordIsPlaying):
+      for note in self.playingChordNotes:
+        self.midiOut.send_message([0xA0, note, value])
     if self.BassIsPlaying:
       self.midiOut.send_message([0xA0, self.playingBassNote, value])
 
