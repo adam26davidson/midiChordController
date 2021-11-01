@@ -54,6 +54,7 @@ class MidiShock:
 
   async def displayLoop(self):
     while True:
+      print("display loop executing")
       self.display.setInversionThumb(self.inversionThumbValue)
       self.display.setBassPositionThumb(self.bassThumbValue)
       self.display.root.update()
