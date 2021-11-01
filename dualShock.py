@@ -32,21 +32,9 @@ class DualShock:
     self.midiMessageRate = 1 / 20
     self.lastMidiUpdate = time.time()
     self.lastUpdate = time.time()
+    self.controllerFound = False
 
-    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    for device in devices:
-      print("\""+device.name+"\"")
-      if (device.name == "Wireless Controller"):
-        print("FOUND CONTROLLER")
-        self.buttons = evdev.InputDevice(device.path)
-      elif (device.name == "Wireless Controller Motion Sensors"):
-        self.motion = evdev.InputDevice(device.path)
-      elif (device.name == "Wireless Controller Touchpad"):
-        self.touch = evdev.InputDevice(device.path)
-
-    asyncio.ensure_future(self.motionLoop())
-    asyncio.ensure_future(self.buttonsLoop())
-    asyncio.ensure_future(self.touchLoop())
+    asyncio.ensure_future(self.findController())
 
   def processValue(self, rawValue, name, maxSteps):
     range = self.ranges[name]
@@ -85,15 +73,23 @@ class DualShock:
     self.state[name] = value
     return value, normalized
 
-  def updateDisplay(self, force=False):
-    t = time.time()
-    if t - self.lastUpdate > ANIMATION_STEP:
-      self.midiShock.display.setInversionThumb(self.gyroThumbValue)
-      self.midiShock.display.setBassPositionThumb(self.lJoyYThumbValue)
-      self.midiShock.updateDisplay()
-      self.lastUpdate = t
-    elif force:
-      self.midiShock.updateDisplay()
+  async def findController(self):
+    while (not self.controllerFound):
+      self.controllerFound = False
+      devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+      for device in devices:
+        if (device.name == "Wireless Controller"):
+          self.buttons = evdev.InputDevice(device.path)
+          self.controllerFound = True
+        elif (device.name == "Wireless Controller Motion Sensors"):
+          self.motion = evdev.InputDevice(device.path)
+        elif (device.name == "Wireless Controller Touchpad"):
+          self.touch = evdev.InputDevice(device.path)
+
+      if (self.controllerFound):
+        asyncio.ensure_future(self.motionLoop())
+        asyncio.ensure_future(self.buttonsLoop())
+        asyncio.ensure_future(self.touchLoop())
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
@@ -187,7 +183,8 @@ class DualShock:
             elif event.value == 1:
               self.midiShock.decrementSetting()
 
-      self.updateDisplay(force=forceUpdate)
+      if (forceUpdate):
+        self.midiShock.updateDisplay()
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():

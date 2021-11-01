@@ -3,6 +3,8 @@ from modulation import Modulation
 from secondary import parseSecondaries, Secondary
 from constants import *
 import rtmidi 
+import time
+import asyncio
 
 
 class MidiShock:
@@ -45,6 +47,18 @@ class MidiShock:
     self.setSetting(self.settingIndex)
 
     self.chordType, self.rootType = self.getChordType(self.activeChord)
+
+    asyncio.ensure_future(self.displayLoop())
+
+  async def displayLoop(self):
+    while True:
+      t = time.time()
+      if t - self.lastUpdate > ANIMATION_STEP:
+        self.display.setInversionThumb(self.gyroThumbValue)
+        self.display.setBassPositionThumb(self.lJoyYThumbValue)
+        self.display.root.update()
+        self.lastUpdate = t
+        time.sleep(ANIMATION_STEP)
 
   def updateDisplay(self):
     self.display.root.update()
