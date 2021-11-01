@@ -43,6 +43,8 @@ class MidiShock:
     self.playingBassNote = None # bass note that is currently playing
     self.BassIsPlaying = False
     self.activeChord = "ex"
+    self.inversionThumbValue
+    self.bassThumbValue
 
     self.setSetting(self.settingIndex)
 
@@ -52,8 +54,8 @@ class MidiShock:
 
   async def displayLoop(self):
     while True:
-      self.display.setInversionThumb(self.gyroThumbValue)
-      self.display.setBassPositionThumb(self.lJoyYThumbValue)
+      self.display.setInversionThumb(self.inversionThumbValue)
+      self.display.setBassPositionThumb(self.bassThumbValue)
       self.display.root.update()
       time.sleep(ANIMATION_STEP)
 
