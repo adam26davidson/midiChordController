@@ -54,7 +54,6 @@ class MidiShock:
 
   async def displayLoop(self):
     while True:
-      print("display loop executing")
       self.display.setInversionThumb(self.inversionThumbValue)
       self.display.setBassPositionThumb(self.bassThumbValue)
       self.display.root.update()
@@ -215,7 +214,7 @@ class MidiShock:
     self.sendMidi(notes)
     self.updateBass()
     self.display.playChord(notes)
-    print("NOTES ON - " + str(notes))
+    #print("NOTES ON - " + str(notes))
 
     self.playingChordNotes = notes
     self.chordIsPlaying = True
@@ -227,7 +226,7 @@ class MidiShock:
     # TODO send midi note on
     self.sendMidi([bassNote])
     self.display.playBass(bassNote)
-    print("NOTE ON - " + str(bassNote))
+    #print("NOTE ON - " + str(bassNote))
 
     self.playingBassNote = bassNote
     self.BassIsPlaying = True
@@ -257,7 +256,7 @@ class MidiShock:
       # TODO send midi notes off for playing chord
       self.sendMidi(self.playingChordNotes, off=True)
       self.display.stopChord(self.playingChordNotes)
-      print("NOTES OFF - " + str(self.playingChordNotes))
+      #print("NOTES OFF - " + str(self.playingChordNotes))
       self.playingChordNotes = []
       self.chordIsPlaying = False
   
@@ -266,7 +265,7 @@ class MidiShock:
       # TODO send midi note off for playing bass
       self.sendMidi([self.playingBassNote], off=True)
       self.display.stopBass(self.playingBassNote)
-      print("NOTE OFF - " + str(self.playingBassNote))
+      #print("NOTE OFF - " + str(self.playingBassNote))
       self.playingBassNote = None
       self.BassIsPlaying = False 
 
