@@ -15,7 +15,7 @@ class Display():
     root.overrideredirect(True)
     root.overrideredirect(False)
 
-    #root.attributes("-fullscreen", True)
+    root.attributes("-fullscreen", True)
     root.wm_attributes("-topmost", 1)
     root.focus_set()
 
@@ -25,7 +25,7 @@ class Display():
 
     root.bind("<Escape>", close_escape)
 
-    self.root.geometry("800x480")
+    #self.root.geometry("800x480")
     self.root.configure(bg='black')
 
     self.shadowChordNotes = []
