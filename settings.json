@@ -156,15 +156,15 @@
       },
       "right": {
         "type": "custom",
-        "map": [2, 4, 5, 7, 9, 10, 0]
+        "map": [2, 4, 5, 7, 9, 10, 12]
       }
     },
     "chords": {
       "ex": {
         "root": 0,
-        "main": [0, 1, 2, 4, 6],
+        "main": [1, 2, 4, 6],
         "mainBass": [0, 4],
-        "alternate": [0, 1, 2, 4, 5],
+        "alternate": [1, 2, 4, 5],
         "alternateBass": [0, 4]
       },
       "square": {
