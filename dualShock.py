@@ -29,7 +29,7 @@ class DualShock:
       "gyroZ": {"top": -8050, "bottom": 8050},
       "lJoyY": {"top": 0, "bottom": 255},
     }
-    self.midiMessageRate = 1 / 20
+    self.midiMessageRate = 1 / 30
     self.lastMidiUpdate = time.time()
     self.lastUpdate = time.time()
     self.controllerFound = False
@@ -104,8 +104,6 @@ class DualShock:
           value = math.floor((min(abs(event.value), max) / max)*127)
           self.midiShock.setAfterTouch(value)
           self.lastMidiUpdate = t
-
-      self.updateDisplay()
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
@@ -190,4 +188,3 @@ class DualShock:
     async for event in self.touch.async_read_loop():
       print("touch")
       print(evdev.categorize(event))
-      self.updateDisplay()

@@ -11,15 +11,3 @@ ds = DualShock(midiShock)
 
 loop = asyncio.get_event_loop()
 loop.run_forever()
-
-# window = tk.Tk()
-# sliders = Sliders(window)
-
-# def startDS():
-#     ds = DualShock(sliders) 
-
-#     loop = asyncio.get_event_loop()
-#     loop.run_forever()
-
-# window.after(0, startDS)
-# window.mainloop()
