@@ -89,6 +89,8 @@ class DualShock:
         asyncio.ensure_future(self.motionLoop())
         asyncio.ensure_future(self.buttonsLoop())
         asyncio.ensure_future(self.touchLoop())
+      
+      await asyncio.sleep(0.5)
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
