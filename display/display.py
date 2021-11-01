@@ -25,7 +25,7 @@ class Display():
 
     root.bind("<Escape>", close_escape)
 
-    #self.root.geometry("800x480")
+    self.root.geometry("800x480")
     self.root.configure(bg='black')
 
     self.shadowChordNotes = []
