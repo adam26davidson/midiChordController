@@ -21,7 +21,7 @@ class DualShock:
     self.gyroSnap = INVERSION_SNAP
     self.gyroThumbValue = 0
     self.lJoyYThumbValue = 127
-    self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315}
+    self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315, "share": 314}
     self.absCodes = {"padX": 16, "padY": 17, "lJoyX": 0, "lJoyY": 1, "rJoyX": 3, "rJoyY": 4}
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
@@ -154,38 +154,38 @@ class DualShock:
         elif event.code == self.buttonCodes["options"]:
           if event.value == 1:
             self.midiShock.toggleShift()
+        elif event.code == self.buttonCodes["share"]:
+          if event.value == 1:
+            self.midiShock.toggleAlt()
       elif event.type == evdev.ecodes.EV_ABS:
         if event.code == self.absCodes["lJoyY"]:
           intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
           self.midiShock.setBassPosition(intValue)
           self.lJoyYThumbValue = value
           forceUpdate = False
-        if not self.midiShock.shift:
-          if event.code == 17:
+        if event.code == 16:
+          if event.value == -1:
+            self.midiShock.setSecondary("left")
+          elif event.value == 0:
+            self.midiShock.setSecondary("none")
+          elif event.value == 1:
+            self.midiShock.setSecondary("right")
+        elif event.code == 17:
+          if not self.midiShock.shift and not self.midiShock.alt:
             if event.value == -1:
               self.midiShock.incrementSpread()
             elif event.value == 1:
               self.midiShock.decrementSpread()
-          elif event.code == 16:
-            if event.value == -1:
-              self.midiShock.setSecondary("left")
-            elif event.value == 0:
-              self.midiShock.setSecondary("none")
-            elif event.value == 1:
-              self.midiShock.setSecondary("right")
-        else:
-          if event.code == 17:
+          elif self.midiShock.shift and not self.midiShock.alt:
             if event.value == -1:
               self.midiShock.incrementKey()
             elif event.value == 1:
               self.midiShock.decrementKey()
-          elif event.code == 16:
+          elif not self.midiShock.shift and self.midiShock.alt:
             if event.value == -1:
-              self.midiShock.setSecondary("left")
-            elif event.value == 0:
-              self.midiShock.setSecondary("none")
+              self.midiShock.incrementSetting()
             elif event.value == 1:
-              self.midiShock.setSecondary("right")
+              self.midiShock.decrementSetting()
 
       self.updateDisplay(force=forceUpdate)
 

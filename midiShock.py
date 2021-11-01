@@ -28,6 +28,7 @@ class MidiShock:
     self.bassRange = 4
     self.spread = 0
     self.shift = False
+    self.alt = False
 
     self.inversion = 0 
     self.bassPosition = 0 
@@ -47,6 +48,15 @@ class MidiShock:
 
   def updateDisplay(self):
     self.display.root.update()
+
+  def incrementSetting(self):
+    self.setSetting((self.settingIndex + 1) % len(SETTINGS))
+
+  def decrementSetting(self):
+    newIndex = self.settingIndex - 1
+    if (newIndex < 0):
+      newIndex = len(SETTINGS) - 1
+    self.setSetting(newIndex)
 
   def setSetting(self, setting):
     self.settingIndex = setting
@@ -354,3 +364,6 @@ class MidiShock:
 
   def toggleShift(self):
     self.shift = not self.shift
+
+  def toggleAlt(self):
+    self.alt = not self.alt
