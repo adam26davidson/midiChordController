@@ -1,5 +1,6 @@
 import json
-
+import os
+PARENT_PATH = os.path.dirname(os.path.abspath(__file__))
 MIN_NOTE = 21
 MAX_NOTE = 108
 MAX_SPREAD_OCTAVES = 5
@@ -10,5 +11,5 @@ INVERSION_SNAP = 0.2
 ANIMATION_STEP = 1.0/20.0
 CENTER_NOTE = 65 # center of home chord range
 BASS_OCTAVE_RANGE = {"min": 34, "max": 45}
-VOICING_PATTERNS = json.load(open("voicingPatterns.json"))
-SETTINGS = json.load(open("settings.json"))
+VOICING_PATTERNS = json.load(open(PARENT_PATH + "/voicingPatterns.json"))
+SETTINGS = json.load(open(PARENT_PATH + "/settings.json"))
