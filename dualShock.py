@@ -19,8 +19,6 @@ class DualShock:
       "lJoyY": {"n": 1, "values": []}
       }
     self.gyroSnap = INVERSION_SNAP
-    self.gyroThumbValue = 0
-    self.lJoyYThumbValue = 127
     self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315, "share": 314}
     self.absCodes = {"padX": 16, "padY": 17, "lJoyX": 0, "lJoyY": 1, "rJoyX": 3, "rJoyY": 4}
     self.motionCodes = {"x": 2, "z": 0}
@@ -96,7 +94,7 @@ class DualShock:
       if event.code == self.motionCodes["x"]:
         intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
         self.midiShock.setInversion(intValue)
-        self.gyroThumbValue = value
+        self.midiShock.inversionThumbValue = value
       elif event.code == self.motionCodes["z"]:
         t = time.time()
         if event.value != 0 and (t - self.lastMidiUpdate) > self.midiMessageRate:
@@ -155,7 +153,7 @@ class DualShock:
         if event.code == self.absCodes["lJoyY"]:
           intValue, value = self.processValue(event.value, "lJoyY", self.midiShock.bassRange)
           self.midiShock.setBassPosition(intValue)
-          self.lJoyYThumbValue = value
+          self.midiShock.bassThumbValue = value
           forceUpdate = False
         if event.code == 16:
           if event.value == -1:

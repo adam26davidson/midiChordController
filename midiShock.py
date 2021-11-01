@@ -43,8 +43,8 @@ class MidiShock:
     self.playingBassNote = None # bass note that is currently playing
     self.BassIsPlaying = False
     self.activeChord = "ex"
-    self.inversionThumbValue
-    self.bassThumbValue
+    self.inversionThumbValue = 0
+    self.bassThumbValue = 0
 
     self.setSetting(self.settingIndex)
 
