@@ -89,7 +89,6 @@
       }
     },
     "chords": {
-      // i9 
       "ex": {
         "root": 0,
         "main": [1, 2, 4, 6],
@@ -97,7 +96,6 @@
         "alternate": [1, 2, 3, 6],
         "alternateBass": [0, 1, 4]
       },
-      // VI9
       "square": {
         "root": 5,
         "main": [1, 2, 4, 6],
@@ -105,7 +103,6 @@
         "alternate": [1, 2, 4, 5],
         "alternateBass": [0, 1, 4]
       },
-      // iv9
       "triangle": {
         "root": 3,
         "main": [1, 2, 4, 6],
@@ -113,7 +110,6 @@
         "alternate": [1, 2, 3, 6],
         "alternateBass": [0, 1, 4]
       },
-      // v7
       "circle": {
         "root": 4,
         "main": [0, 2, 4, 6],
