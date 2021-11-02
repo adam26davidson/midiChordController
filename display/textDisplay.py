@@ -18,7 +18,7 @@ class TextDisplay(tk.Frame):
     self.setting = tk.Label(self, textvariable=self.settingText, width=100, height=40, bg=self.bgColor, fg="#ffffff", justify="left")
     self.setting.pack(pady=(0, 10))
     self.controller = tk.Label(self, textvariable=self.controllerText, width=100, height=40, bg=self.bgColor, fg="#ffffff", justify="left")
-    self.controller.pack(pady=(0, 10))
+    self.controller.pack(side="left", pady=(0, 10))
 
     
 
