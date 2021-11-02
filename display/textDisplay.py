@@ -2,7 +2,7 @@ import tkinter as tk
 from constants import *
 
 class TextDisplay(tk.Frame):
-  width = 100
+  width = 70
   height = 200
 
   bgColor = "#000000"
@@ -16,11 +16,11 @@ class TextDisplay(tk.Frame):
     self.master = master
     
     self.setting = tk.Label(self, textvariable=self.settingText, width=60, height=40, bg=self.bgColor, fg="#ffffff", justify="left")
-    self.setting.pack(side="top", pady=(0, 10))
+    self.setting.pack(side="top")
     self.controller = tk.Label(self, textvariable=self.controllerText, width=60, height=40, bg=self.bgColor, fg="#ffffff", justify="left")
-    self.controller.pack(side="top", pady=(0, 10))
+    self.controller.pack(side="top")
 
-    self.pack(side="top", padx=(20,20), pady=(20,20))
+    self.pack(side="right", padx=(20,20), pady=(20,20))
 
     
 
