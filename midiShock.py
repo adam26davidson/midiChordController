@@ -109,7 +109,7 @@ class MidiShock:
 
     self.chordType, self.rootType = self.getChordType(self.activeChord)
 
-    self.display.setSetting(self.setting.name)
+    self.display.setSetting(self.setting["name"])
 
   def sendMidi(self, notes, off=False):
     type = 0x90
