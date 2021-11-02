@@ -387,3 +387,11 @@ class MidiShock:
 
   def toggleAlt(self):
     self.alt = not self.alt
+  
+  def toggleHold(self):
+    if self.hold:
+      self.hold = False
+      self.stopChord()
+      self.stopBass()
+    else:
+      self.hold = True

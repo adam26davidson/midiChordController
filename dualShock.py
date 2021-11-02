@@ -184,7 +184,7 @@ class DualShock:
               self.midiShock.decrementSetting()
           else:
             if event.value == -1:
-              self.midiShock.hold = True
+              self.midiShock.toggleHold()
             #down button open for option
       if (forceUpdate):
         self.midiShock.updateDisplay()
