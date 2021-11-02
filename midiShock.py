@@ -76,6 +76,7 @@ class MidiShock:
 
   def setSetting(self, setting):
     self.display.setSetting("Loading...")
+    self.updateDisplay()
     self.stopChord()
     self.stopBass()
     self.settingIndex = setting
