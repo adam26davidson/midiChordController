@@ -1,3 +1,6 @@
+# generates all voicing patterns (for all spread values).
+# this code is run once to generate voicingpatterns.json
+# the main program uses voicingPatterns.json, and this code is not executed.
 import json
 
 maxOctaves = 5
@@ -48,6 +51,8 @@ def getRealVoicingValues(voicing, n):
   realVoicing.sort()
   return realVoicing
 
+# ranks all voicings of equal spread based on how internally spread out the notes are
+# returns the most spread out voicing
 def findBestVoicing(voicings, n):
   topVoicing = getRealVoicingValues(voicings[0], n)
   topScore = 0

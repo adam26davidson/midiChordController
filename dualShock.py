@@ -90,6 +90,7 @@ class DualShock:
         asyncio.ensure_future(self.motionLoop())
         asyncio.ensure_future(self.buttonsLoop())
         asyncio.ensure_future(self.touchLoop())
+        self.midiShock.display.setController("DualShock4 Connected")
       
       await asyncio.sleep(0.5)
 

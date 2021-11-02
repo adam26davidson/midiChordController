@@ -75,6 +75,7 @@ class MidiShock:
     self.setSetting(newIndex)
 
   def setSetting(self, setting):
+    self.display.setSetting("Loading...")
     self.stopChord()
     self.stopBass()
     self.settingIndex = setting
@@ -107,6 +108,8 @@ class MidiShock:
     self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
     self.chordType, self.rootType = self.getChordType(self.activeChord)
+
+    self.display.setSetting(self.setting.name)
 
   def sendMidi(self, notes, off=False):
     type = 0x90

@@ -3,6 +3,7 @@ from constants import ANIMATION_STEP
 from display.keyboard import Keyboard
 from display.inversion import Inversion
 from display.spread import Spread
+from display.textDisplay import TextDisplay
 import time
 
 class Display():
@@ -10,7 +11,6 @@ class Display():
     self.height = 480
     self.width = 800
     self.root = root
-
 
     root.overrideredirect(True)
     root.overrideredirect(False)
@@ -38,6 +38,13 @@ class Display():
     self.inversion = Inversion(master=self.root)
     self.bassPosition = Inversion(master=self.root)
     self.chordDisplay = ChordDisplay(master=self.root)
+    self.textDisplay = TextDisplay(master=self.root)
+
+  def setController(self, text):
+    self.textDisplay.controllerText = text
+
+  def setSetting(self, text):
+    self.textDisplay.settingText = text
   
   def setKey(self, key):
     self.chordDisplay.setKey(key)
