@@ -31,7 +31,7 @@ class TextDisplay(tk.Frame):
 
     self.functionFrame = tk.Frame(self, bg=self.bgColor)
     self.functionFrame.pack(side="top")
-    self.alt = tk.Label(self.controllerFrame, text="alt", bg=self.bgColor, fg=self.color, font=mediumFont)
+    self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.color, font=mediumFont)
     self.alt.pack(side="left")
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
