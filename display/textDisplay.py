@@ -2,8 +2,8 @@ import tkinter as tk
 from constants import *
 
 class TextDisplay(tk.Frame):
-  width = 200
-  height = 300
+  width = 250
+  height = 350
 
   bgColor = "#000000"
   controllerColor = "#fffff"
