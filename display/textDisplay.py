@@ -13,9 +13,9 @@ class TextDisplay(tk.Frame):
     self.master = master
 
     self.setting = tk.Label(self, text="Loading...", bg=self.bgColor, fg="#ffffff", justify="left")
-    self.setting.pack()
+    self.setting.pack(side="left", pady=(0, 10))
     self.controller = tk.Label(self, text="No Controller Connected", bg=self.bgColor, fg="#ffffff", justify="left")
-    self.controller.pack()
+    self.controller.pack(side="left", pady=(0, 10))
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 

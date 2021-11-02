@@ -41,10 +41,10 @@ class Display():
     self.textDisplay = TextDisplay(master=self.root)
 
   def setController(self, text):
-    self.textDisplay.controllerText = text
+    self.textDisplay.setController(text)
 
   def setSetting(self, text):
-    self.textDisplay.settingText = text
+    self.textDisplay.setSetting(text)
   
   def setKey(self, key):
     self.chordDisplay.setKey(key)
