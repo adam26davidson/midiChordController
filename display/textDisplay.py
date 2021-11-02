@@ -8,20 +8,19 @@ class TextDisplay(tk.Frame):
   bgColor = "#000000"
   controllerColor = "#fffff"
 
-  settingText = "Loading..."
-  controllerText = "No Controller Connected"
-
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#ffffff")
     self.master = master
-    
-    self.setting = tk.Label(master=self, textvariable=self.settingText, bg=self.bgColor, fg="#ffffff", justify="left")
+
+    self.setting = tk.Label(self, text="Loading...", bg=self.bgColor, fg="#ffffff", justify="left")
     self.setting.pack()
-    # self.controller = tk.Label(self, textvariable=self.controllerText, width=60, height=40, bg=self.bgColor, fg="#ffffff", justify="left")
-    # self.controller.pack(side="top")
+    self.controller = tk.Label(self, text="No Controller Connected", bg=self.bgColor, fg="#ffffff", justify="left")
+    self.controller.pack()
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
-    
+  def setSetting(self, name):
+    self.setting.configure(text=name)
 
-
+  def setController(self, name):
+    self.controller.configure(text=name)
