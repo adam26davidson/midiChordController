@@ -30,9 +30,11 @@ class TextDisplay(tk.Frame):
     self.controller.pack(side="left")
 
     self.functionFrame = tk.Frame(self, bg=self.bgColor)
-    self.functionFrame.pack(side="top")
+    self.functionFrame.pack(side="top", pady=(10, 0))
     self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.color, font=mediumFont)
     self.alt.pack(side="left")
+    self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.color, font=mediumFont)
+    self.shift.pack(side="left")
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
@@ -47,4 +49,10 @@ class TextDisplay(tk.Frame):
       self.alt.configure(fg=self.activeColor)
     else:
       self.alt.configure(fg=self.color)
+
+  def setShift(self, active):
+    if active:
+      self.shift.configure(fg=self.activeColor)
+    else:
+      self.shift.configure(fg=self.color)
 
