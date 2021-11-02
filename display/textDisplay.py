@@ -6,7 +6,7 @@ class TextDisplay(tk.Frame):
   height = 350
 
   bgColor = "#000000"
-  color = "#fffff"
+  color = "#ffffff"
   activeColor = "#0366fc"
 
   def __init__(self, master=None):
