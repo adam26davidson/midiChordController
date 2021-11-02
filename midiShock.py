@@ -31,6 +31,8 @@ class MidiShock:
     self.spread = 0
     self.shift = False
     self.alt = False
+    self.hold = False
+    self.controller = None
 
     self.inversion = 0 
     self.bassPosition = 0 

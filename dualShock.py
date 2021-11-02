@@ -3,6 +3,7 @@ import asyncio
 import math
 import time
 from constants import *
+import midiShock
 
 class DualShock:
   def __init__(self, midiShock):
@@ -114,12 +115,12 @@ class DualShock:
           if event.code == self.buttonCodes[button]:
             if event.value == 1:
               self.midiShock.playChord(button)
-            elif self.midiShock.activeChord == button:
+            elif self.midiShock.activeChord == button and not self.midiShock.hold:
               self.midiShock.stopChord()
         if event.code == self.buttonCodes["lt2"]:
           if event.value == 1:
             self.midiShock.playBass()
-          else:
+          elif not self.midiShock.hold:
             self.midiShock.stopBass()
         elif event.code == self.buttonCodes["rt2"]:
           if event.value == 1:
@@ -181,7 +182,10 @@ class DualShock:
               self.midiShock.incrementSetting()
             elif event.value == 1:
               self.midiShock.decrementSetting()
-
+          else:
+            if event.value == -1:
+              self.midiShock.hold = True
+            #down button open for option
       if (forceUpdate):
         self.midiShock.updateDisplay()
 
