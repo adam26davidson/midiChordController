@@ -73,6 +73,8 @@ class MidiShock:
     self.setSetting(newIndex)
 
   def setSetting(self, setting):
+    self.stopChord()
+    self.stopBass()
     self.settingIndex = setting
     self.setting = SETTINGS[setting]
 
