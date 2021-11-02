@@ -14,14 +14,14 @@ class TextDisplay(tk.Frame):
     settingFont = ("sans serif", 18)
     controllerFont = ("sans serif", 14)
 
-    self.settingFrame = tk.Frame(self)
-    self.settingFrame.pack(side="top", bg=self.bgColor)
+    self.settingFrame = tk.Frame(self, bg=self.bgColor)
+    self.settingFrame.pack(side="top")
     tk.Label(self.settingFrame, text="setting: ", fg="#ffffff", bg=self.bgColor).pack(side="left")
     self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, width=self.width, fg="#ffffff", justify="left", font=settingFont)
     self.setting.pack(side="left")
 
-    self.controllerFrame = tk.Frame(self)
-    self.controllerFrame.pack(side="top", bg=self.bgColor)
+    self.controllerFrame = tk.Frame(self, bg=self.bgColor)
+    self.controllerFrame.pack(side="top")
     tk.Label(self.controllerFrame, text="controller: ", fg="#ffffff", bg=self.bgColor).pack(side="left")
     self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, width=self.width, fg="#ffffff", justify="left", font=controllerFont)
     self.controller.pack(side="left")
