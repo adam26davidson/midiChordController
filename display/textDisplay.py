@@ -14,12 +14,16 @@ class TextDisplay(tk.Frame):
     settingFont = ("sans serif", 20)
     controllerFont = ("sans serif", 15)
 
-    tk.Label(self, text="setting: ", fg="#ffffff", bg=self.bgColor).pack(side="left")
-    self.setting = tk.Label(self, text="Loading...", bg=self.bgColor, width=self.width, fg="#ffffff", justify="left", font=settingFont)
+    self.settingFrame = tk.Frame(self)
+    self.settingFrame.pack(side="top")
+    tk.Label(self.settingFrame, text="setting: ", fg="#ffffff", bg=self.bgColor).pack(side="left")
+    self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, width=self.width, fg="#ffffff", justify="left", font=settingFont)
     self.setting.pack(side="left", pady=(0, 10))
-    
-    tk.Label(self, text="controller: ", fg="#ffffff", bg=self.bgColor).pack(side="left")
-    self.controller = tk.Label(self, text="Not Connected", bg=self.bgColor, width=self.width, fg="#ffffff", justify="left", font=controllerFont)
+
+    self.controllerFrame = tk.Frame(self)
+    self.controllerFrame.pack(side="top")
+    tk.Label(self.controllerFrame, text="controller: ", fg="#ffffff", bg=self.bgColor).pack(side="left")
+    self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, width=self.width, fg="#ffffff", justify="left", font=controllerFont)
     self.controller.pack(side="left", pady=(0, 10))
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
