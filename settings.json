@@ -147,7 +147,7 @@
   },
   {
     "name": "up 2",
-    "scale": [0, 2, 3, 5, 7, 9, 10],
+    "scale": [0, 2, 3, 5, 7, 8, 10],
     "spreadStepsPerOctave": 6,
     "modulations": {
       "left": {
@@ -156,7 +156,7 @@
       },
       "right": {
         "type": "custom",
-        "map": [2, 4, 5, 7, 9, 11, 12]
+        "map": [2, 4, 5, 7, 9, 10, 12]
       }
     },
     "chords": {
@@ -168,7 +168,7 @@
         "alternateBass": [0, 4]
       },
       "square": {
-        "root": 4,
+        "root": 3,
         "main": [1, 2, 3, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
