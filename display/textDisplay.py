@@ -15,7 +15,7 @@ class TextDisplay(tk.Frame):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#ffffff")
     self.master = master
     
-    self.setting = tk.Label(self, textvariable=self.settingText, bg=self.bgColor, fg="#ffffff", justify="left")
+    self.setting = tk.Label(master=self, textvariable=self.settingText, bg=self.bgColor, fg="#ffffff", justify="left")
     self.setting.pack()
     # self.controller = tk.Label(self, textvariable=self.controllerText, width=60, height=40, bg=self.bgColor, fg="#ffffff", justify="left")
     # self.controller.pack(side="top")
