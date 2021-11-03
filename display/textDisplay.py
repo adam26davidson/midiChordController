@@ -35,8 +35,8 @@ class TextDisplay(tk.Frame):
       font=mediumFont, highlightbackground=self.color, highlightthickness=2, padx=5)
     self.alt.pack(side="left")
     self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.color, 
-      font=mediumFont, highlightbackground=self.color, highlightthickness=2)
-    self.shift.pack(side="left", padx=(10, 0))
+      font=mediumFont, highlightbackground=self.color, highlightthickness=2, padx=5)
+    self.shift.pack(side="left", padx=(20, 0))
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
