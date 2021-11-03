@@ -28,11 +28,12 @@ class TextDisplay(tk.Frame):
     self.setting.pack(side="left")
 
     # controller dsiplay
-    controllerIcon = ImageTk.PhotoImage(Image.open(PARENT_PATH+"/images/controller.png"))
-    print(controllerIcon)
+
+    self.controllerImage = Image.open(PARENT_PATH+"/images/controller.png")
+    self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
-    tk.Label(self.controllerFrame, image=controllerIcon).pack(side="left")
+    tk.Label(self.controllerFrame, image=self.controllerIcon).pack(side="left")
     self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, fg=self.color, font=mediumFont)
     self.controller.pack(side="left")
 
