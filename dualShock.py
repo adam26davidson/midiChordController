@@ -97,9 +97,10 @@ class DualShock:
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
       if event.code == self.motionCodes["x"]:
-        intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
-        self.midiShock.setInversion(intValue)
-        self.midiShock.inversionThumbValue = value
+        if (not self.midiShock.inversionHold):
+          intValue, value = self.processValue(event.value, "gyroX", self.midiShock.inversionRange)
+          self.midiShock.setInversion(intValue)
+          self.midiShock.inversionThumbValue = value
       elif event.code == self.motionCodes["z"]:
         t = time.time()
         if event.value != 0 and (t - self.lastMidiUpdate) > self.midiMessageRate:
@@ -186,6 +187,8 @@ class DualShock:
           else:
             if event.value == -1:
               self.midiShock.toggleHold()
+            if event.value == 1:
+              self.midiShock.toggleInversionHold()
             #down button open for option
       if (forceUpdate):
         self.midiShock.updateDisplay()

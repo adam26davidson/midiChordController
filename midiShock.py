@@ -32,6 +32,7 @@ class MidiShock:
     self.shift = False
     self.alt = False
     self.hold = False
+    self.inversionHold = False
     self.controller = None
 
     self.inversion = 0 
@@ -401,3 +402,6 @@ class MidiShock:
       self.stopBass()
     else:
       self.hold = True
+  
+  def toggleInversionHold(self):
+    self.inversionHold = not self.inversionHold
