@@ -35,7 +35,7 @@ class TextDisplay(tk.Frame):
     self.controllerFrame.pack(side="top")
     tk.Label(self.controllerFrame, image=self.controllerIcon, bg=self.bgColor).pack(side="left")
     self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, fg=self.color, font=mediumFont)
-    self.controller.pack(side="left")
+    self.controller.pack(side="left", padx=(10, 0))
 
     # alt and shift
     self.functionFrame = tk.Frame(self, bg=self.bgColor)
