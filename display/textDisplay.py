@@ -8,7 +8,7 @@ class TextDisplay(tk.Frame):
   bgColor = "#000000"
   color = "#ffffff"
   inactiveColor = "#999999"
-  activeColor = "#0366fc"
+  activeColor = "#00d5ff"
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg=self.bgColor)
@@ -32,10 +32,10 @@ class TextDisplay(tk.Frame):
 
     self.functionFrame = tk.Frame(self, bg=self.bgColor)
     self.functionFrame.pack(side="top", pady=(10, 0))
-    self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.color, 
+    self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.inactiveColor, 
       font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
     self.alt.pack(side="left")
-    self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.color, 
+    self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.inactiveColor, 
       font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
     self.shift.pack(side="left", padx=(20, 0))
 
@@ -49,13 +49,13 @@ class TextDisplay(tk.Frame):
   
   def setAlt(self, active):
     if active:
-      self.alt.configure(fg=self.activeColor)
+      self.alt.configure(fg=self.activeColor, highlightbackground=self.activeColor)
     else:
-      self.alt.configure(fg=self.inactiveColor)
+      self.alt.configure(fg=self.inactiveColor, highlightbackground=self.inactiveColor)
 
   def setShift(self, active):
     if active:
-      self.shift.configure(fg=self.activeColor)
+      self.shift.configure(fg=self.activeColor, highlightbackground=self.activeColor)
     else:
-      self.shift.configure(fg=self.inactiveColor)
+      self.shift.configure(fg=self.inactiveColor, highlightbackground=self.inactiveColor)
 
