@@ -1,5 +1,4 @@
 import tkinter as tk
-from PIL import ImageTk, Image
 from constants import *
 
 class TextDisplay(tk.Frame):
@@ -27,11 +26,10 @@ class TextDisplay(tk.Frame):
     self.setting.pack(side="left")
 
     # controller dsiplay
-    controllerIcon = Image.open(PARENT_PATH+"/images/controller.png")
+    controllerIcon = tk.PhotoImage(PARENT_PATH+"/images/controller.png")
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
-    tk.Label(self.controllerFrame, image=ImageTk.PhotoImage(controllerIcon), 
-      fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
+    tk.Label(self.controllerFrame, image=controllerIcon, fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
     self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, fg=self.color, font=mediumFont)
     self.controller.pack(side="left")
 
