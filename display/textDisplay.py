@@ -1,6 +1,5 @@
 import tkinter as tk
 from constants import *
-import PIL
 from PIL import ImageTk, Image 
 
 class TextDisplay(tk.Frame):
@@ -28,8 +27,7 @@ class TextDisplay(tk.Frame):
     self.setting.pack(side="left")
 
     # controller dsiplay
-
-    self.controllerImage = Image.open(PARENT_PATH+"/images/controller.png")
+    self.controllerImage = Image.open(PARENT_PATH+"/images/game-controller.png")
     self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
@@ -45,7 +43,7 @@ class TextDisplay(tk.Frame):
     self.alt.pack(side="left")
     self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.inactiveColor, 
       font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
-    self.shift.pack(side="left", padx=(20, 0))
+    self.shift.pack(side="left", padx=(40, 0))
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
