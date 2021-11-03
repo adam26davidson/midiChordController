@@ -31,10 +31,10 @@ class TextDisplay(tk.Frame):
 
     self.functionFrame = tk.Frame(self, bg=self.bgColor)
     self.functionFrame.pack(side="top", pady=(10, 0))
-    self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.color, font=mediumFont)
+    self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.color, font=mediumFont, highlightbackground=self.color)
     self.alt.pack(side="left")
-    self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.color, font=mediumFont)
-    self.shift.pack(side="left")
+    self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.color, font=mediumFont, highlightbackground=self.color)
+    self.shift.pack(side="left", padx=(10, 0))
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
