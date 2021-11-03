@@ -26,7 +26,7 @@ class TextDisplay(tk.Frame):
     self.setting.pack(side="left")
 
     # controller dsiplay
-    controllerIcon = tk.PhotoImage(PARENT_PATH+"/images/controller.png")
+    controllerIcon = tk.PhotoImage(PARENT_PATH+"/images/controller.ppm")
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
     tk.Label(self.controllerFrame, image=controllerIcon, fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
