@@ -388,9 +388,11 @@ class MidiShock:
 
   def toggleShift(self):
     self.shift = not self.shift
+    self.display.setShift(self.shift)
 
   def toggleAlt(self):
     self.alt = not self.alt
+    self.display.setAlt(self.alt)
   
   def toggleHold(self):
     if self.hold:

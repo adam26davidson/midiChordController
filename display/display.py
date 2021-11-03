@@ -45,6 +45,12 @@ class Display():
 
   def setSetting(self, text):
     self.textDisplay.setSetting(text)
+
+  def setAlt(self, alt):
+    self.textDisplay.setAlt(alt)
+
+  def setShift(self, shift):
+    self.textDisplay.setShift(shift)
   
   def setKey(self, key):
     self.chordDisplay.setKey(key)
