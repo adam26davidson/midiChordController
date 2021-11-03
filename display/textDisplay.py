@@ -21,15 +21,15 @@ class TextDisplay(tk.Frame):
     # setting dsiplay
     self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
     self.settingFrame.pack(side="top")
-    tk.Label(self.settingFrame, text="Setting: ", fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
-    self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.inactiveColor, font=bigFont)
+    tk.Label(self.settingFrame, text="Setting: ", fg=self.inactiveColor, bg=self.bgColor, font=smallFont).pack(side="left")
+    self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
     self.setting.pack(side="left")
 
     # controller dsiplay
-    controllerIcon = tk.PhotoImage(PARENT_PATH+"/images/controller.ppm")
+    controllerIcon = tk.PhotoImage(PARENT_PATH+"/images/controller.pgm")
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
-    tk.Label(self.controllerFrame, image=controllerIcon, fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
+    tk.Label(self.controllerFrame, image=controllerIcon, bg=self.bgColor).pack(side="left")
     self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, fg=self.color, font=mediumFont)
     self.controller.pack(side="left")
 
