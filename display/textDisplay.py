@@ -1,5 +1,6 @@
 import tkinter as tk
 from constants import *
+from pillow import ImageTk, Image 
 
 class TextDisplay(tk.Frame):
   width = 270
@@ -26,7 +27,7 @@ class TextDisplay(tk.Frame):
     self.setting.pack(side="left")
 
     # controller dsiplay
-    controllerIcon = tk.PhotoImage(PARENT_PATH+"/images/controller.pgm")
+    controllerIcon = ImageTk.PhotoImage(Image.open(PARENT_PATH+"/images/controller.png"))
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
     tk.Label(self.controllerFrame, image=controllerIcon, bg=self.bgColor).pack(side="left")
