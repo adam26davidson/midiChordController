@@ -29,6 +29,7 @@ class TextDisplay(tk.Frame):
 
     # controller dsiplay
     controllerIcon = ImageTk.PhotoImage(Image.open(PARENT_PATH+"/images/controller.png"))
+    print(controllerIcon)
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
     tk.Label(self.controllerFrame, image=controllerIcon, fg=self.activeColor, bg=self.bgColor).pack(side="left")

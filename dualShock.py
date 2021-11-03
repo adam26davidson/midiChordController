@@ -192,5 +192,4 @@ class DualShock:
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
-      print("touch")
-      print(evdev.categorize(event))
+      touch = 0
