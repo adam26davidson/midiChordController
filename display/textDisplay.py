@@ -1,6 +1,7 @@
 import tkinter as tk
 from constants import *
-from pillow import ImageTk, Image 
+import  PIL
+from PIL import ImageTk, Image 
 
 class TextDisplay(tk.Frame):
   width = 270
