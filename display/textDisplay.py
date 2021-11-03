@@ -1,8 +1,9 @@
 import tkinter as tk
+from PIL import ImageTk, Image
 from constants import *
 
 class TextDisplay(tk.Frame):
-  width = 250
+  width = 270
   height = 350
 
   bgColor = "#000000"
@@ -18,18 +19,23 @@ class TextDisplay(tk.Frame):
     mediumFont = ("sans serif", 14)
     smallFont = ("sans serif", 12)
 
-    self.settingFrame = tk.Frame(self, bg=self.bgColor)
+    # setting dsiplay
+    self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
     self.settingFrame.pack(side="top")
-    tk.Label(self.settingFrame, text="setting: ", fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
-    self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
+    tk.Label(self.settingFrame, text="Setting: ", fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
+    self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.inactiveColor, font=bigFont)
     self.setting.pack(side="left")
 
+    # controller dsiplay
+    controllerIcon = Image.open(PARENT_PATH+"/images/controller.png")
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
-    tk.Label(self.controllerFrame, text="controller: ", fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
+    tk.Label(self.controllerFrame, image=ImageTk.PhotoImage(controllerIcon), 
+      fg=self.color, bg=self.bgColor, font=smallFont).pack(side="left")
     self.controller = tk.Label(self.controllerFrame, text="Not Connected", bg=self.bgColor, fg=self.color, font=mediumFont)
     self.controller.pack(side="left")
 
+    # alt and shift
     self.functionFrame = tk.Frame(self, bg=self.bgColor)
     self.functionFrame.pack(side="top", pady=(10, 0))
     self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.inactiveColor, 
