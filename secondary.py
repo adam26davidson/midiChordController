@@ -4,7 +4,7 @@ def parseSecondaries(settings):
   def parseSecondary(setting):
     secondaries = {}
     default = Secondary(setting)
-    buttons = ["ex", "square", "triangle", "circle"]
+    buttons = ["south", "west", "north", "east"]
     def getOverrideSecondary(overides):
       overideSettings = setting.copy()
       for key in overides:

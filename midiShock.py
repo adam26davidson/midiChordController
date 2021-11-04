@@ -3,7 +3,6 @@ from modulation import Modulation
 from secondary import parseSecondaries, Secondary
 from constants import *
 import rtmidi 
-import time
 import asyncio
 
 
@@ -45,7 +44,7 @@ class MidiShock:
     self.chordIsPlaying = False
     self.playingBassNote = None # bass note that is currently playing
     self.BassIsPlaying = False
-    self.activeChord = "ex"
+    self.activeChord = "south"
     self.inversionThumbValue = 0
     self.bassThumbValue = 0
     self.afterTouchValue = 0
@@ -87,10 +86,10 @@ class MidiShock:
     self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
 
     self.chords = {
-      "ex": Chord(self.scale, self.setting["chords"]["ex"]),
-      "square": Chord(self.scale, self.setting["chords"]["square"]),
-      "triangle": Chord(self.scale, self.setting["chords"]["triangle"]),
-      "circle": Chord(self.scale, self.setting["chords"]["circle"])
+      "south": Chord(self.scale, self.setting["chords"]["south"]),
+      "west": Chord(self.scale, self.setting["chords"]["west"]),
+      "north": Chord(self.scale, self.setting["chords"]["north"]),
+      "east": Chord(self.scale, self.setting["chords"]["east"])
     }
 
     self.secondaries = parseSecondaries(self.setting["secondaries"])

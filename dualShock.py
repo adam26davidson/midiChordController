@@ -20,7 +20,7 @@ class DualShock:
       "lJoyY": {"n": 1, "values": []}
       }
     self.gyroSnap = INVERSION_SNAP
-    self.buttonCodes = {"ex": 304, "square": 308, "triangle": 307, "circle": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315, "share": 314}
+    self.buttonCodes = {"south": 304, "west": 308, "north": 307, "east": 305, "rt": 311, "rt2": 313, "lt": 310, "lt2": 312, "options": 315, "share": 314}
     self.absCodes = {"padX": 16, "padY": 17, "lJoyX": 0, "lJoyY": 1, "rJoyX": 3, "rJoyY": 4}
     self.motionCodes = {"x": 2, "z": 0}
     self.ranges = {
@@ -113,7 +113,7 @@ class DualShock:
     async for event in self.buttons.async_read_loop():
       forceUpdate = True
       if event.type == evdev.ecodes.EV_KEY:
-        for button in ["ex", "circle", "triangle", "square"]:
+        for button in ["south", "east", "north", "west"]:
           if event.code == self.buttonCodes[button]:
             if event.value == 1:
               self.midiShock.playChord(button)

@@ -14,28 +14,28 @@
       }
     },
     "chords": {
-      "ex": {
+      "south": {
         "root": 0,
         "main": [0, 2, 4, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
         "alternateBass": [0, 1, 4]
       },
-      "square": {
+      "west": {
         "root": 3,
         "main": [0, 2, 4, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
         "alternateBass": [0, 1, 4]
       },
-      "triangle": {
+      "north": {
         "root": 1,
         "main": [0, 2, 4, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
         "alternateBass": [0, 1, 4]
       },
-      "circle": {
+      "east": {
         "root": 5,
         "main": [0, 2, 4, 6],
         "mainBass": [0, 4],
@@ -50,7 +50,7 @@
         "mainBass": [0, 7],
         "alternate": [0, 2, 4, 7, 10],
         "alternateBass": [0, 7],
-        "circle": {
+        "east": {
           "default": {
             "alternate": [0, 1, 4, 7, 10]
           },
@@ -59,7 +59,7 @@
             "main": [0, 4, 7]
           }
         },
-        "triangle": {
+        "north": {
           "default": {
             "alternate": [0, 1, 4, 7, 10]
           }
@@ -89,28 +89,28 @@
       }
     },
     "chords": {
-      "ex": {
+      "south": {
         "root": 0,
         "main": [1, 2, 4, 6],
         "mainBass": [0, 1, 4],
         "alternate": [1, 2, 3, 6],
         "alternateBass": [0, 1, 4]
       },
-      "square": {
+      "west": {
         "root": 5,
         "main": [1, 2, 4, 6],
         "mainBass": [0, 1, 4],
         "alternate": [1, 2, 4, 5],
         "alternateBass": [0, 1, 4]
       },
-      "triangle": {
+      "north": {
         "root": 3,
         "main": [1, 2, 4, 6],
         "mainBass": [0, 1, 4],
         "alternate": [1, 2, 3, 6],
         "alternateBass": [0, 1, 4]
       },
-      "circle": {
+      "east": {
         "root": 4,
         "main": [0, 2, 4, 6],
         "mainBass": [0, 4],
@@ -125,12 +125,12 @@
         "mainBass": [0, 7],
         "alternate": [1, 4, 7, 10],
         "alternateBass": [0, 7],
-        "square": {
+        "west": {
           "default": {
             "alternate": [0, 4, 7, 10]
           }
         },
-        "triangle": {
+        "north": {
           "default": {
             "alternate": [1, 4, 7, 10]
           }
@@ -160,28 +160,28 @@
       }
     },
     "chords": {
-      "ex": {
+      "south": {
         "root": 0,
         "main": [1, 2, 3, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
         "alternateBass": [0, 4]
       },
-      "square": {
+      "west": {
         "root": 3,
         "main": [1, 2, 3, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
         "alternateBass": [0, 4]
       },
-      "triangle": {
+      "north": {
         "root": 5,
         "main": [1, 2, 4, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 5],
         "alternateBass": [0, 4]
       },
-      "circle": {
+      "east": {
         "root": 2,
         "main": [1, 2, 4, 6],
         "mainBass": [0, 4],
@@ -196,7 +196,7 @@
         "mainBass": [0, 7],
         "alternate": [0, 2, 4, 7, 10],
         "alternateBass": [0, 7],
-        "circle": {
+        "east": {
           "default": {
             "alternate": [0, 1, 4, 7, 10]
           },
@@ -205,7 +205,7 @@
             "main": [0, 4, 7]
           }
         },
-        "triangle": {
+        "north": {
           "default": {
             "alternate": [0, 1, 4, 7, 10]
           }
@@ -235,28 +235,28 @@
       }
     },
     "chords": {
-      "ex": {
+      "south": {
         "root": 0,
         "main": [0, 1, 5, 6],
         "mainBass": [0, 4],
         "alternate": [0, 2, 5, 6],
         "alternateBass": [0, 4]
       },
-      "square": {
+      "west": {
         "root": 4,
         "main": [0, 1, 4, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 6],
         "alternateBass": [0, 4]
       },
-      "triangle": {
+      "north": {
         "root": 2,
         "main": [0, 1, 5, 6],
         "mainBass": [0, 4],
         "alternate": [1, 2, 4, 5],
         "alternateBass": [0, 4]
       },
-      "circle": {
+      "east": {
         "root": 6,
         "main": [0, 1, 5, 6],
         "mainBass": [0, 4],
@@ -271,12 +271,12 @@
         "mainBass": [0, 7],
         "alternate": [1, 4, 7, 10],
         "alternateBass": [0, 7],
-        "triangle": {
+        "north": {
           "default": {
             "alternate": [2, 4, 7, 10]
           }
         },
-        "circle": {
+        "east": {
           "default": {
             "alternate": [2, 4, 7, 10]
           }
