@@ -1,6 +1,6 @@
-from chord import Chord
-from modulation import Modulation
-from secondary import parseSecondaries, Secondary
+from modules.chord import Chord
+from modules.modulation import Modulation
+from modules.secondary import parseSecondaries, Secondary
 from display import Display
 from constants import *
 import rtmidi 
