@@ -32,14 +32,14 @@ class Modulation():
       offsets.append(self.map[i] - self.scale[i])
     return offsets
 
-  def apply(self, notes, midiShock):
+  def apply(self, notes, scale):
     modNotes = []
     for note in notes:
-      modNotes.append(self.applyOne(note, midiShock))
+      modNotes.append(self.applyOne(note, scale))
     return modNotes
 
-  def applyOne(self, note, midiShock):
+  def applyOne(self, note, scale):
     #the index of the note in the scale
-    index = midiShock.getScale().index(note % 12)
+    index = scale.index(note % 12)
     #print(index)
     return note + self.offsets[index]

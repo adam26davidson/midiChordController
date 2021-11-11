@@ -1,10 +1,10 @@
+from constants import *
 from display.chordDisplay import ChordDisplay
-from constants import ANIMATION_STEP
 from display.keyboard import Keyboard
 from display.inversion import Inversion
 from display.spread import Spread
 from display.textDisplay import TextDisplay
-import time
+import asyncio
 
 class Display():
   def __init__(self, root):
@@ -32,6 +32,8 @@ class Display():
     self.playingChordNotes = []
     self.shadowBassNote = 48
     self.playingBassNote = None
+    self.inversionThumbValue = 0
+    self.bassThumbValue = 0
 
     self.keyboard = Keyboard(master=self.root)
     self.spread = Spread(master=self.root)
@@ -40,6 +42,13 @@ class Display():
     self.chordDisplay = ChordDisplay(master=self.root)
     self.textDisplay = TextDisplay(master=self.root)
 
+  async def mainLoop(self):
+    while True:
+      self.setInversionThumb()
+      self.setBassPositionThumb()
+      self.root.update()
+      await asyncio.sleep(ANIMATION_STEP)
+  
   def setController(self, text):
     self.textDisplay.setController(text)
 
@@ -64,8 +73,11 @@ class Display():
   def setInversion(self, inversion):
     self.inversion.setActiveRegion(inversion)
 
-  def setInversionThumb(self, position):
-    self.inversion.positionThumb(position)
+  def storeInversionThumb(self, value):
+    self.inversionThumbValue = value
+
+  def setInversionThumb(self):
+    self.inversion.positionThumb(self.inversionThumbValue)
 
   def setBassPositionRange(self, range, position):
     self.bassPosition.setMax(range, position)
@@ -73,8 +85,11 @@ class Display():
   def setBassPosition(self, position):
     self.bassPosition.setActiveRegion(position)
 
-  def setBassPositionThumb(self, position):
-    self.bassPosition.positionThumb(position)
+  def storeBassPositionThumb(self, value):
+    self.bassThumbValue = value
+
+  def setBassPositionThumb(self):
+    self.bassPosition.positionThumb(self.bassThumbValue)
   
   def setSpread(self, spread):
     self.spread.setValue(spread)

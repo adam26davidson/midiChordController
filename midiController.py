@@ -1,16 +1,16 @@
 from chord import Chord
 from modulation import Modulation
 from secondary import parseSecondaries, Secondary
+from display import Display
 from constants import *
 import rtmidi 
 import asyncio
 
-
-class MidiShock:
-  def __init__(self, display, settingIndex=1):
+class MidiController:
+  def __init__(self, settingIndex=1):
 
     # constant for each setting
-    self.display = display
+    self.display = Display()
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
 
@@ -45,22 +45,16 @@ class MidiShock:
     self.playingBassNote = None # bass note that is currently playing
     self.BassIsPlaying = False
     self.activeChord = "south"
-    self.inversionThumbValue = 0
-    self.bassThumbValue = 0
     self.afterTouchValue = 0
 
     self.setSetting(self.settingIndex)
+    self.chordType, self.rootType = self.__getChordType(self.activeChord)
 
-    self.chordType, self.rootType = self.getChordType(self.activeChord)
+  def start(self):
+    asyncio.ensure_future(self.display.mainLoop())
 
-    asyncio.ensure_future(self.displayLoop())
-
-  async def displayLoop(self):
-    while True:
-      self.display.setInversionThumb(self.inversionThumbValue)
-      self.display.setBassPositionThumb(self.bassThumbValue)
-      self.display.root.update()
-      await asyncio.sleep(ANIMATION_STEP)
+    self.loop = asyncio.get_event_loop()
+    self.loop.run_forever()
 
   def updateDisplay(self):
     self.display.root.update()
@@ -83,7 +77,7 @@ class MidiShock:
     self.setting = SETTINGS[setting]
 
     self.scale = self.setting["scale"]
-    self.scaleNotes, self.allScaleNotes = self.findScaleNotes()
+    self.scaleNotes, self.allScaleNotes = self.__findScaleNotes()
 
     self.chords = {
       "south": Chord(self.scale, self.setting["chords"]["south"]),
@@ -103,24 +97,14 @@ class MidiShock:
     self.display.setKey(self.key)
     self.display.setScale(self.scale)
     self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
-    self.display.setChordShadow(self.getChord(self.activeChord))
-    self.display.setBassShadow(self.getBass())
+    self.display.setChordShadow(self.__getChord(self.activeChord))
+    self.display.setBassShadow(self.__getBass())
     self.display.setInversionRange(self.inversionRange, self.inversion)
     self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
-    self.chordType, self.rootType = self.getChordType(self.activeChord)
+    self.chordType, self.rootType = self.__getChordType(self.activeChord)
 
     self.display.setSetting(self.setting["name"])
-
-  def sendMidi(self, notes, off=False):
-    type = 0x90
-    vel = 122
-    if off:
-      type = 0x80
-      vel = 0
-    for note in notes:
-      self.midiOut.send_message([0xA0, note, self.afterTouchValue])
-      self.midiOut.send_message([type, note, vel])
 
   def setAfterTouch(self, value):
     self.afterTouchValue = value
@@ -130,100 +114,14 @@ class MidiShock:
     if self.BassIsPlaying:
       self.midiOut.send_message([0xA0, self.playingBassNote, value])
 
-  def findScaleNotesForKey(self, key):
-    scaleNotes = []
-    for note in self.scale:
-      scaleNotes.append((note + key) % 12)
-    return scaleNotes
-
-  def findScaleNotes(self):
-    scaleNotes = {}
-    allScaleNotes = {}
-    for key in range(0, 12):
-      scaleNotes[key] = self.findScaleNotesForKey(key)
-      allScaleNotes[key] = Chord.findAllNotes(scaleNotes[key])
-    return scaleNotes, allScaleNotes
-
-  def getScale(self):
-    return self.scaleNotes[self.key]
-
-  def mod12(self, notes):
-    newNotes = []
-    for note in notes:
-      newNotes.append(note % 12)
-    return newNotes
-
-  def getChordType(self, button):
-    chord = self.chords[button]
-    # secondary inactive
-    if (self.secondary == "none"):
-      if (self.modulation == "none"):
-        return chord.getNoteTypes(self), chord.getRoot(self)
-      else:
-        modulation = self.modulations[self.modulation]
-        rootNote = modulation.applyOne(chord.getRoot(self), self) % 12
-        chordNotes = self.mod12(modulation.apply(chord.getNoteTypes(self), self))
-        return chordNotes, rootNote
-    # secondary is active
-    else:
-      modKey = "default"
-      if (self.modulation == "left"):
-        modKey = "leftModulation"
-      elif (self.modulation == "left"):
-        modKey = "rightModulation"
-      secondary = self.secondaries[self.secondary][button][modKey]
-      chordRoot = chord.getRoot(self)
-      rootType = secondary.getRoot(chordRoot)
-      chordType = secondary.getNoteTypes(self, chordRoot)
-      chordType.sort()
-      return chordType, rootType
-  
-  def getChord(self, button):
-    chord = self.chords[button]
-    # secondary inactive
-    if (self.secondary == "none"):
-      if (self.modulation == "none"):
-        return chord.getChord(self)
-      else:
-        modulation = self.modulations[self.modulation]
-        return modulation.apply(chord.getChord(self), self)
-    # secondary is active
-    else:
-      modKey = "default"
-      if (self.modulation == "left"):
-        modKey = "leftModulation"
-      elif (self.modulation == "left"):
-        modKey = "rightModulation"
-      secondary = self.secondaries[self.secondary][button][modKey]
-      return secondary.getChord(self, chord.getRoot(self))
-  
-  def getBass(self):
-    chord = self.chords[self.activeChord]
-    if (self.secondary == "none"):
-      if (self.modulation == "none"):
-        return chord.getBass(self)
-      else:
-        modulation = self.modulations[self.modulation]
-        return modulation.applyOne(chord.getBass(self), self)
-    # secondary is active
-    else:
-      modKey = "default"
-      if (self.modulation == "left"):
-        modKey = "leftModulation"
-      elif (self.modulation == "left"):
-        modKey = "rightModulation"
-
-      secondary = self.secondaries[self.secondary][self.activeChord][modKey]
-      return secondary.getBass(self, chord.getRoot(self))
-
   def playChord(self, button):
     self.activeChord = button
-    self.setChordType()
+    self.__setChordType()
     self.stopChord()
-    notes = self.getChord(button)
+    notes = self.__getChord(button)
 
-    self.sendMidi(notes)
-    self.updateBass()
+    self.__sendMidi(notes)
+    self.__updateBass()
     self.display.playChord(notes)
     #print("NOTES ON - " + str(notes))
 
@@ -232,40 +130,20 @@ class MidiShock:
 
   def playBass(self):
     self.stopBass()
-    bassNote = self.getBass()
+    bassNote = self.__getBass()
 
     # TODO send midi note on
-    self.sendMidi([bassNote])
+    self.__sendMidi([bassNote])
     self.display.playBass(bassNote)
     #print("NOTE ON - " + str(bassNote))
 
     self.playingBassNote = bassNote
     self.BassIsPlaying = True
 
-  def updateChord(self):
-    if (self.chordIsPlaying):
-      self.playChord(self.activeChord)
-    else:
-      notes = self.getChord(self.activeChord)
-      self.display.setChordShadow(notes)
-
-  def updateBass(self):
-    if (self.BassIsPlaying):
-      self.playBass()
-    else:
-      note = self.getBass()
-      self.display.setBassShadow(note)
-
-  def setChordType(self):
-    chord, root = self.getChordType(self.activeChord)
-    if chord != self.chordType or root != self.rootType:
-      self.chordType, self.rootType = chord, root
-      self.display.setChord(chord, root)
-
   def stopChord(self):
     if self.chordIsPlaying:
       # TODO send midi notes off for playing chord
-      self.sendMidi(self.playingChordNotes, off=True)
+      self.__sendMidi(self.playingChordNotes, off=True)
       self.display.stopChord(self.playingChordNotes)
       #print("NOTES OFF - " + str(self.playingChordNotes))
       self.playingChordNotes = []
@@ -274,7 +152,7 @@ class MidiShock:
   def stopBass(self):
     if self.BassIsPlaying:
       # TODO send midi note off for playing bass
-      self.sendMidi([self.playingBassNote], off=True)
+      self.__sendMidi([self.playingBassNote], off=True)
       self.display.stopBass(self.playingBassNote)
       #print("NOTE OFF - " + str(self.playingBassNote))
       self.playingBassNote = None
@@ -283,25 +161,26 @@ class MidiShock:
   def setModulation(self, side):
     if self.modulation != side:
       self.modulation = side
-      self.setChordType()
-      self.updateChord()
-      self.updateBass()
+      self.__setChordType()
+      self.__updateChord()
+      self.__updateBass()
 
   def setSecondary(self, side):
     if self.secondary != side:
       self.secondary = side
-      self.setChordType()
-      self.updateChord()
-      self.updateBass()
+      self.__setChordType()
+      self.__updateChord()
+      self.__updateBass()
 
   def setAlternate(self, alternate):
     if self.alternate != alternate:
       self.alternate = alternate
-      self.setChordType()
-      self.updateChord()
-      self.updateBass()
+      self.__setChordType()
+      self.__updateChord()
+      self.__updateBass()
 
-  def setInversion(self, inversion):
+  def setInversion(self, inversion, rawValue):
+    self.display.storeInversionThumb(rawValue)
     if inversion != self.inversion:
       if abs(inversion) <= self.inversionRange:
         self.inversion = inversion
@@ -309,7 +188,7 @@ class MidiShock:
         self.inversion = -1*self.inversionRange
       elif inversion > 0:
         self.inversion = self.inversionRange
-      self.updateChord()
+      self.__updateChord()
       self.display.setInversion(self.inversion)
   
   def setInversionRange(self, range):
@@ -322,13 +201,14 @@ class MidiShock:
 
     if self.inversion > self.inversionRange:
       self.inversion = self.inversionRange
-      self.updateChord()
+      self.__updateChord()
     elif self.inversion < -1*self.inversionRange:
       self.inversion = -1*self.inversionRange
-      self.updateChord()
+      self.__updateChord()
     self.display.setInversionRange(self.inversionRange, self.inversion)
   
-  def setBassPosition(self, position):
+  def setBassPosition(self, position, rawValue):
+    self.display.storeBassPositionThumb(rawValue)
     if position != self.bassPosition:
       if abs(position) <= self.bassRange:
         self.bassPosition = position
@@ -336,7 +216,7 @@ class MidiShock:
         self.bassPosition = -1*self.bassRange
       elif position > 0:
         self.bassPosition = self.bassRange
-      self.updateBass()
+      self.__updateBass()
       self.display.setBassPosition(self.bassPosition)
 
   def setBassRange(self, range):
@@ -349,10 +229,10 @@ class MidiShock:
 
     if self.bassPosition > self.bassRange:
       self.bassPosition = self.bassRange
-      self.updateBass()
+      self.__updateBass()
     elif self.bassPosition < -1*self.bassRange:
       self.bassPosition = -1*self.bassRange
-      self.updateBass()
+      self.__updateBass()
     self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
   def setSpread(self, spread):
@@ -362,7 +242,7 @@ class MidiShock:
       self.spread = 0
     elif spread >= SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
       self.spread = (SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES) - 1
-    self.updateChord()
+    self.__updateChord()
     self.display.setSpread(self.spread)
   
   def incrementSpread(self):
@@ -376,9 +256,9 @@ class MidiShock:
     if self.key != key:
       self.key = key
       self.display.setKey(self.key)
-      self.setChordType()
-      self.updateChord()
-      self.updateBass()
+      self.__setChordType()
+      self.__updateChord()
+      self.__updateBass()
 
   def incrementKey(self):
     self.setKey(self.key + 1)
@@ -404,3 +284,123 @@ class MidiShock:
   
   def toggleInversionHold(self):
     self.inversionHold = not self.inversionHold
+
+  def startController(self, controllerReadLoops):
+    results = [asyncio.ensure_future(loopFunction())
+               for loopFunction in controllerReadLoops]
+
+  def __findScaleNotesForKey(self, key):
+    scaleNotes = []
+    for note in self.scale:
+      scaleNotes.append((note + key) % 12)
+      return scaleNotes
+
+  def __findScaleNotes(self):
+    scaleNotes = {}
+    allScaleNotes = {}
+    for key in range(0, 12):
+      scaleNotes[key] = self.__findScaleNotesForKey(key)
+      allScaleNotes[key] = Chord.findAllNotes(scaleNotes[key])
+    return scaleNotes, allScaleNotes
+  
+  def __sendMidi(self, notes, off=False):
+    type = 0x90
+    vel = 122
+    if off:
+      type = 0x80
+      vel = 0
+    for note in notes:
+      self.midiOut.send_message([0xA0, note, self.afterTouchValue])
+      self.midiOut.send_message([type, note, vel])
+  
+  def __mod12(self, notes):
+    newNotes = []
+    for note in notes:
+      newNotes.append(note % 12)
+    return newNotes
+
+  def __getChordType(self, button):
+    chord = self.chords[button]
+    # secondary inactive
+    if (self.secondary == "none"):
+      if (self.modulation == "none"):
+        return chord.getNoteTypes(self), chord.getRoot(self)
+      else:
+        modulation = self.modulations[self.modulation]
+        rootNote = modulation.applyOne(chord.getRoot(self), self.__getScale()) % 12
+        chordNotes = self.__mod12(modulation.apply(chord.getNoteTypes(self), self.__getScale()))
+        return chordNotes, rootNote
+    # secondary is active
+    else:
+      modKey = "default"
+      if (self.modulation == "left"):
+        modKey = "leftModulation"
+      elif (self.modulation == "left"):
+        modKey = "rightModulation"
+      secondary = self.secondaries[self.secondary][button][modKey]
+      chordRoot = chord.getRoot(self)
+      rootType = secondary.getRoot(chordRoot)
+      chordType = secondary.getNoteTypes(self, chordRoot)
+      chordType.sort()
+      return chordType, rootType
+
+  def __setChordType(self):
+    chord, root = self.__getChordType(self.activeChord)
+    if chord != self.chordType or root != self.rootType:
+      self.chordType, self.rootType = chord, root
+      self.display.setChord(chord, root)
+
+  def __getChord(self, button):
+    chord = self.chords[button]
+    # secondary inactive
+    if (self.secondary == "none"):
+      if (self.modulation == "none"):
+        return chord.getChord(self)
+      else:
+        modulation = self.modulations[self.modulation]
+        return modulation.apply(chord.getChord(self), self.__getScale())
+    # secondary is active
+    else:
+      modKey = "default"
+      if (self.modulation == "left"):
+        modKey = "leftModulation"
+      elif (self.modulation == "left"):
+        modKey = "rightModulation"
+      secondary = self.secondaries[self.secondary][button][modKey]
+      return secondary.getChord(self, chord.getRoot(self))
+  
+  def __getScale(self):
+    return self.scaleNotes[self.key]
+  
+  def __getBass(self):
+    chord = self.chords[self.activeChord]
+    if (self.secondary == "none"):
+      if (self.modulation == "none"):
+        return chord.getBass(self)
+      else:
+        modulation = self.modulations[self.modulation]
+        return modulation.applyOne(chord.getBass(self), self.__getScale())
+    # secondary is active
+    else:
+      modKey = "default"
+      if (self.modulation == "left"):
+        modKey = "leftModulation"
+      elif (self.modulation == "left"):
+        modKey = "rightModulation"
+
+      secondary = self.secondaries[self.secondary][self.activeChord][modKey]
+      return secondary.getBass(self, chord.getRoot(self))
+
+  def __updateChord(self):
+    if (self.chordIsPlaying):
+      self.playChord(self.activeChord)
+    else:
+      notes = self.__getChord(self.activeChord)
+      self.display.setChordShadow(notes)
+
+  def __updateBass(self):
+    if (self.BassIsPlaying):
+      self.playBass()
+    else:
+      note = self.__getBass()
+      self.display.setBassShadow(note)
