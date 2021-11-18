@@ -53,10 +53,7 @@ class MidiController:
 
   def start(self):
     asyncio.ensure_future(self.display.mainLoop())
-    asyncio.ensure_future(self.midiLoop())
-
-    self.loop = asyncio.get_event_loop()
-    self.loop.run_forever()
+    asyncio.ensure_future(self.__midiLoop())
 
   def updateDisplay(self):
     self.display.root.update()

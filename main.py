@@ -1,4 +1,7 @@
-from controllers.DualShock4 import DualShock
+from controllers import searchForControllers
+import asyncio
 
-controller = DualShock()
-controller.start()
+asyncio.ensure_future(searchForControllers())
+
+loop = asyncio.get_event_loop()
+loop.run_forever()
