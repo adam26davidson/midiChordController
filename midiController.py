@@ -320,10 +320,10 @@ class MidiController:
     # secondary inactive
     if (self.secondary == "none"):
       if (self.modulation == "none"):
-        return chord.getNoteTypes(self), chord.getRoot(self)
+        return chord.getNoteTypes(self), chord.getRoot(self.key)
       else:
         modulation = self.modulations[self.modulation]
-        rootNote = modulation.applyOne(chord.getRoot(self), self.__getScale()) % 12
+        rootNote = modulation.applyOne(chord.getRoot(self.key), self.__getScale()) % 12
         chordNotes = self.__mod12(modulation.apply(chord.getNoteTypes(self), self.__getScale()))
         return chordNotes, rootNote
     # secondary is active
@@ -334,7 +334,7 @@ class MidiController:
       elif (self.modulation == "left"):
         modKey = "rightModulation"
       secondary = self.secondaries[self.secondary][button][modKey]
-      chordRoot = chord.getRoot(self)
+      chordRoot = chord.getRoot(self.key)
       rootType = secondary.getRoot(chordRoot)
       chordType = secondary.getNoteTypes(self, chordRoot)
       chordType.sort()
@@ -363,7 +363,7 @@ class MidiController:
       elif (self.modulation == "left"):
         modKey = "rightModulation"
       secondary = self.secondaries[self.secondary][button][modKey]
-      return secondary.getChord(self, chord.getRoot(self))
+      return secondary.getChord(self, chord.getRoot(self.key))
   
   def __getScale(self):
     return self.scaleNotes[self.key]
@@ -385,7 +385,7 @@ class MidiController:
         modKey = "rightModulation"
 
       secondary = self.secondaries[self.secondary][self.activeChord][modKey]
-      return secondary.getBass(self, chord.getRoot(self))
+      return secondary.getBass(self, chord.getRoot(self.key))
 
   def __updateChord(self):
     if (self.chordIsPlaying):
