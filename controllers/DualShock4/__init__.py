@@ -53,9 +53,10 @@ class DualShock(MidiController):
           intValue, value = self.processInversionValue(event.value, "gyroX", self.config, self.absValues["gyroX"])
           self.setInversion(intValue, value)
       elif event.code == self.config["motionCodes"]["z"]:
-        value = self.processCCValue(event.value, "gyroZ", self.config)
-        print(value)
-        self.setAfterTouch(value)
+        if event.value != 0:
+          value = self.processCCValue(event.value, "gyroZ", self.config)
+          print(value)
+          self.setAfterTouch(value)
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
