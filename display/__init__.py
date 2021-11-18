@@ -1,29 +1,30 @@
 from constants import *
-from .chordDisplay import ChordDisplay
-from .keyboard import Keyboard
-from .inversion import Inversion
-from .spread import Spread
-from .textDisplay import TextDisplay
+from display.chordDisplay import ChordDisplay
+from display.keyboard import Keyboard
+from display.inversion import Inversion
+from display.spread import Spread
+from display.textDisplay import TextDisplay
 import asyncio
+import tkinter as tk
 
 class Display():
-  def __init__(self, root):
+  def __init__(self):
     self.height = 480
     self.width = 800
-    self.root = root
+    self.root = tk.Tk()
 
-    root.overrideredirect(True)
-    root.overrideredirect(False)
+    self.root.overrideredirect(True)
+    self.root.overrideredirect(False)
 
-    root.attributes("-fullscreen", True)
-    root.wm_attributes("-topmost", 1)
-    root.focus_set()
+    self.root.attributes("-fullscreen", True)
+    self.root.wm_attributes("-topmost", 1)
+    self.root.focus_set()
 
     def close_escape(event=None):
       print("escaped")
-      root.destroy()
+      self.root.destroy()
 
-    root.bind("<Escape>", close_escape)
+    self.root.bind("<Escape>", close_escape)
 
     #self.root.geometry("800x480")
     self.root.configure(bg='black')

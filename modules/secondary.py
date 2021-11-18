@@ -1,4 +1,4 @@
-from chord import Chord
+from .chord import Chord
 
 def parseSecondaries(settings):
   def parseSecondary(setting):
