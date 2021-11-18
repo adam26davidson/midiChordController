@@ -293,15 +293,16 @@ class MidiController:
 
     range = config["ranges"][name]
 
-    pastValues.append(rawValue)
-    if (len(pastValues) > config["absAverageCounts"][name]):
-      pastValues.pop(0)
+    pastRawValues = pastValues["past"]
+    pastRawValues.append(rawValue)
+    if (len(pastRawValues) > config["absAverageCounts"][name]):
+      pastRawValues.pop(0)
 
     # get the average of the past raw values (prevents fluttering)
     sum = 0
-    for val in pastValues:
+    for val in pastRawValues:
       sum += val
-    avg = sum / len(pastValues)
+    avg = sum / len(pastRawValues)
 
     #clamp value to between -0.999 and 0.999
     slope = 2.0 / (range["top"]- range["bottom"])
@@ -321,14 +322,14 @@ class MidiController:
     value = getValue(snapped)
     snap = (1.0 / (maxSteps + 1)) * INVERSION_SNAP
 
-    if value == self.absValues[name]["processed"] + 1:
+    if value == pastValues["processed"] + 1:
       snapped -= snap
       value = getValue(snapped)
-    if value == self.absValues[name]["processed"] - 1:
+    if value == pastValues["processed"] - 1:
       snapped += snap
       value = getValue(snapped)
     
-    self.absValues[name]["processed"] = value
+    pastValues["processed"] = value
     return value, normalized
 
   def __findScaleNotesForKey(self, key):
