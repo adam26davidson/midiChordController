@@ -16,17 +16,20 @@ class Display():
     self.root.overrideredirect(True)
     self.root.overrideredirect(False)
 
-    self.root.attributes("-fullscreen", True)
-    self.root.wm_attributes("-topmost", 1)
-    self.root.focus_set()
-
+    if FULLSCREEN:
+      self.root.attributes("-fullscreen", True)
+      self.root.wm_attributes("-topmost", 1)
+      self.root.focus_set()
+    else:
+      self.root.geometry("800x480")
+      
     def close_escape(event=None):
       print("escaped")
       self.root.destroy()
 
     self.root.bind("<Escape>", close_escape)
 
-    #self.root.geometry("800x480")
+
     self.root.configure(bg='black')
 
     self.shadowChordNotes = []
