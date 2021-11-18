@@ -21,7 +21,7 @@ class DualShock(MidiController):
     self.controllerFound = False
 
   def start(self):
-    super().mainLoop()
+    super().start()
     asyncio.ensure_future(self.findController())
 
   def __processValue(self, rawValue, name, maxSteps):
