@@ -1,4 +1,5 @@
 config = {
+  "name": "DualShock4",
   "absAverageCounts":{
     "leftJoyY": 1,
     "gyroX": 2

@@ -17,77 +17,34 @@ class DualShock(MidiController):
       "leftJoyY": {"processed": 0, "past": []}
     }
     self.lastMidiUpdate = time.time()
-    self.lastUpdate = time.time()
-    self.controllerFound = False
 
   def start(self):
-    asyncio.ensure_future(self.findController())
+    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+    for device in devices:
+      if (device.name == "Wireless Controller"):
+        self.buttons = evdev.InputDevice(device.path)
+        asyncio.ensure_future(self.buttonsLoop())
+      elif (device.name == "Wireless Controller Motion Sensors"):
+        self.motion = evdev.InputDevice(device.path)
+        asyncio.ensure_future(self.motionLoop())
+      elif (device.name == "Wireless Controller Touchpad"):
+        self.touch = evdev.InputDevice(device.path)
+        asyncio.ensure_future(self.touchLoop())
+
+      self.display.setController(self.config["name"])
     super().start()
 
-  def __processValue(self, rawValue, name, maxSteps):
-    range = self.config["ranges"][name]
-    pastValues = self.absValues[name]["past"]
-
-    pastValues.append(rawValue)
-    if (len(pastValues) > self.config["absAverageCounts"][name]):
-      pastValues.pop(0)
-
-    # get the average of the past raw values (prevents jitter)
-    sum = 0
-    for val in pastValues:
-      sum += val
-    avg = sum / len(pastValues)
-
-    #clamp value to between -0.999 and 0.999
-    slope = 2.0 / (range["top"]- range["bottom"])
-    intercept = 1 - (slope*range["top"])
-    normalized =  (slope*avg) + intercept
-    normalized = max(min(normalized, 0.999), -0.999)
-    
-    #
-    def getValue(n):
-      if n > 0:
-        return math.floor(n * (maxSteps + 1))
-      else:
-        return math.ceil(n * (maxSteps + 1))
-
-    # snap processed value back into current window if     
-    snapped = normalized
-    value = getValue(snapped)
-    snap = (1.0 / (maxSteps + 1)) * INVERSION_SNAP
-
-    if value == self.absValues[name]["processed"] + 1:
-      snapped -= snap
-      value = getValue(snapped)
-    if value == self.absValues[name]["processed"] - 1:
-      snapped += snap
-      value = getValue(snapped)
-    
-    self.absValues[name]["processed"] = value
-    return value, normalized
-
-  async def findController(self):
-    while (not self.controllerFound):
-      self.controllerFound = False
-      devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-      print(device.name for device in devices)
-      for device in devices:
-        if (device.name == "Wireless Controller"):
-          self.buttons = evdev.InputDevice(device.path)
-          self.controllerFound = True
-          print("FOUND CONTROLLER")
-        elif (device.name == "Wireless Controller Motion Sensors"):
-          self.motion = evdev.InputDevice(device.path)
-        elif (device.name == "Wireless Controller Touchpad"):
-          self.touch = evdev.InputDevice(device.path)
-
-      if (self.controllerFound):
-        asyncio.ensure_future(self.motionLoop())
-        asyncio.ensure_future(self.buttonsLoop())
-        asyncio.ensure_future(self.touchLoop())
-        self.display.setController("DualShock4")
-      
-      await asyncio.sleep(0.5)
+  def checkIfConnected():
+    found = False
+    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+    for device in devices:
+      if (device.name == "Wireless Controller"):
+        found = True
+      elif (device.name == "Wireless Controller Motion Sensors"):
+        found = True
+      elif (device.name == "Wireless Controller Touchpad"):
+        found = True
+    return found
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
@@ -96,12 +53,8 @@ class DualShock(MidiController):
           intValue, value = self.processInversionValue(event.value, "gyroX", self.config, self.absValues["gyroX"])
           self.setInversion(intValue, value)
       elif event.code == self.config["motionCodes"]["z"]:
-        t = time.time()
-        if event.value != 0 and (t - self.lastMidiUpdate) > MIDI_STEP:
-          max = self.config["ranges"]["gyroZ"]["bottom"]
-          value = math.floor((min(abs(event.value), max) / max)*127)
-          self.setAfterTouch(value)
-          self.lastMidiUpdate = t
+        value = self.processCCValue(event.value, self.config, "gyroZ")
+        self.setAfterTouch(value)
   
   async def buttonsLoop(self):
     async for event in self.buttons.async_read_loop():
@@ -111,12 +64,12 @@ class DualShock(MidiController):
           if event.code == self.config["buttonCodes"][button]:
             if event.value == 1:
               self.playChord(button)
-            elif self.activeChord == button and not self.hold:
+            elif self.activeChord == button:
               self.stopChord()
         if event.code == self.config["buttonCodes"]["leftTrigger2"]:
           if event.value == 1:
             self.playBass()
-          elif not self.hold:
+          else:
             self.stopBass()
         elif event.code == self.config["buttonCodes"]["rightTrigger2"]:
           if event.value == 1:

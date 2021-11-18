@@ -53,6 +53,7 @@ class MidiController:
 
   def start(self):
     asyncio.ensure_future(self.display.mainLoop())
+    asyncio.ensure_future(self.midiLoop())
 
     self.loop = asyncio.get_event_loop()
     self.loop.run_forever()
@@ -72,8 +73,8 @@ class MidiController:
   def setSetting(self, setting):
     self.display.setSetting("Loading...")
     self.updateDisplay()
-    self.stopChord()
-    self.stopBass()
+    self.stopChord(buttonUp=False)
+    self.stopBass(buttonUp=False)
     self.settingIndex = setting
     self.setting = SETTINGS[setting]
 
@@ -109,16 +110,11 @@ class MidiController:
 
   def setAfterTouch(self, value):
     self.afterTouchValue = value
-    if(self.chordIsPlaying):
-      for note in self.playingChordNotes:
-        self.midiOut.send_message([0xA0, note, value])
-    if self.BassIsPlaying:
-      self.midiOut.send_message([0xA0, self.playingBassNote, value])
 
   def playChord(self, button):
     self.activeChord = button
     self.__setChordType()
-    self.stopChord()
+    self.stopChord(buttonUp=False)
     notes = self.__getChord(button)
 
     self.__sendMidi(notes)
@@ -130,7 +126,7 @@ class MidiController:
     self.chordIsPlaying = True
 
   def playBass(self):
-    self.stopBass()
+    self.stopBass(buttonUp=False)
     bassNote = self.__getBass()
 
     # TODO send midi note on
@@ -141,23 +137,25 @@ class MidiController:
     self.playingBassNote = bassNote
     self.BassIsPlaying = True
 
-  def stopChord(self):
-    if self.chordIsPlaying:
-      # TODO send midi notes off for playing chord
-      self.__sendMidi(self.playingChordNotes, off=True)
-      self.display.stopChord(self.playingChordNotes)
-      #print("NOTES OFF - " + str(self.playingChordNotes))
-      self.playingChordNotes = []
-      self.chordIsPlaying = False
+  def stopChord(self, buttonUp=True):
+    if not buttonUp or not self.hold:
+      if self.chordIsPlaying:
+        # TODO send midi notes off for playing chord
+        self.__sendMidi(self.playingChordNotes, off=True)
+        self.display.stopChord(self.playingChordNotes)
+        #print("NOTES OFF - " + str(self.playingChordNotes))
+        self.playingChordNotes = []
+        self.chordIsPlaying = False
   
-  def stopBass(self):
-    if self.BassIsPlaying:
-      # TODO send midi note off for playing bass
-      self.__sendMidi([self.playingBassNote], off=True)
-      self.display.stopBass(self.playingBassNote)
-      #print("NOTE OFF - " + str(self.playingBassNote))
-      self.playingBassNote = None
-      self.BassIsPlaying = False 
+  def stopBass(self, buttonUp=True):
+    if not buttonUp or not self.hold:
+      if self.BassIsPlaying:
+        # TODO send midi note off for playing bass
+        self.__sendMidi([self.playingBassNote], off=True)
+        self.display.stopBass(self.playingBassNote)
+        #print("NOTE OFF - " + str(self.playingBassNote))
+        self.playingBassNote = None
+        self.BassIsPlaying = False 
 
   def setModulation(self, side):
     if self.modulation != side:
@@ -181,16 +179,17 @@ class MidiController:
       self.__updateBass()
 
   def setInversion(self, inversion, rawValue):
-    self.display.storeInversionThumb(rawValue)
-    if inversion != self.inversion:
-      if abs(inversion) <= self.inversionRange:
-        self.inversion = inversion
-      elif inversion < 0:
-        self.inversion = -1*self.inversionRange
-      elif inversion > 0:
-        self.inversion = self.inversionRange
-      self.__updateChord()
-      self.display.setInversion(self.inversion)
+    if (not self.inversionHold):
+      self.display.storeInversionThumb(rawValue)
+      if inversion != self.inversion:
+        if abs(inversion) <= self.inversionRange:
+          self.inversion = inversion
+        elif inversion < 0:
+          self.inversion = -1*self.inversionRange
+        elif inversion > 0:
+          self.inversion = self.inversionRange
+        self.__updateChord()
+        self.display.setInversion(self.inversion)
   
   def setInversionRange(self, range):
     if range <= MAX_INVERSION_RANGE and range >= 0:
@@ -278,13 +277,18 @@ class MidiController:
   def toggleHold(self):
     if self.hold:
       self.hold = False
-      self.stopChord()
-      self.stopBass()
+      self.stopChord(buttonUp=False)
+      self.stopBass(buttonUp=False)
     else:
       self.hold = True
   
   def toggleInversionHold(self):
     self.inversionHold = not self.inversionHold
+
+  def processCCValue(self, rawValue, name, config):
+    max = config["ranges"][name]["bottom"]
+    value = math.floor((min(abs(rawValue), max) / max)*127)
+    return value
 
   def processInversionValue(self, rawValue, name, config, pastValues, type="chord"):
     maxSteps = self.inversionRange
@@ -331,6 +335,18 @@ class MidiController:
     
     pastValues["processed"] = value
     return value, normalized
+  
+  async def __midiLoop(self):
+    while(self.running):
+      self.__sendAfterTouch()
+      asyncio.sleep(MIDI_STEP)
+
+  def __sendAfterTouch(self):
+    if(self.chordIsPlaying):
+      for note in self.playingChordNotes:
+        self.midiOut.send_message([0xA0, note, self.afterTouchValue])
+    if self.BassIsPlaying:
+      self.midiOut.send_message([0xA0, self.playingBassNote, self.afterTouchValue])
 
   def __findScaleNotesForKey(self, key):
     scaleNotes = []
