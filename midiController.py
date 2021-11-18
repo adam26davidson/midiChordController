@@ -285,10 +285,6 @@ class MidiController:
   def toggleInversionHold(self):
     self.inversionHold = not self.inversionHold
 
-  def startController(self, controllerReadLoops):
-    results = [asyncio.ensure_future(loopFunction())
-               for loopFunction in controllerReadLoops]
-
   def __findScaleNotesForKey(self, key):
     scaleNotes = []
     for note in self.scale:
