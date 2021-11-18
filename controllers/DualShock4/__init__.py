@@ -70,6 +70,7 @@ class DualShock(MidiController):
     while (not self.controllerFound):
       self.controllerFound = False
       devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+      print(device.name for device in devices)
       for device in devices:
         if (device.name == "Wireless Controller"):
           self.buttons = evdev.InputDevice(device.path)
