@@ -12,5 +12,5 @@ ANIMATION_STEP = 1.0/20.0
 MIDI_STEP = 1.0/20.0
 CENTER_NOTE = 65 # center of home chord
 BASS_OCTAVE_RANGE = {"min": 34, "max": 45}
-VOICING_PATTERNS = json.load(open(PARENT_PATH + "/modules/voicingPetterns/voicingPatterns.json"))
+VOICING_PATTERNS = json.load(open(PARENT_PATH + "/modules/voicingPatterns/voicingPatterns.json"))
 SETTINGS = json.load(open(PARENT_PATH + "/settings.json"))
