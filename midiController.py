@@ -289,7 +289,7 @@ class MidiController:
     scaleNotes = []
     for note in self.scale:
       scaleNotes.append((note + key) % 12)
-      return scaleNotes
+    return scaleNotes
 
   def __findScaleNotes(self):
     scaleNotes = {}
