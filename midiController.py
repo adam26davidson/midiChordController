@@ -339,7 +339,7 @@ class MidiController:
   async def __midiLoop(self):
     while(self.running):
       self.__sendAfterTouch()
-      asyncio.sleep(MIDI_STEP)
+      await asyncio.sleep(MIDI_STEP)
 
   def __sendAfterTouch(self):
     if(self.chordIsPlaying):

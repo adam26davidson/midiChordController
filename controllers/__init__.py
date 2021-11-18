@@ -12,5 +12,5 @@ async def searchForControllers():
         connectedController = Controller()
         connectedController.start()
         break
-      asyncio.sleep(0.25)
+      await asyncio.sleep(0.25)
       
