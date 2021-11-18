@@ -55,7 +55,6 @@ class DualShock(MidiController):
       elif event.code == self.config["motionCodes"]["z"]:
         if event.value != 0:
           value = self.processCCValue(event.value, "gyroZ", self.config)
-          print(value)
           self.setAfterTouch(value)
   
   async def buttonsLoop(self):
