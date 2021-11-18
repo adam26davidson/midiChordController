@@ -152,7 +152,12 @@ class DualShock(MidiController):
 
       elif event.type == evdev.ecodes.EV_ABS:
         if event.code == self.config["absCodes"]["leftJoyY"]:
-          intValue, value = self.__processValue(event.value, "leftJoyY", self.bassRange)
+          intValue, value = self.processInversionValue(
+            event.value, 
+            "leftJoyY", 
+            self.config, 
+            self.absValues["leftJoyY"], 
+            type="bass")
           self.setBassPosition(intValue, value)
           forceUpdate = False
         if event.code == self.config["absCodes"]["padX"]:
