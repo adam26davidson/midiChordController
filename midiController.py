@@ -297,6 +297,7 @@ class MidiController:
     for key in range(0, 12):
       scaleNotes[key] = self.__findScaleNotesForKey(key)
       allScaleNotes[key] = Chord.findAllNotes(scaleNotes[key])
+    print(scaleNotes)
     return scaleNotes, allScaleNotes
   
   def __sendMidi(self, notes, off=False):
