@@ -1,4 +1,4 @@
-from DualShock4 import DualShock
+from .DualShock4 import DualShock
 import asyncio
 controllers = [DualShock]
 
