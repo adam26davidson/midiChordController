@@ -26,7 +26,7 @@ class DualShock(MidiController):
 
   def __processValue(self, rawValue, name, maxSteps):
     range = self.config["ranges"][name]
-    pastValues = self.absValues[name]["raw"]
+    pastValues = self.absValues[name]["past"]
 
     pastValues.append(rawValue)
     if (len(pastValues) > self.config["absAverageCounts"][name]):
