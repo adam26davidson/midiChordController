@@ -3,6 +3,7 @@ from modules.modulation import Modulation
 from modules.secondary import parseSecondaries, Secondary
 from display import Display
 from constants import *
+import math
 import rtmidi 
 import asyncio
 
@@ -284,6 +285,51 @@ class MidiController:
   
   def toggleInversionHold(self):
     self.inversionHold = not self.inversionHold
+
+  def processInversionValue(self, rawValue, name, config, pastValues, type="chord"):
+    maxSteps = self.inversionRange
+    if (type == "bass"):
+      maxSteps = self.bassRange
+
+    range = config["ranges"][name]
+
+    pastValues.append(rawValue)
+    if (len(pastValues) > config["absAverageCounts"][name]):
+      pastValues.pop(0)
+
+    # get the average of the past raw values (prevents fluttering)
+    sum = 0
+    for val in pastValues:
+      sum += val
+    avg = sum / len(pastValues)
+
+    #clamp value to between -0.999 and 0.999
+    slope = 2.0 / (range["top"]- range["bottom"])
+    intercept = 1 - (slope*range["top"])
+    normalized =  (slope*avg) + intercept
+    normalized = max(min(normalized, 0.999), -0.999)
+    
+    # converts to an integer in the correct inversion range
+    def getValue(n):
+      if n > 0:
+        return math.floor(n * (maxSteps + 1))
+      else:
+        return math.ceil(n * (maxSteps + 1))
+
+    # snap processed value back into current window if     
+    snapped = normalized
+    value = getValue(snapped)
+    snap = (1.0 / (maxSteps + 1)) * INVERSION_SNAP
+
+    if value == self.absValues[name]["processed"] + 1:
+      snapped -= snap
+      value = getValue(snapped)
+    if value == self.absValues[name]["processed"] - 1:
+      snapped += snap
+      value = getValue(snapped)
+    
+    self.absValues[name]["processed"] = value
+    return value, normalized
 
   def __findScaleNotesForKey(self, key):
     scaleNotes = []

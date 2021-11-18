@@ -1,7 +1,7 @@
 config = {
   "absAverageCounts":{
     "leftJoyY": 1,
-    "gyroX": 3
+    "gyroX": 2
   },
   "buttonCodes": {
     "south": 304, 

@@ -93,7 +93,7 @@ class DualShock(MidiController):
     async for event in self.motion.async_read_loop():
       if event.code == self.config["motionCodes"]["x"]:
         if (not self.inversionHold):
-          intValue, value = self.__processValue(event.value, "gyroX", self.inversionRange)
+          intValue, value = self.processInversionValue(event.value, "gyroX", self.config, self.absValues["gyroX"])
           self.setInversion(intValue, value)
       elif event.code == self.config["motionCodes"]["z"]:
         t = time.time()
