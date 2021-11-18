@@ -48,10 +48,13 @@ class MidiController:
     self.activeChord = "south"
     self.afterTouchValue = 0
 
+    self.running = False
+
     self.setSetting(self.settingIndex)
     self.chordType, self.rootType = self.__getChordType(self.activeChord)
 
   def start(self):
+    self.running = True
     asyncio.ensure_future(self.display.mainLoop())
     asyncio.ensure_future(self.__midiLoop())
 
