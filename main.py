@@ -1,7 +1,10 @@
 from controllers import searchForControllers
+from display import Display
 import asyncio
 
-asyncio.ensure_future(searchForControllers())
+display = Display()
+asyncio.ensure_future(display.mainLoop())
+asyncio.ensure_future(searchForControllers(display))
 
 loop = asyncio.get_event_loop()
 loop.run_forever()

@@ -7,8 +7,8 @@ from midiController import MidiController
 from .config import config
 
 class DualShock(MidiController):
-  def __init__(self):
-    super().__init__()
+  def __init__(self, display):
+    super().__init__(display)
     self.config = config
     self.leftTriggerDown = False
     self.rightTriggerDown = False

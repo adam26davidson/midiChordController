@@ -1,17 +1,16 @@
 from modules.chord import Chord
 from modules.modulation import Modulation
 from modules.secondary import parseSecondaries, Secondary
-from display import Display
 from constants import *
 import math
 import rtmidi 
 import asyncio
 
 class MidiController:
-  def __init__(self, settingIndex=1):
+  def __init__(self, display, settingIndex=0):
 
     # constant for each setting
-    self.display = Display()
+    self.display = display
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
 
@@ -55,7 +54,6 @@ class MidiController:
 
   def start(self):
     self.running = True
-    asyncio.ensure_future(self.display.mainLoop())
     asyncio.ensure_future(self.__midiLoop())
 
   def updateDisplay(self):
@@ -332,7 +330,7 @@ class MidiController:
     if value == pastValues["processed"] - 1:
       snapped += snap
       value = getValue(snapped)
-    
+
     pastValues["processed"] = value
     return value, normalized
   
