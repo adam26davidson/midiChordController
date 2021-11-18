@@ -33,6 +33,7 @@ class Modulation():
     return offsets
 
   def apply(self, notes, scale):
+    print("SCALE: ")
     print(scale)
     modNotes = []
     for note in notes:
