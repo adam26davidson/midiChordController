@@ -21,8 +21,8 @@ class DualShock(MidiController):
     self.controllerFound = False
 
   def start(self):
-    super().start()
     asyncio.ensure_future(self.findController())
+    super().start()
 
   def __processValue(self, rawValue, name, maxSteps):
     range = self.config["ranges"][name]
