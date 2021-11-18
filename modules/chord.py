@@ -177,8 +177,8 @@ class Chord:
       else:
         return keyVoicings[0][0]
 
-  def getRoot(self, midiShock):
-    return self.rootNotes[midiShock.key]
+  def getRoot(self, key):
+    return self.rootNotes[key]
 
   def getNoteTypes(self, midiShock):
     if midiShock.alternate:
