@@ -7,7 +7,7 @@ import rtmidi
 import asyncio
 
 class MidiController:
-  def __init__(self, display, settingIndex=0):
+  def __init__(self, display = None, settingIndex=0):
 
     # constant for each setting
     self.display = display
@@ -57,7 +57,7 @@ class MidiController:
     asyncio.ensure_future(self.__midiLoop())
 
   def updateDisplay(self):
-    self.display.root.update()
+    if self.display: self.display.root.update()
 
   def incrementSetting(self):
     self.setSetting((self.settingIndex + 1) % len(SETTINGS))
@@ -69,8 +69,9 @@ class MidiController:
     self.setSetting(newIndex)
 
   def setSetting(self, setting):
-    self.display.setSetting("Loading...")
-    self.updateDisplay()
+    if self.display:
+      self.display.setSetting("Loading...")
+      self.updateDisplay()
     self.stopChord(buttonUp=False)
     self.stopBass(buttonUp=False)
     self.settingIndex = setting
@@ -94,17 +95,18 @@ class MidiController:
     }
 
     chord = self.chords[self.activeChord]
-    self.display.setKey(self.key)
-    self.display.setScale(self.scale)
-    self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
-    self.display.setChordShadow(self.__getChord(self.activeChord))
-    self.display.setBassShadow(self.__getBass())
-    self.display.setInversionRange(self.inversionRange, self.inversion)
-    self.display.setBassPositionRange(self.bassRange, self.bassPosition)
+    if self.display:
+      self.display.setKey(self.key)
+      self.display.setScale(self.scale)
+      self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
+      self.display.setChordShadow(self.__getChord(self.activeChord))
+      self.display.setBassShadow(self.__getBass())
+      self.display.setInversionRange(self.inversionRange, self.inversion)
+      self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
     self.chordType, self.rootType = self.__getChordType(self.activeChord)
 
-    self.display.setSetting(self.setting["name"])
+    if self.display: self.display.setSetting(self.setting["name"])
 
   def setAfterTouch(self, value):
     self.afterTouchValue = value
@@ -117,7 +119,7 @@ class MidiController:
 
     self.__sendMidi(notes)
     self.__updateBass()
-    self.display.playChord(notes)
+    if self.display: self.display.playChord(notes)
     #print("NOTES ON - " + str(notes))
 
     self.playingChordNotes = notes
@@ -129,7 +131,7 @@ class MidiController:
 
     # TODO send midi note on
     self.__sendMidi([bassNote])
-    self.display.playBass(bassNote)
+    if self.display: self.display.playBass(bassNote)
     #print("NOTE ON - " + str(bassNote))
 
     self.playingBassNote = bassNote
@@ -140,7 +142,7 @@ class MidiController:
       if self.chordIsPlaying:
         # TODO send midi notes off for playing chord
         self.__sendMidi(self.playingChordNotes, off=True)
-        self.display.stopChord(self.playingChordNotes)
+        if self.display: self.display.stopChord(self.playingChordNotes)
         #print("NOTES OFF - " + str(self.playingChordNotes))
         self.playingChordNotes = []
         self.chordIsPlaying = False
@@ -150,7 +152,7 @@ class MidiController:
       if self.BassIsPlaying:
         # TODO send midi note off for playing bass
         self.__sendMidi([self.playingBassNote], off=True)
-        self.display.stopBass(self.playingBassNote)
+        if self.display: self.display.stopBass(self.playingBassNote)
         #print("NOTE OFF - " + str(self.playingBassNote))
         self.playingBassNote = None
         self.BassIsPlaying = False 
@@ -178,7 +180,7 @@ class MidiController:
 
   def setInversion(self, inversion, rawValue):
     if (not self.inversionHold):
-      self.display.storeInversionThumb(rawValue)
+      if self.display: self.display.storeInversionThumb(rawValue)
       if inversion != self.inversion:
         if abs(inversion) <= self.inversionRange:
           self.inversion = inversion
@@ -187,7 +189,7 @@ class MidiController:
         elif inversion > 0:
           self.inversion = self.inversionRange
         self.__updateChord()
-        self.display.setInversion(self.inversion)
+        if self.display: self.display.setInversion(self.inversion)
   
   def setInversionRange(self, range):
     if range <= MAX_INVERSION_RANGE and range >= 0:
@@ -203,10 +205,10 @@ class MidiController:
     elif self.inversion < -1*self.inversionRange:
       self.inversion = -1*self.inversionRange
       self.__updateChord()
-    self.display.setInversionRange(self.inversionRange, self.inversion)
+    if self.display: self.display.setInversionRange(self.inversionRange, self.inversion)
   
   def setBassPosition(self, position, rawValue):
-    self.display.storeBassPositionThumb(rawValue)
+    if self.display: self.display.storeBassPositionThumb(rawValue)
     if position != self.bassPosition:
       if abs(position) <= self.bassRange:
         self.bassPosition = position
@@ -215,7 +217,7 @@ class MidiController:
       elif position > 0:
         self.bassPosition = self.bassRange
       self.__updateBass()
-      self.display.setBassPosition(self.bassPosition)
+      if self.display: self.display.setBassPosition(self.bassPosition)
 
   def setBassRange(self, range):
     if range <= MAX_BASS_RANGE and range >= 0:
@@ -231,7 +233,7 @@ class MidiController:
     elif self.bassPosition < -1*self.bassRange:
       self.bassPosition = -1*self.bassRange
       self.__updateBass()
-    self.display.setBassPositionRange(self.bassRange, self.bassPosition)
+    if self.display: self.display.setBassPositionRange(self.bassRange, self.bassPosition)
 
   def setSpread(self, spread):
     if spread >= 0 and spread < SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
@@ -241,7 +243,7 @@ class MidiController:
     elif spread >= SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
       self.spread = (SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES) - 1
     self.__updateChord()
-    self.display.setSpread(self.spread)
+    if self.display: self.display.setSpread(self.spread)
   
   def incrementSpread(self):
     self.setSpread(self.spread + 1)
@@ -253,7 +255,7 @@ class MidiController:
     key = key % 12
     if self.key != key:
       self.key = key
-      self.display.setKey(self.key)
+      if self.display: self.display.setKey(self.key)
       self.__setChordType()
       self.__updateChord()
       self.__updateBass()
@@ -266,11 +268,11 @@ class MidiController:
 
   def toggleShift(self):
     self.shift = not self.shift
-    self.display.setShift(self.shift)
+    if self.display: self.display.setShift(self.shift)
 
   def toggleAlt(self):
     self.alt = not self.alt
-    self.display.setAlt(self.alt)
+    if self.display: self.display.setAlt(self.alt)
   
   def toggleHold(self):
     if self.hold:
@@ -406,7 +408,7 @@ class MidiController:
     chord, root = self.__getChordType(self.activeChord)
     if chord != self.chordType or root != self.rootType:
       self.chordType, self.rootType = chord, root
-      self.display.setChord(chord, root)
+      if self.display: self.display.setChord(chord, root)
 
   def __getChord(self, button):
     chord = self.chords[button]
@@ -454,11 +456,11 @@ class MidiController:
       self.playChord(self.activeChord)
     else:
       notes = self.__getChord(self.activeChord)
-      self.display.setChordShadow(notes)
+      if self.display: self.display.setChordShadow(notes)
 
   def __updateBass(self):
     if (self.BassIsPlaying):
       self.playBass()
     else:
       note = self.__getBass()
-      self.display.setBassShadow(note)
+      if self.display: self.display.setBassShadow(note)

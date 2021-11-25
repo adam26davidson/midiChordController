@@ -1,6 +1,7 @@
 from .DualShock4 import DualShock
+from .Wired360Controller import Wired360Controller
 import asyncio
-controllers = [DualShock]
+controllers = [DualShock, Wired360Controller]
 
 async def searchForControllers(display):
   foundController = False
