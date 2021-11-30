@@ -17,15 +17,8 @@ class Keyboard(tk.Canvas):
   minKey = 21
   maxKey = 108
 
-  blackColor = "#262626"
-  whiteColor = "#262626"
-
-  shadowColor = "#858585"
-  rootShadowColor = "#567e85"
-
-  playedColor = "#ffffff"
-  rootPlayedColor = "#00d9ff"
-
+  chordColorDim = "#a6a6a6"
+  rootColorDim = "#bd9c31"
   chordColor = "#ffffff"
   rootColor = "#ffc400"
 
@@ -131,11 +124,11 @@ class Keyboard(tk.Canvas):
 
   def setKeyClear(self, note):
     self.setKeyRadius(note, self.smallRadius)
-    self.setKeyColor(note, self.chordColor)
+    self.setKeyColor(note, self.chordColorDim)
 
   def setKeyChord(self, note, isRoot=False):
-    color = self.chordColor
-    if isRoot: color = self.rootColor
+    color = self.chordColorDim
+    if isRoot: color = self.rootColorDim
     self.setKeyRadius(note, self.mediumRadius)
     self.setKeyHollow(note)
     self.setKeyOutlineColor(note, color)
