@@ -15,7 +15,10 @@ config = {
     "leftTrigger": 310, 
     "leftTrigger2": 2, 
     "options": 315, 
-    "share": 314
+    "share": 314,
+    "home": 316,
+    "leftJoy": 318,
+    "rightJoy": 317
   },
   "absCodes": {
     "padX": 16, 

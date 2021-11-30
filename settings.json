@@ -290,5 +290,76 @@
         "alternateBass": [0, 7]
       }
     }
+  },
+  {
+    "name": "Riki2",
+    "scale": [0, 2, 3, 5, 7, 8, 9],
+    "spreadStepsPerOctave": 6,
+    "modulations": {
+      "left": {
+        "type": "modal",
+        "map": [6, 0]
+      },
+      "right": {
+        "type": "custom",
+        "map": [0, 2, 3, 5, 9, 1, 10]
+      }
+    },
+    "chords": {
+      "south": {
+        "root": 0,
+        "main": [0, 1, 6, 3],
+        "mainBass": [0, 4],
+        "alternate": [0, 2, 5, 6],
+        "alternateBass": [0, 4]
+      },
+      "west": {
+        "root": 3,
+        "main": [3, 6, 2, 7],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 4, 6],
+        "alternateBass": [0, 4]
+      },
+      "north": {
+        "root": 4,
+        "main": [4, 0, 2, 7],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 4, 5],
+        "alternateBass": [0, 4]
+      },
+      "east": {
+        "root": 6,
+        "main": [0, 1, 5, 6],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 4, 5],
+        "alternateBass": [0, 4]
+      }
+    },
+    "secondaries": {
+      "left": {
+        "interval": 7,
+        "main": [0, 4, 7, 10],
+        "mainBass": [0, 7],
+        "alternate": [1, 4, 7, 10],
+        "alternateBass": [0, 7],
+        "north": {
+          "default": {
+            "alternate": [2, 4, 7, 10]
+          }
+        },
+        "east": {
+          "default": {
+            "alternate": [2, 4, 7, 10]
+          }
+        }
+      },
+      "right": {
+        "interval": 1,
+        "main": [0, 2, 9, 10],
+        "mainBass": [0, 7],
+        "alternate": [0, 2, 4, 9],
+        "alternateBass": [0, 7]
+      }
+    }
   }
 ]

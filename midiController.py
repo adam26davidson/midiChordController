@@ -3,7 +3,8 @@ from modules.modulation import Modulation
 from modules.secondary import parseSecondaries, Secondary
 from constants import *
 import math
-import rtmidi 
+from rtmidi import MidiOut
+from rtmidi.midiconstants import *
 import asyncio
 
 class MidiController:
@@ -14,7 +15,7 @@ class MidiController:
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
 
-    self.midiOut = rtmidi.MidiOut()
+    self.midiOut = MidiOut()
     availablePorts = self.midiOut.get_ports()
     print(availablePorts)
 
@@ -28,11 +29,16 @@ class MidiController:
     self.inversionRange = 4
     self.bassRange = 4
     self.spread = 0
+    self.octave = 0
+    self.voices = 8
     self.shift = False
     self.alt = False
     self.hold = False
+    self.home = False
     self.inversionHold = False
     self.controller = None
+    # midi channel
+    self.channel = 1
 
     self.inversion = 0 
     self.bassPosition = 0 
@@ -78,6 +84,7 @@ class MidiController:
     self.setting = SETTINGS[setting]
 
     self.scale = self.setting["scale"]
+    print(f"SETTING NAME: {self.setting['name']}")
     self.scaleNotes, self.allScaleNotes = self.__findScaleNotes()
 
     self.chords = {
@@ -116,14 +123,19 @@ class MidiController:
     self.__setChordType()
     self.stopChord(buttonUp=False)
     notes = self.__getChord(button)
-
     self.__sendMidi(notes)
     self.__updateBass()
     if self.display: self.display.playChord(notes)
-    #print("NOTES ON - " + str(notes))
+    # print("NOTES ON - " + str(notes))
 
     self.playingChordNotes = notes
     self.chordIsPlaying = True
+
+  def __setNumVoices(self, chordNotes):
+    return chordNotes[:self.voices] if self.voices < len(chordNotes) else chordNotes
+
+  def __setOctave(self, chordNotes):
+    return [note + (self.octave * 12) for note in chordNotes]
 
   def playBass(self):
     self.stopBass(buttonUp=False)
@@ -132,7 +144,7 @@ class MidiController:
     # TODO send midi note on
     self.__sendMidi([bassNote])
     if self.display: self.display.playBass(bassNote)
-    #print("NOTE ON - " + str(bassNote))
+    # print("NOTE ON - " + str(bassNote))
 
     self.playingBassNote = bassNote
     self.BassIsPlaying = True
@@ -141,7 +153,7 @@ class MidiController:
     if not buttonUp or not self.hold:
       if self.chordIsPlaying:
         # TODO send midi notes off for playing chord
-        self.__sendMidi(self.playingChordNotes, off=True)
+        self.__sendMidi(self.playingChordNotes, command = NOTE_OFF)
         if self.display: self.display.stopChord(self.playingChordNotes)
         #print("NOTES OFF - " + str(self.playingChordNotes))
         self.playingChordNotes = []
@@ -151,7 +163,7 @@ class MidiController:
     if not buttonUp or not self.hold:
       if self.BassIsPlaying:
         # TODO send midi note off for playing bass
-        self.__sendMidi([self.playingBassNote], off=True)
+        self.__sendMidi([self.playingBassNote], command = NOTE_OFF)
         if self.display: self.display.stopBass(self.playingBassNote)
         #print("NOTE OFF - " + str(self.playingBassNote))
         self.playingBassNote = None
@@ -265,6 +277,25 @@ class MidiController:
 
   def decrementKey(self):
     self.setKey(self.key + 11)
+  
+  def incrementVoices(self):
+    self.voices = (self.voices % MAX_VOICING) + 1 if self.voices < MAX_VOICING else 2
+  
+  def decrementVoices(self):
+    """Does not go less than 2 voices."""
+    self.voices = ((MAX_VOICING + 1) if self.voices < 3 else self.voices) - 1
+  
+  def incrementMidiChannel(self):
+    self.channel = (self.channel % 16) + 1
+  
+  def decrementMidiChannel(self):
+    self.channel = (17 if self.channel < 2 else self.channel) - 1
+
+  def incrementOctave(self):
+    self.octave = self.octave + 1 if self.octave < 3 else self.octave
+  
+  def decrementOctave(self):
+    self.octave = self.octave - 1 if self.octave > -3 else self.octave
 
   def toggleShift(self):
     self.shift = not self.shift
@@ -284,6 +315,9 @@ class MidiController:
   
   def toggleInversionHold(self):
     self.inversionHold = not self.inversionHold
+
+  def toggleHome(self):
+    self.home = not self.home
 
   def processCCValue(self, rawValue, name, config):
     max = config["ranges"][name]["bottom"]
@@ -363,15 +397,12 @@ class MidiController:
     print(scaleNotes)
     return scaleNotes, allScaleNotes
   
-  def __sendMidi(self, notes, off=False):
-    type = 0x90
-    vel = 122
-    if off:
-      type = 0x80
-      vel = 0
+  def __sendMidi(self, notes, command = NOTE_ON, channel = None, velocity = 122):
+    vel =  0 if command == NOTE_OFF else velocity
+    midiCommandWithChannel = (command & 0xf0) | ((channel if channel else self.channel) - 1 & 0xf)
     for note in notes:
-      self.midiOut.send_message([0xA0, note, self.afterTouchValue])
-      self.midiOut.send_message([type, note, vel])
+      self.midiOut.send_message([POLY_AFTERTOUCH, note, self.afterTouchValue])
+      self.midiOut.send_message([midiCommandWithChannel, note, vel])
   
   def __mod12(self, notes):
     newNotes = []
@@ -415,10 +446,10 @@ class MidiController:
     # secondary inactive
     if (self.secondary == "none"):
       if (self.modulation == "none"):
-        return chord.getChord(self)
+        chord = chord.getChord(self)
       else:
         modulation = self.modulations[self.modulation]
-        return modulation.apply(chord.getChord(self), self.__getScale())
+        chord = modulation.apply(chord.getChord(self), self.__getScale())
     # secondary is active
     else:
       modKey = "default"
@@ -427,8 +458,18 @@ class MidiController:
       elif (self.modulation == "left"):
         modKey = "rightModulation"
       secondary = self.secondaries[self.secondary][button][modKey]
-      return secondary.getChord(self, chord.getRoot(self.key))
-  
+      chord = secondary.getChord(self, chord.getRoot(self.key))
+    
+    chordAdjustedNumVoices = self.__setNumVoices(chord)
+    chordAdjustedOctaves = self.__setOctave(chordAdjustedNumVoices)
+    return chordAdjustedOctaves
+
+  def __setNumVoices(self, chordNotes):
+    return chordNotes[:self.voices] if self.voices < len(chordNotes) else chordNotes
+
+  def __setOctave(self, chordNotes):
+    return [note + (self.octave * 12) for note in chordNotes]
+ 
   def __getScale(self):
     return self.scaleNotes[self.key]
   
