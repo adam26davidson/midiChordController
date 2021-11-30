@@ -164,9 +164,9 @@ class Keyboard(tk.Canvas):
     self.root = rootType
     for note in self.keyRange:
       if note % 12 == rootType:
-        self.setKeyChord(note)
-      elif noteTypes.count(note % 12) > 0:
         self.setKeyChord(note, isRoot=True)
+      elif noteTypes.count(note % 12) > 0:
+        self.setKeyChord(note)
 
   def clearAll(self):
     for note in self.keyRange:
