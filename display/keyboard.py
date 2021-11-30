@@ -178,7 +178,7 @@ class Keyboard(tk.Canvas):
         if note % 12 == self.root:
           self.setKeyChord(note, isRoot=True)
         elif self.chord.count(note % 12) > 0:
-        self.setKeyChord(note)
+          self.setKeyChord(note)
         else:
           self.setKeyClear(note)
   
