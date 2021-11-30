@@ -174,12 +174,13 @@ class Keyboard(tk.Canvas):
 
   def reset(self, notes):
     for note in notes:
-      if note % 12 == self.root:
-        self.setKeyChord(note, isRoot=True)
-      elif self.chord.count(note % 12) > 0:
-       self.setKeyChord(note)
-      else:
-        self.setKeyClear(note)
+      if note in self.keyRange:
+        if note % 12 == self.root:
+          self.setKeyChord(note, isRoot=True)
+        elif self.chord.count(note % 12) > 0:
+        self.setKeyChord(note)
+        else:
+          self.setKeyClear(note)
   
   def setShadow(self, notes):
     for note in notes:
