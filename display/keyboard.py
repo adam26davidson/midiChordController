@@ -9,7 +9,7 @@ class Keyboard(tk.Canvas):
   whiteKeyYOffset = 17
   keyDiameter = 20
   keyOutlineWidth = 2
-  width = 720
+  width = 730
   height = 40
   blackHeight = 27
   blackNoteTypes = [1, 3, 6, 8, 10]
