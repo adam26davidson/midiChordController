@@ -8,7 +8,7 @@ class Keyboard(tk.Canvas):
   bassRadius = 9
   whiteKeyYOffset = 17
   keyDiameter = 20
-  keyOutlineWidth = 1
+  keyOutlineWidth = 2
   width = 720
   height = 40
   blackHeight = 27
