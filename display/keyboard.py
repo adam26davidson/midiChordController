@@ -6,9 +6,9 @@ class Keyboard(tk.Canvas):
   mediumRadius = 4
   largeRadius = 7
   bassRadius = 9
-  whiteKeyYOffset = 20
+  whiteKeyYOffset = 17
   keyDiameter = 20
-  keyOutlineWidth = 2
+  keyOutlineWidth = 1
   width = 720
   height = 40
   blackHeight = 27
