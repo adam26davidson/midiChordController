@@ -2,7 +2,7 @@ import tkinter as tk
 from constants import *
 
 class Spread(tk.Canvas):
-  width = 732
+  width = 720
   height = 30
   numKeys = 61
   color = "#636363"
