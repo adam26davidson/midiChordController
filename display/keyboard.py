@@ -2,8 +2,8 @@ import tkinter as tk
 
 class Keyboard(tk.Canvas):
 
-  smallRadius = 3
-  mediumRadius = 5
+  smallRadius = 2
+  mediumRadius = 4
   largeRadius = 7
   bassRadius = 9
   whiteKeyYOffset = 20
