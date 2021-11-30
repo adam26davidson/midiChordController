@@ -27,7 +27,7 @@ class Keyboard(tk.Canvas):
   rootPlayedColor = "#00d9ff"
 
   chordColor = "#ffffff"
-  rootColor = "#414b4d"
+  rootColor = "#ffc400"
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
