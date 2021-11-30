@@ -150,12 +150,14 @@ class Keyboard(tk.Canvas):
         self.setKeyColor(note, self.shadowColor)
 
   def play(self, notes):
-
     for note in notes:
-      if note >= self.keyRange.start and note < self.keyRange.stop
-      if note % 12 == self.root:
-        self.setKeyColor(note, self.rootPlayedColor)
+      if note in self.keyRange:
+        if note % 12 == self.root:
+          self.setKeyColor(note, self.rootPlayedColor)
+        else:
+          self.setKeyColor(note, self.playedColor)
       else:
-        self.setKeyColor(note, self.playedColor)
+        # TODO add indication that notes are played outside keyboard range
+        pass
 
   
