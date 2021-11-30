@@ -6,7 +6,7 @@ from constants import *
 from midiController import MidiController
 from .config import config
 
-class DualShock4Linux(MidiController):
+class DualShock4(MidiController):
   config = config
   library = None
 
@@ -35,7 +35,7 @@ class DualShock4Linux(MidiController):
       self.display.setController(self.config["name"])
     super().start()
 
-  def checkIfConnected(osName):
+  def checkIfConnected():
       found = False
       devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
       for device in devices:
