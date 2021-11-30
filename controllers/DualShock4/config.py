@@ -32,5 +32,5 @@ config = {
     "gyroX": {"top": -8050, "bottom": 8050},
     "gyroZ": {"top": -8050, "bottom": 8050},
     "leftJoyY": {"top": 0, "bottom": 255},
-  },
+  }
 }

@@ -1,6 +1,6 @@
 [
   {
-    "name": "default",
+    "name": "Default",
     "scale": [0, 2, 4, 5, 7, 9, 11],
     "spreadStepsPerOctave": 6,
     "modulations": {
@@ -146,7 +146,7 @@
     }
   },
   {
-    "name": "up 2",
+    "name": "Up 2",
     "scale": [0, 2, 3, 5, 7, 8, 10],
     "spreadStepsPerOctave": 6,
     "modulations": {

@@ -6,17 +6,18 @@ from constants import *
 from midiController import MidiController
 from .config import config
 
-class DualShock(MidiController):
+class DualShock4Linux(MidiController):
+  config = config
+  library = None
+
   def __init__(self, display):
     super().__init__(display)
-    self.config = config
     self.leftTriggerDown = False
     self.rightTriggerDown = False
     self.absValues = {
       "gyroX": {"processed": 0, "past": []},
       "leftJoyY": {"processed": 0, "past": []}
     }
-    self.lastMidiUpdate = time.time()
 
   def start(self):
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
@@ -34,17 +35,17 @@ class DualShock(MidiController):
       self.display.setController(self.config["name"])
     super().start()
 
-  def checkIfConnected():
-    found = False
-    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    for device in devices:
-      if (device.name == "Wireless Controller"):
-        found = True
-      elif (device.name == "Wireless Controller Motion Sensors"):
-        found = True
-      elif (device.name == "Wireless Controller Touchpad"):
-        found = True
-    return found
+  def checkIfConnected(osName):
+      found = False
+      devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+      for device in devices:
+        if (device.name == "Wireless Controller"):
+          found = True
+        elif (device.name == "Wireless Controller Motion Sensors"):
+          found = True
+        elif (device.name == "Wireless Controller Touchpad"):
+          found = True
+      return found
 
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():

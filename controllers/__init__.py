@@ -1,5 +1,6 @@
 from .DualShock4 import DualShock
 import asyncio
+
 controllers = [DualShock]
 
 async def searchForControllers(display):
