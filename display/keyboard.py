@@ -170,7 +170,7 @@ class Keyboard(tk.Canvas):
 
   def clearAll(self):
     for note in self.keyRange:
-      self.setKeyClear()
+      self.setKeyClear(note)
 
   def reset(self, notes):
     for note in notes:
