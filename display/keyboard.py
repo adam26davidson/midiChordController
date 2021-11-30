@@ -8,6 +8,7 @@ class Keyboard(tk.Canvas):
   bassRadius = 9
   whiteKeyYOffset = 20
   keyDiameter = 20
+  keyOutlineWidth = 2
   width = 720
   height = 40
   blackHeight = 27
@@ -25,7 +26,7 @@ class Keyboard(tk.Canvas):
   playedColor = "#ffffff"
   rootPlayedColor = "#00d9ff"
 
-  chordColor = "#4d4d4d"
+  chordColor = "#ffffff"
   rootColor = "#414b4d"
 
   def __init__(self, master=None):
@@ -52,8 +53,15 @@ class Keyboard(tk.Canvas):
       yB = yT + (2 * self.smallRadius)
 
       key = {
-          "id": self.create_oval(xL, yT, xR, yB, fill=self.chordColor),
-          "color": "white" 
+          "id": self.create_oval(
+            xL, yT, xR, yB, 
+            fill=self.chordColor, 
+            outline=self.chordColor, 
+            width=self.keyOutlineWidth),
+          "center": {
+            "x": xL + self.smallRadius, 
+            "y": yT + + self.smallRadius
+          }
         }
       keys[i] = key
 
@@ -108,6 +116,42 @@ class Keyboard(tk.Canvas):
 
   def setKeyColor(self, note, color):
     self.itemconfigure(self.keys[note]["id"], fill=color)
+    self.itemconfigure(self.keys[note]["id"], outline=color)
+  
+  def setKeyHollow(self, note):
+    self.itemconfigure(self.keys[note]["id"], fill='')
+
+  def setKeyOutlineColor(self, note, color):
+    self.itemconfigure(self.keys[note]["id"], outline=color)
+
+  def setKeyRadius(self, note, radius):
+    x = self.keys[note]["center"]["x"]
+    y = self.keys[note]["center"]["y"]
+    self.coords(self.keys[note]["id"], x - radius, y - radius, x + radius, y + radius)
+
+  def setKeyClear(self, note):
+    self.setKeyRadius(note, self.smallRadius)
+    self.setKeyColor(note, self.chordColor)
+
+  def setKeyChord(self, note, isRoot=False):
+    color = self.chordColor
+    if isRoot: color = self.rootColor
+    self.setKeyRadius(note, self.mediumRadius)
+    self.setKeyHollow(note)
+    self.setKeyOutlineColor(note, color)
+  
+  def setKeyShadow(self, note, isRoot=False):
+    color = self.chordColor
+    if isRoot: color = self.rootColor
+    self.setKeyRadius(note, self.largeRadius)
+    self.setKeyHollow(note)
+    self.setKeyOutlineColor(note, color)
+  
+  def setKeyPlayed(self, note, isRoot=False):
+    color = self.chordColor
+    if isRoot: color = self.rootColor
+    self.setKeyRadius(note, self.largeRadius)
+    self.setKeyColor(note, color)
 
   def resetAll(self):
     self.clearAll()
@@ -120,42 +164,38 @@ class Keyboard(tk.Canvas):
     self.root = rootType
     for note in self.keyRange:
       if note % 12 == rootType:
-        self.setKeyColor(note, self.rootColor)
+        self.setKeyChord(note)
       elif noteTypes.count(note % 12) > 0:
-       self.setKeyColor(note, self.chordColor)
+        self.setKeyChord(note, isRoot=True)
 
   def clearAll(self):
     for note in self.keyRange:
-      if self.keys[note]["color"] == "black":
-        self.setKeyColor(note, self.blackColor)
-      else:
-        self.setKeyColor(note, self.whiteColor)
+      self.setKeyClear()
 
   def reset(self, notes):
     for note in notes:
       if note % 12 == self.root:
-        self.setKeyColor(note, self.rootColor)
+        self.setKeyChord(note, isRoot=True)
       elif self.chord.count(note % 12) > 0:
-       self.setKeyColor(note, self.chordColor)
-      elif self.keys[note]["color"] == "black":
-        self.setKeyColor(note, self.blackColor)
+       self.setKeyChord(note)
       else:
-        self.setKeyColor(note, self.whiteColor)
+        self.setKeyClear(note)
   
   def setShadow(self, notes):
     for note in notes:
-      if note % 12 == self.root:
-        self.setKeyColor(note, self.rootShadowColor)
-      else:
-        self.setKeyColor(note, self.shadowColor)
+      if note in self.keyRange:
+        if note % 12 == self.root:
+          self.setKeyShadow(note, isRoot=True)
+        else:
+          self.setKeyShadow(note)
 
   def play(self, notes):
     for note in notes:
       if note in self.keyRange:
         if note % 12 == self.root:
-          self.setKeyColor(note, self.rootPlayedColor)
+          self.setKeyPlayed(note, isRoot=True)
         else:
-          self.setKeyColor(note, self.playedColor)
+          self.setKeyPlayed(note)
       else:
         # TODO add indication that notes are played outside keyboard range
         pass
