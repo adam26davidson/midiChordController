@@ -12,7 +12,7 @@ class Keyboard(tk.Canvas):
   height = 40
   blackHeight = 27
   blackNoteTypes = [1, 3, 6, 8, 10]
-  keyRange = range(36, 61)
+  keyRange = range(36, 97)
   minKey = 21
   maxKey = 108
 
@@ -43,17 +43,16 @@ class Keyboard(tk.Canvas):
     for i in self.keyRange:
       if self.blackNoteTypes.count(i % 12) == 1:
         xL = self.keyDiameter*(whiteKeyIndex - 0.5) - self.smallRadius
-        xR = xL + self.keyDiameter
         yT = 0
-        yB = yT + self.keyDiameter
       else:
         xL = self.keyDiameter*(whiteKeyIndex + 0.5) - self.smallRadius
-        xR = xL + self.keyDiameter
         yT = self.whiteKeyYOffset
-        yB = yT + self.keyDiameter
         whiteKeyIndex += 1
+      xR = xL + (2 * self.smallRadius)
+      yB = yT + (2 * self.smallRadius)
+
       key = {
-          "id": self.create_arc(xL, yT, xR, yB, fill=self.chordColor),
+          "id": self.create_oval(xL, yT, xR, yB, fill=self.chordColor),
           "color": "white" 
         }
       keys[i] = key
@@ -151,7 +150,9 @@ class Keyboard(tk.Canvas):
         self.setKeyColor(note, self.shadowColor)
 
   def play(self, notes):
+
     for note in notes:
+      if note >= self.keyRange.start and note < self.keyRange.stop
       if note % 12 == self.root:
         self.setKeyColor(note, self.rootPlayedColor)
       else:
