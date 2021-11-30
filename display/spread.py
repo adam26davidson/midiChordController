@@ -4,6 +4,7 @@ from constants import *
 class Spread(tk.Canvas):
   width = 726
   height = 30
+  numKeys = 61
   color = "#636363"
 
   def __init__(self, master=None):
@@ -13,7 +14,7 @@ class Spread(tk.Canvas):
     self.pack(side="bottom")
 
   def drawArrow(self):
-    keyWidth = self.width / 88
+    keyWidth = self.width / self.numKeys
     center = self.width / 2
     x1 = center - ((self.value/2)*keyWidth)
     x2 = center + ((self.value/2)*keyWidth)
@@ -22,7 +23,7 @@ class Spread(tk.Canvas):
 
   def setValue(self, spread):
     self.value = (spread * (12/SPREAD_STEPS_PER_OCTAVE)) + 12
-    keyWidth = self.width / 88
+    keyWidth = self.width / self.numKeys
     center = self.width / 2
     x1 = center - ((self.value/2)*keyWidth)
     x2 = center + ((self.value/2)*keyWidth)
