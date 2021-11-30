@@ -17,8 +17,8 @@ class Keyboard(tk.Canvas):
   minKey = 21
   maxKey = 108
 
-  chordColorDim = "#a6a6a6"
-  rootColorDim = "#bd9c31"
+  chordColorDim = "#828282"
+  rootColorDim = "#ab9346"
   chordColor = "#ffffff"
   rootColor = "#ffc400"
 
