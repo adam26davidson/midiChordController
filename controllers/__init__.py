@@ -1,7 +1,7 @@
-from .DualShock4 import DualShock
+from .DualShock4 import DualShock4
 import asyncio
 
-controllers = [DualShock]
+controllers = [DualShock4]
 
 async def searchForControllers(display):
   foundController = False
