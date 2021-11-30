@@ -37,10 +37,10 @@ class Keyboard(tk.Canvas):
     for i in self.keyRange:
       if self.blackNoteTypes.count(i % 12) == 1:
         xL = self.keyDiameter*whiteKeyIndex - self.smallRadius
-        yT = 0
+        yT = (self.keyDiameter / 2)  - self.smallRadius
       else:
         xL = self.keyDiameter*(whiteKeyIndex + 0.5) - self.smallRadius
-        yT = self.whiteKeyYOffset
+        yT = ((self.keyDiameter / 2) - self.smallRadius) + self.whiteKeyYOffset
         whiteKeyIndex += 1
       xR = xL + (2 * self.smallRadius)
       yB = yT + (2 * self.smallRadius)
