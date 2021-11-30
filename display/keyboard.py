@@ -52,8 +52,8 @@ class Keyboard(tk.Canvas):
             outline=self.chordColor, 
             width=self.keyOutlineWidth),
           "center": {
-            "x": xL + self.keyDiameter / 2, 
-            "y": yT + self.keyDiameter / 2
+            "x": xL + self.smallRadius / 2, 
+            "y": yT + self.smallRadius / 2
           }
         }
       keys[i] = key
