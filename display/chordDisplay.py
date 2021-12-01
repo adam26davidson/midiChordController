@@ -13,7 +13,7 @@ class ChordDisplay(tk.Canvas):
   outlineWidth = 3
 
   bassRadius = 70
-  bassNoteRadius = 13
+  bassNoteRadius = 10
   bassDash = ()
   bassOutlineShadowWidth = 3
   bassOutlinePlayedWidth = 4
