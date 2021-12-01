@@ -1,5 +1,6 @@
 import tkinter as tk
 from constants import *
+from displayConstants import FONTS, COLORS
 from PIL import ImageTk, Image 
 
 class TextDisplay(tk.Frame):
@@ -7,17 +8,17 @@ class TextDisplay(tk.Frame):
   height = 350
 
   bgColor = "#000000"
-  color = "#ffffff"
-  inactiveColor = "#999999"
-  activeColor = "#00d5ff"
+  color = COLORS["chord"]
+  inactiveColor = COLORS["chordDim"]
+  activeColor = COLORS["root"]
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg=self.bgColor)
     self.master = master
 
-    bigFont = ("sans serif", 18)
-    mediumFont = ("sans serif", 14)
-    smallFont = ("sans serif", 12)
+    bigFont = FONTS["big"]
+    mediumFont = FONTS["medium"]
+    smallFont = FONTS["small"]
 
     # setting dsiplay
     self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)

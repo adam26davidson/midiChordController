@@ -34,8 +34,8 @@ class ChordDisplay(tk.Canvas):
     gap = 10
     lineY0 = (y - (self.keyTextOffset)) - (self.noteRadius + gap)
     lineY1 = y + (self.keyTextFontSize/2) + gap
-    self.create_line(x, lineY0, x, lineY1, fill=self.keyTextColor)
-    return self.create_text(x, y, fill=self.keyTextColor, text=self.noteNames[self.key])
+    self.create_line(x, lineY0, x, lineY1, fill=COLORS["chord"])
+    return self.create_text(x, y, fill=COLORS["chord"], text=self.noteNames[self.key])
   
   def createNotes(self):
     notes = []
