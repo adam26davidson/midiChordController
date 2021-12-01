@@ -5,7 +5,7 @@ class Spread(tk.Canvas):
   width = 720
   height = 30
   numKeys = 61
-  color = "#636363"
+  color = "#828282"
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
