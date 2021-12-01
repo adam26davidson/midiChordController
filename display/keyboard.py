@@ -33,6 +33,7 @@ class Keyboard(tk.Canvas):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.master = master
     self.keys = self.createKeys()
+    self.arrows = self.createArrows()
     self.pack(side="bottom", pady=(0,20))
 
     self.root = 0
@@ -46,7 +47,7 @@ class Keyboard(tk.Canvas):
     xl2 = xl1
     y2 = y0 + (self.smallArrowHeight / 2)
 
-    self.rightArrow = {
+    leftArrow = {
       "id": self.create_polygon(
         xl0, y0, xl1, y1, xl2, y2,
         joinstyle="round",
@@ -64,7 +65,7 @@ class Keyboard(tk.Canvas):
     xr1 = self.width - xl1
     xr2 = xr1
 
-    self.rightArrow = {
+    rightArrow = {
       "id": self.create_polygon(
         xr0, y0, xr1, y1, xr2, y2,
         joinstyle="round",
@@ -77,6 +78,8 @@ class Keyboard(tk.Canvas):
         "y": y0
       }
     }
+
+    return {"left": leftArrow, "right": rightArrow}
 
   def createKeys(self):
     keys = {}
