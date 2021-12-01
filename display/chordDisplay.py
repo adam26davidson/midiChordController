@@ -22,6 +22,7 @@ class ChordDisplay(tk.Canvas):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.master = master
     self.key = 0
+    self.root = 0
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.notes = self.createNotes()
     self.keyText = self.createKeyText()
@@ -50,7 +51,7 @@ class ChordDisplay(tk.Canvas):
         "id": self.create_oval(
           x0, y0, x1, y1, 
           width=self.outlineWidth,
-          fill=color,
+          fill='',
           outline = color
         ),
         "center": { "x": x, "y": y }
