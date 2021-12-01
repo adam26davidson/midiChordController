@@ -78,19 +78,19 @@ class ChordDisplay(tk.Canvas):
     self.coords(self.notes[note]["id"], x - radius, y - radius, x + radius, y + radius)
 
   def setNoteNotInScale(self, note):
-    self.setNoteHollow()
+    self.setNoteHollow(note)
     self.setNoteOutlineColor(note, '')
 
   def setNoteInScale(self, note):
     self.setNoteRadius(note, self.smallNoteRadius)
-    self.setNoteHollow()
+    self.setNoteHollow(note)
     self.setNoteOutlineColor(note, COLORS["chordDim"])
 
   def setNoteShadow(self, note, isRoot=False):
     color = COLORS["chord"]
     if isRoot: color = COLORS["root"]
     self.setNoteRadius(note, self.largeNoteRadius)
-    self.setNoteHollow()
+    self.setNoteHollow(note)
     self.setNoteOutlineColor(note, color)
 
   def setNotePlayed(self, note, isRoot=False):
