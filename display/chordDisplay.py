@@ -30,6 +30,7 @@ class ChordDisplay(tk.Canvas):
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.notes = self.createNotes()
     self.keyText = self.createKeyText()
+    self.bass = self.createBassNote()
     self.pack(side="right", pady=(30, 0), padx=(0,80))
 
   def createKeyText(self):
@@ -47,6 +48,7 @@ class ChordDisplay(tk.Canvas):
       dash=self.bassDash, 
       width=self.bassOutlineShadowWidth
     )
+    return bassNote
   
   def createNotes(self):
     notes = []
