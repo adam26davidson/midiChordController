@@ -262,44 +262,36 @@ class Keyboard(tk.Canvas):
           self.setKeyChord(note)
         else:
           self.setKeyClear(note)
-      elif note < self.minKey:
+      else:
+        side = "left"
+        if note > self.maxKey: side = "right"
         allKeysOff = self.resetKeyOutOfRange(note)
         if allKeysOff:
-          self.setArrowClear("left")
-      elif note > self.maxKey:
-        allKeysOff = self.resetKeyOutOfRange(note)
-        if allKeysOff:
-          self.setArrowClear("right")
+          self.setArrowClear(side)
   
   def setShadow(self, notes):
     for note in notes:
+      isRoot = note % 12 == self.root
       if note in self.keyRange:
-        if note % 12 == self.root:
-          self.setKeyShadow(note, isRoot=True)
-        else:
-          self.setKeyShadow(note)
-      elif note < self.minKey:
+          self.setKeyShadow(note, isRoot=isRoot)
+      else:
+        side = "left"
+        if note > self.maxKey: side = "right"
         noKeysPlayed = self.setKeyOutOfRangeShadow(note)
         if noKeysPlayed:
-          self.setArrowShadow("left")
-      elif note > self.maxKey:
-        noKeysPlayed = self.setKeyOutOfRangeShadow(note)
-        if noKeysPlayed:
-          self.setArrowShadow("right")
+          self.setArrowShadow(side, isRoot=isRoot)
 
   def play(self, notes):
     for note in notes:
+      isRoot = note % 12 == self.root
       if note in self.keyRange:
-        if note % 12 == self.root:
-          self.setKeyPlayed(note, isRoot=True)
-        else:
-          self.setKeyPlayed(note)
-      elif note < self.minKey:
+          self.setKeyPlayed(note, isRoot=isRoot)
+      else :
+        side = "left"
+        if note > self.maxKey: side = "right"
         self.setKeyOutOfRangePlayed(note)
-        self.setArrowShadow("left")
-      elif note > self.maxKey:
-        self.setKeyOutOfRangePlayed(note)
-        self.setArrowShadow("right")
+        self.setArrowPlayed(side, isRoot=isRoot)
+
         
 
   
