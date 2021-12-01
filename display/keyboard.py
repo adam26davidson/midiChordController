@@ -6,7 +6,7 @@ class Keyboard(tk.Canvas):
   mediumRadius = 4
   largeRadius = 7
 
-  arrowXPadding = 2
+  arrowXPadding = 4
   smallArrowWidth = 10
   smallArrowHeight = 8
   largeArrowWidth = 15
@@ -51,7 +51,7 @@ class Keyboard(tk.Canvas):
       "id": self.create_polygon(
         xl0, y0, xl1, y1, xl2, y2,
         joinstyle="round",
-        smooth=1,
+        smooth=0,
         width=self.keyOutlineWidth,
         fill=self.chordColorDim,
         outline=self.chordColorDim
@@ -70,7 +70,7 @@ class Keyboard(tk.Canvas):
       "id": self.create_polygon(
         xr0, y0, xr1, y1, xr2, y2,
         joinstyle="round",
-        smooth=1,
+        smooth=0,
         width=self.keyOutlineWidth,
         fill=self.chordColorDim,
         outline=self.chordColorDim
