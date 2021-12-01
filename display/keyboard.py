@@ -7,10 +7,10 @@ class Keyboard(tk.Canvas):
   largeRadius = 7
 
   arrowXPadding = 2
-  smallArrowWidth = 15
-  smallArrowHeight = 12
-  largeArrowWidth = 20
-  largeArrowHeight = 16
+  smallArrowWidth = 10
+  smallArrowHeight = 8
+  largeArrowWidth = 15
+  largeArrowHeight = 12
 
   keyXOffset = 30
   whiteKeyYOffset = 17
@@ -52,7 +52,7 @@ class Keyboard(tk.Canvas):
         xl0, y0, xl1, y1, xl2, y2,
         joinstyle="round",
         width=self.keyOutlineWidth,
-        fill='',
+        fill= self.chordColorDim,
         outline=self.chordColorDim
       ),
       "center": {
