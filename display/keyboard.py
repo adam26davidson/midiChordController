@@ -51,8 +51,9 @@ class Keyboard(tk.Canvas):
       "id": self.create_polygon(
         xl0, y0, xl1, y1, xl2, y2,
         joinstyle="round",
+        smooth=1,
         width=self.keyOutlineWidth,
-        fill= self.chordColorDim,
+        fill=self.chordColorDim,
         outline=self.chordColorDim
       ),
       "center": {
@@ -69,8 +70,9 @@ class Keyboard(tk.Canvas):
       "id": self.create_polygon(
         xr0, y0, xr1, y1, xr2, y2,
         joinstyle="round",
+        smooth=1,
         width=self.keyOutlineWidth,
-        fill='',
+        fill=self.chordColorDim,
         outline=self.chordColorDim
       ),
       "center": {
