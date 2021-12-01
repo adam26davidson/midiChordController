@@ -154,7 +154,7 @@ class Keyboard(tk.Canvas):
     contained = False
     for note in notes:
       if note % 12 == self.root:
-        contained == True
+        contained = True
         break
     return contained
 
