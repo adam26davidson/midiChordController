@@ -12,7 +12,7 @@ class Keyboard(tk.Canvas):
   whiteKeyYOffset = 17
   keyDiameter = 20
   smallRadius = 1
-  mediumRadius = 5
+  mediumRadius = 4
   largeRadius = 7
   keyOutlineWidth = 2
 
