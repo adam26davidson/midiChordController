@@ -129,6 +129,9 @@ class ChordDisplay(tk.Canvas):
     self.setNoteRadius(note, self.largeNoteRadius)
     self.setNoteColor(note, color)
 
+  def convertNote(self, note):
+    return ((note % 12) + (12-self.key)) % 12
+
   def setKey(self, key):
     self.key = key
     self.itemconfigure(self.keyText, text=self.noteNames[self.key])
@@ -161,6 +164,7 @@ class ChordDisplay(tk.Canvas):
       self.setNotePlayed(note, isRoot)
 
   def setBassShadow(self, note):
+    note = self.convertNote(note)
     color = COLORS["chord"]
     if note == self.root: color = COLORS["root"]
     self.setBassPosition(note)
@@ -169,6 +173,7 @@ class ChordDisplay(tk.Canvas):
     self.setBassColor(color)
 
   def playBass(self, note):
+    note = self.convertNote(note)
     color = COLORS["chord"]
     if note == self.root: color = COLORS["root"]
     self.setBassPosition(note)
