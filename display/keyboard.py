@@ -2,7 +2,7 @@ import tkinter as tk
 
 class Keyboard(tk.Canvas):
 
-  arrowXPadding = 2
+  arrowXPadding = 1
   smallArrowWidth = 10
   smallArrowHeight = 8
   largeArrowWidth = 15
@@ -11,8 +11,8 @@ class Keyboard(tk.Canvas):
   keyXOffset = 25
   whiteKeyYOffset = 17
   keyDiameter = 20
-  smallRadius = 2
-  mediumRadius = 4
+  smallRadius = 1
+  mediumRadius = 5
   largeRadius = 7
   keyOutlineWidth = 2
 
@@ -167,7 +167,8 @@ class Keyboard(tk.Canvas):
     if self.keysOutOfRange[side]["shadow"].count(note) == 0:
       self.keysOutOfRange[side]["shadow"].append(note)
     noKeysPlayed = self.keysOutOfRange[side]["played"].count(note) == 0
-    return noKeysPlayed
+    rootIsShadow = self.keysOutOfRange[side]["shadow"].count(self.root) == 1
+    return noKeysPlayed, rootIsShadow
 
   def setKeyOutOfRangePlayed(self, note):
     side = "below"
@@ -176,6 +177,8 @@ class Keyboard(tk.Canvas):
       self.keysOutOfRange[side]["shadow"].remove(note)
     if self.keysOutOfRange[side]["played"].count(note) == 0:
       self.keysOutOfRange[side]["played"].append(note)
+    rootIsPlayed = self.keysOutOfRange[side]["played"].count(self.root) == 1
+    return rootIsPlayed
 
   def setArrowClear(self, side):
     self.setArrowSize(side, "small")
@@ -277,9 +280,9 @@ class Keyboard(tk.Canvas):
       else:
         side = "left"
         if note > self.maxKey: side = "right"
-        noKeysPlayed = self.setKeyOutOfRangeShadow(note)
+        noKeysPlayed, rootIsShadow = self.setKeyOutOfRangeShadow(note)
         if noKeysPlayed:
-          self.setArrowShadow(side, isRoot=isRoot)
+          self.setArrowShadow(side, isRoot=rootIsShadow)
 
   def play(self, notes):
     for note in notes:
@@ -289,8 +292,8 @@ class Keyboard(tk.Canvas):
       else :
         side = "left"
         if note > self.maxKey: side = "right"
-        self.setKeyOutOfRangePlayed(note)
-        self.setArrowPlayed(side, isRoot=isRoot)
+        rootIsPlayed = self.setKeyOutOfRangePlayed(note)
+        self.setArrowPlayed(side, isRoot=rootIsPlayed)
 
         
 
