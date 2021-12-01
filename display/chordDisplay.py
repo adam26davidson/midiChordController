@@ -111,8 +111,8 @@ class ChordDisplay(tk.Canvas):
         self.setNoteNotInScale(note)
 
   def setChord(self, chordTypes, rootType):
-    self.setScale(self.scale)
     self.root = (rootType + (12-self.key)) % 12
+    self.setScale(self.scale)
     chord = []
     for i in chordTypes:
       chord.append((i + (12-self.key)) % 12)
