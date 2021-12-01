@@ -1,16 +1,15 @@
 import tkinter as tk
 import math
 from constants import *
-from .displayConstants import COLORS
+from .displayConstants import COLORS, FONTS
 
 class ChordDisplay(tk.Canvas):
   height = 350
   width = 300
   radius = 120
 
-  smallNoteRadius = 15
-  largeNoteRadius = 19
-  noteRadius = 19
+  smallNoteRadius = 13
+  largeNoteRadius = 18
   bassRadius = 22
   outlineWidth = 3
 
@@ -31,11 +30,7 @@ class ChordDisplay(tk.Canvas):
   def createKeyText(self):
     x = self.width / 2
     y = self.notes[0]["center"]["y"] + self.keyTextOffset
-    gap = 10
-    lineY0 = (y - (self.keyTextOffset)) - (self.noteRadius + gap)
-    lineY1 = y + (self.keyTextFontSize/2) + gap
-    self.create_line(x, lineY0, x, lineY1, fill=COLORS["chord"])
-    return self.create_text(x, y, fill=COLORS["chord"], text=self.noteNames[self.key])
+    return self.create_text(x, y, fill=COLORS["chord"], text=self.noteNames[self.key], font=FONTS["big"])
   
   def createNotes(self):
     notes = []
@@ -48,8 +43,8 @@ class ChordDisplay(tk.Canvas):
       theta = ((i*-2*math.pi) / 12) + (0.5*math.pi)
       x = centerX + (self.radius*math.cos(theta))
       y = centerY - (self.radius*math.sin(theta))
-      x0, x1 = x - self.noteRadius, x + self.noteRadius
-      y0, y1 = y - self.noteRadius, y + self.noteRadius
+      x0, x1 = x - self.smallNoteRadius, x + self.smallNoteRadius
+      y0, y1 = y - self.smallNoteRadius, y + self.smallNoteRadius
 
       note = {
         "id": self.create_oval(

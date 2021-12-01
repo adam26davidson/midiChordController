@@ -150,6 +150,14 @@ class Keyboard(tk.Canvas):
     x1 = x0 + sign * width
     self.coords(self.arrows[side]["id"], x0, y0, x1, y1, x1, y2)
 
+  def containsRoot(self, notes):
+    contained = False
+    for note in notes:
+      if note % 12 == self.root:
+        contained == True
+        break
+    return contained
+
   def resetKeyOutOfRange(self, note):
     side = "below"
     if note < self.minKey: side = "above"
@@ -168,7 +176,7 @@ class Keyboard(tk.Canvas):
     if self.keysOutOfRange[side]["shadow"].count(note) == 0:
       self.keysOutOfRange[side]["shadow"].append(note)
     noKeysPlayed = self.keysOutOfRange[side]["played"].count(note) == 0
-    rootIsShadow = self.keysOutOfRange[side]["shadow"].count(self.root) == 1
+    rootIsShadow = self.containsRoot(self.keysOutOfRange[side]["shadow"])
     return noKeysPlayed, rootIsShadow
 
   def setKeyOutOfRangePlayed(self, note):
@@ -178,7 +186,7 @@ class Keyboard(tk.Canvas):
       self.keysOutOfRange[side]["shadow"].remove(note)
     if self.keysOutOfRange[side]["played"].count(note) == 0:
       self.keysOutOfRange[side]["played"].append(note)
-    rootIsPlayed = self.keysOutOfRange[side]["played"].count(self.root) == 1
+    rootIsPlayed = self.containsRoot(self.keysOutOfRange[side]["played"])
     return rootIsPlayed
 
   def setArrowClear(self, side):
