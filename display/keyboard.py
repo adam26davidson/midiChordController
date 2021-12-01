@@ -124,7 +124,7 @@ class Keyboard(tk.Canvas):
     )
 
   def setArrowHollow(self, side):
-    self.itemconfigure(self.keys[side]["id"], fill='')
+    self.itemconfigure(self.arrows[side]["id"], fill='')
 
   def setArrowOutlineColor(self, side, color):
     self.itemconfigure(self.arrows[side]["id"], outline=color)
