@@ -12,7 +12,7 @@ class ChordDisplay(tk.Canvas):
   largeNoteRadius = 18
   outlineWidth = 3
 
-  bassRadius = 90
+  bassRadius = 70
   bassNoteRadius = 13
   bassDash = ()
   bassOutlineShadowWidth = 3
@@ -87,7 +87,7 @@ class ChordDisplay(tk.Canvas):
   def setBassOutlineColor(self, color):
     self.itemconfigure(self.bass, outline=color)
 
-  def setBassHollow(self, color):
+  def setBassHollow(self):
     self.itemconfigure(self.bass, fill='')
 
   def setBassPosition(self, note):
