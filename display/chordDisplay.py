@@ -10,8 +10,12 @@ class ChordDisplay(tk.Canvas):
 
   smallNoteRadius = 13
   largeNoteRadius = 18
-  bassRadius = 22
   outlineWidth = 3
+
+  bassRadius = 22
+  bassDash = (5, 5)
+  bassOutlineShadowWidth = 3
+  bassOutlinePlayedWidth = 5
 
   keyTextOffset = -60
   keyTextFontSize = 30
@@ -32,6 +36,17 @@ class ChordDisplay(tk.Canvas):
     x = self.width / 2
     y = self.notes[0]["center"]["y"] + self.keyTextOffset
     return self.create_text(x, y, fill=COLORS["chord"], text=self.noteNames[self.key], font=FONTS["big"])
+
+  def createBassNote(self):
+    center = self.notes[0]["center"]
+    x0, x1 = center["x"] - self.bassRadius, center["x"] + self.bassRadius
+    y0, y1 = center["y"] - self.bassRadius, center["y"] + self.bassRadius
+    bassNote = self.create_oval(x0, y0, x1, y1, 
+      fill='', 
+      outline=COLORS["root"], 
+      dash=self.bassDash, 
+      width=self.bassOutlineShadowWidth
+    )
   
   def createNotes(self):
     notes = []
