@@ -12,9 +12,9 @@ class ChordDisplay(tk.Canvas):
   largeNoteRadius = 18
   outlineWidth = 3
 
-  bassRadius = 25
-  bassDash = (3, 5)
-  bassOutlineShadowWidth = 3
+  bassRadius = 26
+  bassDash = (5, 5)
+  bassOutlineShadowWidth = 2
   bassOutlinePlayedWidth = 4
 
   keyTextOffset = -60
