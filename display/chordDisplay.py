@@ -105,22 +105,6 @@ class ChordDisplay(tk.Canvas):
     y = self.notes[note]["center"]["y"]
     self.coords(self.notes[note]["id"], x - radius, y - radius, x + radius, y + radius)
 
-  def setBassShadow(self, note, isRoot):
-    color = COLORS["chord"]
-    if isRoot: color = COLORS["root"]
-    self.setBassPosition(note)
-    self.setBassWidth(self.bassOutlineShadowWidth)
-    self.setBassDash(self.bassDash)
-    self.setBassColor(color)
-
-  def setBassPlayed(self, note, isRoot):
-    color = COLORS["chord"]
-    if isRoot: color = COLORS["root"]
-    self.setBassPosition(note)
-    self.setBassWidth(self.bassOutlinePlayedWidth)
-    self.setBassDash(())
-    self.setBassColor(color)
-
   def setNoteNotInScale(self, note):
     self.setNoteHollow(note)
     self.setNoteOutlineColor(note, '')
@@ -177,9 +161,17 @@ class ChordDisplay(tk.Canvas):
       self.setNotePlayed(note, isRoot)
 
   def setBassShadow(self, note):
-    isRoot = note == self.root
-    self.setBassShadow(note, isRoot)
-    
+    color = COLORS["chord"]
+    if note == self.root: color = COLORS["root"]
+    self.setBassPosition(note)
+    self.setBassWidth(self.bassOutlineShadowWidth)
+    self.setBassDash(self.bassDash)
+    self.setBassColor(color)
+
   def playBass(self, note):
-    isRoot = note == self.root
-    self.setBassPlayed(note, isRoot)
+    color = COLORS["chord"]
+    if note == self.root: color = COLORS["root"]
+    self.setBassPosition(note)
+    self.setBassWidth(self.bassOutlinePlayedWidth)
+    self.setBassDash(())
+    self.setBassColor(color)
