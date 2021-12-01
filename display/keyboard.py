@@ -2,23 +2,23 @@ import tkinter as tk
 
 class Keyboard(tk.Canvas):
 
-  smallRadius = 2
-  mediumRadius = 4
-  largeRadius = 7
-
   arrowXPadding = 4
   smallArrowWidth = 10
   smallArrowHeight = 8
   largeArrowWidth = 15
   largeArrowHeight = 12
 
-  keyXOffset = 30
+  keyXOffset = 25
   whiteKeyYOffset = 17
   keyDiameter = 20
+  smallRadius = 2
+  mediumRadius = 4
+  largeRadius = 7
   keyOutlineWidth = 2
 
-  width = 780
+  width = 770
   height = 37
+
   blackNoteTypes = [1, 3, 6, 8, 10]
   keyRange = range(36, 97)
   minKey = 36
