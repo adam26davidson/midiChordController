@@ -38,7 +38,6 @@ class ChordDisplay(tk.Canvas):
     return self.create_text(x, y, fill=self.keyTextColor, text=self.noteNames[self.key])
   
   def createNotes(self):
-    positions = []
     notes = []
     centerX = self.width / 2
     centerY = self.height - centerX
@@ -62,7 +61,7 @@ class ChordDisplay(tk.Canvas):
         "center": { "x": x, "y": y }
       }
       notes.append(note)
-    return positions, notes
+    return notes
 
   def setNoteColor(self, note, color):
     self.itemconfigure(self.notes[note]["id"], fill=color, outline=color)
