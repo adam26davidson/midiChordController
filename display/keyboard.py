@@ -1,4 +1,5 @@
 import tkinter as tk
+from .displayConstants import COLORS
 
 class Keyboard(tk.Canvas):
 
@@ -11,8 +12,8 @@ class Keyboard(tk.Canvas):
   keyXOffset = 25
   whiteKeyYOffset = 17
   keyDiameter = 20
-  smallRadius = 1
-  mediumRadius = 4
+  smallRadius = 2
+  mediumRadius = 5
   largeRadius = 7
   keyOutlineWidth = 2
 
@@ -24,10 +25,10 @@ class Keyboard(tk.Canvas):
   minKey = 36
   maxKey = 96
 
-  chordColorDim = "#828282"
-  rootColorDim = "#ab9346"
-  chordColor = "#ffffff"
-  rootColor = "#ffc400"
+  chordColorDim = COLORS["chordDim"]
+  rootColorDim = COLORS["rootDim"]
+  chordColor = COLORS["chord"]
+  rootColor = COLORS["root"]
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")

@@ -1,33 +1,30 @@
 import tkinter as tk
 import math
 from constants import *
+from .displayConstants import COLORS
 
 class ChordDisplay(tk.Canvas):
   height = 350
   width = 300
   radius = 120
+
+  smallNoteRadius = 15
+  largeNoteRadius = 19
   noteRadius = 19
   bassRadius = 22
+  outlineWidth = 3
+
   keyTextOffset = -60
-  keyTextFontSize = 20
+  keyTextFontSize = 30
 
   noteNames = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"]
-
-  keyTextColor = "#ffffff"
-  scaleColor = "#333333"
-
-  playedColor = "#ffffff"
-  playedRootColor = "#00d9ff"
-
-  shadowColor = "#858585"
-  shadowRootColor = "#567e85"
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.master = master
     self.key = 0
     self.scale = [0, 2, 4, 5, 7, 9, 11]
-    self.positions, self.notes = self.createNotes()
+    self.notes = self.createNotes()
     self.keyText = self.createKeyText()
     self.pack(side="right", pady=(30, 0), padx=(0,80))
 
@@ -46,20 +43,62 @@ class ChordDisplay(tk.Canvas):
     centerX = self.width / 2
     centerY = self.height - centerX
     for i in range(0, 12):
-      fill = ''
+      color = ''
       if self.scale.count(i) != 0:
-        fill = self.scaleColor
+        color = COLORS["chordDim"]
       theta = ((i*-2*math.pi) / 12) + (0.5*math.pi)
       x = centerX + (self.radius*math.cos(theta))
       y = centerY - (self.radius*math.sin(theta))
       x0, x1 = x - self.noteRadius, x + self.noteRadius
       y0, y1 = y - self.noteRadius, y + self.noteRadius
-      positions.append((x, y))
-      notes.append(self.create_oval(x0, y0, x1, y1, fill=fill))
+
+      note = {
+        "id": self.create_oval(
+          x0, y0, x1, y1, 
+          width=self.outlineWidth,
+          fill=color,
+          outline = color
+        ),
+        "center": { "x": x, "y": y }
+      }
+      notes.append(note)
     return positions, notes
 
   def setNoteColor(self, note, color):
-    self.itemconfigure(self.notes[note], fill=color)
+    self.itemconfigure(self.notes[note]["id"], fill=color, outline=color)
+
+  def setNoteOutlineColor(self, note, color):
+    self.itemconfigure(self.notes[note]["id"], outline=color)
+
+  def setNoteHollow(self, note):
+    self.itemconfigure(self.notes[note]["id"], fill='')
+  
+  def setNoteRadius(self, note, radius):
+    x = self.keys[note]["center"]["x"]
+    y = self.keys[note]["center"]["y"]
+    self.coords(self.notes[note]["id"], x - radius, y - radius, x + radius, y + radius)
+
+  def setNoteNotInScale(self, note):
+    self.setNoteHollow()
+    self.setNoteOutlineColor(note, '')
+
+  def setNoteInScale(self, note):
+    self.setNoteRadius(self.smallNoteRadius)
+    self.setNoteHollow()
+    self.setNoteOutlineColor(note, COLORS["chordDim"])
+
+  def setNoteShadow(self, note, isRoot=False):
+    color = COLORS["chord"]
+    if isRoot: color = COLORS["root"]
+    self.setNoteRadius(self.largeNoteRadius)
+    self.setNoteHollow()
+    self.setNoteOutlineColor(note, color)
+
+  def setNotePlayed(self, note, isRoot=False):
+    color = COLORS["chord"]
+    if isRoot: color = COLORS["root"]
+    self.setNoteRadius(self.largeNoteRadius)
+    self.setNoteColor(note, color)
 
   def setKey(self, key):
     self.key = key
@@ -68,10 +107,10 @@ class ChordDisplay(tk.Canvas):
   def setScale(self, scale):
     self.scale = scale
     for i in range(0, 12):
-      fill = ''
       if self.scale.count(i) != 0:
-        fill = self.scaleColor
-      self.setNoteColor(i, fill)
+        self.setNoteInScale(i)
+      else:
+        self.setNoteNotInScale(i)
 
   def setChord(self, chordTypes, rootType):
     self.setScale(self.scale)
@@ -83,14 +122,10 @@ class ChordDisplay(tk.Canvas):
 
   def setChordShadow(self):
     for note in self.chord:
-      color = self.shadowColor
-      if note == self.root:
-        color = self.shadowRootColor
-      self.setNoteColor(note, color)
+      isRoot = note == self.root
+      self.setNoteShadow(note, isRoot)
 
   def playChord(self):
     for note in self.chord:
-      color = self.playedColor
-      if note == self.root:
-        color = self.playedRootColor
-      self.setNoteColor(note, color)
+      isRoot = note == self.root
+      self.setNotePlayed(note, isRoot)
