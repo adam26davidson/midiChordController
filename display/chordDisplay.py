@@ -73,8 +73,8 @@ class ChordDisplay(tk.Canvas):
     self.itemconfigure(self.notes[note]["id"], fill='')
   
   def setNoteRadius(self, note, radius):
-    x = self.keys[note]["center"]["x"]
-    y = self.keys[note]["center"]["y"]
+    x = self.notes[note]["center"]["x"]
+    y = self.notes[note]["center"]["y"]
     self.coords(self.notes[note]["id"], x - radius, y - radius, x + radius, y + radius)
 
   def setNoteNotInScale(self, note):
