@@ -117,7 +117,7 @@ class Keyboard(tk.Canvas):
     return keys 
 
   def setArrowColor(self, side, color):
-    self.itemConfigure(
+    self.itemconfigure(
       self.arrows[side]["id"], 
       fill=color,
       outline=color
