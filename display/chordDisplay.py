@@ -12,10 +12,10 @@ class ChordDisplay(tk.Canvas):
   largeNoteRadius = 18
   outlineWidth = 3
 
-  bassRadius = 22
-  bassDash = (5, 5)
+  bassRadius = 25
+  bassDash = (3, 5)
   bassOutlineShadowWidth = 3
-  bassOutlinePlayedWidth = 5
+  bassOutlinePlayedWidth = 4
 
   keyTextOffset = -60
   keyTextFontSize = 30
@@ -76,6 +76,21 @@ class ChordDisplay(tk.Canvas):
       notes.append(note)
     return notes
 
+  def setBassColor(self, color):
+    self.itemconfigure(self.bass, outline=color)
+
+  def setBassPosition(self, note):
+    center = self.notes[note]["center"]
+    x0, x1 = center["x"] - self.bassRadius, center["x"] + self.bassRadius
+    y0, y1 = center["y"] - self.bassRadius, center["y"] + self.bassRadius
+    self.coords(self.bass, x0, y0, x1, y1)
+
+  def setBassWidth(self, width):
+    self.itemconfigure(self.bass, width=width)
+
+  def setBassDash(self, dash):
+    self.itemconfigure(self.bass, dash=dash)
+
   def setNoteColor(self, note, color):
     self.itemconfigure(self.notes[note]["id"], fill=color, outline=color)
 
@@ -89,6 +104,22 @@ class ChordDisplay(tk.Canvas):
     x = self.notes[note]["center"]["x"]
     y = self.notes[note]["center"]["y"]
     self.coords(self.notes[note]["id"], x - radius, y - radius, x + radius, y + radius)
+
+  def setBassShadow(self, note, isRoot):
+    color = COLORS["chord"]
+    if isRoot: color = COLORS["root"]
+    self.setBassPosition(note)
+    self.setBassWidth(self.bassOutlineShadowWidth)
+    self.setBassDash(self.bassDash)
+    self.setBassColor(color)
+
+  def setBassPlayed(self, note, isRoot):
+    color = COLORS["chord"]
+    if isRoot: color = COLORS["root"]
+    self.setBassPosition(note)
+    self.setBassWidth(self.bassOutlinePlayedWidth)
+    self.setBassDash(())
+    self.setBassColor(color)
 
   def setNoteNotInScale(self, note):
     self.setNoteHollow(note)
@@ -144,3 +175,11 @@ class ChordDisplay(tk.Canvas):
     for note in self.chord:
       isRoot = note == self.root
       self.setNotePlayed(note, isRoot)
+
+  def setBassShadow(self, note):
+    isRoot = note == self.root
+    self.setBassShadow(note, isRoot)
+    
+  def playBass(self, note):
+    isRoot = note == self.root
+    self.setBassPlayed(note, isRoot)

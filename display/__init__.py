@@ -22,7 +22,7 @@ class Display():
       self.root.focus_set()
     else:
       self.root.geometry("800x480")
-      
+
     def close_escape(event=None):
       print("escaped")
       self.root.destroy()
@@ -126,6 +126,7 @@ class Display():
   def playBass(self, note):
     self.stopBassShadow()
     self.keyboard.play([note])
+    self.chordDisplay.playBass(note)
     self.playingBassNote = note
 
   def stopChord(self, notes):
@@ -137,6 +138,7 @@ class Display():
   def stopBass(self, note):
     if self.playingChordNotes.count(note) == 0:
       self.keyboard.setShadow([note])
+    self.chordDisplay.setBassShadow(note)
     self.shadowBassNote = note
     self.playingBassNote = None
 
@@ -152,3 +154,4 @@ class Display():
     noteInPlayingChord = self.playingChordNotes.count(note) != 0
     if not noteInPlayingChord:
       self.keyboard.setShadow([note])
+    self.chordDisplay.setBassShadow(note)
