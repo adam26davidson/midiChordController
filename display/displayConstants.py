@@ -1,10 +1,8 @@
 COLORS = {
-  "bass": "#006eff",
-  "bassDim": "#4584a8",
   "chordDim": "#828282",
-  "rootDim": "#ab9346",
+  "rootDim": "#bf9536",
   "chord": "#ffffff",
-  "root": "#ffc400"
+  "root": "ffb102"
 }
 
 FONTS = {
