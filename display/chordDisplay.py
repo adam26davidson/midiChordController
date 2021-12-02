@@ -13,10 +13,10 @@ class ChordDisplay(tk.Canvas):
   outlineWidth = 3
 
   bassRadius = 120
-  bassNoteRadius = 25
+  bassNoteRadius = 27
   bassDash = ()
   bassOutlineShadowWidth = 3
-  bassOutlinePlayedWidth = 4
+  bassOutlinePlayedWidth = 5
 
   keyTextOffset = -60
   keyTextFontSize = 30
@@ -181,9 +181,9 @@ class ChordDisplay(tk.Canvas):
   def setBassShadow(self, note):
     note = self.convertNote(note)
     color = COLORS["chord"]
-    if note == self.root: color = COLORS["bassDim"]
+    if note == self.root: color = COLORS["bass"]
     self.setBassPosition(note)
-    #self.setBassHollow()
+    self.setBassWidth(self.bassOutlineShadowWidth)
     self.setBassOutlineColor(color)
 
   def playBass(self, note):
@@ -191,4 +191,5 @@ class ChordDisplay(tk.Canvas):
     color = COLORS["chord"]
     if note == self.root: color = COLORS["bass"]
     self.setBassPosition(note)
+    self.setBassWidth(self.bassOutlinePlayedWidth)
     self.setBassOutlineColor(color)
