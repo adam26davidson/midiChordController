@@ -142,7 +142,7 @@ class ChordDisplay(tk.Canvas):
   #   self.itemconfigure(self.bass, outline=color, fill=color)
 
   def setBassShadowOutlineColor(self, color):
-    self.itemconfigure(self.bass, outline=color)
+    self.itemconfigure(self.bassShadow, outline=color)
 
   # def setBassHollow(self):
   #   self.itemconfigure(self.bass, fill='')
@@ -155,7 +155,7 @@ class ChordDisplay(tk.Canvas):
     y = centerY - (self.bassRadius*math.sin(theta))
     x0, x1 = x - self.bassNoteRadius, x + self.bassNoteRadius
     y0, y1 = y - self.bassNoteRadius, y + self.bassNoteRadius
-    self.coords(self.bass, x0, y0, x1, y1)
+    self.coords(self.bassShadow, x0, y0, x1, y1)
 
   # def setBassWidth(self, width):
   #   self.itemconfigure(self.bass, width=width)
