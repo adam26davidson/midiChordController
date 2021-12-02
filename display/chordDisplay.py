@@ -8,7 +8,7 @@ class ChordDisplay(tk.Canvas):
   width = 300
   radius = 120
 
-  smallNoteRadius = 15
+  smallNoteRadius = 16
   largeNoteRadius = 18
   outlineWidth = 4
 
