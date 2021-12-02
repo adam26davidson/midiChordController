@@ -5,7 +5,7 @@ from .displayConstants import COLORS, FONTS
 
 class ChordDisplay(tk.Canvas):
   height = 350
-  width = 300
+  width = 350
   radius = 120
 
   smallNoteRadius = 13
@@ -13,9 +13,9 @@ class ChordDisplay(tk.Canvas):
   outlineWidth = 3
 
   bassRadius = 120
-  bassNoteRadius = 26
+  bassNoteRadius = 20
   bassDash = ()
-  bassOutlineShadowWidth = 3
+  bassOutlineShadowWidth = 4
   bassOutlinePlayedWidth = 15
 
   keyTextOffset = -60
