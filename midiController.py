@@ -339,11 +339,12 @@ class MidiController:
 
   def processThresholdValue(self, rawValue, name, config):
     range = config["ranges"][name]
-    center = (range["top"] - range["bottom"]) / 2
+    center = abs((range["top"] - range["bottom"]) / 2)
     threshold = range["threshold"] * center
+    print(threshold)
     if rawValue > (center + threshold):
       return 1
-    if rawValue < center - threshold:
+    if rawValue < (center - threshold):
       return -1
     else:
       return 0
