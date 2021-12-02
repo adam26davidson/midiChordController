@@ -31,6 +31,7 @@ config = {
   "ranges": {
     "gyroX": {"top": -8050, "bottom": 8050},
     "gyroZ": {"top": -8050, "bottom": 8050},
-    "leftJoyY": {"top": 0, "bottom": 255},
+    "leftJoyY": {"top": 0, "bottom": 255, "threshold": 0.6},
+    "leftJoyX": {"top": 0, "bottom": 255},
   }
 }

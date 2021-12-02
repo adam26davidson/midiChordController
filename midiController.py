@@ -25,7 +25,7 @@ class MidiController:
       self.midiOut.open_virtual_port("virtual output")
 
     #state variables
-    self.key = 0 # 0 is C, 1 is C# etc
+    self.key = 0 # 0 is C, 1 is C# etc.
     self.inversionRange = 4
     self.bassRange = 4
     self.spread = 0
@@ -42,6 +42,7 @@ class MidiController:
 
     self.inversion = 0 
     self.bassPosition = 0 
+    self.bassPositionMode = "incremental" #can be "incremental" or "continuous"
     self.modulation = "none" # can be "left", "none", or "right"
     self.secondary = "none" # can be "left", "none", or "right"
     self.alternate = False
@@ -218,7 +219,19 @@ class MidiController:
       self.inversion = -1*self.inversionRange
       self.__updateChord()
     if self.display: self.display.setInversionRange(self.inversionRange, self.inversion)
-  
+
+  def incrementBassPosition(self):
+    newPosition = self.bassPosition + 1
+    if abs(newPosition) <= self.bassRange:
+      thumb = self.__getIncrementalInversionThumbValue(newPosition)
+      self.setBassPosition(newPosition, thumb)
+
+  def decrementBassPosition(self):
+    newPosition = self.bassPosition - 1
+    if abs(newPosition) <= self.bassRange:
+      thumb = self.__getIncrementalInversionThumbValue(newPosition)
+      self.setBassPosition(newPosition, thumb)
+    
   def setBassPosition(self, position, rawValue):
     if self.display: self.display.storeBassPositionThumb(rawValue)
     if position != self.bassPosition:
@@ -324,6 +337,17 @@ class MidiController:
     value = math.floor((min(abs(rawValue), max) / max)*127)
     return value
 
+  def processThresholdValue(self, rawValue, name, config):
+    range = config["ranges"][name]
+    center = (range["top"] - range["bottom"]) / 2
+    threshold = range["threshold"] * center
+    if rawValue > (center + threshold):
+      return 1
+    if rawValue < center - threshold:
+      return -1
+    else:
+      return 0
+
   def processInversionValue(self, rawValue, name, config, pastValues, type="chord"):
     maxSteps = self.inversionRange
     if (type == "bass"):
@@ -374,6 +398,16 @@ class MidiController:
     while(self.running):
       self.__sendAfterTouch()
       await asyncio.sleep(MIDI_STEP)
+
+  def __getIncrementalInversionThumbValue(self, position):
+    thumb = 0
+    if position > 0:
+      step = 1 / (self.bassRange + 1)
+      thumb = (position + 0.5) * step
+    elif position < 0:
+      step = 1 / (self.bassRange + 1)
+      thumb = (position - 0.5) * step
+    return thumb
 
   def __sendAfterTouch(self):
     if(self.chordIsPlaying):

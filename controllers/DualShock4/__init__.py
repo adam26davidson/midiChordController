@@ -16,7 +16,7 @@ class DualShock4(MidiController):
     self.rightTriggerDown = False
     self.absValues = {
       "gyroX": {"processed": 0, "past": []},
-      "leftJoyY": {"processed": 0, "past": []}
+      "leftJoyY": {"processed": 0, "past": [], "lastThreshhold": False}
     }
 
   def start(self):
@@ -106,16 +106,23 @@ class DualShock4(MidiController):
             self.toggleAlt()
 
       elif event.type == evdev.ecodes.EV_ABS:
+        # if event.code == self.config["absCodes"]["leftJoyY"]:
+        #   intValue, value = self.processInversionValue(
+        #     event.value, 
+        #     "leftJoyY", 
+        #     self.config, 
+        #     self.absValues["leftJoyY"], 
+        #     type="bass")
+        #   self.setBassPosition(intValue, value)
+        #   forceUpdate = False
         if event.code == self.config["absCodes"]["leftJoyY"]:
-          intValue, value = self.processInversionValue(
-            event.value, 
-            "leftJoyY", 
-            self.config, 
-            self.absValues["leftJoyY"], 
-            type="bass")
-          self.setBassPosition(intValue, value)
-          forceUpdate = False
-        if event.code == self.config["absCodes"]["padX"]:
+          value = self.processThresholdValue(event.value, "leftJoyY", self.config)
+          if value == -1 and self.absValues["leftJoyY"]["lastThreshold"] != -1:
+            self.decrementBassPosition()
+          elif value == 1 and self.absValues["leftJoyY"]["lastThreshold"] != 1:
+            self.incrementBassPosition()
+          self.absValues["leftJoyY"]["lastThreshold"] = value
+        elif event.code == self.config["absCodes"]["padX"]:
           if event.value == -1:
             self.setSecondary("left")
           elif event.value == 0:
