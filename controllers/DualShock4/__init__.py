@@ -16,7 +16,7 @@ class DualShock4(MidiController):
     self.rightTriggerDown = False
     self.absValues = {
       "gyroX": {"processed": 0, "past": []},
-      "leftJoyY": {"processed": 0, "past": [], "lastThreshold": False}
+      "leftJoyY": {"processed": 0, "past": [], "lastThreshold": 0}
     }
 
   def start(self):
@@ -117,6 +117,7 @@ class DualShock4(MidiController):
         #   forceUpdate = False
         if event.code == self.config["absCodes"]["leftJoyY"]:
           value = self.processThresholdValue(event.value, "leftJoyY", self.config)
+          print(value)
           if value == -1 and self.absValues["leftJoyY"]["lastThreshold"] != -1:
             self.decrementBassPosition()
           elif value == 1 and self.absValues["leftJoyY"]["lastThreshold"] != 1:
