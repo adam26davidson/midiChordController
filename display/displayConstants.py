@@ -1,5 +1,5 @@
 COLORS = {
-  "bass": "#03a1fc",
+  "bass": "#0088ff",
   "bassDim": "#4584a8",
   "chordDim": "#828282",
   "rootDim": "#ab9346",
