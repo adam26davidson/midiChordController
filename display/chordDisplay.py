@@ -13,7 +13,7 @@ class ChordDisplay(tk.Canvas):
   outlineWidth = 3
 
   bassRadius = 120
-  bassNoteRadius = 25
+  bassNoteRadius = 22
   bassDash = ()
   bassOutlineShadowWidth = 3
   bassOutlinePlayedWidth = 10
@@ -28,10 +28,12 @@ class ChordDisplay(tk.Canvas):
     self.master = master
     self.key = 0
     self.root = 0
+    self.bassNote = 0
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.notes = self.createNotes()
     self.keyText = self.createKeyText()
-    self.bass = self.createBassNote()
+    self.bassShadow = self.createBassShadowNote()
+    self.bassPlayed = self.createBassPlayedNote()
     self.pack(side="right", pady=(30, 0), padx=(0,80))
 
   def createKeyText(self):
@@ -39,7 +41,7 @@ class ChordDisplay(tk.Canvas):
     y = self.notes[0]["center"]["y"] + self.keyTextOffset
     return self.create_text(x, y, fill=COLORS["chord"], text=self.noteNames[self.key], font=FONTS["big"])
 
-  def createBassNote(self):
+  def createBassShadowNote(self):
     centerX = self.width / 2
     centerY = self.height - centerX
     theta = ((0*-2*math.pi) / 12) + (0.5*math.pi)
@@ -54,6 +56,35 @@ class ChordDisplay(tk.Canvas):
       width=self.bassOutlineShadowWidth
     )
     return bassNote
+
+  def createBassPlayedNote(self):
+    bass = {}
+    for type in "root", "chord":
+      center = self.notes[0]["center"]
+      color1 = COLORS[type]
+      color2 = "#000000"
+      innerRadius = self.bassNoteRadius
+      outerRadius = innerRadius + self.bassOutlinePlayedWidth
+      rings = []
+      numRings = outerRadius - innerRadius
+      (r1,g1,b1) = self.winfo_rgb(color1)
+      (r2,g2,b2) = self.winfo_rgb(color2)
+      rStep = float(r2-r1) / numRings
+      gStep = float(g2-g1) / numRings
+      bStep = float(b2-b1) / numRings
+      for i in range(0, numRings):
+        r = innerRadius + i
+        nr = int(r1 + (rStep * i))
+        ng = int(g1 + (gStep * i))
+        nb = int(b1 + (bStep * i))
+        color = "#%4.4x%4.4x%4.4x" % (nr,ng,nb)
+        x0, x1 = center["x"] - r, center["x"] + r
+        y0, y1 = center["y"] - r, center["y"] + r
+        ring = self.create_oval(x0, y0, x1, y1, fill='', outline=color, width=1, state='hidden')
+        rings.append(ring)
+      bass[type] = rings
+    return bass
+
   
   def createNotes(self):
     notes = []
@@ -81,16 +112,42 @@ class ChordDisplay(tk.Canvas):
       notes.append(note)
     return notes
 
-  def setBassColor(self, color):
-    self.itemconfigure(self.bass, outline=color, fill=color)
+  def hideBassPlayed(self):
+    for type in "chord", "root":
+      for ring in self.bassPlayed[type]:
+        self.itemconfigure(ring, state='hidden')
+  
+  def showBassPlayed(self, isRoot):
+    type = "chord"
+    if isRoot: type = "root"
+    for ring in self.bassPlayed[type]:
+      self.itemconfigure(ring, state='normal')
 
-  def setBassOutlineColor(self, color):
+  def setBassPlayedPosition(self, note, isRoot):
+    type = "chord"
+    if isRoot: type = "root"
+
+    center = self.notes[note]["center"]
+    innerRadius = self.bassNoteRadius
+    outerRadius = innerRadius + self.bassOutlinePlayedWidth
+    numRings = outerRadius - innerRadius
+    for i in range(0, numRings):
+      r = innerRadius + i
+      x0, x1 = center["x"] - r, center["x"] + r
+      y0, y1 = center["y"] - r, center["y"] + r
+      self.coords(self.bassPlayed[type][i], x0, y0, x1, y1)
+
+
+  # def setBassColor(self, color):
+  #   self.itemconfigure(self.bass, outline=color, fill=color)
+
+  def setBassShadowOutlineColor(self, color):
     self.itemconfigure(self.bass, outline=color)
 
-  def setBassHollow(self):
-    self.itemconfigure(self.bass, fill='')
+  # def setBassHollow(self):
+  #   self.itemconfigure(self.bass, fill='')
 
-  def setBassPosition(self, note):
+  def setBassShadowPosition(self, note):
     centerX = self.width / 2
     centerY = self.height - centerX
     theta = ((note*-2*math.pi) / 12) + (0.5*math.pi)
@@ -100,11 +157,11 @@ class ChordDisplay(tk.Canvas):
     y0, y1 = y - self.bassNoteRadius, y + self.bassNoteRadius
     self.coords(self.bass, x0, y0, x1, y1)
 
-  def setBassWidth(self, width):
-    self.itemconfigure(self.bass, width=width)
+  # def setBassWidth(self, width):
+  #   self.itemconfigure(self.bass, width=width)
 
-  def setBassDash(self, dash):
-    self.itemconfigure(self.bass, dash=dash)
+  # def setBassDash(self, dash):
+  #   self.itemconfigure(self.bass, dash=dash)
 
   def setNoteColor(self, note, color):
     self.itemconfigure(self.notes[note]["id"], fill=color, outline=color)
@@ -180,16 +237,16 @@ class ChordDisplay(tk.Canvas):
 
   def setBassShadow(self, note):
     note = self.convertNote(note)
-    color = COLORS["bass"]
-    if note == self.root: color = COLORS["bass"]
-    self.setBassPosition(note)
-    self.setBassWidth(self.bassOutlineShadowWidth)
-    self.setBassOutlineColor(color)
+    color = COLORS["chord"]
+    if note == self.root: color = COLORS["root"]
+    self.hideBassPlayed()
+    self.setBassShadowPosition(note)
+    self.setBassShadowOutlineColor(color)
 
   def playBass(self, note):
     note = self.convertNote(note)
-    color = COLORS["bass"]
-    if note == self.root: color = COLORS["bass"]
-    self.setBassPosition(note)
-    self.setBassWidth(self.bassOutlinePlayedWidth)
-    self.setBassOutlineColor(color)
+    isRoot = note == self.root
+    self.hideBassPlayed()
+    self.setBassShadowOutlineColor('')
+    self.setBassPlayedPosition(note, isRoot)
+    self.showBassPlayed(isRoot)
