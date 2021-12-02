@@ -117,11 +117,10 @@ class DualShock4(MidiController):
         #   forceUpdate = False
         if event.code == self.config["absCodes"]["leftJoyY"]:
           value = self.processThresholdValue(event.value, "leftJoyY", self.config)
-          print(value)
           if value == -1 and self.absValues["leftJoyY"]["lastThreshold"] != -1:
-            self.decrementBassPosition()
-          elif value == 1 and self.absValues["leftJoyY"]["lastThreshold"] != 1:
             self.incrementBassPosition()
+          elif value == 1 and self.absValues["leftJoyY"]["lastThreshold"] != 1:
+            self.decrementBassPosition()
           self.absValues["leftJoyY"]["lastThreshold"] = value
         elif event.code == self.config["absCodes"]["padX"]:
           if event.value == -1:
