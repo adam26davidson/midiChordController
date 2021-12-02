@@ -16,7 +16,7 @@ class DualShock4(MidiController):
     self.rightTriggerDown = False
     self.absValues = {
       "gyroX": {"processed": 0, "past": []},
-      "leftJoyY": {"processed": 0, "past": [], "lastThreshhold": False}
+      "leftJoyY": {"processed": 0, "past": [], "lastThreshold": False}
     }
 
   def start(self):
