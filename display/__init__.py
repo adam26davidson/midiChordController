@@ -50,7 +50,7 @@ class Display():
     while True:
       self.setInversionThumb()
       self.setBassPositionThumb()
-      self.chordDisplay.runAnimationStep()
+      #self.chordDisplay.runAnimationStep()
       self.root.update()
       await asyncio.sleep(ANIMATION_STEP)
   

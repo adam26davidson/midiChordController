@@ -246,7 +246,6 @@ class ChordDisplay(tk.Canvas):
     clamped = []
     for degree in map:
       clamped.append(degree % 12)
-    
     self.modulationState = {
       "oldSCale": self.scale,
       "newScale": clamped,
