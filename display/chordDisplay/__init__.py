@@ -137,8 +137,8 @@ class ChordDisplay(tk.Canvas):
         D = self.distance(x0, y0, x1, y1)
         if D != 0:
           d = self.calculateAnimatedNoteDistance(D, t)
-          x = ((x1 - x0) * d) / D
-          y = ((y1 - y0) * d) / D
+          x = x0 + ((x1 - x0) * d) / D
+          y = y0 + ((y1 - y0) * d) / D
           return {"x": x, "y": y}
         else: 
           return self.notes[note]["center"]
