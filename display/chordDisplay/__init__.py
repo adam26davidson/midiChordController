@@ -56,15 +56,16 @@ class ChordDisplay(tk.Canvas):
 
   def createBassNote(self):
     center = self.notes[0]["center"]
-    x0, x1 = center["x"] - self.bassNoteShadowRadius, center["x"] + self.bassNoteShadowRadius
-    y0, y1 = center["y"] - self.bassNoteShadowRadius, center["y"] + self.bassNoteShadowRadius
+    r = self.bassNoteShadowRadius
+    x0, x1 = center["x"] - r, center["x"] + r
+    y0, y1 = center["y"] - r, center["y"] + r
     bassNote = self.create_oval(x0, y0, x1, y1, 
       fill='', 
       outline=COLORS["root"], 
       dash=self.bassDash, 
       width=self.bassOutlineShadowWidth
     )
-    return bassNote
+    return {"id": bassNote, "note": 0, "radius": r}
 
   def createNotes(self):
     notes = []
@@ -105,6 +106,7 @@ class ChordDisplay(tk.Canvas):
       for note in self.modulationState["newScale"]:
         center = self.getNotePosition(note)
         self.setNotePosition(note, center["x"], center["y"])
+      self.setBassPositionAndRadius(self.bass["note"],self.bass["radius"])
       if t > self.modAnimationLength:
         self.modulationState["status"] = "active"
 
@@ -149,16 +151,18 @@ class ChordDisplay(tk.Canvas):
       return self.notes[note]["center"]
 
   def setBassOutlineColor(self, color):
-    self.itemconfigure(self.bass, outline=color)
+    self.itemconfigure(self.bass["id"], outline=color)
 
   def setBassPositionAndRadius(self, note, radius):
-    center = self.notes[note]["center"]
+    self.bass["note"] = note
+    self.bass["radius"] = radius
+    center = self.getNotePosition(note)
     x0, x1 = center["x"] - radius, center["x"] + radius
     y0, y1 = center["y"] - radius, center["y"] + radius
-    self.coords(self.bass, x0, y0, x1, y1)
+    self.coords(self.bass["id"], x0, y0, x1, y1)
 
   def setBassWidth(self, width):
-    self.itemconfigure(self.bass, width=width)
+    self.itemconfigure(self.bass["id"], width=width)
 
   def setNoteColor(self, note, color):
     self.itemconfigure(self.notes[note]["id"], fill=color, outline=color)
