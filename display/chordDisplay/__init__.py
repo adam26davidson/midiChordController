@@ -111,6 +111,7 @@ class ChordDisplay(tk.Canvas):
     return math.sqrt(((x1 - x0)**2) + ((y0 - y1)**2))
 
   def calculateAnimatedNoteDistance(self, D, t):
+    if D == 0: return 0
     T = self.modAnimationLength
     if t <= T / 2:
       return ((2 * D) / (T ** 2)) * (t ** 2)
