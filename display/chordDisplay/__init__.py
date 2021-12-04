@@ -114,9 +114,9 @@ class ChordDisplay(tk.Canvas):
     if D == 0: return 0
     T = self.modAnimationLength
     if t <= T / 2:
-      return ((2 * D) / (T ** 2)) * (t ** 2)
+      return ((D) / (T ** 2)) * (t ** 2)
     elif t <= T:
-      return (((-2 * D) / (T ** 2)) * (t ** 2)) + ((4 * D * t) / T)
+      return (((-1 * D) / (T ** 2)) * (t ** 2)) + ((2 * D * t) / T)
     else:
       return D
 
@@ -137,8 +137,8 @@ class ChordDisplay(tk.Canvas):
         D = self.distance(x0, y0, x1, y1)
         if D != 0:
           d = self.calculateAnimatedNoteDistance(D, t)
-          x = x0 + (((x1 - x0) * d) / (2*D))
-          y = y0 + (((y1 - y0) * d) / (2*D))
+          x = x0 + (((x1 - x0) * d) / D)
+          y = y0 + (((y1 - y0) * d) / D)
           return {"x": x, "y": y}
         else: 
           return self.notes[note]["center"]
