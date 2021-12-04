@@ -346,7 +346,6 @@ class MidiController:
     range = config["ranges"][name]
     center = abs((range["top"] - range["bottom"]) / 2)
     threshold = range["threshold"] * center
-    print(threshold)
     if rawValue > (center + threshold):
       return 1
     if rawValue < (center - threshold):
@@ -434,7 +433,6 @@ class MidiController:
     for key in range(0, 12):
       scaleNotes[key] = self.__findScaleNotesForKey(key)
       allScaleNotes[key] = Chord.findAllNotes(scaleNotes[key])
-    print(scaleNotes)
     return scaleNotes, allScaleNotes
   
   def __sendMidi(self, notes, command = NOTE_ON, channel = None, velocity = 122):
