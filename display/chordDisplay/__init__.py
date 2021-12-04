@@ -116,8 +116,8 @@ class ChordDisplay(tk.Canvas):
     T = self.modAnimationLength
     if t <= T / 2:
       return ((2 * D) / (T ** 2)) * (t ** 2)
-    elif t <= T:
-      return (((-2 * D) / (T ** 2)) * (t ** 2)) + ((2 * D * t) / T) - (D / 2)
+    elif t >=T / 2 and t <= :
+      return ((((-2 * D) / (T ** 2)) * (t ** 2)) + ((2 * D * t) / T)) - D
     else:
       return D
 
