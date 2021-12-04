@@ -117,7 +117,7 @@ class ChordDisplay(tk.Canvas):
     if t <= T / 2:
       return ((2 * D) / (T ** 2)) * (t ** 2)
     elif t > T / 2 and t <= T:
-      return ((((-2 * D) / (T ** 2)) * (t ** 2)) + ((2 * D * t) / T)) - D
+      return ((((-2 * D) / (T ** 2)) * (t ** 2)) + ((4 * D * t) / T)) - D
     else:
       return D
 
