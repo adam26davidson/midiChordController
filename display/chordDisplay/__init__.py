@@ -102,7 +102,7 @@ class ChordDisplay(tk.Canvas):
     if self.modulationState["status"] == "startAnimation":
       t = time.time() - self.modulationState["startTime"]
       for note in self.modulationState["newScale"]:
-        center = self.getNotePosition(self, note)
+        center = self.getNotePosition(note)
         self.setNotePosition(note, center["x"], center["y"])
       if t > self.modAnimationLength:
         self.modulationState["status"] = "active"
