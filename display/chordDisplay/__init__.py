@@ -134,7 +134,7 @@ class ChordDisplay(tk.Canvas):
         center1 = self.notes[note]["center"]
         x0, y0 = center0["x"], center0["y"]
         x1, y1 = center1["x"], center1["y"]
-        D = self.distance(x0, y0, x1, y1)
+        D = self.distance(x0, y0, x1, y1) / 2
         if D != 0:
           d = self.calculateAnimatedNoteDistance(D, t)
           x = x0 + ((x1 - x0) * d) / D
@@ -268,5 +268,3 @@ class ChordDisplay(tk.Canvas):
     self.modulationState["status"] = "none"
     self.setScale(self.modulationState["oldScale"])
   
-
-
