@@ -161,5 +161,4 @@ class Display():
     self.chordDisplay.startModulation(map)
   
   def stopModulation(self):
-    pass
-    #self.chordDisplay.stopModulation()
+    self.chordDisplay.stopModulation()

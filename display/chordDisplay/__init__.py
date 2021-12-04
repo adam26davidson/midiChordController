@@ -250,9 +250,12 @@ class ChordDisplay(tk.Canvas):
     self.setBassOutlineColor(color)
 
   def startModulation(self, map):
+    print("new Scale: ")
     clamped = []
     for degree in map:
       clamped.append(degree % 12)
+    print()
+    print(clamped)
     self.modulationState = {
       "oldScale": self.scale,
       "newScale": clamped,
@@ -260,4 +263,10 @@ class ChordDisplay(tk.Canvas):
       "startTime": time.time()
     }
     self.setScale(clamped)
+  
+  def stopModulation(self):
+    self.modulationState["status"] = "none"
+    self.setScale(self.modulationState["oldScale"])
+  
+
 
