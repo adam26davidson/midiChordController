@@ -21,7 +21,7 @@ class ChordDisplay(tk.Canvas):
   bassOutlineShadowWidth = 6
   bassOutlinePlayedWidth = 10
 
-  modAnimationLength = 0.5
+  modAnimationLength = 0.3
 
   keyTextOffset = -60
   keyTextFontSize = 30
