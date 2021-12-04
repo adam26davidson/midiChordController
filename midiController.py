@@ -174,9 +174,9 @@ class MidiController:
     if self.modulation != side:
       if self.display: 
         if side != "none":
-          self.display.startModulation(self.modulations[side].applyToScale())
+          self.display.setModulation(self.modulations[side].applyToScale(), side)
         else:
-          self.display.stopModulation()
+          self.display.setModulation(self.scale, side)
       self.modulation = side
       self.__setChordType()
       self.__updateChord()

@@ -21,7 +21,7 @@ class ChordDisplay(tk.Canvas):
   bassOutlineShadowWidth = 6
   bassOutlinePlayedWidth = 10
 
-  modAnimationLength = 0.3
+  modAnimationLength = 1
 
   keyTextOffset = -60
   keyTextFontSize = 30
@@ -32,6 +32,7 @@ class ChordDisplay(tk.Canvas):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.modulationState = {
+      "side": "none",
       "oldScale": [0, 2, 4, 5, 7, 9, 11],
       "newScale": None,
       "status": "none",
@@ -249,22 +250,18 @@ class ChordDisplay(tk.Canvas):
     self.setBassWidth(self.bassOutlinePlayedWidth)
     self.setBassOutlineColor(color)
 
-  def startModulation(self, map):
+  # make this setModulation - can work for forward and backwards + left to right mods!
+  def setModulation(self, newScale, side):
     print("new Scale: ")
-    clamped = []
-    for degree in map:
-      clamped.append(degree % 12)
-    print()
-    print(clamped)
+    print(newScale)
     self.modulationState = {
+      "side": side,
       "oldScale": self.scale,
-      "newScale": clamped,
+      "newScale": newScale,
       "status": "startAnimation",
       "startTime": time.time()
     }
-    self.setScale(clamped)
+    self.setScale(newScale)
   
-  def stopModulation(self):
-    self.modulationState["status"] = "none"
-    self.setScale(self.modulationState["oldScale"])
+
   

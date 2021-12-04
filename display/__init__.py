@@ -157,8 +157,6 @@ class Display():
       self.keyboard.setShadow([note])
     self.chordDisplay.setBassShadow(note)
 
-  def startModulation(self, map):
-    self.chordDisplay.startModulation(map)
-  
-  def stopModulation(self):
-    self.chordDisplay.stopModulation()
+  def setModulation(self, newScale, side):
+    self.chordDisplay.setModulation(newScale, side)
+
