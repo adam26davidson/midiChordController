@@ -173,7 +173,7 @@ class MidiController:
   def setModulation(self, side):
     if self.modulation != side:
       if self.display: 
-        self.display.startModulation(self.modulations[side].getMap())
+        self.display.startModulation(self.modulations[side].applyToScale())
       self.modulation = side
       self.__setChordType()
       self.__updateChord()
