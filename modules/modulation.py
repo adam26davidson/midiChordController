@@ -45,3 +45,9 @@ class Modulation():
     index = scale.index(note % 12)
     #print(index)
     return note + self.offsets[index]
+
+  def applyToScale(self):
+    newScale = 0
+    for degree in self.scale:
+      newScale.append((degree + self.offsets[degree]) % 12)
+    return

@@ -1,7 +1,9 @@
 import tkinter as tk
 import math
 from constants import *
-from .displayConstants import COLORS, FONTS
+import time
+import math
+from ..displayConstants import COLORS, FONTS
 
 class ChordDisplay(tk.Canvas):
   height = 350
@@ -19,6 +21,8 @@ class ChordDisplay(tk.Canvas):
   bassOutlineShadowWidth = 6
   bassOutlinePlayedWidth = 10
 
+  modAnimationLength = 0.5
+
   keyTextOffset = -60
   keyTextFontSize = 30
 
@@ -26,6 +30,12 @@ class ChordDisplay(tk.Canvas):
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
+    self.modulationState = {
+      "scale": None,
+      "status": "none",
+      "startTime": 0
+    }
+    self.animationInProgress = False
     self.master = master
     self.key = 0
     self.root = 0
@@ -43,13 +53,9 @@ class ChordDisplay(tk.Canvas):
     return self.create_text(x, y, fill=COLORS["chord"], text=self.noteNames[self.key], font=FONTS["big"])
 
   def createBassNote(self):
-    centerX = self.width / 2
-    centerY = self.height - centerX
-    theta = ((0*-2*math.pi) / 12) + (0.5*math.pi)
-    x = centerX + (self.bassRadius*math.cos(theta))
-    y = centerY - (self.bassRadius*math.sin(theta))
-    x0, x1 = x - self.bassNoteShadowRadius, x + self.bassNoteShadowRadius
-    y0, y1 = y - self.bassNoteShadowRadius, y + self.bassNoteShadowRadius
+    center = self.notes[0]["center"]
+    x0, x1 = center["x"] - self.bassNoteShadowRadius, center["x"] + self.bassNoteShadowRadius
+    y0, y1 = center["y"] - self.bassNoteShadowRadius, center["y"] + self.bassNoteShadowRadius
     bassNote = self.create_oval(x0, y0, x1, y1, 
       fill='', 
       outline=COLORS["root"], 
@@ -58,35 +64,6 @@ class ChordDisplay(tk.Canvas):
     )
     return bassNote
 
-  # def createBassPlayedNote(self):
-  #   bass = {}
-  #   for type in "root", "chord":
-  #     center = self.notes[0]["center"]
-  #     color1 = COLORS[type]
-  #     color2 = "#000000"
-  #     innerRadius = self.bassNoteRadius
-  #     outerRadius = innerRadius + self.bassOutlinePlayedWidth
-  #     rings = []
-  #     numRings = outerRadius - innerRadius
-  #     (r1,g1,b1) = self.winfo_rgb(color1)
-  #     (r2,g2,b2) = self.winfo_rgb(color2)
-  #     rStep = float(r2-r1) / numRings
-  #     gStep = float(g2-g1) / numRings
-  #     bStep = float(b2-b1) / numRings
-  #     for i in range(0, numRings):
-  #       r = innerRadius + i
-  #       nr = int(r1 + (rStep * i))
-  #       ng = int(g1 + (gStep * i))
-  #       nb = int(b1 + (bStep * i))
-  #       color = "#%4.4x%4.4x%4.4x" % (nr,ng,nb)
-  #       x0, x1 = center["x"] - r, center["x"] + r
-  #       y0, y1 = center["y"] - r, center["y"] + r
-  #       ring = self.create_oval(x0, y0, x1, y1, fill='', outline=color, width=1, state='hidden')
-  #       rings.append(ring)
-  #     bass[type] = rings
-  #   return bass
-
-  
   def createNotes(self):
     notes = []
     centerX = self.width / 2
@@ -108,62 +85,71 @@ class ChordDisplay(tk.Canvas):
           fill='',
           outline = color
         ),
-        "center": { "x": x, "y": y }
+        "center": { "x": x, "y": y },
+        "radius": self.smallNoteRadius
       }
       notes.append(note)
     return notes
 
-  # def hideBassPlayed(self):
-  #   for type in "chord", "root":
-  #     for ring in self.bassPlayed[type]:
-  #       self.itemconfigure(ring, state='hidden')
-  
-  # def showBassPlayed(self, isRoot):
-  #   type = "chord"
-  #   if isRoot: type = "root"
-  #   for ring in self.bassPlayed[type]:
-  #     self.itemconfigure(ring, state='normal')
+  def setNotePosition(self, note, x, y):
+    r = self.notes[note]["radius"]
+    x0, x1 = x - r, x + r
+    y0, y1 = y - r, y + r
+    self.coords(self.notes[note]["id"],x0, y0, x1, y1)
 
-  # def setBassPlayedPosition(self, note, isRoot):
-  #   type = "chord"
-  #   if isRoot: type = "root"
-
-  #   center = self.notes[note]["center"]
-  #   innerRadius = self.bassNoteRadius
-  #   outerRadius = innerRadius + self.bassOutlinePlayedWidth
-  #   numRings = outerRadius - innerRadius
-  #   for i in range(0, numRings):
-  #     r = innerRadius + i
-  #     x0, x1 = center["x"] - r, center["x"] + r
-  #     y0, y1 = center["y"] - r, center["y"] + r
-  #     self.coords(self.bassPlayed[type][i], x0, y0, x1, y1)
+  def runAnimationStep(self):
+    if self.modulationState["status"] == "startAnimation":
+      t = time.time() - self.modulationState["startTime"]
+      for note in self.modulationState["scale"]:
+        center = self.getNotePosition(self, note)
+        self.setNotePosition(note, center["x"], center["y"])
+      if t > self.modAnimationLength:
+        self.modulationState["status"] = "active"
 
 
-  # def setBassColor(self, color):
-  #   self.itemconfigure(self.bass, outline=color, fill=color)
+  def distance(self, x0, y0, x1, y1):
+    return math.sqrt(((x1 - x0)**2) + ((y0 - y1)**2))
+
+  def calculateAnimatedNoteDistance(self, D, t):
+    T = self.modAnimationLength
+    if t <= T / 2:
+      return ((2 * D) / (T ** 2)) * (t ** 2)
+    elif t <= T:
+      return (((-2 * D) / (T ** 2)) * (t ** 2)) + ((4 * D * t) / T)
+    else:
+      return D
+
+  def getNotePosition(self, note):
+    if self.modulationState["status"] == "none":
+      return self.notes[note]["center"]
+    elif self.modulationState["status"] == "startAnimation":
+      if note in self.modulationState["scale"]:
+        t = time.time() - self.modulationState["startTime"]
+        index = self.modulationState["scale"].index(note)
+        oldNote = self.scale[index]
+        center0 = self.notes[oldNote]["center"]
+        center1 = self.notes[note]["center"]
+        x0, y0 = center0["x"], center0["y"]
+        x1, y1 = center1["x"], center1["y"]
+        D = self.distance(x0, y0, x1, y1)
+        d = self.calculateAnimatedNoteDistance(D, t)
+        x = ((x1 - x0) * d) / D
+        y = ((y1 - y0) * d) / D
+        return {"x": x, "y": y}
+      else:
+        return self.notes[note]["center"]
 
   def setBassOutlineColor(self, color):
     self.itemconfigure(self.bass, outline=color)
 
-  # def setBassHollow(self):
-  #   self.itemconfigure(self.bass, fill='')
-
   def setBassPositionAndRadius(self, note, radius):
-    centerX = self.width / 2
-    centerY = self.height - centerX
-    theta = ((note*-2*math.pi) / 12) + (0.5*math.pi)
-    x = centerX + (self.bassRadius*math.cos(theta))
-    y = centerY - (self.bassRadius*math.sin(theta))
-    x0, x1 = x - radius, x + radius
-    y0, y1 = y - radius, y + radius
+    center = self.notes[note]["center"]
+    x0, x1 = center["x"] - radius, center["x"] + radius
+    y0, y1 = center["y"] - radius, center["y"] + radius
     self.coords(self.bass, x0, y0, x1, y1)
-
 
   def setBassWidth(self, width):
     self.itemconfigure(self.bass, width=width)
-
-  # def setBassDash(self, dash):
-  #   self.itemconfigure(self.bass, dash=dash)
 
   def setNoteColor(self, note, color):
     self.itemconfigure(self.notes[note]["id"], fill=color, outline=color)
@@ -175,8 +161,10 @@ class ChordDisplay(tk.Canvas):
     self.itemconfigure(self.notes[note]["id"], fill='')
   
   def setNoteRadius(self, note, radius):
-    x = self.notes[note]["center"]["x"]
-    y = self.notes[note]["center"]["y"]
+    self.notes[note]["radius"] = radius
+    center = self.getNotePosition(note)
+    x = center["x"]
+    y = center["y"]
     self.coords(self.notes[note]["id"], x - radius, y - radius, x + radius, y + radius)
 
   def setNoteNotInScale(self, note):
@@ -220,11 +208,11 @@ class ChordDisplay(tk.Canvas):
         self.setNoteNotInScale(note)
 
   def setChord(self, chordTypes, rootType):
-    self.root = (rootType + (12-self.key)) % 12
+    self.root = self.convertNote(rootType)
     self.setScale(self.scale)
     chord = []
     for i in chordTypes:
-      chord.append((i + (12-self.key)) % 12)
+      chord.append(self.convertNote(i))
     self.chord = chord
 
   def setChordShadow(self):
@@ -252,3 +240,16 @@ class ChordDisplay(tk.Canvas):
     self.setBassPositionAndRadius(note, self.bassNotePlayedRadius)
     self.setBassWidth(self.bassOutlinePlayedWidth)
     self.setBassOutlineColor(color)
+
+  def startModulation(self, map):
+    clamped = []
+    for degree in map:
+      clamped.append(degree % 12)
+    t = time.time()
+    self.setScale(clamped)
+    self.modulationState = {
+      "scale": clamped,
+      "status": "startAnimation",
+      "startTime": t
+    }
+

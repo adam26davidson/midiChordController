@@ -1,9 +1,9 @@
 from constants import *
-from display.chordDisplay import ChordDisplay
-from display.keyboard import Keyboard
-from display.inversion import Inversion
-from display.spread import Spread
-from display.textDisplay import TextDisplay
+from .chordDisplay import ChordDisplay
+from .keyboard import Keyboard
+from .inversion import Inversion
+from .spread import Spread
+from .textDisplay import TextDisplay
 import asyncio
 import tkinter as tk
 
@@ -50,6 +50,7 @@ class Display():
     while True:
       self.setInversionThumb()
       self.setBassPositionThumb()
+      self.chordDisplay.runAnimationStep()
       self.root.update()
       await asyncio.sleep(ANIMATION_STEP)
   
@@ -155,3 +156,6 @@ class Display():
     if not noteInPlayingChord:
       self.keyboard.setShadow([note])
     self.chordDisplay.setBassShadow(note)
+
+  def startModulation(self, map):
+    self.chordDisplay.startModulation(map)

@@ -106,15 +106,6 @@ class DualShock4(MidiController):
             self.toggleAlt()
 
       elif event.type == evdev.ecodes.EV_ABS:
-        # if event.code == self.config["absCodes"]["leftJoyY"]:
-        #   intValue, value = self.processInversionValue(
-        #     event.value, 
-        #     "leftJoyY", 
-        #     self.config, 
-        #     self.absValues["leftJoyY"], 
-        #     type="bass")
-        #   self.setBassPosition(intValue, value)
-        #   forceUpdate = False
         if event.code == self.config["absCodes"]["leftJoyY"]:
           value = self.processThresholdValue(event.value, "leftJoyY", self.config)
           if value == -1 and self.absValues["leftJoyY"]["lastThreshold"] != -1:
