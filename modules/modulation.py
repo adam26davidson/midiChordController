@@ -48,6 +48,6 @@ class Modulation():
 
   def applyToScale(self):
     newScale = []
-    for degree in self.scale:
-      newScale.append((degree + self.offsets[degree]) % 12)
+    for i in range(0, len(self.scale)):
+      newScale.append((self.scale[i] + self.offsets[i]) % 12)
     return
