@@ -144,6 +144,8 @@ class ChordDisplay(tk.Canvas):
           return self.notes[note]["center"]
       else:
         return self.notes[note]["center"]
+    else: 
+      return self.notes[note]["center"]
 
   def setBassOutlineColor(self, color):
     self.itemconfigure(self.bass, outline=color)
