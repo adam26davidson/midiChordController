@@ -106,7 +106,6 @@ class ChordDisplay(tk.Canvas):
       if t > self.modAnimationLength:
         self.modulationState["status"] = "active"
 
-
   def distance(self, x0, y0, x1, y1):
     return math.sqrt(((x1 - x0)**2) + ((y0 - y1)**2))
 
@@ -123,10 +122,12 @@ class ChordDisplay(tk.Canvas):
     if self.modulationState["status"] == "none":
       return self.notes[note]["center"]
     elif self.modulationState["status"] == "startAnimation":
-      if note in self.modulationState["scale"]:
+      newScale = self.modulationState["newScale"]
+      oldScale = self.modulationState["oldScale"]
+      if note in newScale:
         t = time.time() - self.modulationState["startTime"]
-        index = self.modulationState["scale"].index(note)
-        oldNote = self.scale[index]
+        index = newScale.index(note)
+        oldNote = oldScale[index]
         center0 = self.notes[oldNote]["center"]
         center1 = self.notes[note]["center"]
         x0, y0 = center0["x"], center0["y"]
@@ -245,11 +246,12 @@ class ChordDisplay(tk.Canvas):
     clamped = []
     for degree in map:
       clamped.append(degree % 12)
-    t = time.time()
-    self.setScale(clamped)
+    
     self.modulationState = {
-      "scale": clamped,
+      "oldSCale": self.scale,
+      "newScale": clamped,
       "status": "startAnimation",
-      "startTime": t
+      "startTime": time.time()
     }
+    self.setScale(clamped)
 
