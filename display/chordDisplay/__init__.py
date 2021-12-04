@@ -126,7 +126,7 @@ class ChordDisplay(tk.Canvas):
     elif self.modulationState["status"] == "startAnimation":
       newScale = self.modulationState["newScale"]
       oldScale = self.modulationState["oldScale"]
-      if note in newScale:
+      if note in newScale and note not in oldScale:
         t = time.time() - self.modulationState["startTime"]
         index = newScale.index(note)
         oldNote = oldScale[index]
@@ -135,10 +135,13 @@ class ChordDisplay(tk.Canvas):
         x0, y0 = center0["x"], center0["y"]
         x1, y1 = center1["x"], center1["y"]
         D = self.distance(x0, y0, x1, y1)
-        d = self.calculateAnimatedNoteDistance(D, t)
-        x = ((x1 - x0) * d) / D
-        y = ((y1 - y0) * d) / D
-        return {"x": x, "y": y}
+        if D != 0:
+          d = self.calculateAnimatedNoteDistance(D, t)
+          x = ((x1 - x0) * d) / D
+          y = ((y1 - y0) * d) / D
+          return {"x": x, "y": y}
+        else: 
+          return self.notes[note]["center"]
       else:
         return self.notes[note]["center"]
 
