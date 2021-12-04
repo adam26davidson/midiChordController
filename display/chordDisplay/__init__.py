@@ -126,7 +126,7 @@ class ChordDisplay(tk.Canvas):
     elif self.modulationState["status"] == "startAnimation":
       newScale = self.modulationState["newScale"]
       oldScale = self.modulationState["oldScale"]
-      if note in newScale and note not in oldScale:
+      if note in newScale:
         t = time.time() - self.modulationState["startTime"]
         index = newScale.index(note)
         oldNote = oldScale[index]
