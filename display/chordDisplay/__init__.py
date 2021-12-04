@@ -30,8 +30,10 @@ class ChordDisplay(tk.Canvas):
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
+    self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.modulationState = {
-      "scale": None,
+      "oldScale": [0, 2, 4, 5, 7, 9, 11],
+      "newScale": None,
       "status": "none",
       "startTime": 0
     }
@@ -40,7 +42,6 @@ class ChordDisplay(tk.Canvas):
     self.key = 0
     self.root = 0
     self.bassNote = 0
-    self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.notes = self.createNotes()
     self.keyText = self.createKeyText()
     self.bass = self.createBassNote()
@@ -202,7 +203,7 @@ class ChordDisplay(tk.Canvas):
   def setScale(self, scale):
     self.scale = scale
     for note in range(0, 12):
-      if self.scale.count(note) != 0:
+      if note in self.scale:
         isRoot = note == self.root
         self.setNoteInScale(note, isRoot)
       else:
