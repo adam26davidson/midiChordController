@@ -35,7 +35,6 @@ class Wired360Controller(MidiController):
         for device in devices:
             if (device.name == "Microsoft X-Box 360 pad"):
                 found = True
-
         return found
 
     def printMode(self):
