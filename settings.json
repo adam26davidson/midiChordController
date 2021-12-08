@@ -9,7 +9,7 @@
       },
       "right": {
         "type": "custom",
-        "map": [0, 0, 3, 5, 7, 7, 10]
+        "map": [0, 10, 8, 7, 5, 3, 1]
       }
     },
     "chords": {
@@ -47,28 +47,94 @@
         "interval": 7,
         "main": [0, 4, 7, 10],
         "mainBass": [0, 7],
-        "alternate": [0, 2, 4, 7, 10],
+        "alternate": [2, 4, 7, 10],
         "alternateBass": [0, 7],
         "east": {
           "default": {
-            "alternate": [0, 1, 4, 7, 10]
-          },
-          "leftModulation": {
-            "root": 5,
-            "main": [0, 4, 7]
+            "alternate": [1, 4, 7, 10]
           }
         },
         "north": {
           "default": {
-            "alternate": [0, 1, 4, 7, 10]
+            "alternate": [1, 4, 7, 10]
           }
         }
       },
       "right": {
         "interval": 1,
-        "main": [0, 4, 6, 11],
-        "mainBass": [0, 6],
-        "alternate": [0, 2, 4, 9],
+        "main": [0, 4, 7, 10],
+        "mainBass": [0, 7],
+        "alternate": [2, 4, 7, 10],
+        "alternateBass": [0, 7]
+      }
+    }
+  },
+  {
+    "name": "No Fives",
+    "scale": [0, 2, 4, 5, 7, 9, 11],
+    "modulations": {
+      "left": {
+        "type": "modal",
+        "map": [0, 5]
+      },
+      "right": {
+        "type": "custom",
+        "map": [0, 10, 8, 7, 5, 3, 1]
+      }
+    },
+    "chords": {
+      "south": {
+        "root": 0,
+        "main": [0, 2, 6],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 6],
+        "alternateBass": [0, 1, 4]
+      },
+      "west": {
+        "root": 3,
+        "main": [0, 2, 6],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 6],
+        "alternateBass": [0, 1, 4]
+      },
+      "north": {
+        "root": 1,
+        "main": [0, 2, 6],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 6],
+        "alternateBass": [0, 1, 4]
+      },
+      "east": {
+        "root": 5,
+        "main": [0, 2, 6],
+        "mainBass": [0, 4],
+        "alternate": [1, 2, 6],
+        "alternateBass": [0, 1, 4]
+      }
+    },
+    "secondaries": {
+      "left": {
+        "interval": 7,
+        "main": [0, 4, 10],
+        "mainBass": [0, 7],
+        "alternate": [2, 4, 10],
+        "alternateBass": [0, 7],
+        "east": {
+          "default": {
+            "alternate": [1, 4, 10]
+          }
+        },
+        "north": {
+          "default": {
+            "alternate": [1, 4, 10]
+          }
+        }
+      },
+      "right": {
+        "interval": 1,
+        "main": [0, 4, 10],
+        "mainBass": [0, 7],
+        "alternate": [2, 4, 10],
         "alternateBass": [0, 7]
       }
     }
