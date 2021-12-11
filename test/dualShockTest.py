@@ -1,7 +1,7 @@
 import evdev
 import asyncio
 
-print(evdev.list_devices())
+print([d.name for d in evdev.list_devices()])
 
 motion = None
 touch = None
