@@ -70,8 +70,19 @@ evdevMap = {
       "events":{ 1: "DPAD_DOWN", 0: "DPAD_Y_OFF", -1: "DPAD_UP"}
     },
 
+    316: {
+      "name": "START_BUTTON",
+      "type": "BUTTON",
+      "events":{ 1: "START_BUTTON_DOWN", 0: "START_BUTTON_UP"}
+    },
+
 
     # ANALOG STICKS
+    317: {
+      "name": "LEFT_STICK_BUTTON",
+      "type": "BUTTON",
+      "events":{ 1: "LEFT_STICK_BUTTON_DOWN", 0: "LEFT_STICK_BUTTON_UP"}
+    },
     0: {
       "name": "LEFT_STICK_X",
       "type": "ANALOG",
@@ -93,6 +104,11 @@ evdevMap = {
         0: "LEFT_STICK_Y_OFF",
         -1: "LEFT_STICK_DOWN"
       }
+    },
+    318: {
+      "name": "RIGHT_STICK_BUTTON",
+      "type": "BUTTON",
+      "events":{ 1: "RIGHT_STICK_BUTTON_DOWN", 0: "RIGHT_STICK_BUTTON_UP"}
     },
     3: {
       "name": "RIGHT_STICK_X",

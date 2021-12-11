@@ -14,9 +14,7 @@ async def buttonsLoop():
       print(evdev.categorize(event))
       print(event)
     elif event.type == evdev.ecodes.EV_ABS:
-      if event.code > 4:
-        pass
-        #print(event)
+      print(event)
 
 async def touchLoop():
   async for event in touch.async_read_loop():
