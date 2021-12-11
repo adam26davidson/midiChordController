@@ -30,13 +30,15 @@ async def motionLoop():
       
 
 if (evdev.list_devices().count('/dev/input/event1') == 1):
-  motion = evdev.InputDevice('/dev/input/event1')
-  touch = evdev.InputDevice('/dev/input/event0')
-  buttons = evdev.InputDevice('/dev/input/event2')
+  motion = evdev.InputDevice('/dev/input/event5')
+  touch = evdev.InputDevice('/dev/input/event4')
+  buttons = evdev.InputDevice('/dev/input/event6')
 
   #asyncio.ensure_future(motionLoop())
   asyncio.ensure_future(buttonsLoop())
   #asyncio.ensure_future(touchLoop())
   
+loop = asyncio.get_event_loop()
+loop.run_forever()
 
 
