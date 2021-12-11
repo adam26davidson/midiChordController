@@ -40,10 +40,26 @@ evdevMap = {
       "type": "BUTTON",
       "events":{ 1: "RIGHT_TRIGGER_DOWN", 0: "RIGHT_TRIGGER_UP" }
     },
+    5: {
+      "name": "RIGHT_TRIGGER_ANALOG",
+      "type": "ANALOG",
+      "range": {"top": 0, "bottom": 255},
+      "events":{ 
+        "value": "RIGHT_TRIGGER_UPDATE", 
+      }
+    },
     312: {
       "name": "LEFT_TRIGGER",
       "type": "BUTTON",
       "events":{ 1: "LEFT_TRIGGER_DOWN", 0: "LEFT_TRIGGER_UP" }
+    },
+    2: {
+      "name": "LEFT_TRIGGER_ANALOG",
+      "type": "ANALOG",
+      "range": {"top": 0, "bottom": 255},
+      "events":{ 
+        "value": "LEFT_TRIGGER_UPDATE", 
+      }
     },
 
     # OPTIONS
@@ -131,7 +147,7 @@ evdevMap = {
         0: "RIGHT_STICK_Y_OFF",
         -1: "RIGHT_STICK_DOWN"
       }
-    },
+    }
 
   },
   "motion": {

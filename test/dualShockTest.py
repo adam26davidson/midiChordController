@@ -34,7 +34,7 @@ if (evdev.list_devices().count('/dev/input/event1') == 1):
 
   #asyncio.ensure_future(motionLoop())
   asyncio.ensure_future(buttonsLoop())
-  #asyncio.ensure_future(touchLoop())
+  asyncio.ensure_future(touchLoop())
   
 loop = asyncio.get_event_loop()
 loop.run_forever()
