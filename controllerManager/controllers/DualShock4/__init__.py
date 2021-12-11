@@ -1,30 +1,36 @@
 import evdev
 import asyncio
-import math
-import time
-from constants import * 
-from midiController import MidiController
+from .evdevMap import evdevMap
 from .config import config
+from ...controller import Controller
 
-class DualShock4(MidiController):
+
+class DualShock4(Controller):
+
   config = config
-  library = None
+  evdevMap = evdevMap
 
-  def __init__(self, display):
-    super().__init__(display)
-    self.leftTriggerDown = False
-    self.rightTriggerDown = False
-    self.absValues = {
-      "gyroX": {"processed": 0, "past": []},
-      "leftJoyY": {"processed": 0, "past": [], "lastThreshold": 0}
-    }
+  def __init__(self, sendEvent):
+    self.sendEvent = sendEvent
+
+    mainState = self.createState(self.evdevMap['main'])
+    motionState = self.createState(self.evdevMap['motion'])
+    self.state = mainState | motionState
+  
+  def createState(self, controls):
+    state = {}
+    for control in controls:
+      if control['type'] in ['BUTTON', "PAD"]:
+        state[control['name']] = 0
+      elif control['type'] == 'ANALOG':
+        state[control['name']] = {"valueHistory": [], "thresholdValue": 0}
 
   def start(self):
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     for device in devices:
       if (device.name == "Wireless Controller"):
-        self.buttons = evdev.InputDevice(device.path)
-        asyncio.ensure_future(self.buttonsLoop())
+        self.mainControls = evdev.InputDevice(device.path)
+        asyncio.ensure_future(self.mainControlsLoop())
       elif (device.name == "Wireless Controller Motion Sensors"):
         self.motion = evdev.InputDevice(device.path)
         asyncio.ensure_future(self.motionLoop())
@@ -47,103 +53,45 @@ class DualShock4(MidiController):
           found = True
       return found
 
+  def processEvent(self, event, device):
+    if event.code in self.evdevMap[device].keys():
+      control = self.evdevMap['main'][event.code]
+      if control['type'] in ['BUTTON', 'PAD']:
+        self.processButtonEvent(event, device)
+      elif control['type'] == 'ANALOG':
+        self.processAnalogEvent(event, device)
+
+  def processButtonEvent(self, event, device):
+    control = self.evdevMap[device][event.code]
+
+    self.state[control['name']] = event.value
+    eventName = control['events'][event.value]
+    self.sendEvent({'name': eventName})
+
+  def processAnalogEvent(self, event, device):
+    control = self.evdevMap[device][event.code]
+    config = self.config[control['name']]
+    state = self.state[control['name']]
+
+    result = self.processAnalogValue(event.value, control, config, state)
+    state = result[state]
+
+    self.sendEvent({
+      'name': control['events']['value'],
+      'value': result['value']
+    })
+
+    if result['thresholdValueChanged']:
+      eventName = control['events'][result['thresholdValue']]
+      self.sendEvent({'name': eventName})
+  
+  async def mainControlsLoop(self):
+    async for event in self.mainControls.async_read_loop():
+      self.processEvent(event, 'main')
+
   async def motionLoop(self):
     async for event in self.motion.async_read_loop():
-      if event.code == self.config["motionCodes"]["x"]:
-        if (not self.inversionHold):
-          intValue, value = self.processInversionValue(event.value, "gyroX", self.config, self.absValues["gyroX"])
-          self.setInversion(intValue, value)
-      elif event.code == self.config["motionCodes"]["z"]:
-        if event.value != 0:
-          value = self.processCCValue(event.value, "gyroZ", self.config)
-          self.setAfterTouch(value)
-  
-  async def buttonsLoop(self):
-    async for event in self.buttons.async_read_loop():
-      forceUpdate = True
-      if event.type == evdev.ecodes.EV_KEY:
-        for button in ["south", "east", "north", "west"]:
-          if event.code == self.config["buttonCodes"][button]:
-            if event.value == 1:
-              self.playChord(button)
-            elif self.activeChord == button:
-              self.stopChord()
-        if event.code == self.config["buttonCodes"]["leftTrigger2"]:
-          if event.value == 1:
-            self.playBass()
-          else:
-            self.stopBass()
-        elif event.code == self.config["buttonCodes"]["rightTrigger2"]:
-          if event.value == 1:
-            self.setAlternate(True)
-          else:
-            self.setAlternate(False)
-        elif event.code == self.config["buttonCodes"]["leftTrigger"]:
-          if event.value == 1:
-            self.leftTriggerDown = True
-            self.setModulation("left")
-          else:
-            self.leftTriggerDown = False
-            if self.rightTriggerDown:
-              self.setModulation("right")
-            else:
-              self.setModulation("none")
-        elif event.code == self.config["buttonCodes"]["rightTrigger"]:
-          if event.value == 1:
-            self.rightTriggerDown = True
-            self.setModulation("right")
-          else:
-            self.rightTriggerDown = False
-            if self.leftTriggerDown:
-              self.setModulation("left")
-            else:
-              self.setModulation("none")
-        elif event.code == self.config["buttonCodes"]["options"]:
-          if event.value == 1:
-            self.toggleShift()
-        elif event.code == self.config["buttonCodes"]["share"]:
-          if event.value == 1:
-            self.toggleAlt()
-
-      elif event.type == evdev.ecodes.EV_ABS:
-        if event.code == self.config["absCodes"]["leftJoyY"]:
-          value = self.processThresholdValue(event.value, "leftJoyY", self.config)
-          if value == -1 and self.absValues["leftJoyY"]["lastThreshold"] != -1:
-            self.incrementBassPosition()
-          elif value == 1 and self.absValues["leftJoyY"]["lastThreshold"] != 1:
-            self.decrementBassPosition()
-          self.absValues["leftJoyY"]["lastThreshold"] = value
-        elif event.code == self.config["absCodes"]["padX"]:
-          if event.value == -1:
-            self.setSecondary("left")
-          elif event.value == 0:
-            self.setSecondary("none")
-          elif event.value == 1:
-            self.setSecondary("right")
-
-        elif event.code == self.config["absCodes"]["padY"]:
-          if not self.shift and not self.alt:
-            if event.value == -1:
-              self.incrementSpread()
-            elif event.value == 1:
-              self.decrementSpread()
-          elif self.shift and not self.alt:
-            if event.value == -1:
-              self.incrementKey()
-            elif event.value == 1:
-              self.decrementKey()
-          elif not self.shift and self.alt:
-            if event.value == -1:
-              self.incrementSetting()
-            elif event.value == 1:
-              self.decrementSetting()
-          else:
-            if event.value == -1:
-              self.toggleHold()
-            if event.value == 1:
-              self.toggleInversionHold()
-      if (forceUpdate):
-        self.updateDisplay()
+      self.processEvent(event, 'motion')
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():

@@ -14,7 +14,6 @@ class controllerManager():
     for callBack in self.subscriberCallbacks:
       callBack(event)
 
-
   async def searchForControllers(display):
     foundController = False
     connectedController = None
