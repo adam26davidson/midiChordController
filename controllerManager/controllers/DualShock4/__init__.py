@@ -4,7 +4,6 @@ from .evdevMap import evdevMap
 from .config import config
 from ...controller import Controller
 
-
 class DualShock4(Controller):
 
   config = config

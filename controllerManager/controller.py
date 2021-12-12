@@ -37,13 +37,15 @@ class Controller(ABC):
     normalized = max(min(normalized, 0.999), -0.999)
 
     thresholdValue = 0
-    #determine threshold value
-    if normalized > config["threshold"]:
-      thresholdValue = 1
-    elif normalized < -1*config["threshold"]:
-      thresholdValue = -1
+    thresholdValueChanged = False
+    if "threshold" in config.keys():
+      #determine threshold value
+      if normalized > config["threshold"]:
+        thresholdValue = 1
+      elif normalized < -1*config["threshold"]:
+        thresholdValue = -1
 
-    thresholdValueChanged = thresholdValue != state["thresholdValue"]
+      thresholdValueChanged = thresholdValue != state["thresholdValue"]
     
     return {
       "thresholdValueChanged": thresholdValueChanged,

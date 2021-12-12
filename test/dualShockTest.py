@@ -19,12 +19,13 @@ async def buttonsLoop():
 async def touchLoop():
   async for event in touch.async_read_loop():
     if event.type == evdev.ecodes.EV_KEY:
-      print("touch")
-      print(evdev.categorize(event))
-      print(event)
-    elif event.type == evdev.ecodes.EV_ABS:
       pass
-      #print(event)
+      # print("touch")
+      # print(evdev.categorize(event))
+      # print(event)
+    elif event.type == evdev.ecodes.EV_ABS:
+      
+      print(event)
 
 async def motionLoop():
   async for event in motion.async_read_loop():

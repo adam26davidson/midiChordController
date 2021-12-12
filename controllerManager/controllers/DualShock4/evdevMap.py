@@ -45,7 +45,7 @@ evdevMap = {
       "type": "ANALOG",
       "range": {"top": 0, "bottom": 255},
       "events":{ 
-        "value": "RIGHT_TRIGGER_UPDATE", 
+        "value": "RIGHT_TRIGGER_UPDATE"
       }
     },
     312: {
@@ -58,7 +58,7 @@ evdevMap = {
       "type": "ANALOG",
       "range": {"top": 0, "bottom": 255},
       "events":{ 
-        "value": "LEFT_TRIGGER_UPDATE", 
+        "value": "LEFT_TRIGGER_UPDATE"
       }
     },
 
@@ -105,9 +105,11 @@ evdevMap = {
       "range": {"top": 0, "bottom": 255},
       "events":{ 
         "value": "LEFT_STICK_X_UPDATE", 
-        1: "LEFT_STICK_RIGHT",
-        0: "LEFT_STICK_X_OFF",
-        -1: "LEFT_STICK_LEFT"
+        "threshold": { 
+          1: "LEFT_STICK_RIGHT",
+          0: "LEFT_STICK_X_OFF",
+          -1: "LEFT_STICK_LEFT"
+        }
       }
     },
     1: {
@@ -116,9 +118,11 @@ evdevMap = {
       "range": {"top": 0, "bottom": 255},
       "events":{ 
         "value": "LEFT_STICK_Y_UPDATE", 
-        1: "LEFT_STICK_UP",
-        0: "LEFT_STICK_Y_OFF",
-        -1: "LEFT_STICK_DOWN"
+        "threshold": { 
+          1: "LEFT_STICK_UP",
+          0: "LEFT_STICK_Y_OFF",
+          -1: "LEFT_STICK_DOWN"
+        }
       }
     },
     318: {
@@ -132,9 +136,11 @@ evdevMap = {
       "range": {"top": 0, "bottom": 255},
       "events":{ 
         "value": "RIGHT_STICK_X_UPDATE", 
-        1: "RIGHT_STICK_RIGHT",
-        0: "RIGHT_STICK_X_OFF",
-        -1: "RIGHT_STICK_LEFT"
+        "threshold": { 
+          1: "RIGHT_STICK_RIGHT",
+          0: "RIGHT_STICK_X_OFF",
+          -1: "RIGHT_STICK_LEFT"
+        }
       }
     },
     4: {
@@ -143,9 +149,11 @@ evdevMap = {
       "range": {"top": 0, "bottom": 255},
       "events":{ 
         "value": "RIGHT_STICK_Y_UPDATE", 
-        1: "RIGHT_STICK_UP",
-        0: "RIGHT_STICK_Y_OFF",
-        -1: "RIGHT_STICK_DOWN"
+        "threshold": { 
+          1: "RIGHT_STICK_UP",
+          0: "RIGHT_STICK_Y_OFF",
+          -1: "RIGHT_STICK_DOWN"
+        }
       }
     }
 
@@ -157,10 +165,12 @@ evdevMap = {
       "type": "ANALOG",
       "range": {"top": -8050, "bottom": 8050},
       "events":{ 
-        "value": "GYRO_PITCH_UPDATE", 
-        1: "GYRO_PITCH_UP",
-        0: "GYRO_PITCH_OFF",
-        -1: "GYRO_PITCH_DOWN"
+        "value": "GYRO_PITCH_UPDATE",
+        "threshold": { 
+          1: "GYRO_PITCH_UP",
+          0: "GYRO_PITCH_OFF",
+          -1: "GYRO_PITCH_DOWN"
+        }
       }
     },
     0: {
@@ -169,10 +179,26 @@ evdevMap = {
       "range": {"top": -8050, "bottom": 8050},
       "events":{ 
         "value": "GYRO_ROLL_UPDATE", 
-        1: "GYRO_ROLL_RIGHT",
-        0: "GYRO_ROLL_OFF",
-        -1: "GYRO_ROLL_LEFT"
+        "threshold": {
+          1: "GYRO_ROLL_RIGHT",
+          0: "GYRO_ROLL_OFF",
+          -1: "GYRO_ROLL_LEFT"
+        }
+        
       }
     },
+  },
+  "touch": {
+    272: {
+      "name": "TOUCHPAD_BUTTON",
+      "type": "BUTTON",
+      "events":{ 1: "TOUCHPAD_BUTTON_DOWN", 0: "TOUCHPAD_BUTTON_UP" }
+    },
+    325: {
+      "name": "TOUCHPAD_TOUCH",
+      "type": "BUTTON",
+      "events":{ 1: "TOUCHPAD_TOUCH_DOWN", 0: "TOUCHPAD_TOUCH_UP" }
+    },
+
   }
 }
