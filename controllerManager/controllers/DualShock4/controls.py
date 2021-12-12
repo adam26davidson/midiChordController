@@ -1,4 +1,6 @@
 config = {
+  "vendor": 1356,
+  "product": 2508,
   "main": {
     # MAIN BUTTONS
     304: {
