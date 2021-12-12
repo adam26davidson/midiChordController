@@ -23,7 +23,7 @@ async def touchLoop():
       # print("touch")
       # print(evdev.categorize(event))
       # print(event)
-    elif event.type == evdev.ecodes.EV_ABS:
+    elif event.type == evdev.ecodes.EV_ABS and event.code in [0, 1]:
       
       print(event)
 
