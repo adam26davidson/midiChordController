@@ -19,7 +19,7 @@ async def buttonsLoop():
 async def touchLoop():
   async for event in touch.async_read_loop():
     print("touch")
-    print(evdev.categorize(event))
+    print(event)
 
 async def motionLoop():
   async for event in motion.async_read_loop():
