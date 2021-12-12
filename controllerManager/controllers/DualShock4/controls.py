@@ -1,4 +1,4 @@
-config = {
+controls = {
   "vendor": 1356,
   "product": 2508,
   "main": {

@@ -40,5 +40,4 @@ musicEngineMap = {
   "LEFT_TRIGGER_DOWN": "BASS_ON",
   "LEFT_TRIGGER_UP": "BASS_OFF",
 
-
 }
