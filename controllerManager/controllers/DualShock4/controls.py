@@ -1,4 +1,4 @@
-evdevMap = {
+config = {
   "main": {
     # MAIN BUTTONS
     304: {
@@ -43,10 +43,11 @@ evdevMap = {
     5: {
       "name": "RIGHT_TRIGGER_ANALOG",
       "type": "ANALOG",
-      "range": {"top": 0, "bottom": 255},
+      "range": {"top": 255, "bottom": 0},
       "events":{ 
         "value": "RIGHT_TRIGGER_UPDATE"
-      }
+      },
+      "config": { "averageCount": 1}
     },
     312: {
       "name": "LEFT_TRIGGER",
@@ -56,10 +57,11 @@ evdevMap = {
     2: {
       "name": "LEFT_TRIGGER_ANALOG",
       "type": "ANALOG",
-      "range": {"top": 0, "bottom": 255},
+      "range": {"top": 255, "bottom": 0},
       "events":{ 
         "value": "LEFT_TRIGGER_UPDATE"
-      }
+      },
+      "config": { "averageCount": 1}
     },
 
     # OPTIONS
@@ -110,7 +112,8 @@ evdevMap = {
           0: "LEFT_STICK_X_OFF",
           -1: "LEFT_STICK_LEFT"
         }
-      }
+      },
+      "config": { "averageCount": 1, "threshold": 0.6 }
     },
     1: {
       "name": "LEFT_STICK_Y",
@@ -123,7 +126,8 @@ evdevMap = {
           0: "LEFT_STICK_Y_OFF",
           -1: "LEFT_STICK_DOWN"
         }
-      }
+      },
+      "config": { "averageCount": 1, "threshold": 0.6 }
     },
     318: {
       "name": "RIGHT_STICK_BUTTON",
@@ -141,7 +145,8 @@ evdevMap = {
           0: "RIGHT_STICK_X_OFF",
           -1: "RIGHT_STICK_LEFT"
         }
-      }
+      },
+      "config": { "averageCount": 1, "threshold": 0.6 }
     },
     4: {
       "name": "RIGHT_STICK_Y",
@@ -154,7 +159,8 @@ evdevMap = {
           0: "RIGHT_STICK_Y_OFF",
           -1: "RIGHT_STICK_DOWN"
         }
-      }
+      },
+      "config": { "averageCount": 1, "threshold": 0.6 }
     }
 
   },
@@ -171,7 +177,8 @@ evdevMap = {
           0: "GYRO_PITCH_OFF",
           -1: "GYRO_PITCH_DOWN"
         }
-      }
+      },
+      "config": { "averageCount": 1, "threshold": 0.4 }
     },
     0: {
       "name": "GYRO_ROLL",
@@ -184,11 +191,12 @@ evdevMap = {
           0: "GYRO_ROLL_OFF",
           -1: "GYRO_ROLL_LEFT"
         }
-        
-      }
+      },
+      "config": { "averageCount": 1, "threshold": 0.4 }
     },
   },
   "touch": {
+    #TOUCH PAD 
     272: {
       "name": "TOUCHPAD_BUTTON",
       "type": "BUTTON",
@@ -200,5 +208,23 @@ evdevMap = {
       "events":{ 1: "TOUCHPAD_TOUCH_DOWN", 0: "TOUCHPAD_TOUCH_UP" }
     },
 
+    0: {
+      "name": "TOUCHPAD_X",
+      "type": "ANALOG",
+      "range": {"top": 1919, "bottom": 0},
+      "events":{ 
+        "value": "TOUCHPAD_X_UPDATE"
+      },
+      "config": { "averageCount": 1}
+    },
+    1: {
+      "name": "TOUCHPAD_Y",
+      "type": "ANALOG",
+      "range": {"top": 0, "bottom": 1896},
+      "events":{ 
+        "value": "TOUCHPAD_Y_UPDATE"
+      },
+      "config": { "averageCount": 1}
+    }
   }
 }

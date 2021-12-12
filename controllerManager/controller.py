@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod, abstractproperty
-from typing import Dict
-from numpy import * 
 
 class Controller(ABC):
+
+  def __init__(self, sendEvent, controls, state):
+    self.sendEvent = sendEvent
+    self.controls = controls
+    self.state = state
 
   @abstractmethod
   def checkIfConnected():
@@ -16,11 +19,38 @@ class Controller(ABC):
   def getMusicEngineMap(self):
     pass
 
-  def processAnalogValue(self, value, control: Dict, config: Dict, state: Dict):
-    range = control['range']
+  def createState(self, controls):
+    state = {}
+    for control in controls:
+      if control['type'] in ['BUTTON', "PAD"]:
+        state[control['name']] = 0
+      elif control['type'] == 'ANALOG':
+        state[control['name']] = {"valueHistory": [], "thresholdValue": 0}
+    return state
 
-    valueHistory = state["valueHistory"].copy()
-    valueHistory.append(value)
+  def processEvent(self, event, device):
+    if event.code in self.controls[device].keys():
+
+      control = self.controls[device][event.code]
+      controlState = self.controls[control['name']]
+
+      if control['type'] in ['BUTTON', 'PAD']:
+        self.processButtonEvent(event, control, controlState)
+      elif control['type'] == 'ANALOG':
+        self.processAnalogEvent(event, control, controlState)
+
+  def processButtonEvent(self, event, control, controlState):
+    controlState[control['name']] = event.value
+    eventName = control['events'][event.value]
+    self.sendEvent({'name': eventName})
+
+  def processAnalogEvent(self, event, control, controlState):
+    range = control['range']
+    config = control['config']
+
+    # update value history
+    valueHistory = controlState["valueHistory"]
+    valueHistory.append(event.value)
     if (len(valueHistory) > config["averageCount"]):
       valueHistory.pop(0)
 
@@ -28,31 +58,35 @@ class Controller(ABC):
     sum = 0
     for val in valueHistory:
       sum += val
-    avg = sum / len(valueHistory)
+    averageValue = sum / len(valueHistory)
 
-    #clamp value to between -0.999 and 0.999
+    #normalize value to between -0.999 and 0.999
     slope = 2.0 / (range["top"]- range["bottom"])
-    intercept = 1 - (slope*range["top"])
-    normalized =  (slope*avg) + intercept
-    normalized = max(min(normalized, 0.999), -0.999)
+    intercept = 1 - (slope * range["top"])
+    normalizedValue =  (slope * averageValue) + intercept
+    normalizedValue = max(min(normalizedValue, 0.999), -0.999)
+      
+    self.sendEvent({
+      'name': control['events']['value'],
+      'value': normalizedValue
+    })
 
-    thresholdValue = 0
-    thresholdValueChanged = False
-    if "threshold" in config.keys():
-      #determine threshold value
-      if normalized > config["threshold"]:
+    self.processThreshold(normalizedValue, control, controlState)
+    
+
+  def processThreshold(self, normalizedValue, control, controlState):
+    if "threshold" in control['config'].keys():
+      thresholdValue = 0
+      if normalizedValue > control['config']["threshold"]:
         thresholdValue = 1
-      elif normalized < -1*config["threshold"]:
+      elif normalizedValue < -1*control['config']["threshold"]:
         thresholdValue = -1
 
-      thresholdValueChanged = thresholdValue != state["thresholdValue"]
-    
-    return {
-      "thresholdValueChanged": thresholdValueChanged,
-      "value": normalized,
-      "thresholdValue": thresholdValue,
-      "state": {
-        "valueHistory": valueHistory,
-        "thresholdValue": thresholdValue
-      }
-    }
+      thresholdValueChanged = thresholdValue != controlState["thresholdValue"]
+
+      # update threshold state
+      controlState["thresholdValue"] = thresholdValue
+
+      if thresholdValueChanged:
+        eventName = control['events']['threshold'][thresholdValue]
+        self.sendEvent({'name': eventName})

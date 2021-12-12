@@ -1,20 +1,19 @@
 import evdev
 import asyncio
-from .evdevMap import evdevMap
 from .config import config
 from ...controller import Controller
 
 class DualShock4(Controller):
 
   config = config
-  evdevMap = evdevMap
 
   def __init__(self, sendEvent):
     self.sendEvent = sendEvent
 
-    mainState = self.createState(self.evdevMap['main'])
-    motionState = self.createState(self.evdevMap['motion'])
-    self.state = mainState | motionState
+    mainState = self.createState(self.config['main'])
+    motionState = self.createState(self.config['motion'])
+    touchState = self.createState(self.config['touch'])
+    self.state = mainState | motionState | touchState
   
   def createState(self, controls):
     state = {}
@@ -53,27 +52,26 @@ class DualShock4(Controller):
       return found
 
   def processEvent(self, event, device):
-    if event.code in self.evdevMap[device].keys():
-      control = self.evdevMap['main'][event.code]
+    if event.code in self.config[device].keys():
+      control = self.config['main'][event.code]
       if control['type'] in ['BUTTON', 'PAD']:
         self.processButtonEvent(event, device)
       elif control['type'] == 'ANALOG':
         self.processAnalogEvent(event, device)
 
   def processButtonEvent(self, event, device):
-    control = self.evdevMap[device][event.code]
+    control = self.config[device][event.code]
 
     self.state[control['name']] = event.value
     eventName = control['events'][event.value]
     self.sendEvent({'name': eventName})
 
   def processAnalogEvent(self, event, device):
-    control = self.evdevMap[device][event.code]
-    config = self.config[control['name']]
+    control = self.config[device][event.code]
     state = self.state[control['name']]
 
-    result = self.processAnalogValue(event.value, control, config, state)
-    state = result[state]
+    result = self.processAnalogValue(event.value, control, state)
+    state = result['state']
 
     self.sendEvent({
       'name': control['events']['value'],
@@ -81,7 +79,7 @@ class DualShock4(Controller):
     })
 
     if result['thresholdValueChanged']:
-      eventName = control['events'][result['thresholdValue']]
+      eventName = control['events']['threshold'][result['thresholdValue']]
       self.sendEvent({'name': eventName})
   
   async def mainControlsLoop(self):
@@ -94,4 +92,4 @@ class DualShock4(Controller):
 
   async def touchLoop(self):
     async for event in self.touch.async_read_loop():
-      pass
+      self.processEvent(event, 'touch')
