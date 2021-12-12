@@ -14,14 +14,14 @@ class controllerManager():
     for callBack in self.subscriberCallbacks:
       callBack(event)
 
-  async def searchForControllers(display):
+  async def searchForControllers(self):
     foundController = False
     connectedController = None
     while (not foundController):
       for Controller in controllers:
         foundController = Controller.checkIfConnected()
         if foundController:
-          connectedController = Controller(display)
+          connectedController = Controller(self.sendEvent)
           connectedController.start()
           break
         await asyncio.sleep(0.25)

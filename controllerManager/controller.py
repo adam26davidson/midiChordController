@@ -2,13 +2,18 @@ from abc import ABC, abstractmethod, abstractproperty
 
 class Controller(ABC):
 
-  def __init__(self, sendEvent, controls, state):
+  def __init__(self, sendEvent, info, state):
     self.sendEvent = sendEvent
-    self.controls = controls
+    self.info = info
     self.state = state
 
+  
   @abstractmethod
-  def checkIfConnected():
+  def start(self):
+    pass
+
+  @abstractmethod
+  def checkIfConnected(self):
     pass
 
   @abstractmethod
@@ -29,10 +34,10 @@ class Controller(ABC):
     return state
 
   def processEvent(self, event, device):
-    if event.code in self.controls[device].keys():
+    if event.code in self.info['controls'][device].keys():
 
-      control = self.controls[device][event.code]
-      controlState = self.controls[control['name']]
+      control = self.info['controls'][device][event.code]
+      controlState = self.state[control['name']]
 
       if control['type'] in ['BUTTON', 'PAD']:
         self.processButtonEvent(event, control, controlState)
