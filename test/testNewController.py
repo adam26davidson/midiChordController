@@ -25,8 +25,8 @@ async def touchLoop():
       # print(evdev.categorize(event))
       # print(event)
     elif event.type == evdev.ecodes.EV_ABS and event.code in [0, 1]:
-      
-      print(event)
+      pass
+      #print(event)
 
 async def motionLoop():
   async for event in motion.async_read_loop():
