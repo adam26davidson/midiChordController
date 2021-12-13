@@ -14,7 +14,8 @@ async def buttonsLoop():
       print(evdev.categorize(event))
       print(event)
     elif event.type == evdev.ecodes.EV_ABS:
-      print(event)
+      pass
+      #print(event)
 
 async def touchLoop():
   async for event in touch.async_read_loop():
@@ -29,9 +30,9 @@ async def touchLoop():
 
 async def motionLoop():
   async for event in motion.async_read_loop():
-    print("motion")
-    print(evdev.categorize(event))
-      
+    pass
+    # print("motion")
+    # print(evdev.categorize(event))
 
 if (evdev.list_devices().count('/dev/input/event1') == 1):
   motion = evdev.InputDevice('/dev/input/event5')
