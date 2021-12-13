@@ -1,4 +1,5 @@
 from .controllers import controllerClasses
+from .functionMaps import meMap, uiMaps
 import asyncio
 
 class controllerManager():
@@ -10,7 +11,7 @@ class controllerManager():
   def subscribe(self, callBack):
     self.subscriberCallbacks.append(callBack)
 
-  def sendEvent(self, event):
+  async def sendEvent(self, event):
     for callBack in self.subscriberCallbacks:
       callBack(event)
 

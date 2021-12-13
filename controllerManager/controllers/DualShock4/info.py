@@ -1,7 +1,9 @@
 info = {
   "vendor": 1356,
   "product": 2508,
-  "defaultMusicEngineMap": "hasGyro",
+  "meMap": "gyroInversions",
+  'uiMaps': 'default',
+  "compatiblemeMaps": ['gyroInversions', 'default'],
   "controls": {
     "main": {
       # MAIN BUTTONS

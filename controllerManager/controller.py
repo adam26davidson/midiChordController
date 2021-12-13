@@ -1,17 +1,38 @@
 from abc import ABC, abstractmethod, abstractproperty
+import asyncio
+from .functionMaps import meMaps, uiMaps
 import evdev
 
 class Controller(ABC):
 
-  def __init__(self, sendEvent, info, state):
+  def __init__(self, sendEvent, info):
     self.sendEvent = sendEvent
     self.info = info
+
+    state = {} 
+    for device in info['controls'].keys():
+      state = state | self.createState(self.info['controls'][device])
+    
     self.state = state
 
-  
-  @abstractmethod
-  def start(self):
-    pass
+  def start(self, id, devices):
+    self.id = id
+    self.devices = devices
+
+    for key in devices.keys():
+      asyncio.ensure_future(self.deviceReadLoop(key))
+    
+    payload = {
+      'id': id, 
+      'role': 'primary',
+      'meMap': meMaps[self.info['meMap']],
+      'uiMap': uiMaps[self.info['uiMap']],
+      'compatibleMeMaps': self.info['compatibleMeMaps']
+    }
+
+  async def deviceReadLoop(self, device):
+    async for event in self.devices[device].async_read_loop():
+      self.processEvent(event, device)
 
   def checkIfConnected(self):
     pass
@@ -43,6 +64,8 @@ class Controller(ABC):
       elif control['type'] == 'ANALOG':
         state[control['name']] = {"valueHistory": [], "thresholdValue": 0}
     return state
+
+
 
   def processEvent(self, event, device):
     if event.code in self.info['controls'][device].keys():
