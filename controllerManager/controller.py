@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod, abstractproperty
+import evdev
 
 class Controller(ABC):
 
@@ -12,7 +13,6 @@ class Controller(ABC):
   def start(self):
     pass
 
-  @abstractmethod
   def checkIfConnected(self):
     pass
 
@@ -23,6 +23,17 @@ class Controller(ABC):
   @abstractmethod
   def getMusicEngineMap(self):
     pass
+
+  @staticmethod
+  def checkIfConnected(info):
+    found = False
+    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+    for device in devices:
+      vendorMatch = device.info.vendor == info['vendor']
+      productMatch = device.info.product == info['product']
+      if (vendorMatch and productMatch):
+        found = True
+    return found
 
   def createState(self, controls):
     state = {}
