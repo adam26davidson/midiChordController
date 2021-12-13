@@ -88,15 +88,21 @@ class Controller(ABC):
     })
 
     self.processThreshold(normalizedValue, control, controlState)
-    
 
   def processThreshold(self, normalizedValue, control, controlState):
-    if "threshold" in control['config'].keys():
+    if 'threshold' in control['events'].keys():
       thresholdValue = 0
-      if normalizedValue > control['config']["threshold"]:
-        thresholdValue = 1
-      elif normalizedValue < -1*control['config']["threshold"]:
-        thresholdValue = -1
+      if "centeredThreshold" in control['config'].keys():
+        if normalizedValue > control['config']["centeredThreshold"]:
+          thresholdValue = 1
+        elif normalizedValue < -1*control['config']["centeredThreshold"]:
+          thresholdValue = -1
+      elif "centeredThreshold" in control['config'].keys():
+        threshold = -1 + (control['config']["centeredThreshold"] * 2)
+        if normalizedValue > threshold:
+          thresholdValue = 1
+        else:
+          thresholdValue = 0
 
       thresholdValueChanged = thresholdValue != controlState["thresholdValue"]
 

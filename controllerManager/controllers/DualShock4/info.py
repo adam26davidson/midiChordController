@@ -49,9 +49,13 @@ info = {
         "type": "ANALOG",
         "range": {"top": 255, "bottom": 0},
         "events":{ 
-          "value": "RIGHT_TRIGGER_UPDATE"
+          "value": "RIGHT_TRIGGER_UPDATE",
+          "threshold": {
+            1: "RIGHT_TRIGGER_DOWN",
+            0: "RIGHT_TRIGGER_UP"
+          }
         },
-        "config": { "averageCount": 1}
+        "config": { "averageCount": 1, "threshold": 0.2}
       },
       312: {
         "name": "LEFT_TRIGGER",
@@ -63,9 +67,13 @@ info = {
         "type": "ANALOG",
         "range": {"top": 255, "bottom": 0},
         "events":{ 
-          "value": "LEFT_TRIGGER_UPDATE"
+          "value": "LEFT_TRIGGER_UPDATE",
+          "threshold": {
+            1: "LEFT_TRIGGER_DOWN",
+            0: "LEFT_TRIGGER_UP"
+          }
         },
-        "config": { "averageCount": 1}
+        "config": { "averageCount": 1, "threshold": 0.2}
       },
 
       # OPTIONS
@@ -117,7 +125,7 @@ info = {
             -1: "LEFT_STICK_LEFT"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.6 }
+        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
       },
       1: {
         "name": "LEFT_STICK_Y",
@@ -131,7 +139,7 @@ info = {
             -1: "LEFT_STICK_DOWN"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.6 }
+        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
       },
       318: {
         "name": "RIGHT_STICK_BUTTON",
@@ -150,7 +158,7 @@ info = {
             -1: "RIGHT_STICK_LEFT"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.6 }
+        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
       },
       4: {
         "name": "RIGHT_STICK_Y",
@@ -164,7 +172,7 @@ info = {
             -1: "RIGHT_STICK_DOWN"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.6 }
+        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
       }
 
     },
@@ -182,7 +190,7 @@ info = {
             -1: "GYRO_PITCH_DOWN"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.4 }
+        "config": { "averageCount": 1, "centeredThreshold": 0.4 }
       },
       0: {
         "name": "GYRO_ROLL",
@@ -196,7 +204,7 @@ info = {
             -1: "GYRO_ROLL_LEFT"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.4 }
+        "config": { "averageCount": 1, "centeredThreshold": 0.4 }
       },
     },
     "touch": {
