@@ -2,7 +2,7 @@ from pyrsistent import freeze, thaw, m, pmap, v, pvector
 
 def reducer(state, action):
   if state is None:
-    state = freeze({
+    return freeze({
       'waitingForConnection': False,
       'controllers': []
     })
