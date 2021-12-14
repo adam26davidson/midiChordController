@@ -3,7 +3,7 @@ info = {
   "vendor": 1356,
   "product": 2508,
   "meMap": "gyroInversions",
-  'uiMaps': 'default',
+  'uiMap': 'default',
   "compatiblemeMaps": ['gyroInversions', 'default'],
   "controls": {
     "main": {
