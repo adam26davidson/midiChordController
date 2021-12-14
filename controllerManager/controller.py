@@ -75,8 +75,13 @@ class Controller(ABC):
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']
     config = control['config']
+    
+    ignoreValue = False
+    if 'ignoreValues' in config.keys():
+      if event.value in config['ignoreValues']:
+        ignoreValue = True
 
-    if event.value not in config['ignoreValues']:
+    if not ignoreValue:
 
       # update value history
       valueHistory = controlState["valueHistory"]
