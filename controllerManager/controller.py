@@ -63,7 +63,7 @@ class Controller(ABC):
       control = self.info['controls'][device][event.code]
       controlState = self.state[control['name']]
       if control['type'] in ['BUTTON', 'PAD']:
-        self.processButtonEvent(event, control, self.state)
+        self.processButtonEvent(event, control)
       elif control['type'] == 'ANALOG':
         self.processAnalogEvent(event, control, controlState)
 
