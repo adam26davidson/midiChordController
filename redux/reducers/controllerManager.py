@@ -10,6 +10,7 @@ def reducer(state, action):
   if action['type'] == 'controllerManager/controllerAdded':
     newController = freeze({
       'id': action['data']['id'],
+      'name': action['data']['name'],
       'role': action['data']['role'],
       'compatibleMeMaps': action['data']['compatibleMeMaps'],
       'meMap': action['data']['meMap'],

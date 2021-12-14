@@ -63,19 +63,19 @@ class Controller(ABC):
       control = self.info['controls'][device][event.code]
       controlState = self.state[control['name']]
       if control['type'] in ['BUTTON', 'PAD']:
-        self.processButtonEvent(event, control, controlState)
+        self.processButtonEvent(event, control, self.state)
       elif control['type'] == 'ANALOG':
         self.processAnalogEvent(event, control, controlState)
 
-  def processButtonEvent(self, event, control, controlState):
-    controlState[control['name']] = event.value
+  def processButtonEvent(self, event, control):
+    self.state[control['name']] = event.value
     eventName = control['events'][event.value]
     self.sendEvent({'name': eventName, 'id': self.id})
 
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']
     config = control['config']
-    
+
     ignoreValue = False
     if 'ignoreValues' in config.keys():
       if event.value in config['ignoreValues']:
