@@ -37,5 +37,5 @@ class ControllerManager():
           break
         await asyncio.sleep(0.25)
       
-  async def handleStoreUpdate(self):
+  def handleStoreUpdate(self):
     pass
