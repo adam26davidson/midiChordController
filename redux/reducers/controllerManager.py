@@ -2,7 +2,10 @@ from pyrsistent import freeze, thaw, m, pmap, v, pvector
 
 def reducer(state, action):
   if state is None:
-    state = m()
+    state = freeze({
+      'waitingForConnection': False,
+      'controllers': []
+    })
 
   if action['type'] == 'controllerManager/controllerAdded':
     newController = freeze({

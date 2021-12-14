@@ -2,7 +2,28 @@ from pyrsistent import freeze, thaw, m, pmap, v, pvector
 
 def reducer(state, action):
   if state is None:
-    return m()
+    return freeze({
+      'settingsList': [],
+      'key': 0,
+      'scale': [],
+      'spread': 0,
+      'inversion': 0,
+      'inversionMode': 'incremental',
+      'inversionRange': 0,
+      'bassPosition': 0,
+      'bassMode': 'incremental',
+      'bassRange': 0,
+      'setting': 0,
+      'octave': 0,
+      'voiceCount': 0,
+      'modulation': 'none',
+      'secondary': 'none',
+      'bassNote': 0,
+      'bassShadow': 0,
+      'chordNotes': [],
+      'chordType': [],
+      'chordShadow': []
+    })
 
   if action == 'me/settingListChanged':
     return state.set('settingsList', v(action['data']['settingsList']))
