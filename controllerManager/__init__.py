@@ -18,7 +18,7 @@ class ControllerManager():
   def subscribe(self, callBack):
     self.subscriberCallbacks.append(callBack)
 
-  async def sendEvent(self, event):
+  def sendEvent(self, event):
     for callBack in self.subscriberCallbacks:
       callBack(event)
 
