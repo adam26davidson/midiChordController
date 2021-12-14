@@ -90,4 +90,6 @@ def reducer(state, action):
 
   elif action == 'me/chordShadowChanged':
     return state.set('chordShadow', v(action['data']['chordShadow']))
+    
+  else: return state
   

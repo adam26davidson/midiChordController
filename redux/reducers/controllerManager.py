@@ -38,3 +38,5 @@ def reducer(state, action):
 
   elif action['type'] == 'controllerManager/stoppedWaitingForConnection':
     return state.set('waitingForConnection', False)
+
+  else: return state
