@@ -11,6 +11,9 @@ class ControllerManager():
     self.connectedControllers = {}
     self.subscriberCallbacks = []
     store.subscribe(self.handleStoreUpdate)
+  
+  def start(self):
+    self.waitForConnection()
 
   def subscribe(self, callBack):
     self.subscriberCallbacks.append(callBack)
@@ -35,6 +38,4 @@ class ControllerManager():
         await asyncio.sleep(0.25)
       
   async def handleStoreUpdate():
-    print('STATE UPDATE')
-    controllers = store.get_state()['controllerManager']['controllers']
-    print([c['name'] for c in controllers])
+    pass
