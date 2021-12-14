@@ -13,7 +13,7 @@ class ControllerManager():
     store.subscribe(self.handleStoreUpdate)
   
   def start(self):
-    self.waitForConnection()
+    asyncio.ensure_future(self.waitForConnection())
 
   def subscribe(self, callBack):
     self.subscriberCallbacks.append(callBack)
