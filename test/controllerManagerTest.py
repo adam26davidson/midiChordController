@@ -1,5 +1,5 @@
-from ..controllerManager import ControllerManager
-from ..redux import store
+from controllerManager import ControllerManager
+from redux import store
 
 c = ControllerManager()
 
