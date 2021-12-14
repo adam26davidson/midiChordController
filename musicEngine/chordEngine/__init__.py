@@ -7,11 +7,10 @@ from rtmidi import MidiOut
 from rtmidi.midiconstants import *
 import asyncio
 
-class MidiController:
+class ChordEngine:
   def __init__(self, display = None, settingIndex=0):
 
     # constant for each setting
-    self.display = display
     self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
 
@@ -31,12 +30,10 @@ class MidiController:
     self.spread = 0
     self.octave = 0
     self.voices = 8
-    self.shift = False
-    self.alt = False
     self.hold = False
     self.home = False
     self.inversionHold = False
-    self.controller = None
+
     # midi channel
     self.channel = 1
 

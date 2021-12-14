@@ -1,12 +1,16 @@
+from redux.reducers import controllerManager
 from .controllers import controllerClasses
-from .functionMaps import meMap, uiMaps
+from redux import store
+from redux.actions import controllerManager as actions
 import asyncio
 
-class controllerManager():
+class ControllerManager():
+
   def __init__(self):
     self.controllerClasses = controllerClasses
     self.connectedControllers = {}
     self.subscriberCallbacks = []
+    store.subscribe(self.handleStoreUpdate)
 
   def subscribe(self, callBack):
     self.subscriberCallbacks.append(callBack)
@@ -15,15 +19,22 @@ class controllerManager():
     for callBack in self.subscriberCallbacks:
       callBack(event)
 
-  async def searchForControllers(self):
+  async def waitForConnection(self):
+    store.dispatch(actions.startWaitingForConnection())
     foundController = False
     connectedController = None
     while (not foundController):
-      for Controller in controllers:
+      for Controller in controllerClasses:
         foundController = Controller.checkIfConnected()
         if foundController:
           connectedController = Controller(self.sendEvent)
           connectedController.start()
+          self.connectedControllers = [connectedController]
+          store.dispatch(actions.stopWaitingForConnection())
           break
         await asyncio.sleep(0.25)
       
+  async def handleStoreUpdate():
+    print('STATE UPDATE')
+    controllers = store.get_state()['controllerManager']['controllers']
+    print([c['name'] for c in controllers])

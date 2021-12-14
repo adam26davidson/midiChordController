@@ -1,4 +1,5 @@
 info = {
+  "name": "DualShock4",
   "vendor": 1356,
   "product": 2508,
   "meMap": "gyroInversions",

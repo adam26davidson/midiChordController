@@ -1,7 +1,7 @@
 info = {
   "vendor": 1356,
   "product": 2508,
-  "defaultMusicEngineMap": "hasGyro",
+  "defaultMusicEngineMap": "default",
   "controls": {
     "main": {
       # MAIN BUTTONS
@@ -39,11 +39,6 @@ info = {
       },
 
       # TRIGGERS
-      313: {
-        "name": "RIGHT_TRIGGER",
-        "type": "BUTTON",
-        "events":{ 1: "RIGHT_TRIGGER_DOWN", 0: "RIGHT_TRIGGER_UP" }
-      },
       5: {
         "name": "RIGHT_TRIGGER_ANALOG",
         "type": "ANALOG",
@@ -55,12 +50,7 @@ info = {
             0: "RIGHT_TRIGGER_UP"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.2}
-      },
-      312: {
-        "name": "LEFT_TRIGGER",
-        "type": "BUTTON",
-        "events":{ 1: "LEFT_TRIGGER_DOWN", 0: "LEFT_TRIGGER_UP" }
+        "config": { "averageCount": 1, "threshold": 0.1}
       },
       2: {
         "name": "LEFT_TRIGGER_ANALOG",
@@ -73,7 +63,7 @@ info = {
             0: "LEFT_TRIGGER_UP"
           }
         },
-        "config": { "averageCount": 1, "threshold": 0.2}
+        "config": { "averageCount": 1, "threshold": 0.1}
       },
 
       # OPTIONS

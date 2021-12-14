@@ -1,5 +1,7 @@
-from controllers import searchForControllers
+from controllerManager import ControllerManager
 from display import Display
+from redux import store
+import pydux
 import asyncio
 import argparse
 
@@ -11,10 +13,11 @@ def parse_arguments():
   return parser.parse_args()
 
 if __name__ == "__main__":
+
   args = parse_arguments()
   display = Display() if args.display else None
-  if display: asyncio.ensure_future(display.mainLoop())
-  asyncio.ensure_future(searchForControllers(display))
 
-  loop = asyncio.get_event_loop()
-  loop.run_forever()
+  controllerManager = ControllerManager()
+
+
+  asyncio.get_event_loop().run_forever()

@@ -7,8 +7,8 @@ config = {
   },
   "buttonCodes": {
     "south": 304, 
-    "west": 307, 
-    "north": 308, 
+    "west": 307,
+    "north": 308,
     "east": 305, 
     "rightTrigger": 311, 
     "rightTrigger2": 5, 

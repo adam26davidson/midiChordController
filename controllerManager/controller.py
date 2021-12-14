@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod, abstractproperty
 import asyncio
-from .functionMaps import meMaps, uiMaps
+from .maps import meMaps, uiMaps
+from redux import store
+from redux.actions import controllerManager as actions
 import evdev
 
 class Controller(ABC):
@@ -15,6 +17,19 @@ class Controller(ABC):
     
     self.state = state
 
+  @staticmethod
+  def checkIfConnected(info):
+    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+    connectedControllers = store.get_state()['controllerManager']['controllers']
+    connectedIds = [c['id'] for c in connectedControllers]
+    for device in devices:
+      vendorMatch = device.info.vendor == info['vendor']
+      productMatch = device.info.product == info['product']
+      newId = device.uniq not in connectedIds
+      if (vendorMatch and productMatch and newId):
+        return True
+    return False
+
   def start(self, id, devices):
     self.id = id
     self.devices = devices
@@ -22,39 +37,19 @@ class Controller(ABC):
     for key in devices.keys():
       asyncio.ensure_future(self.deviceReadLoop(key))
     
-    payload = {
+    data = {
       'id': id, 
+      'name': self.info['name'],
       'role': 'primary',
       'meMap': meMaps[self.info['meMap']],
       'uiMap': uiMaps[self.info['uiMap']],
       'compatibleMeMaps': self.info['compatibleMeMaps']
     }
+    store.dispatch(actions.add(data))
 
   async def deviceReadLoop(self, device):
     async for event in self.devices[device].async_read_loop():
       self.processEvent(event, device)
-
-  def checkIfConnected(self):
-    pass
-
-  @abstractmethod
-  def getUIMap(self):
-    pass
-
-  @abstractmethod
-  def getMusicEngineMap(self):
-    pass
-
-  @staticmethod
-  def checkIfConnected(info):
-    found = False
-    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    for device in devices:
-      vendorMatch = device.info.vendor == info['vendor']
-      productMatch = device.info.product == info['product']
-      if (vendorMatch and productMatch):
-        found = True
-    return found
 
   def createState(self, controls):
     state = {}
@@ -64,8 +59,6 @@ class Controller(ABC):
       elif control['type'] == 'ANALOG':
         state[control['name']] = {"valueHistory": [], "thresholdValue": 0}
     return state
-
-
 
   def processEvent(self, event, device):
     if event.code in self.info['controls'][device].keys():
@@ -81,7 +74,7 @@ class Controller(ABC):
   def processButtonEvent(self, event, control, controlState):
     controlState[control['name']] = event.value
     eventName = control['events'][event.value]
-    self.sendEvent({'name': eventName})
+    self.sendEvent({'name': eventName, 'id': self.id})
 
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']
@@ -107,6 +100,7 @@ class Controller(ABC):
       
     self.sendEvent({
       'name': control['events']['value'],
+      'id': self.id,
       'value': normalizedValue
     })
 
@@ -134,4 +128,4 @@ class Controller(ABC):
 
       if thresholdValueChanged:
         eventName = control['events']['threshold'][thresholdValue]
-        self.sendEvent({'name': eventName})
+        self.sendEvent({'name': eventName, 'id': self.id})
