@@ -53,7 +53,7 @@ class Controller(ABC):
 
   def createState(self, controls):
     state = {}
-    for control in controls:
+    for control in controls.items():
       if control['type'] in ['BUTTON', "PAD"]:
         state[control['name']] = 0
       elif control['type'] == 'ANALOG':
