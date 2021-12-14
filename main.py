@@ -1,7 +1,6 @@
 from controllerManager import ControllerManager
 from display import Display
 from redux import store
-import pydux
 import asyncio
 import argparse
 

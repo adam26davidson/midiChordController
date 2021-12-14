@@ -1,6 +1,7 @@
 info = {
-  "vendor": 1356,
-  "product": 2508,
+  "name": "Xbox 360 Controller",
+  "vendor": 0,
+  "product": 0,
   "defaultMusicEngineMap": "default",
   "controls": {
     "main": {
