@@ -33,10 +33,8 @@ class Controller(ABC):
   def start(self, id, devices):
     self.id = id
     self.devices = devices
-
     for key in devices.keys():
       asyncio.ensure_future(self.deviceReadLoop(key))
-    
     data = {
       'id': id, 
       'name': self.info['name'],
@@ -53,7 +51,7 @@ class Controller(ABC):
 
   def createState(self, controls):
     state = {}
-    for control in controls.items():
+    for control in controls.values():
       if control['type'] in ['BUTTON', "PAD"]:
         state[control['name']] = 0
       elif control['type'] == 'ANALOG':
@@ -62,10 +60,8 @@ class Controller(ABC):
 
   def processEvent(self, event, device):
     if event.code in self.info['controls'][device].keys():
-
       control = self.info['controls'][device][event.code]
       controlState = self.state[control['name']]
-
       if control['type'] in ['BUTTON', 'PAD']:
         self.processButtonEvent(event, control, controlState)
       elif control['type'] == 'ANALOG':
