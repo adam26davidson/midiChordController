@@ -4,7 +4,7 @@ info = {
   "product": 2508,
   "meMap": "gyroInversions",
   'uiMap': 'default',
-  "compatiblemeMaps": ['gyroInversions', 'default'],
+  "compatibleMeMaps": ['gyroInversions', 'default'],
   "controls": {
     "main": {
       # MAIN BUTTONS
