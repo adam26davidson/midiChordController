@@ -76,31 +76,33 @@ class Controller(ABC):
     range = control['range']
     config = control['config']
 
-    # update value history
-    valueHistory = controlState["valueHistory"]
-    valueHistory.append(event.value)
-    if (len(valueHistory) > config["averageCount"]):
-      valueHistory.pop(0)
+    if event.value not in config['ignoreValues']:
 
-    # get the average of the past raw values (prevents fluttering)
-    sum = 0
-    for val in valueHistory:
-      sum += val
-    averageValue = sum / len(valueHistory)
+      # update value history
+      valueHistory = controlState["valueHistory"]
+      valueHistory.append(event.value)
+      if (len(valueHistory) > config["averageCount"]):
+        valueHistory.pop(0)
 
-    #normalize value to between -0.999 and 0.999
-    slope = 2.0 / (range["top"]- range["bottom"])
-    intercept = 1 - (slope * range["top"])
-    normalizedValue =  (slope * averageValue) + intercept
-    normalizedValue = max(min(normalizedValue, 0.999), -0.999)
-      
-    self.sendEvent({
-      'name': control['events']['value'],
-      'id': self.id,
-      'value': normalizedValue
-    })
+      # get the average of the past raw values (prevents fluttering)
+      sum = 0
+      for val in valueHistory:
+        sum += val
+      averageValue = sum / len(valueHistory)
 
-    self.processThreshold(normalizedValue, control, controlState)
+      #normalize value to between -0.999 and 0.999
+      slope = 2.0 / (range["top"]- range["bottom"])
+      intercept = 1 - (slope * range["top"])
+      normalizedValue =  (slope * averageValue) + intercept
+      normalizedValue = max(min(normalizedValue, 0.999), -0.999)
+        
+      self.sendEvent({
+        'name': control['events']['value'],
+        'id': self.id,
+        'value': normalizedValue
+      })
+
+      self.processThreshold(normalizedValue, control, controlState)
 
   def processThreshold(self, normalizedValue, control, controlState):
     if 'threshold' in control['events'].keys():

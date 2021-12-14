@@ -161,7 +161,11 @@ info = {
             -1: "RIGHT_STICK_LEFT"
           }
         },
-        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
+        "config": { 
+          "averageCount": 1, 
+          "centeredThreshold": 0.6,
+          "ignoreValues": [0] 
+          }
       },
       4: {
         "name": "RIGHT_STICK_Y",
