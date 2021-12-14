@@ -13,7 +13,7 @@ class Controller(ABC):
 
     state = {} 
     for device in info['controls'].keys():
-      state = state | self.createState(self.info['controls'][device])
+      state = {**state, **self.createState(self.info['controls'][device])}
     
     self.state = state
 
