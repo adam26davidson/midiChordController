@@ -1,19 +1,19 @@
 def add(data):
   return {
     'type': 'controllerManager/controllerAdded',
-    'payload': data
+    'data': data
   }
 
 def remove(data):
   return {
     'type': 'controllerManager/controllerRemoved',
-    'payload': data
+    'data': data
   } 
 
 def updateMap(data):
   return {
     'type': 'controllerManager/controllerRemoved',
-    'payload': data
+    'data': data
   } 
 
 def startWaitingForConnection():
