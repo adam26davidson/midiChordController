@@ -14,10 +14,10 @@ def parse_arguments():
 
 if __name__ == "__main__":
 
-  args = parse_arguments()
-  display = Display() if args.display else None
+  # args = parse_arguments()
+  # display = Display() if args.display else None
 
-  controllerManager = ControllerManager()
-
+  from test.controllerManagerTest import controllerManagerTest
+  controllerManagerTest()
 
   asyncio.get_event_loop().run_forever()
