@@ -146,7 +146,11 @@ info = {
             -1: "LEFT_STICK_DOWN"
           }
         },
-        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
+        "config": { 
+          "averageCount": 1, 
+          "centeredThreshold": 0.6,
+          "ignoreValues": [0] 
+        }
       },
       318: {
         "name": "RIGHT_STICK_BUTTON",
@@ -183,7 +187,11 @@ info = {
             -1: "RIGHT_STICK_DOWN"
           }
         },
-        "config": { "averageCount": 1, "centeredThreshold": 0.6 }
+        "config": { 
+          "averageCount": 1, 
+          "centeredThreshold": 0.6,
+          "ignoreValues": [0] 
+        }
       }
 
     },
@@ -201,7 +209,11 @@ info = {
             -1: "GYRO_PITCH_DOWN"
           }
         },
-        "config": { "averageCount": 1, "centeredThreshold": 0.4 }
+        "config": { 
+          "averageCount": 1, 
+          "centeredThreshold": 0.6,
+          "ignoreValues": [0] 
+        }
       },
       0: {
         "name": "GYRO_ROLL",
@@ -215,7 +227,11 @@ info = {
             -1: "GYRO_ROLL_LEFT"
           }
         },
-        "config": { "averageCount": 1, "centeredThreshold": 0.4 }
+        "config": { 
+          "averageCount": 1, 
+          "centeredThreshold": 0.6,
+          "ignoreValues": [0] 
+        }
       },
     },
     "touch": {
