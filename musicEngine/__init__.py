@@ -43,27 +43,22 @@ class MusicEngine():
       "INCREMENT_SPREAD": self.chordEngine.incrementSpread,
       "DECREMENT_SPREAD": self.chordEngine.decrementSpread,
 
-      #BUMPERS
       "RIGHT_MODULATION_ON": lambda: self.chordEngine.setModulation('right'),
       "RIGHT_MODULATION_OFF": lambda: self.chordEngine.setModulation('none'),
       "LEFT_MODULATION_ON": lambda: self.chordEngine.setModulation('left'),
       "LEFT_MODULATION_OFF": lambda: self.chordEngine.setModulation('none'),
 
-      #TRIGGERS
       "ALTERNATE_ON": lambda: self.chordEngine.setAlternate(True),
       "ALTERNATE_OFF": lambda: self.chordEngine.setAlternate(False),
       "BASS_ON": self.chordEngine.playBass,
       "BASS_OFF": self.chordEngine.stopBass,
 
-      #OPTIONS
       "TOGGLE_INVERSION_LOCK": self.chordEngine.toggleInversionLock,
       "TOGGLE_HOLD": self.chordEngine.toggleHold,
 
-      #GYROSCOPE
       "UPDATE_INVERSION": self.chordEngine.toggleInversionLock,
       "UPDATE_AFTERTOUCH": self.midi.setAfterTouch,
 
-      #TOUCHPAD
       "UPDATE_MIDI_CC_1": self.midi.getCCSetter(1),
       "UPDATE_MIDI_CC_2": self.midi.getCCSetter(2)
     }
