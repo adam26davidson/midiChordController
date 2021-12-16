@@ -3,6 +3,9 @@ from pyrsistent import freeze, thaw, m, pmap, v, pvector
 def reducer(state, action):
   if state is None:
     return freeze({
+      'availableMidiPorts': [],
+      'connectedMidiPort': '',
+
       'settingsList': [],
       'key': 0,
       'scale': [],
@@ -25,8 +28,14 @@ def reducer(state, action):
       'chordShadow': []
     })
 
-  if action == 'me/settingListChanged':
+  if action == 'me/settingsListChanged':
     return state.set('settingsList', v(action['data']['settingsList']))
+
+  elif action == 'me/settingChanged':
+    return state.set('setting', action['data']['setting'])
+
+  elif action == 'me/settingLoadingChanged':
+    return state.set('settingLoading', action['data']['settingLoading'])
 
   if action == 'me/keyChanged':
     return state.set('key', action['data']['key'])
@@ -55,11 +64,8 @@ def reducer(state, action):
   elif action == 'me/bassRangeChanged':
     return state.set('bassRange', action['data']['bassRange'])
 
-  elif action == 'me/settingChanged':
-    return state.set('setting', action['data']['setting'])
-
-  elif action == 'me/octaveChanged':
-    return state.set('octave', action['data']['octave'])
+  elif action == 'me/chordOctaveChanged':
+    return state.set('chordOctave', action['data']['chordOctave'])
 
   elif action == 'me/voiceCountChanged':
     return state.set('voiceCount', action['data']['voiceCount'])
@@ -90,6 +96,24 @@ def reducer(state, action):
 
   elif action == 'me/chordShadowChanged':
     return state.set('chordShadow', v(action['data']['chordShadow']))
+
+  elif action == 'me/chordChannelChanged':
+    return state.set('chordChannel', action['data']['chordChannel'])
+
+  elif action == 'me/bassChannelChanged':
+    return state.set('bassChannel', action['data']['bassChannel'])
+
+  elif action == 'me/distributeChannelsChanged':
+    return state.set('distributeChannels', action['data']['distributeChannels'])
+  
+  elif action == 'me/noteVelocityChanged':
+    return state.set('distributeChannels', action['data']['distributeChannels'])
+
+  elif action == 'me/holdChanged':
+    return state.set('hold', action['data']['hold'])
+
+  elif action == 'me/inversionLockChanged':
+    return state.set('inversionLock', action['data']['inversionLock'])
     
   else: return state
   

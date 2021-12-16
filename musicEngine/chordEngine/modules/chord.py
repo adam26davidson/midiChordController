@@ -139,39 +139,40 @@ class Chord:
     spreadOctaves = (spread * (1 / SPREAD_STEPS_PER_OCTAVE))
     return int(spreadOctaves*spreadsPerOct)
 
-  def getBassFromParams(self, midiShock, params, allNotes):
-    p = midiShock.bassPosition
-    if p <= params[midiShock.key]["topCount"] and p >= (-1*params[midiShock.key]["bottomCount"]):
-      return allNotes[midiShock.key][params[midiShock.key]["center"] + p]
-    elif p > params[midiShock.key]["topCount"]:
-      return allNotes[midiShock.key][len(allNotes[midiShock.key]) - 1]
-    elif p < (-1*params[midiShock.key]["bottomCount"]):
-      return allNotes[midiShock.key][0]
+  def getBassFromParams(self, state, params, allNotes):
+    p = state['bassPosition']
+    key = state['key']
+    if p <= params[key]["topCount"] and p >= (-1*params[key]["bottomCount"]):
+      return allNotes[key][params[key]["center"] + p]
+    elif p > params[key]["topCount"]:
+      return allNotes[key][len(allNotes[key]) - 1]
+    elif p < (-1*params[key]["bottomCount"]):
+      return allNotes[key][0]
 
-  def getChordFromParams(self, midiShock, inversionParams, voicings):
-    keyVoicings = voicings[midiShock.key]
-    spread = Chord.convertSpread(midiShock.spread, len(keyVoicings[0][0]))
+  def getChordFromParams(self, state, inversionParams, voicings):
+    keyVoicings = voicings[state['key']]
+    spread = Chord.convertSpread(state['spread'], len(keyVoicings[0][0]))
     # ensure that spread is within range
     if spread >= len(keyVoicings):
       spread = len(keyVoicings) - 1
-    params = inversionParams[midiShock.key][spread]
+    params = inversionParams[state['key']][spread]
     # if the inversion is within range
-    if midiShock.inversion <= params["topCount"] and midiShock.inversion >= (-1*params["bottomCount"]):
-      return keyVoicings[spread][params["center"] + midiShock.inversion]
+    if state['inversion'] <= params["topCount"] and state['inversion'] >= (-1*params["bottomCount"]):
+      return keyVoicings[spread][params["center"] + state['inversion']]
     # if the inversion is above the range
-    elif midiShock.inversion > params["topCount"]:
+    elif state['inversion'] > params["topCount"]:
       # if upper limit is not exceeded by more than the spread
-      if midiShock.inversion - params["topCount"] < spread:
-        spreadVoicings = keyVoicings[spread - (midiShock.inversion - params["topCount"])]
+      if state['inversion'] - params["topCount"] < spread:
+        spreadVoicings = keyVoicings[spread - (state['inversion'] - params["topCount"])]
         return spreadVoicings[len(spreadVoicings)-1]
       # if upper limit is exceeded by more than the spread
       else:
         return keyVoicings[0][len(keyVoicings[0]) - 1]
     # if the inversion is below the lower limit
-    elif midiShock.inversion < (-1*params["bottomCount"]):
+    elif state['inversion'] < (-1*params["bottomCount"]):
       # if lower limit is not exceeded by more than the spread
-      if ((-1*params["bottomCount"]) - midiShock.inversion) < spread:
-        spreadVoicings = keyVoicings[spread - ((-1*params["bottomCount"]) - midiShock.inversion)]
+      if ((-1*params["bottomCount"]) - state['inversion']) < spread:
+        spreadVoicings = keyVoicings[spread - ((-1*params["bottomCount"]) - state['inversion'])]
         return spreadVoicings[0]
       # if the limit range is exceeded by more than the spread
       else:
@@ -180,20 +181,20 @@ class Chord:
   def getRoot(self, key):
     return self.rootNotes[key]
 
-  def getNoteTypes(self, midiShock):
-    if midiShock.alternate:
-      return self.altNotes[midiShock.key]
+  def getNoteTypes(self, state):
+    if state['alternate']:
+      return self.altNotes[state['key']]
     else:
-      return self.mainNotes[midiShock.key]
+      return self.mainNotes[state['key']]
 
-  def getChord(self, midiShock):
-    if midiShock.alternate:
-      return self.getChordFromParams(midiShock, self.altInversionParams, self.altVoicings)
+  def getChord(self, state):
+    if state['alternate']:
+      return self.getChordFromParams(state, self.altInversionParams, self.altVoicings)
     else:
-      return self.getChordFromParams(midiShock, self.mainInversionParams, self.mainVoicings)
+      return self.getChordFromParams(state, self.mainInversionParams, self.mainVoicings)
 
-  def getBass(self, midiShock):
-    if midiShock.alternate:
-      return self.getBassFromParams(midiShock, self.altBassParams, self.allAltBassNotes)
+  def getBass(self, state):
+    if state['alternate']:
+      return self.getBassFromParams(state, self.altBassParams, self.allAltBassNotes)
     else:
-      return self.getBassFromParams(midiShock, self.mainBassParams, self.allMainBassNotes)
+      return self.getBassFromParams(state, self.mainBassParams, self.allMainBassNotes)

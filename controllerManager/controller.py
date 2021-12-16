@@ -10,6 +10,8 @@ class Controller(ABC):
   def __init__(self, sendEvent, info):
     self.sendEvent = sendEvent
     self.info = info
+    self.meMap = meMaps[self.info['meMap']]
+    self.uiMap = uiMaps[self.info['meMap']]
 
     state = {} 
     for device in info['controls'].keys():
@@ -33,14 +35,18 @@ class Controller(ABC):
   def start(self, id, devices):
     self.id = id
     self.devices = devices
+    connectedControllers = store.get_state()['controllerManager']['controllers']
+    roles = [c['role'] for c in connectedControllers]
+    role = 'primary'
+    if 'primary' in roles: role = 'secondary'
     for key in devices.keys():
       asyncio.ensure_future(self.deviceReadLoop(key))
     data = {
       'id': id, 
       'name': self.info['name'],
-      'role': 'primary',
-      'meMap': meMaps[self.info['meMap']],
-      'uiMap': uiMaps[self.info['uiMap']],
+      'role': role,
+      'meMap': self.meMap,
+      'uiMap': self.uiMap,
       'compatibleMeMaps': self.info['compatibleMeMaps']
     }
     store.dispatch(actions.add(data))
@@ -68,9 +74,9 @@ class Controller(ABC):
         self.processAnalogEvent(event, control, controlState)
 
   def processButtonEvent(self, event, control):
-    self.state[control['name']] = event.value
     eventName = control['events'][event.value]
     self.sendEvent({'name': eventName, 'id': self.id})
+    self.state[control['name']] = event.value
 
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']

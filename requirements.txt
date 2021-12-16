@@ -2,3 +2,4 @@ evdev==1.4.0 ; sys_platform == 'linux'
 python-rtmidi==1.4.9
 pydux==0.2.2
 pyrsistent==0.18.0
+numpy==1.21.4

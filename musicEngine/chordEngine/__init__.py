@@ -1,133 +1,126 @@
-from modules.chord import Chord
-from modules.modulation import Modulation
-from modules.secondary import parseSecondaries, Secondary
+from .modules.chord import Chord
+from .modules.modulation import Modulation
+from .modules.secondary import parseSecondaries
 from constants import *
-import math
-from rtmidi import MidiOut
-from rtmidi.midiconstants import *
-import asyncio
+from redux import store
+from redux.actions import musicEngine as actions
+import math, asyncio
 
 class ChordEngine:
-  def __init__(self, display = None, settingIndex=0):
+  def __init__(self, settingIndex=0):
 
-    # constant for each setting
-    self.settingIndex = settingIndex
     self.setting = SETTINGS[settingIndex]
+    settingsList = [s['name'] for s in SETTINGS]
+    store.dispatch(actions.changeSettingsList(settingsList))
+    self.callbacks = []
+    self.state = {
+      'settingIndex': settingIndex,
+      'loadingSetting': False,
 
-    self.midiOut = MidiOut()
-    availablePorts = self.midiOut.get_ports()
-    print(availablePorts)
+      'scale': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      'scaleNotes': [],
+      'allScaleNotes': [],
 
-    if len(availablePorts) > 1:
-      self.midiOut.open_port(1)
-    else:
-      self.midiOut.open_virtual_port("virtual output")
+      'key': 0, # 0 is C, 1 is C# etc.
+      'inversionRange': 4,
+      'inversionMode': 'incremental', #can be "incremental" or "continuous"
+      'bassRange': 4,
+      'bassMode': 'incremental', #can be "incremental" or "continuous"
+      'inversion': 0,
+      'bassPosition': 0,
+      'chordOctave': 0,
+      'spread': 0,
 
-    #state variables
-    self.key = 0 # 0 is C, 1 is C# etc.
-    self.inversionRange = 4
-    self.bassRange = 4
-    self.spread = 0
-    self.octave = 0
-    self.voices = 8
-    self.hold = False
-    self.home = False
-    self.inversionHold = False
+      'voiceCount': 16,
+      'voiceCountMode': 'max', # can be 'max' or 'absolute'
+      'hold': False,
+      'inversionLock': False,
 
-    # midi channel
-    self.channel = 1
+      'modulation': 'none', # can be "left", "none", or "right"
+      'secondary': 'none', # can be "left", "none", or "right"
+      'alternate': False,
 
-    self.inversion = 0 
-    self.bassPosition = 0 
-    self.bassPositionMode = "incremental" #can be "incremental" or "continuous"
-    self.modulation = "none" # can be "left", "none", or "right"
-    self.secondary = "none" # can be "left", "none", or "right"
-    self.alternate = False
+      'rootType': 0,
+      'chordType': [],
+      'playingChordNotes': [],
+      'chordIsPlaying': False,
+      'playingBassNote': None,
+      'bassIsPlaying': False,
+      'activeChord': 'south',
+    }
 
-    self.playingChordNotes = [] # chord notes that are currently playing
-    self.chordIsPlaying = False
-    self.playingBassNote = None # bass note that is currently playing
-    self.BassIsPlaying = False
-    self.activeChord = "south"
-    self.afterTouchValue = 0
+    store.dispatch(actions.changeKey(self.state['key']))
+    store.dispatch(actions.changeInversionRange(self.state['inversionRange']))
+    store.dispatch(actions.changeBassRange(self.state['bassRange']))
+    store.dispatch(actions.changeInversion(self.state['inversion']))
+    store.dispatch(actions.changeBassPosition(self.state['bassPosition']))
 
-    self.running = False
+    self.setSetting(self.state['settingIndex'])
 
-    self.setSetting(self.settingIndex)
-    self.chordType, self.rootType = self.__getChordType(self.activeChord)
-
-  def start(self):
-    self.running = True
-    asyncio.ensure_future(self.__midiLoop())
-
-  def updateDisplay(self):
-    if self.display: self.display.root.update()
 
   def incrementSetting(self):
-    self.setSetting((self.settingIndex + 1) % len(SETTINGS))
+    self.setSetting((self.state['settingIndex'] + 1) % len(SETTINGS))
 
   def decrementSetting(self):
-    newIndex = self.settingIndex - 1
+    newIndex = self.state['settingIndex'] - 1
     if (newIndex < 0):
       newIndex = len(SETTINGS) - 1
     self.setSetting(newIndex)
 
   def setSetting(self, setting):
-    if self.display:
-      self.display.setSetting("Loading...")
-      self.updateDisplay()
+    self.state['loadingSetting'] = True
+    store.dispatch(actions.changeSettingLoading(True))
     self.stopChord(buttonUp=False)
     self.stopBass(buttonUp=False)
-    self.settingIndex = setting
+    self.state['settingIndex'] = setting
     self.setting = SETTINGS[setting]
 
-    self.scale = self.setting["scale"]
-    print(f"SETTING NAME: {self.setting['name']}")
-    self.scaleNotes, self.allScaleNotes = self.__findScaleNotes()
+    scale = self.setting["scale"]
+    self.state['scale'] = scale
+    self.state['scaleNotes'], self.state['allScaleNotes'] = self.__findScaleNotes()
 
     self.chords = {
-      "south": Chord(self.scale, self.setting["chords"]["south"]),
-      "west": Chord(self.scale, self.setting["chords"]["west"]),
-      "north": Chord(self.scale, self.setting["chords"]["north"]),
-      "east": Chord(self.scale, self.setting["chords"]["east"])
+      "south": Chord(scale, self.setting["chords"]["south"]),
+      "west": Chord(scale, self.setting["chords"]["west"]),
+      "north": Chord(scale, self.setting["chords"]["north"]),
+      "east": Chord(scale, self.setting["chords"]["east"])
     }
 
     self.secondaries = parseSecondaries(self.setting["secondaries"])
 
     self.modulations = {
-      "left": Modulation(self.scale, self.setting["modulations"]["left"]),
-      "right": Modulation(self.scale, self.setting["modulations"]["right"])
+      "left": Modulation(scale, self.setting["modulations"]["left"]),
+      "right": Modulation(scale, self.setting["modulations"]["right"])
     }
 
-    chord = self.chords[self.activeChord]
-    if self.display:
-      self.display.setKey(self.key)
-      self.display.setScale(self.scale)
-      self.display.setChord(chord.mainNotes[self.key], chord.rootNotes[self.key])
-      self.display.setChordShadow(self.__getChord(self.activeChord))
-      self.display.setBassShadow(self.__getBass())
-      self.display.setInversionRange(self.inversionRange, self.inversion)
-      self.display.setBassPositionRange(self.bassRange, self.bassPosition)
+    types = self.__getChordType(self.state['activeChord'])
+    self.state['chordType'], self.state['rootType'] = types
 
-    self.chordType, self.rootType = self.__getChordType(self.activeChord)
 
-    if self.display: self.display.setSetting(self.setting["name"])
+    store.dispatch(actions.changeSetting(setting))
+    store.dispatch(actions.changeScale(scale))
+    store.dispatch(actions.changeChordType({
+      'chord': self.state['chordType'], 
+      'root': self.state['rootType']
+    }))
+    shadowChord = self.__getChord(self.state['activeChord'])
+    store.dispatch(actions.changeChordShadow(shadowChord))
+    store.dispatch(actions.changeBassShadow(self.__getBass()))
 
-  def setAfterTouch(self, value):
-    self.afterTouchValue = value
+    store.dispatch(actions.changeSettingLoading(False))
+    self.state['loadingSetting'] = False
 
   def playChord(self, button):
-    self.activeChord = button
+    self.state['activeChord'] = button
     self.__setChordType()
     self.stopChord(buttonUp=False)
     notes = self.__getChord(button)
-    self.__sendMidi(notes)
+    self.__sendNotesOn(notes, player='chord')
     self.__updateBass()
-    if self.display: self.display.playChord(notes)
-    # print("NOTES ON - " + str(notes))
+    store.dispatch(actions.playChord(notes))
 
-    self.playingChordNotes = notes
-    self.chordIsPlaying = True
+    self.state['playingChordNotes'] = notes
+    self.state['chordIsPlaying'] = True
 
   def __setNumVoices(self, chordNotes):
     return chordNotes[:self.voices] if self.voices < len(chordNotes) else chordNotes
@@ -139,288 +132,216 @@ class ChordEngine:
     self.stopBass(buttonUp=False)
     bassNote = self.__getBass()
 
-    # TODO send midi note on
-    self.__sendMidi([bassNote])
-    if self.display: self.display.playBass(bassNote)
-    # print("NOTE ON - " + str(bassNote))
+    self.__sendNotesOn([bassNote], player='bass')
+    store.dispatch(actions.playBass(bassNote))
 
-    self.playingBassNote = bassNote
-    self.BassIsPlaying = True
+    self.state['playingBassNote'] = bassNote
+    self.state['BassIsPlaying'] = True
 
   def stopChord(self, buttonUp=True):
-    if not buttonUp or not self.hold:
-      if self.chordIsPlaying:
-        # TODO send midi notes off for playing chord
-        self.__sendMidi(self.playingChordNotes, command = NOTE_OFF)
-        if self.display: self.display.stopChord(self.playingChordNotes)
-        #print("NOTES OFF - " + str(self.playingChordNotes))
-        self.playingChordNotes = []
-        self.chordIsPlaying = False
+    if not buttonUp or not self.state['hold']:
+      if self.state['chordIsPlaying']:
+        self.__sendNotesOff(self.state['playingChordNotes'], player='chord')
+        store.dispatch(actions.stopChord())
+        self.state['playingChordNotes'] = []
+        self.state['chordIsPlaying'] = False
   
   def stopBass(self, buttonUp=True):
-    if not buttonUp or not self.hold:
-      if self.BassIsPlaying:
-        # TODO send midi note off for playing bass
-        self.__sendMidi([self.playingBassNote], command = NOTE_OFF)
-        if self.display: self.display.stopBass(self.playingBassNote)
-        #print("NOTE OFF - " + str(self.playingBassNote))
-        self.playingBassNote = None
-        self.BassIsPlaying = False 
+    if not buttonUp or not self.state['hold']:
+      if self.state['BassIsPlaying']:
+        self.__sendNotesOff([self.state['playingBassNote']], player='bass')
+        store.dispatch(actions.stopBass())
+        self.state['playingBassNote'] = None
+        self.state['BassIsPlaying'] = False 
 
   def setModulation(self, side):
-    if self.modulation != side:
-      if self.display: 
-        if side != "none":
-          self.display.setModulation(self.modulations[side].applyToScale(), side)
-        else:
-          self.display.setModulation(self.scale, side)
-      self.modulation = side
+    if self.state['modulation'] != side:
+      scale = self.state['scale']
+      if side != "none": scale = self.modulations[side].applyToScale()
+      store.dispatch(actions.changeModulation({
+        'scale': scale,
+        'side': side
+      }))
+      self.state['modulation'] = side
       self.__setChordType()
       self.__updateChord()
       self.__updateBass()
 
   def setSecondary(self, side):
-    if self.secondary != side:
-      self.secondary = side
+    if self.state['secondary'] != side:
+      self.state['secondary'] = side
       self.__setChordType()
       self.__updateChord()
       self.__updateBass()
 
   def setAlternate(self, alternate):
-    if self.alternate != alternate:
-      self.alternate = alternate
+    if self.state['alternate'] != alternate:
+      self.state['alternate'] = alternate
       self.__setChordType()
       self.__updateChord()
       self.__updateBass()
 
-  def setInversion(self, inversion, rawValue):
-    if (not self.inversionHold):
-      if self.display: self.display.storeInversionThumb(rawValue)
-      if inversion != self.inversion:
-        if abs(inversion) <= self.inversionRange:
-          self.inversion = inversion
-        elif inversion < 0:
-          self.inversion = -1*self.inversionRange
-        elif inversion > 0:
-          self.inversion = self.inversionRange
+  def incrementInversion(self):
+    newInversion = self.state['inversion'] + 1
+    if abs(newInversion) <= self.state['inversionRange']:
+      self.setInversion(newInversion)
+
+  def decrementInversion(self):
+    newInversion = self.state['inversion'] - 1
+    if abs(newInversion) <= self.state['inversionRange']:
+      self.setInversion(newInversion)
+
+  def setInversion(self, inversion):
+    if (not self.state['inversionLock']):
+      if inversion != self.state['inversion']:
+        range = self.state['inversionRange']
+        self.state['inversion'] = max(min(inversion, range), -1*range)
         self.__updateChord()
-        if self.display: self.display.setInversion(self.inversion)
+        store.dispatch(actions.changeInversion(self.state['inversion']))
+
+  def setAnalogInversion(self, value):
+    inversion = self.processInversionValue(value, type='chord')
+    self.setInversion(inversion)
+
+  def setAnalogBassPosition(self, value):
+    position = self.processInversionValue(value, type='bass')
+    self.setBassPosition(position)
   
   def setInversionRange(self, range):
-    if range <= MAX_INVERSION_RANGE and range >= 0:
-      self.inversionRange = range
-    elif range < 0:
-      self.inversionRange = 0
-    elif range > MAX_INVERSION_RANGE:
-      self.inversionRange = MAX_INVERSION_RANGE
-
-    if self.inversion > self.inversionRange:
-      self.inversion = self.inversionRange
-      self.__updateChord()
-    elif self.inversion < -1*self.inversionRange:
-      self.inversion = -1*self.inversionRange
-      self.__updateChord()
-    if self.display: self.display.setInversionRange(self.inversionRange, self.inversion)
+    range = max(min(range, MAX_INVERSION_RANGE), 0)
+    self.state['inversionRange'] = range
+    self.state['inversion'] = max(min(self.state['inversion'], range), -1*range) 
+    self.__updateChord()
+    store.dispatch(actions.changeInversion(self.state['inversion']))
+    store.dispatch(actions.changeInversionRange(self.state['inversionRange']))
 
   def incrementBassPosition(self):
-    newPosition = self.bassPosition + 1
-    if abs(newPosition) <= self.bassRange:
-      thumb = self.__getIncrementalInversionThumbValue(newPosition)
-      self.setBassPosition(newPosition, thumb)
+    newPosition = self.state['bassPosition'] + 1
+    if abs(newPosition) <= self.state['bassRange']:
+      self.setBassPosition(newPosition)
 
   def decrementBassPosition(self):
-    newPosition = self.bassPosition - 1
-    if abs(newPosition) <= self.bassRange:
-      thumb = self.__getIncrementalInversionThumbValue(newPosition)
-      self.setBassPosition(newPosition, thumb)
+    newPosition = self.state['bassPosition'] - 1
+    if abs(newPosition) <= self.state['bassRange']:
+      self.setBassPosition(newPosition)
     
-  def setBassPosition(self, position, rawValue):
-    if self.display: self.display.storeBassPositionThumb(rawValue)
-    if position != self.bassPosition:
-      if abs(position) <= self.bassRange:
-        self.bassPosition = position
-      elif position < 0:
-        self.bassPosition = -1*self.bassRange
-      elif position > 0:
-        self.bassPosition = self.bassRange
+  def setBassPosition(self, position):
+    if position != self.state['bassPosition']:
+      range = self.state['bassRange']
+      self.state['bassPosition'] = max(min(position, range), -1*range)
       self.__updateBass()
-      if self.display: self.display.setBassPosition(self.bassPosition)
+      store.dispatch(actions.changeBassPosition(self.state['bassposition']))
 
   def setBassRange(self, range):
-    if range <= MAX_BASS_RANGE and range >= 0:
-      self.bassRange = range
-    elif range < 0:
-      self.bassRange = 0
-    elif range > MAX_BASS_RANGE:
-      self.bassRange = MAX_BASS_RANGE
-
-    if self.bassPosition > self.bassRange:
-      self.bassPosition = self.bassRange
-      self.__updateBass()
-    elif self.bassPosition < -1*self.bassRange:
-      self.bassPosition = -1*self.bassRange
-      self.__updateBass()
-    if self.display: self.display.setBassPositionRange(self.bassRange, self.bassPosition)
+    range = max(min(range, MAX_BASS_RANGE), 0)
+    self.state['bassRange'] = range
+    self.state['bassPosition'] = max(min(self.state['bassPosition'], range), -1*range)   
+    self.__updateBass()
+    store.dispatch(actions.changeInversion(self.state['bassPosition']))
+    store.dispatch(actions.changeInversionRange(self.state['bassRange']))
 
   def setSpread(self, spread):
-    if spread >= 0 and spread < SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
-      self.spread = spread
-    elif spread < 0:
-      self.spread = 0
-    elif spread >= SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES:
-      self.spread = (SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES) - 1
+    maxSpread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
+    spread = max(min(spread, maxSpread), 0)
+    self.state['spread'] = spread
     self.__updateChord()
-    if self.display: self.display.setSpread(self.spread)
+    store.dispatch(actions.changeSpread(self.state['spread']))
   
   def incrementSpread(self):
-    self.setSpread(self.spread + 1)
+    self.setSpread(self.state['spread'] + 1)
 
   def decrementSpread(self):
-    self.setSpread(self.spread - 1)
+    self.setSpread(self.state['spread'] - 1)
 
   def setKey(self, key):
     key = key % 12
-    if self.key != key:
-      self.key = key
-      if self.display: self.display.setKey(self.key)
+    if self.state['key'] != key:
+      self.state['key'] = key
+      store.dispatch(actions.changeKey(key))
       self.__setChordType()
       self.__updateChord()
       self.__updateBass()
 
   def incrementKey(self):
-    self.setKey(self.key + 1)
+    self.setKey(self.state['key'] + 1)
 
   def decrementKey(self):
-    self.setKey(self.key + 11)
-  
-  def incrementVoices(self):
-    self.voices = (self.voices % MAX_VOICING) + 1 if self.voices < MAX_VOICING else 2
-  
-  def decrementVoices(self):
-    """Does not go less than 2 voices."""
-    self.voices = ((MAX_VOICING + 1) if self.voices < 3 else self.voices) - 1
-  
-  def incrementMidiChannel(self):
-    self.channel = (self.channel % 16) + 1
-  
-  def decrementMidiChannel(self):
-    self.channel = (17 if self.channel < 2 else self.channel) - 1
+    self.setKey(self.state['key'] + 11)
 
-  def incrementOctave(self):
-    self.octave = self.octave + 1 if self.octave < 3 else self.octave
+  def setVoiceCount(self, count):
+    count = max(min(count, MAX_VOICE_COUNT), 1)
+    self.state['voiceCount'] = count
+    self.__updateChord()
+    store.dispatch(actions.changeVoiceCount(self.state['voiceCount']))
   
-  def decrementOctave(self):
-    self.octave = self.octave - 1 if self.octave > -3 else self.octave
+  def incrementVoiceCount(self):
+    self.setVoiceCount(self.state['voiceCount'] + 1)
+  
+  def decrementVoiceCount(self):
+    self.setVoiceCount(self.state['voiceCount'] - 1)
+  
+  def setChordChannel(self, channel):
+    channel = max(min(channel, 16), 0)
+    self.state['chordChannel'] = channel
+    self.__updateChord()
+    store.dispatch(actions.changeChordChannel(channel))
 
-  def toggleShift(self):
-    self.shift = not self.shift
-    if self.display: self.display.setShift(self.shift)
+  def setBassChannel(self, channel):
+    channel = max(min(channel, 16), 0)
+    self.state['bassChannel'] = channel
+    self.__updateBass()
+    store.dispatch(actions.changeBassChannel(channel))
 
-  def toggleAlt(self):
-    self.alt = not self.alt
-    if self.display: self.display.setAlt(self.alt)
+  def setChordOctave(self, octave):
+    self.state['chordOctave'] = max(min(octave, MAX_OCTAVE_SHIFT), -1*MAX_OCTAVE_SHIFT)
+    self.__updateChord()
+    store.dispatch(actions.changeChordOctave(self.state['chordOctave']))
+
+  def incrementChordOctave(self):
+    self.setChordOctave(self.state['chordOctave'] + 1)
+  
+  def decrementChordOctave(self):
+    self.setChordOctave(self.state['chordOctave'] + 1)
   
   def toggleHold(self):
-    if self.hold:
-      self.hold = False
+    if self.state['hold']:
+      self.state['hold'] = False
       self.stopChord(buttonUp=False)
       self.stopBass(buttonUp=False)
     else:
-      self.hold = True
+      self.state['hold'] = True
+    store.dispatch(actions.changeHold(self.state['chordOctave']))
   
-  def toggleInversionHold(self):
-    self.inversionHold = not self.inversionHold
+  def toggleInversionLock(self):
+    self.state['inversionLock'] = not self.state['inversionLock']
+    store.dispatch(actions.changeInversionLock(self.state['inversionLock']))
 
-  def toggleHome(self):
-    self.home = not self.home
+  def processInversionValue(self, rawValue, type='chord'):
+    maxSteps = self.state['inversionRange'] if type == 'chord' else self.state['bassRange']
+    lastValue = self.state['inversion'] if type == 'chord' else self.state['bassPosition']
 
-  def processCCValue(self, rawValue, name, config):
-    max = config["ranges"][name]["bottom"]
-    value = math.floor((min(abs(rawValue), max) / max)*127)
-    return value
-
-  def processThresholdValue(self, rawValue, name, config):
-    range = config["ranges"][name]
-    center = abs((range["top"] - range["bottom"]) / 2)
-    threshold = range["threshold"] * center
-    if rawValue > (center + threshold):
-      return 1
-    if rawValue < (center - threshold):
-      return -1
-    else:
-      return 0
-
-  def processInversionValue(self, rawValue, name, config, pastValues, type="chord"):
-    maxSteps = self.inversionRange
-    if (type == "bass"):
-      maxSteps = self.bassRange
-
-    range = config["ranges"][name]
-
-    pastRawValues = pastValues["past"]
-    pastRawValues.append(rawValue)
-    if (len(pastRawValues) > config["absAverageCounts"][name]):
-      pastRawValues.pop(0)
-
-    # get the average of the past raw values (prevents fluttering)
-    sum = 0
-    for val in pastRawValues:
-      sum += val
-    avg = sum / len(pastRawValues)
-
-    #clamp value to between -0.999 and 0.999
-    slope = 2.0 / (range["top"]- range["bottom"])
-    intercept = 1 - (slope*range["top"])
-    normalized =  (slope*avg) + intercept
-    normalized = max(min(normalized, 0.999), -0.999)
-    
     # converts to an integer in the correct inversion range
-    def getValue(n):
-      if n > 0:
-        return math.floor(n * (maxSteps + 1))
-      else:
-        return math.ceil(n * (maxSteps + 1))
+    def getValue(x):
+      return math.floor(((x+1)/2)*((2*maxSteps)+1)) - maxSteps
 
     # snap processed value back into current window if     
-    snapped = normalized
-    value = getValue(snapped)
+    value = getValue(rawValue)
     snap = (1.0 / (maxSteps + 1)) * INVERSION_SNAP
+    if value == lastValue + 1:
+      rawValue -= snap
+      value = getValue(rawValue)
+    if value == lastValue - 1:
+      rawValue += snap
+      value = getValue(rawValue)
 
-    if value == pastValues["processed"] + 1:
-      snapped -= snap
-      value = getValue(snapped)
-    if value == pastValues["processed"] - 1:
-      snapped += snap
-      value = getValue(snapped)
+    return value
 
-    pastValues["processed"] = value
-    return value, normalized
-  
-  async def __midiLoop(self):
-    while(self.running):
-      self.__sendAfterTouch()
-      await asyncio.sleep(MIDI_STEP)
-
-  def __getIncrementalInversionThumbValue(self, position):
-    thumb = 0
-    if position > 0:
-      step = 1 / (self.bassRange + 1)
-      thumb = (position + 0.5) * step
-    elif position < 0:
-      step = 1 / (self.bassRange + 1)
-      thumb = (position - 0.5) * step
-    return thumb
-
-  def __sendAfterTouch(self):
-    if(self.chordIsPlaying):
-      for note in self.playingChordNotes:
-        self.midiOut.send_message([0xA0, note, self.afterTouchValue])
-    if self.BassIsPlaying:
-      self.midiOut.send_message([0xA0, self.playingBassNote, self.afterTouchValue])
+  def subscribe(self, callback):
+    self.callbacks.append(callback)
 
   def __findScaleNotesForKey(self, key):
     scaleNotes = []
-    for note in self.scale:
+    for note in self.state['scale']:
       scaleNotes.append((note + key) % 12)
     return scaleNotes
 
@@ -432,12 +353,26 @@ class ChordEngine:
       allScaleNotes[key] = Chord.findAllNotes(scaleNotes[key])
     return scaleNotes, allScaleNotes
   
-  def __sendMidi(self, notes, command = NOTE_ON, channel = None, velocity = 122):
-    vel =  0 if command == NOTE_OFF else velocity
-    midiCommandWithChannel = (command & 0xf0) | ((channel if channel else self.channel) - 1 & 0xf)
-    for note in notes:
-      self.midiOut.send_message([POLY_AFTERTOUCH, note, self.afterTouchValue])
-      self.midiOut.send_message([midiCommandWithChannel, note, vel])
+  
+  def __sendNotesOn(self, notes, player):
+    message = {
+      'type': 'on',
+      'notes': notes,
+      'player': player
+    }
+    self.__sendMessage(message)
+
+  def __sendNotesOff(self, notes, player):
+    message = {
+      'type': 'off',
+      'notes': notes,
+      'player': player
+    }
+    self.__sendMessage(message)
+    
+  def __sendMessage(self, message):
+    for callback in self.callbacks:
+      callback(message)
   
   def __mod12(self, notes):
     newNotes = []
@@ -448,95 +383,95 @@ class ChordEngine:
   def __getChordType(self, button):
     chord = self.chords[button]
     # secondary inactive
-    if (self.secondary == "none"):
-      if (self.modulation == "none"):
-        return chord.getNoteTypes(self), chord.getRoot(self.key)
+    if (self.state['secondary'] == "none"):
+      if (self.state['modulation'] == "none"):
+        return chord.getNoteTypes(self.state), chord.getRoot(self.state['key'])
       else:
-        modulation = self.modulations[self.modulation]
-        rootNote = modulation.applyOne(chord.getRoot(self.key), self.__getScale()) % 12
-        chordNotes = self.__mod12(modulation.apply(chord.getNoteTypes(self), self.__getScale()))
+        modulation = self.modulations[self.state['modulation']]
+        rootNote = modulation.applyOne(chord.getRoot(self.state['key']), self.__getScale()) % 12
+        chordNotes = self.__mod12(modulation.apply(chord.getNoteTypes(self.state), self.__getScale()))
         return chordNotes, rootNote
     # secondary is active
     else:
       modKey = "default"
-      if (self.modulation == "left"):
+      if (self.state['modulation'] == "left"):
         modKey = "leftModulation"
-      elif (self.modulation == "left"):
+      elif (self.state['modulation'] == "left"):
         modKey = "rightModulation"
-      secondary = self.secondaries[self.secondary][button][modKey]
-      chordRoot = chord.getRoot(self.key)
+      secondary = self.secondaries[self.state['secondary']][button][modKey]
+      chordRoot = chord.getRoot(self.state['key'])
       rootType = secondary.getRoot(chordRoot)
-      chordType = secondary.getNoteTypes(self, chordRoot)
+      chordType = secondary.getNoteTypes(self.state, chordRoot)
       chordType.sort()
       return chordType, rootType
 
   def __setChordType(self):
-    chord, root = self.__getChordType(self.activeChord)
+    chord, root = self.__getChordType(self.state['activeChord'])
     if chord != self.chordType or root != self.rootType:
       self.chordType, self.rootType = chord, root
-      if self.display: self.display.setChord(chord, root)
+      store.dispatch(actions.changeChordType({'chord': chord, 'root': root}))
 
   def __getChord(self, button):
     chord = self.chords[button]
     # secondary inactive
-    if (self.secondary == "none"):
-      if (self.modulation == "none"):
+    if (self.state['secondary'] == "none"):
+      if (self.state['modulation'] == "none"):
         chord = chord.getChord(self)
       else:
-        modulation = self.modulations[self.modulation]
+        modulation = self.modulations[self.state['modulation']]
         chord = modulation.apply(chord.getChord(self), self.__getScale())
     # secondary is active
     else:
       modKey = "default"
-      if (self.modulation == "left"):
+      if (self.state['modulation'] == "left"):
         modKey = "leftModulation"
-      elif (self.modulation == "left"):
+      elif (self.state['modulation'] == "left"):
         modKey = "rightModulation"
-      secondary = self.secondaries[self.secondary][button][modKey]
-      chord = secondary.getChord(self, chord.getRoot(self.key))
+      secondary = self.secondaries[self.state['secondary']][button][modKey]
+      chord = secondary.getChord(self.state, chord.getRoot(self.state['key']))
     
     chordAdjustedNumVoices = self.__setNumVoices(chord)
     chordAdjustedOctaves = self.__setOctave(chordAdjustedNumVoices)
     return chordAdjustedOctaves
 
   def __setNumVoices(self, chordNotes):
-    return chordNotes[:self.voices] if self.voices < len(chordNotes) else chordNotes
+    return chordNotes[:self.state['voiceCount']] if self.state['voiceCount'] < len(chordNotes) else chordNotes
 
   def __setOctave(self, chordNotes):
-    return [note + (self.octave * 12) for note in chordNotes]
+    return [note + (self.state['chordOctave'] * 12) for note in chordNotes]
  
   def __getScale(self):
-    return self.scaleNotes[self.key]
+    return self.state['scaleNotes'][self.state['key']]
   
   def __getBass(self):
-    chord = self.chords[self.activeChord]
-    if (self.secondary == "none"):
-      if (self.modulation == "none"):
+    chord = self.chords[self.state['activeChord']]
+    if (self.state['secondary'] == "none"):
+      if (self.state['modulation'] == "none"):
         return chord.getBass(self)
       else:
-        modulation = self.modulations[self.modulation]
+        modulation = self.modulations[self.state['modulation']]
         return modulation.applyOne(chord.getBass(self), self.__getScale())
     # secondary is active
     else:
       modKey = "default"
-      if (self.modulation == "left"):
+      if (self.state['modulation'] == "left"):
         modKey = "leftModulation"
-      elif (self.modulation == "left"):
+      elif (self.state['modulation'] == "left"):
         modKey = "rightModulation"
 
-      secondary = self.secondaries[self.secondary][self.activeChord][modKey]
-      return secondary.getBass(self, chord.getRoot(self.key))
+      secondary = self.secondaries[self.state['secondary']][self.state['activeChord']][modKey]
+      return secondary.getBass(self.state, chord.getRoot(self.state['key']))
 
   def __updateChord(self):
-    if (self.chordIsPlaying):
-      self.playChord(self.activeChord)
+    if (self.state['chordIsPlaying']):
+      self.playChord(self.state['activeChord'])
     else:
-      notes = self.__getChord(self.activeChord)
-      if self.display: self.display.setChordShadow(notes)
+      notes = self.__getChord(self.state['activeChord'])
+      store.dispatch(actions.changeChordShadow(notes))
 
   def __updateBass(self):
-    if (self.BassIsPlaying):
+    if (self.state['bassIsPlaying']):
       self.playBass()
     else:
       note = self.__getBass()
-      if self.display: self.display.setBassShadow(note)
+      store.dispatch(actions.changeBassShadow(note))

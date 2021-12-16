@@ -8,7 +8,7 @@ class ControllerManager():
 
   def __init__(self):
     self.controllerClasses = controllerClasses
-    self.connectedControllers = {}
+    self.connectedControllers = []
     self.subscriberCallbacks = []
     store.subscribe(self.handleStoreUpdate)
   
@@ -21,18 +21,29 @@ class ControllerManager():
   def sendEvent(self, event):
     for callBack in self.subscriberCallbacks:
       callBack(event)
+    
+  def getConnected(self):
+    foundController = True
+    while foundController:
+      foundController = False
+      for Controller in self.controllerClasses:
+        foundController = Controller.checkIfConnected()
+        if foundController:
+          connectedController = Controller(self.sendEvent)
+          connectedController.start()
+          self.connectedControllers.append(connectedController)
 
   async def waitForConnection(self):
     store.dispatch(actions.startWaitingForConnection())
     foundController = False
     connectedController = None
     while (not foundController):
-      for Controller in controllerClasses:
+      for Controller in self.controllerClasses:
         foundController = Controller.checkIfConnected()
         if foundController:
           connectedController = Controller(self.sendEvent)
           connectedController.start()
-          self.connectedControllers = [connectedController]
+          self.connectedControllers.append(connectedController)
           store.dispatch(actions.stopWaitingForConnection())
           break
         await asyncio.sleep(0.25)
