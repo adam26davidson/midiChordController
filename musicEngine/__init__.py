@@ -52,20 +52,20 @@ class MusicEngine():
       #TRIGGERS
       "ALTERNATE_ON": lambda: self.chordEngine.setAlternate(True),
       "ALTERNATE_OFF": lambda: self.chordEngine.setAlternate(False),
-      "BASS_ON",
-      "BASS_OFF",
+      "BASS_ON": self.chordEngine.playBass,
+      "BASS_OFF": self.chordEngine.stopBass,
 
       #OPTIONS
-      "TOGGLE_INVERSION_LOCK",
-      "TOGGLE_HOLD",
+      "TOGGLE_INVERSION_LOCK": self.chordEngine.toggleInversionLock,
+      "TOGGLE_HOLD": self.chordEngine.toggleHold,
 
       #GYROSCOPE
-      "UPDATE_INVERSION",
-      "UPDATE_AFTERTOUCH",
+      "UPDATE_INVERSION": self.chordEngine.toggleInversionLock,
+      "UPDATE_AFTERTOUCH": self.midi.setAfterTouch,
 
       #TOUCHPAD
-      "UPDATE_MIDI_CC_1",
-      "UPDATE_MIDI_CC_2"
+      "UPDATE_MIDI_CC_1": self.midi.getCCSetter(1),
+      "UPDATE_MIDI_CC_2": self.midi.getCCSetter(2)
     }
 
   def controllerEventHandler(self, event):
