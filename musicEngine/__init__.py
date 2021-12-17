@@ -19,9 +19,9 @@ class MusicEngine():
       "SOUTH_CHORD_OFF": self.chordEngine.stopChord,
       "WEST_CHORD_ON": lambda: self.chordEngine.playChord('west'),
       "WEST_CHORD_OFF": self.chordEngine.stopChord,
-      "NORTH_CHORD_ON": lambda: self.chordEngine.playChord('west'),
+      "NORTH_CHORD_ON": lambda: self.chordEngine.playChord('north'),
       "NORTH_CHORD_OFF": self.chordEngine.stopChord,
-      "EAST_CHORD_ON": lambda: self.chordEngine.playChord('west'),
+      "EAST_CHORD_ON": lambda: self.chordEngine.playChord('east'),
       "EAST_CHORD_OFF": self.chordEngine.stopChord,
 
       "LEFT_SECONDARY_ON": lambda: self.chordEngine.setSecondary('left'),
