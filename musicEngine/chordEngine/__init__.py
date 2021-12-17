@@ -217,6 +217,7 @@ class ChordEngine:
     store.dispatch(actions.changeInversionRange(self.state['inversionRange']))
 
   def incrementBassPosition(self):
+    print('INCREMENTING BASS')
     newPosition = self.state['bassPosition'] + 1
     if abs(newPosition) <= self.state['bassRange']:
       self.setBassPosition(newPosition)
