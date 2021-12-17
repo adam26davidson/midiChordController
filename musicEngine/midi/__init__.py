@@ -98,6 +98,7 @@ class Midi():
 
   def __sendAftertouch(self):
     if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
+      print('setting aftertouch to: ' + str(self.state['afterTouch']))
       for note in self.state['playingNotes']:
         channel = self.state['noteChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
@@ -116,7 +117,6 @@ class Midi():
   async def __loop(self):
     while True:
       self.__sendAftertouch()
-      print(self.state[''])
       self.__sendCCValues()
       await asyncio.sleep(MIDI_STEP)
   
