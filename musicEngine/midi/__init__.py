@@ -62,9 +62,11 @@ class Midi():
         self.state['noteChannels'][note] = noteChannel
         channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
         if intervals is None:
+          print('no strum')
           self.state['playingNotes'].append(note)
           self.midiOut.send_message([channelCommand, note, velocity])
         else:
+          print('strum')
           j = i if self.state['strumDirection'] != 'down' else (len(notes) - 1) -i
           asyncio.ensure_future(self.__scheduleNote(
             command = channelCommand,
