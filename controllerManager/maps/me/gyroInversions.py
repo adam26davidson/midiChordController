@@ -59,7 +59,7 @@ gyroInversions = {
     "GYRO_ROLL_UPDATE": "UPDATE_AFTERTOUCH",
 
     #TOUCHPAD
-    "TOUCH_X": "UPDATE_MIDI_CC_1",
-    "TOUCH_Y": "UPDATE_MIDI_CC_2"
+    "TOUCHPAD_X": "UPDATE_MIDI_CC_1",
+    "TOUCHPAD_Y": "UPDATE_MIDI_CC_2"
   }
 }
