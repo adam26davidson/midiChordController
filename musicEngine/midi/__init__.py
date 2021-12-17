@@ -13,7 +13,7 @@ class Midi():
       'velocityMode': 'random', # 'constant' or 'random'
       'velocityDeviation': 15, # 'standard deviation for random velocity'
 
-      'strumMode': 'random', # 'random', 'regular', 'off'
+      'strumMode': 'regular', # 'random', 'regular', 'off'
       'strumInterval': 1, # time beween notes or spread of distribution
       'strumOrder' : 'random', # 'up', 'down', or 'random'
       'playingChordNotes': [],
