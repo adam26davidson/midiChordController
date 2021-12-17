@@ -10,11 +10,11 @@ class Midi():
     self.midiOut = MidiOut()
     self.state = {
       'velocity': 100, # constant velocity or center of random distribution
-      'velocityMode': 'constant', # 'constant' or 'random'
+      'velocityMode': 'random', # 'constant' or 'random'
       'velocityDeviation': 5, # 'standard deviation for random velocity'
 
       'strumMode': 'random', # 'random', 'regular', 'off'
-      'strumInterval': 0.05, # time beween notes or spread of distribution
+      'strumInterval': 0.1, # time beween notes or spread of distribution
       'strumOrder' : 'up', # 'up', 'down', or 'random'
       'playingNotes': [],
       'scheduledNotes': [],
@@ -42,8 +42,6 @@ class Midi():
 
   def handleNotesMessage(self, message):
     notes, player, type = message['notes'], message['player'], message['type']
-    print('notes inside midi handle message')
-    print(notes)
     if type == 'on':
       channelMap, channel = None, None     
       if self.state['distributeChannels']:
@@ -98,7 +96,6 @@ class Midi():
 
   def __sendAftertouch(self):
     if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
-      print('setting aftertouch to: ' + str(self.state['afterTouch']))
       for note in self.state['playingNotes']:
         channel = self.state['noteChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
