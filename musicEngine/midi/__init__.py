@@ -11,10 +11,10 @@ class Midi():
     self.state = {
       'velocity': 100, # constant velocity or center of random distribution
       'velocityMode': 'random', # 'constant' or 'random'
-      'velocityDeviation': 5, # 'standard deviation for random velocity'
+      'velocityDeviation': 10, # 'standard deviation for random velocity'
 
       'strumMode': 'random', # 'random', 'regular', 'off'
-      'strumInterval': 0.5, # time beween notes or spread of distribution
+      'strumInterval': 0.1, # time beween notes or spread of distribution
       'strumOrder' : 'up', # 'up', 'down', or 'random'
       'playingNotes': [],
       'scheduledNotes': [],
