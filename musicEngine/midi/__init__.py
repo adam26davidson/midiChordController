@@ -53,6 +53,7 @@ class Midi():
       if self.state['strumMode'] != 'off' and player == 'chord':
         print('strum is good')
         intervals = self.__getIntervals(len(notes))
+        print(intervals)
         notes.sort()
 
       for i, note in enumerate(notes):
