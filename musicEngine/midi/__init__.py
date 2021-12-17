@@ -129,8 +129,8 @@ class Midi():
           channel = self.state['distChordChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
         self.midiOut.send_message([channelCommand, note, self.state['afterTouch']])
-      if self.state['playingBassnote'] is not None:
-        bassNote = self.state['playingBassnote']
+      if self.state['playingBassNote'] is not None:
+        bassNote = self.state['playingBassNote']
         channel = self.state['bassChannel']
         if self.state['distributeChannels']:
           channel = self.state['distBassChannel']
@@ -147,7 +147,7 @@ class Midi():
             channel = self.state['distChordChannels'][note]
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])
-        if self.state['playingBassnote'] is not None:
+        if self.state['playingBassNote'] is not None:
           channel = self.state['bassChannel']
           if self.state['distributeChannels']:
             channel = self.state['distBassChannel']
