@@ -36,7 +36,7 @@ class Midi():
 
   def start(self):
     self.availableOutputPorts = self.midiOut.get_ports()
-    if len(self.availablePorts) >= 2:
+    if len(self.availableOutputPorts) >= 2:
       self.midiOut.open_port(1)
     asyncio.ensure_future(self.__loop())
 
