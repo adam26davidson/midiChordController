@@ -447,10 +447,10 @@ class ChordEngine:
     chord = self.chords[self.state['activeChord']]
     if (self.state['secondary'] == "none"):
       if (self.state['modulation'] == "none"):
-        return chord.getBass(self)
+        return chord.getBass(self.state)
       else:
         modulation = self.modulations[self.state['modulation']]
-        return modulation.applyOne(chord.getBass(self), self.__getScale())
+        return modulation.applyOne(chord.getBass(self.state), self.__getScale())
     # secondary is active
     else:
       modKey = "default"
