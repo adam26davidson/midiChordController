@@ -77,7 +77,7 @@ class Midi():
       if self.state['distributeChannels']:
         self.__openChannels(notes)
 
-      for i, note in message['notes'].enumerate():
+      for i, note in enumerate(message['notes']):
         velocity = 0
         noteChannel = self.state['noteChannels'][note]
         channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
