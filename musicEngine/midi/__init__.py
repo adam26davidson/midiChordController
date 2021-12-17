@@ -42,7 +42,7 @@ class Midi():
     asyncio.ensure_future(self.__loop())
 
   def handleNotesMessage(self, message):
-    notes, player, type = message['note'], message['player'], message['type']
+    notes, player, type = message['notes'], message['player'], message['type']
     if type == 'on':
       channelMap, channel = None, None     
       if self.state['distributeChannels']:
