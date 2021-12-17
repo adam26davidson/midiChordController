@@ -136,7 +136,7 @@ class ChordEngine:
     store.dispatch(actions.playBass(bassNote))
 
     self.state['playingBassNote'] = bassNote
-    self.state['BassIsPlaying'] = True
+    self.state['bassIsPlaying'] = True
 
   def stopChord(self, buttonUp=True):
     if not buttonUp or not self.state['hold']:
@@ -148,11 +148,11 @@ class ChordEngine:
   
   def stopBass(self, buttonUp=True):
     if not buttonUp or not self.state['hold']:
-      if self.state['BassIsPlaying']:
+      if self.state['bassIsPlaying']:
         self.__sendNotesOff([self.state['playingBassNote']], player='bass')
         store.dispatch(actions.stopBass())
         self.state['playingBassNote'] = None
-        self.state['BassIsPlaying'] = False 
+        self.state['bassIsPlaying'] = False 
 
   def setModulation(self, side):
     if self.state['modulation'] != side:
