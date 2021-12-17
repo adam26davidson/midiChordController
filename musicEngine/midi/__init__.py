@@ -113,7 +113,6 @@ class Midi():
         self.midiOut.send_message([channelCommand, note, 0])
 
 
-
   def setAfterTouch(self, value):
     self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
 
@@ -124,17 +123,34 @@ class Midi():
 
   def __sendAftertouch(self):
     if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
-      for note in self.state['playingNotes']:
-        channel = self.state['noteChannels'][note]
+      for note in self.state['playingChordNotes']:
+        channel = self.state['chordChannel']
+        if self.state['distributeChannels']:
+          channel = self.state['distChordChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
         self.midiOut.send_message([channelCommand, note, self.state['afterTouch']])
+      if self.state['playingBassnote'] is not None:
+        bassNote = self.state['playingBassnote']
+        channel = self.state['bassChannel']
+        if self.state['distributeChannels']:
+          channel = self.state['distBassChannel']
+        channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
+        self.midiOut.send_message([channelCommand, bassNote, self.state['afterTouch']])
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
         
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
       if val != self.state['lastSentCCValues'][cc]:
-        for note in self.state['playingNotes']:
-          channel = self.state['noteChannels'][note]
+        for note in self.state['playingChordNotes']:
+          channel = self.state['chordChannel']
+          if self.state['distributeChannels']:
+            channel = self.state['distChordChannels'][note]
+          channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
+          self.midiOut.send_message([channelCommand, cc, val])
+        if self.state['playingBassnote'] is not None:
+          channel = self.state['bassChannel']
+          if self.state['distributeChannels']:
+            channel = self.state['distBassChannel']
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])
         self.state['lastSentCCValues'][cc] = val
