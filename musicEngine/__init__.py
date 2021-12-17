@@ -59,7 +59,7 @@ class MusicEngine():
       "TOGGLE_INVERSION_LOCK": self.chordEngine.toggleInversionLock,
       "TOGGLE_HOLD": self.chordEngine.toggleHold,
 
-      "UPDATE_INVERSION": self.chordEngine.toggleInversionLock,
+      "UPDATE_INVERSION": self.chordEngine.setAnalogInversion,
       "UPDATE_AFTERTOUCH": self.midi.setAfterTouch,
 
       "UPDATE_MIDI_CC_1": self.midi.getCCSetter(1),
