@@ -156,7 +156,7 @@ class Midi():
   def __getIntervals(self, n):
     intervals = []
     if self.state['strumMode'] == 'random':
-      intervals = self.__getRandomIntervals(len(n))
+      intervals = self.__getRandomIntervals(n)
       intervals = intervals.sort() if self.state['strumOrder'] != 'random' else intervals
     elif self.state['strumMode'] == 'regular':
       intervals = self.__getRegularIntervals(n)
