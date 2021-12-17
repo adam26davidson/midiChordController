@@ -123,9 +123,9 @@ info = {
         "events":{ 
           "value": "LEFT_STICK_X_UPDATE", 
           "threshold": { 
-            1: "LEFT_STICK_RIGHT",
+            -1: "LEFT_STICK_RIGHT",
             0: "LEFT_STICK_X_OFF",
-            -1: "LEFT_STICK_LEFT"
+            1: "LEFT_STICK_LEFT"
           }
         },
         "config": { 
@@ -164,9 +164,9 @@ info = {
         "events":{ 
           "value": "RIGHT_STICK_X_UPDATE", 
           "threshold": { 
-            1: "RIGHT_STICK_RIGHT",
+            -1: "RIGHT_STICK_RIGHT",
             0: "RIGHT_STICK_X_OFF",
-            -1: "RIGHT_STICK_LEFT"
+            1: "RIGHT_STICK_LEFT"
           }
         },
         "config": { 
