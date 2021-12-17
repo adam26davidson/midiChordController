@@ -60,7 +60,8 @@ class Midi():
       else:
         self.state['distBassChannel'] = None
     if player == 'chord':
-      self.state['playingChordNotes'].remove(note)
+      if note in self.state['playingChordNotes']:
+        self.state['playingChordNotes'].remove(note)
     else:
       self.state['playingBassNote'] = None
   
