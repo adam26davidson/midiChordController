@@ -72,7 +72,7 @@ class MusicEngine():
     meMap = None
     for controller in controllers:
       if controller['role'] == 'primary':
-        meMap = controller['meMap']
+        meMap = controller['meMap']['map']
     
     command = meMap[event['name']]
     if 'value' in event.keys():
