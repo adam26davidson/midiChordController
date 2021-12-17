@@ -116,7 +116,7 @@ class Midi():
     while True:
       self.__sendAftertouch()
       self.__sendCCValues()
-      asyncio.sleep(MIDI_STEP)
+      await asyncio.sleep(MIDI_STEP)
   
   def __combineCommandAndChannel(self, command, channel):
     return (command & 0xf0) | (channel & 0xf)
@@ -172,7 +172,7 @@ class Midi():
 
   async def __scheduleNote(self, command, note, velocity, interval):
     self.state['scheduledNotes'].append(note)
-    asyncio.sleep(interval)
+    await asyncio.sleep(interval)
     if note in self.state['scheduledNotes']:
       self.midiOut.send_message([command, note, velocity])
       self.state['playingNotes'].append(note)
