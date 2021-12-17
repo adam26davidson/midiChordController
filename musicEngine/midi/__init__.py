@@ -43,6 +43,8 @@ class Midi():
 
   def handleNotesMessage(self, message):
     notes, player, type = message['notes'], message['player'], message['type']
+    print('notes inside midi handle message')
+    print(notes)
     if type == 'on':
       channelMap, channel = None, None     
       if self.state['distributeChannels']:
@@ -53,7 +55,7 @@ class Midi():
       intervals = None
       if self.state['strumMode'] != 'off' and player == 'chord':
         intervals = self.__getIntervals(len(notes))
-        notes = notes.sort()
+        notes.sort()
 
       for i, note in enumerate(notes):
         velocity = self.__getVelocity()
