@@ -115,6 +115,7 @@ class ChordEngine:
     self.__setChordType()
     self.stopChord(buttonUp=False)
     notes = self.__getChord(button)
+    print(notes)
     self.__sendNotesOn(notes, player='chord')
     self.__updateBass()
     store.dispatch(actions.playChord(notes))
