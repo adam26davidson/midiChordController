@@ -55,7 +55,7 @@ class Midi():
         intervals = self.__getIntervals(len(notes))
         notes = notes.sort()
 
-      for i, note in message['notes'].enumerate():
+      for i, note in enumerate(notes):
         velocity = self.__getVelocity()
         noteChannel = channel
         if channelMap is not None:
@@ -77,7 +77,7 @@ class Midi():
       if self.state['distributeChannels']:
         self.__openChannels(notes)
 
-      for i, note in enumerate(message['notes']):
+      for note in notes:
         velocity = 0
         noteChannel = self.state['noteChannels'][note]
         channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
