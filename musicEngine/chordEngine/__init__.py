@@ -232,7 +232,7 @@ class ChordEngine:
       range = self.state['bassRange']
       self.state['bassPosition'] = max(min(position, range), -1*range)
       self.__updateBass()
-      store.dispatch(actions.changeBassPosition(self.state['bassposition']))
+      store.dispatch(actions.changeBassPosition(self.state['bassPosition']))
 
   def setBassRange(self, range):
     range = max(min(range, MAX_BASS_RANGE), 0)
