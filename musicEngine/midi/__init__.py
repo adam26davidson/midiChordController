@@ -102,7 +102,7 @@ class Midi():
       for note in self.state['playingNotes']:
         channel = self.state['noteChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
-        self.midiOut.send_message(channelCommand, note, self.state['afterTouch'])
+        self.midiOut.send_message([channelCommand, note, self.state['afterTouch']])
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
         
   def __sendCCValues(self):
@@ -111,7 +111,7 @@ class Midi():
         for note in self.state['playingNotes']:
           channel = self.state['noteChannels'][note]
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
-          self.midiOut.send_message(channelCommand, cc, val)
+          self.midiOut.send_message([channelCommand, cc, val])
         self.state['lastSentCCValues'][cc] = val
 
   async def __loop(self):
@@ -121,7 +121,7 @@ class Midi():
       await asyncio.sleep(MIDI_STEP)
   
   def __combineCommandAndChannel(self, command, channel):
-    return (command & 0xf0) | (channel & 0xf)
+    return ((command & 0xf0) | (channel & 0xf))
 
   def __distributeChannels(self, notes):
     channelMap = {}
