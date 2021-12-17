@@ -6,6 +6,7 @@ def musicEngineTest():
   c = ControllerManager()
   m = MusicEngine()
 
+
   def handleControllerEvent(event):
     if 'value' not in event.keys():
       print(event['name'])
@@ -21,4 +22,5 @@ def musicEngineTest():
   c.subscribe(handleControllerEvent)
   store.subscribe(handleStateChange)
 
+  m.start()
   c.start()
