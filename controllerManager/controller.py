@@ -11,7 +11,7 @@ class Controller(ABC):
     self.sendEvent = sendEvent
     self.info = info
     self.meMap = meMaps[self.info['meMap']]
-    self.uiMap = uiMaps[self.info['meMap']]
+    self.uiMap = uiMaps[self.info['uiMap']]
 
     state = {} 
     for device in info['controls'].keys():
