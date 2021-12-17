@@ -10,8 +10,11 @@ class MusicEngine():
 
     self.chordEngine.subscribe(self.midi.handleNotesMessage)
 
-  def commandMap(self):
-    return {
+  def start(self):
+    self.midi.start()
+
+  def commandMap(self, key):
+    map = {
       "SOUTH_CHORD_ON": lambda: self.chordEngine.playChord('south'),
       "SOUTH_CHORD_OFF": self.chordEngine.stopChord,
       "WEST_CHORD_ON": lambda: self.chordEngine.playChord('west'),
@@ -62,6 +65,7 @@ class MusicEngine():
       "UPDATE_MIDI_CC_1": self.midi.getCCSetter(1),
       "UPDATE_MIDI_CC_2": self.midi.getCCSetter(2)
     }
+    return map[key]
 
   def controllerEventHandler(self, event):
     controllers = store.get_state()['controllerManager']['controllers']
@@ -71,3 +75,7 @@ class MusicEngine():
         meMap = controller[meMap]
     
     command = meMap[event['name']]
+    if 'value' in event.keys():
+      self.commandMap(command)(event['value'])
+    else:
+      self.commandMap(command)()

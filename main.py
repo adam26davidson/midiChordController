@@ -16,7 +16,7 @@ if __name__ == "__main__":
   # args = parse_arguments()
   # display = Display() if args.display else None
 
-  from test.controllerManagerTest import controllerManagerTest
-  controllerManagerTest()
+  from test.musicEngineTest import musicEngineTest
+  musicEngineTest()
 
   asyncio.get_event_loop().run_forever()
