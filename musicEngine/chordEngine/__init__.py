@@ -407,8 +407,8 @@ class ChordEngine:
 
   def __setChordType(self):
     chord, root = self.__getChordType(self.state['activeChord'])
-    if chord != self.chordType or root != self.rootType:
-      self.chordType, self.rootType = chord, root
+    if chord != self.state['chordType'] or root != self.state['rootType']:
+      self.state['chordType'], self.state['rootType'] = chord, root
       store.dispatch(actions.changeChordType({'chord': chord, 'root': root}))
 
   def __getChord(self, button):
