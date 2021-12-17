@@ -303,7 +303,7 @@ class ChordEngine:
     self.setChordOctave(self.state['chordOctave'] + 1)
   
   def decrementChordOctave(self):
-    self.setChordOctave(self.state['chordOctave'] + 1)
+    self.setChordOctave(self.state['chordOctave'] - 1)
   
   def toggleHold(self):
     if self.state['hold']:
