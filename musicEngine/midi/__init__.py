@@ -64,6 +64,7 @@ class Midi():
         self.state['noteChannels'][note] = noteChannel
         channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
         if intervals is None:
+          self.state['playingNotes'].append(note)
           self.midiOut.send_message([channelCommand, note, velocity])
         else:
           j = i if self.state['strumDirection'] != 'down' else (len(notes) - 1) -i
@@ -84,6 +85,7 @@ class Midi():
         channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
         self.midiOut.send_message([channelCommand, note, velocity])
         self.state['noteChannels'][note] = None
+        self.state['playingNotes'].remove(note)
 
 
   def setAfterTouch(self, value):
@@ -102,7 +104,6 @@ class Midi():
         self.midiOut.send_message(channelCommand, note, self.state['afterTouch'])
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
         
-
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
       if val != self.state['lastSentCCValues'][cc]:
@@ -115,6 +116,7 @@ class Midi():
   async def __loop(self):
     while True:
       self.__sendAftertouch()
+      print(self.state[''])
       self.__sendCCValues()
       await asyncio.sleep(MIDI_STEP)
   
