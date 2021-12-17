@@ -75,8 +75,12 @@ class Controller(ABC):
 
   def processButtonEvent(self, event, control):
     eventName = control['events'][event.value]
-    self.sendEvent({'name': eventName, 'id': self.id})
+    self.__sendEvent({'name': eventName, 'id': self.id})
     self.state[control['name']] = event.value
+
+  def __sendEvent(self, event):
+    if event['name'] in self.meMap['map'].keys():
+      self.sendEvent(event)
 
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']
@@ -107,7 +111,7 @@ class Controller(ABC):
       normalizedValue =  (slope * averageValue) + intercept
       normalizedValue = max(min(normalizedValue, 0.999), -0.999)
         
-      self.sendEvent({
+      self.__sendEvent({
         'name': control['events']['value'],
         'id': self.id,
         'value': normalizedValue
@@ -137,4 +141,4 @@ class Controller(ABC):
 
       if thresholdValueChanged:
         eventName = control['events']['threshold'][thresholdValue]
-        self.sendEvent({'name': eventName, 'id': self.id})
+        self.__sendEvent({'name': eventName, 'id': self.id})
