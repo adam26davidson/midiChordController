@@ -93,8 +93,8 @@ class Midi():
         noteChannel = self.__getNoteChannel(note, player, type)
         channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
         if intervals is None:
-          self.storeNoteOn(note, player, noteChannel)
           self.midiOut.send_message([channelCommand, note, velocity])
+          self.storeNoteOn(note, player, noteChannel)
         else:
           j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
           asyncio.ensure_future(self.__scheduleNote(
@@ -106,12 +106,13 @@ class Midi():
           ))
 
     elif type == 'off':
-      self.state['scheduledNotes'] = []
+      if player == 'chord':
+        self.state['scheduledNotes'] = []
       for note in notes:
         noteChannel = self.__getNoteChannel(note, player, type)
         channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
-        self.__storeNoteOff(note, player, noteChannel)
         self.midiOut.send_message([channelCommand, note, 0])
+        self.__storeNoteOff(note, player, noteChannel)
 
 
   def setAfterTouch(self, value):
