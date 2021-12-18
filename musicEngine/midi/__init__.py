@@ -83,6 +83,15 @@ class Midi():
   def handleNotesMessage(self, message):
     notes, player, type = message['notes'], message['player'], message['type']
     if type == 'on': 
+      if type == 'chord':
+        self.state['scheduledNotes'] = []
+        if len(self.state['playingChordNotes']) > 0:
+          print('CAUGHT SOME STRAY NOTES BOIIIIIIIIIIIIIIIIIIIIII')
+          self.handleNotesMessage({
+            'notes': self.state['playingChordNotes'],
+            'type': 'off',
+            'player': 'chord'
+            })
       intervals = None
       if self.state['strumMode'] != 'off' and player == 'chord':
         intervals = self.__getIntervals(len(notes))
