@@ -226,3 +226,5 @@ class Midi():
       self.midiOut.send_message([command, note, velocity])
       self.storeNoteOn(note, 'chord', channel)
       self.state['scheduledNotes'].remove(note)
+    else:
+      print('NOTE ' + str(note) + ' CANCELLED')
