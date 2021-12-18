@@ -15,7 +15,7 @@ class Midi():
 
       'strumMode': 'regular', # 'random', 'regular', 'off'
       'strumInterval': 0.1, # time beween notes or spread of distribution
-      'strumOrder' : 'random', # 'up', 'down', or 'random'
+      'strumOrder' : 'down', # 'up', 'down', or 'random'
       'playingChordNotes': [],
       'playingBassNote': None,
       'scheduledNotes': [],
