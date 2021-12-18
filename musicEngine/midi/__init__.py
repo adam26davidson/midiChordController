@@ -14,7 +14,7 @@ class Midi():
       'velocityDeviation': 15, # 'standard deviation for random velocity'
 
       'strumMode': 'random', # 'random', 'regular', 'off'
-      'strumInterval': 0.5, # time beween notes or spread of distribution
+      'strumInterval': 0.1, # time beween notes or spread of distribution
       'strumOrder' : 'down', # 'up', 'down', or 'random'
       'playingChordNotes': [],
       'playingBassNote': None,
