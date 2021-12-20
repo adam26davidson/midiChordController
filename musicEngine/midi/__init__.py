@@ -38,8 +38,9 @@ class Midi():
 
   def start(self):
     self.availableOutputPorts = self.midiOut.get_ports()
-    if len(self.availableOutputPorts) >= 2:
-      self.midiOut.open_port(1)
+    print(self.availableOutputPorts)
+    if len(self.availableOutputPorts) > 0:
+      self.midiOut.open_port(0)
     asyncio.ensure_future(self.__loop())
 
   def storeNoteOn(self, note, player, channel=None):
@@ -86,7 +87,6 @@ class Midi():
       if type == 'chord':
         self.state['scheduledNotes'] = []
         if len(self.state['playingChordNotes']) > 0:
-          print('CAUGHT SOME STRAY NOTES BOIIIIIIIIIIIIIIIIIIIIII')
           self.handleNotesMessage({
             'notes': self.state['playingChordNotes'],
             'type': 'off',
