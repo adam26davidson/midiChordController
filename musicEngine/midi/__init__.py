@@ -119,12 +119,13 @@ class Midi():
       if player == 'chord':
         self.state['scheduledNotes'] = []
       notes = self.state['playingChordNotes'] if player == 'chord' else notes
+      print(f"notes to be stopped: {notes}")
       for note in notes:
-        print(f"notes to be stopped: {notes}")
         noteChannel = self.__getNoteChannel(note, player, type)
         channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
         self.midiOut.send_message([channelCommand, note, 0])
         self.__storeNoteOff(note, player, noteChannel)
+      print(f"notes not stopped: {self.state['playingChordNotes']}")
 
 
   def setAfterTouch(self, value):
