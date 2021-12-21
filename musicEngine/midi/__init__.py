@@ -2,7 +2,7 @@ from rtmidi import MidiOut, MidiIn
 from redux import store
 from rtmidi.midiconstants import *
 from constants import *
-from numpy import random
+from numpy import random, copy
 import asyncio, math
 
 class Midi():
@@ -118,7 +118,7 @@ class Midi():
     elif type == 'off':
       if player == 'chord':
         self.state['scheduledNotes'] = []
-      notes = self.state['playingChordNotes'] if player == 'chord' else notes
+      notes = self.state['playingChordNotes'].copy() if player == 'chord' else notes
       print(f"notes to be stopped: {notes}")
       for note in notes:
         noteChannel = self.__getNoteChannel(note, player, type)
