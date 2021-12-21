@@ -113,7 +113,7 @@ class Midi():
             interval = intervals[j],
             channel = noteChannel
           ))
-      print('playingChordNotes: {playingChordNotes}')
+      print(f'playingChordNotes: {self.state["playingChordNotes"]}')
 
     elif type == 'off':
       if player == 'chord':
