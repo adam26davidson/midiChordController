@@ -84,7 +84,7 @@ class Midi():
   def handleNotesMessage(self, message):
     notes, player, type = message['notes'], message['player'], message['type']
     if type == 'on': 
-      if type == 'chord':
+      if player == 'chord':
         self.state['scheduledNotes'] = []
         if len(self.state['playingChordNotes']) > 0:
           self.handleNotesMessage({
@@ -118,7 +118,9 @@ class Midi():
     elif type == 'off':
       if player == 'chord':
         self.state['scheduledNotes'] = []
-      for note in self.state['playingChordNotes']:
+      notes = self.state['playingChordNotes'] if player == 'chord' else notes
+      for note in notes:
+        print(f"notes to be stopped: {notes}")
         noteChannel = self.__getNoteChannel(note, player, type)
         channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
         self.midiOut.send_message([channelCommand, note, 0])
