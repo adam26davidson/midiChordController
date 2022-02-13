@@ -131,7 +131,7 @@ class Midi():
         for channel in range(0, 15):
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
-        print('setting cc ' + cc + ' to ' + val)
+        print('setting cc ' + str(cc) + ' to ' + val)
         self.state['lastSentCCValues'][cc] = val
 
   async def __loop(self):
