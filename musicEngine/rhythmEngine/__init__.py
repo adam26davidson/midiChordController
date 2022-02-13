@@ -57,6 +57,7 @@ class RhythmEngine():
             indexesToRemove.append(i)
         for i in indexesToRemove:
           self.state['scheduledMessages'].pop(i)
+      asyncio.sleep(0)
 
   def __getRandomIntervals(self, n):
     values = random.normal(
