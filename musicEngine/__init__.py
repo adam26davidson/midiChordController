@@ -68,8 +68,8 @@ class MusicEngine():
       "UPDATE_INVERSION": self.chordEngine.setAnalogInversion,
       "UPDATE_AFTERTOUCH": self.midi.setAfterTouch,
 
-      "UPDATE_MIDI_CC_1": cc1Setter,
-      "UPDATE_MIDI_CC_2": cc2Setter
+      "UPDATE_MIDI_CC_1": lambda val: cc1Setter(val),
+      "UPDATE_MIDI_CC_2": lambda val: cc2Setter(val)
     }
     return map[key]
 
