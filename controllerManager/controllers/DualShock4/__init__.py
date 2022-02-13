@@ -28,6 +28,7 @@ class DualShock4(Controller):
           devices['motion'] = device
         elif (device.name.lower().find('touchpad') != -1 and isCorrectId):
           devices['touch'] = device
+          print('touchpad connected')
         elif isCorrectId:
           devices['main'] = device
     super().start(id, devices)
