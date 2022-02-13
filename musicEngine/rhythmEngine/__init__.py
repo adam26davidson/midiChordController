@@ -46,17 +46,19 @@ class RhythmEngine():
   async def __scheduledMessageLoop(self):
     while True:
       if not self.state['scheduledMessageLocked']:
-        indexesToRemove = []
-        for (i, message) in enumerate(self.state['scheduledMessages']):
+        self.state['scheduledMessageLocked'] = True
+        messagesToKeep = []
+        for message in self.state['scheduledMessages']:
           if message['playAt'] >= time.time():
             self.__sendMessage({
               'note': message['note'],
               'type': message['type'],
               'player': message['player']
             })
-            indexesToRemove.append(i)
-        for i in indexesToRemove:
-          self.state['scheduledMessages'].pop(i)
+          else:
+            messagesToKeep.append(message)
+        self.state['scheduledMessages'] = messagesToKeep
+        self.state['scheduledMessageLocked'] = False
       await asyncio.sleep(0)
 
   def __getRandomIntervals(self, n):
@@ -100,18 +102,19 @@ class RhythmEngine():
   def __handleChordOff(self, notes):
     self.state['scheduledMessageLocked'] = True
     for note in notes:
+      # remove scheduled message
+      messagesToKeep = []
+      for scheduledMessage in enumerate(self.state['scheduledMessages']):
+        if not scheduledMessage['note'] == note: 
+          messagesToKeep.append(scheduledMessage)
+      self.state['scheduledMessages'] = messagesToKeep
+
+      #send note off
       message = {
         'note': note,
         'type': 'off',
         'player': 'chord',
       }
-      removeIndex = None
-      for (i, scheduledMessage) in enumerate(self.state['scheduledMessages']):
-        if scheduledMessage['note'] == note: 
-          removeIndex = i
-          break
-      if removeIndex:
-        self.state['scheduledMessages'].pop(removeIndex)
       self.__sendMessage(message)
     self.state['scheduledMessageLocked'] = False
   
