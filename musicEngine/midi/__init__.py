@@ -54,7 +54,6 @@ class Midi():
     print('cc setter for cc ' + str(cc) + ' was created')
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
-      print('cc ' + str(cc) + ' set to ' + str(value))
     return setCCValue
 
   def __noteOff(self, note, player):
@@ -137,7 +136,7 @@ class Midi():
   async def __loop(self):
     while True:
       self.__sendAftertouch()
-      #self.__sendCCValues()
+      self.__sendCCValues()
       await asyncio.sleep(MIDI_STEP)
   
   def __combineCommandAndChannel(self, command, channel):
