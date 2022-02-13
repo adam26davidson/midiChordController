@@ -74,7 +74,6 @@ class Display():
       await asyncio.sleep(ANIMATION_STEP)
 
   def __handleStoreUpdate(self):
-    print('display store update function')
     meState = thaw(store.get_state()['musicEngine'])
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
@@ -105,6 +104,7 @@ class Display():
     elif meState['key'] != self.state['key']:
       self.__setKey(meState['key'])
     elif meState['scale'] != self.state['scale']:
+      print('display scale set')
       self.__setScale(meState['scale'])
 
   def setController(self, text):
