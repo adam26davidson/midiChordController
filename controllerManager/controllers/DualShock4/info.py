@@ -262,7 +262,7 @@ info = {
       1: {
         "name": "TOUCHPAD_Y",
         "type": "ANALOG",
-        "range": {"top": 0, "bottom": 1100},
+        "range": {"top": 0, "bottom": 900},
         "events":{ 
           "value": "TOUCHPAD_Y_UPDATE"
         },
