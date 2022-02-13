@@ -75,7 +75,7 @@ class Display():
 
   def __handleStoreUpdate(self):
     meState = thaw(store.get_state()['musicEngine'])
-    print(meState['scale'])
+    print(meState)
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
       self.__setChordShadow(meState['chordShadow'])
