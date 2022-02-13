@@ -87,7 +87,7 @@ class Display():
       self.__setBassShadow(meState['bassShadow'])
     elif meState['bassNote'] != self.state['playingBassNote']:
       if meState['bassNote'] != None:
-        self.__playBass(meState['chordNotes'])
+        self.__playBass(meState['bassNote'])
       else:
         self.__stopBass()
     elif meState['chordType']['notes'] != self.state['chordType']['notes'] or \
