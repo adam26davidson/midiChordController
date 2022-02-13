@@ -2,6 +2,7 @@ import tkinter as tk
 from constants import *
 from .displayConstants import FONTS, COLORS
 from PIL import ImageTk, Image 
+from redux import store
 
 class TextDisplay(tk.Frame):
   width = 270

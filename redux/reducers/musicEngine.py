@@ -24,7 +24,7 @@ def reducer(state, action):
       'bassNote': 0,
       'bassShadow': 0,
       'chordNotes': [],
-      'chordType': [],
+      'chordType': {'notes': [], 'root': 0},
       'chordShadow': []
     })
 

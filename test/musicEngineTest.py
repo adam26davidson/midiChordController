@@ -1,10 +1,12 @@
 from controllerManager import ControllerManager
 from musicEngine import MusicEngine
+from display import Display
 from redux import store
 
 def musicEngineTest():
   c = ControllerManager()
   m = MusicEngine()
+  d = Display()
 
 
   def handleControllerEvent(event):
@@ -21,3 +23,4 @@ def musicEngineTest():
 
   m.start()
   c.start()
+  d.start()

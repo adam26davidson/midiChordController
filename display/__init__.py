@@ -1,4 +1,5 @@
 from constants import *
+from redux import store
 from .chordDisplay import ChordDisplay
 from .keyboard import Keyboard
 from .inversion import Inversion
@@ -32,12 +33,24 @@ class Display():
 
     self.root.configure(bg='black')
 
-    self.shadowChordNotes = []
-    self.playingChordNotes = []
-    self.shadowBassNote = 48
-    self.playingBassNote = None
-    self.inversionThumbValue = 0
-    self.bassThumbValue = 0
+    self.state = {
+      'chordType': {'notes': [], 'root': 0},
+      'shadowChordNotes' : [],
+      'playingChordNotes' : [],
+      'shadowBassNote' : 48,
+      'playingBassNote' : None,
+
+      'inversionThumbValue' : 0,
+      'bassThumbValue' : 0,
+
+      'bassPosition': 0,
+      'bassRange': 4,
+      'inversion': 0,
+      'inversionRange': 4,
+
+      'key': 0,
+      'scale': []
+    }
 
     self.keyboard = Keyboard(master=self.root)
     self.spread = Spread(master=self.root)
@@ -46,14 +59,52 @@ class Display():
     self.chordDisplay = ChordDisplay(master=self.root)
     self.textDisplay = TextDisplay(master=self.root)
 
-  async def mainLoop(self):
+    store.subscribe(self.__handleStoreUpdate)
+
+  def start(self):
+    asyncio.ensure_future(self.__mainLoop())
+
+  async def __mainLoop(self):
     while True:
       self.setInversionThumb()
       self.setBassPositionThumb()
       self.chordDisplay.runAnimationStep()
       self.root.update()
       await asyncio.sleep(ANIMATION_STEP)
-  
+
+  def __handleStoreUpdate(self):
+    meState = store.get_state()['musicEngine']
+
+    if meState['chordShadow'] != self.state['shadowChordNotes']:
+      self.__setChordShadow(meState['chordShadow'])
+    elif meState['chordNotes'] != self.state['playingChordNotes']:
+      if len(meState['chordNotes']) > 0:
+        self.__playChord(meState['chordNotes'])
+      else:
+        self.__stopChord()
+    elif meState['bassShadow'] != self.state['shadowBassNote']:
+      self.__setBassShadow(meState['bassShadow'])
+    elif meState['bassNote'] != self.state['playingBassNote']:
+      if meState['bassNote'] != None:
+        self.__playBass(meState['chordNotes'])
+      else:
+        self.__stopBass()
+    elif meState['chordType']['notes'] != self.state['chordType']['notes'] or \
+      meState['chordType']['root'] != self.state['chordType']['root']:
+      self.__setChord(meState['chordType']['notes'], meState['chordType']['root'])
+    elif meState['inversion'] != self.state['inversion']:
+      self.__setInversion(meState['inversion'])
+    elif meState['bassPosition'] != self.state['bassPosition']:
+      self.__setBassPosition(meState['bassPosition'])
+    elif meState['inversionRange'] != self.state['inversionRange']:
+      self.__setInversionRange(meState['inversionRange'], meState['inversion'])
+    elif meState['bassRange'] != self.state['bassRange']:
+      self.__setBassPositionRange(meState['bassRange'], meState['bassPosition'])
+    elif meState['key'] != self.state['key']:
+      self.__setKey(meState['key'])
+    elif meState['scale'] != self.state['scale']:
+      self.__setScale(meState['scale'])
+
   def setController(self, text):
     self.textDisplay.setController(text)
 
@@ -66,16 +117,21 @@ class Display():
   def setShift(self, shift):
     self.textDisplay.setShift(shift)
   
-  def setKey(self, key):
+  def __setKey(self, key):
+    self.state['key'] = key
     self.chordDisplay.setKey(key)
 
-  def setScale(self, scale):
+  def __setScale(self, scale):
+    self.state['scale'] = scale
     self.chordDisplay.setScale(scale)
 
-  def setInversionRange(self, range, inversion):
+  def __setInversionRange(self, range, inversion):
+    self.state['inversionRange'] = range
+    self.state['inversion'] = inversion
     self.inversion.setMax(range, inversion)
   
-  def setInversion(self, inversion):
+  def __setInversion(self, inversion):
+    self.state['inversion'] = inversion
     self.inversion.setActiveRegion(inversion)
 
   def storeInversionThumb(self, value):
@@ -84,10 +140,13 @@ class Display():
   def setInversionThumb(self):
     self.inversion.positionThumb(self.inversionThumbValue)
 
-  def setBassPositionRange(self, range, position):
+  def __setBassPositionRange(self, range, position):
+    self.state['bassRange'] = range
+    self.state['bassPosition'] = position
     self.bassPosition.setMax(range, position)
   
-  def setBassPosition(self, position):
+  def __setBassPosition(self, position):
+    self.state['bassPosition'] = position
     self.bassPosition.setActiveRegion(position)
 
   def storeBassPositionThumb(self, value):
@@ -95,64 +154,62 @@ class Display():
 
   def setBassPositionThumb(self):
     self.bassPosition.positionThumb(self.bassThumbValue)
-  
-  def setSpread(self, spread):
-    self.spread.setValue(spread)
 
-  def stopChordShadow(self):
+  def __stopChordShadow(self):
     resetNotes = []
-    for note in self.shadowChordNotes:
-      if note != self.shadowBassNote:
+    for note in self.state['shadowChordNotes']:
+      if note != self.state['shadowBassNote']:
         resetNotes.append(note)
     self.keyboard.reset(resetNotes)
-    self.shadowChordNotes = []
+    self.state['shadowChordNotes'] = []
 
-  def stopBassShadow(self):
-    noteInPlayingChord = self.playingChordNotes.count(self.shadowBassNote) != 0
-    noteInShadowChord = self.shadowChordNotes.count(self.shadowBassNote) != 0
+  def __stopBassShadow(self):
+    noteInPlayingChord = self.state['playingChordNotes'].count(self.state['shadowBassNote']) != 0
+    noteInShadowChord = self.state['shadowChordNotes'].count(self.state['shadowBassNote']) != 0
     if (not noteInPlayingChord) and (not noteInShadowChord):
-      self.keyboard.reset([self.shadowBassNote])
-    self.shadowBassNote = None
+      self.keyboard.reset([self.state['shadowBassNote']])
+    self.state['shadowBassNote'] = None
 
-  def setChord(self, chord, root):
+  def __setChord(self, chord, root):
+    self.state['chordType'] = {'notes': chord, 'root': root}
     self.keyboard.setChord(chord, root)
     self.chordDisplay.setChord(chord, root)
   
-  def playChord(self, notes):
-    self.stopChordShadow()
+  def __playChord(self, notes):
+    self.__stopChordShadow()
     self.keyboard.play(notes)
-    self.playingChordNotes = notes
+    self.state['playingChordNotes'] = notes
     self.chordDisplay.playChord()
   
-  def playBass(self, note):
-    self.stopBassShadow()
+  def __playBass(self, note):
+    self.__stopBassShadow()
     self.keyboard.play([note])
     self.chordDisplay.playBass(note)
-    self.playingBassNote = note
+    self.state['playingBassNote'] = note
 
-  def stopChord(self, notes):
-    self.shadowChordNotes = notes
+  def __stopChord(self, notes):
+    self.state['shadowChordNotes'] = notes
     self.keyboard.setShadow(notes)
-    self.playingChordNotes = []
+    self.state['playingChordNotes'] = []
     self.chordDisplay.setChordShadow()
 
-  def stopBass(self, note):
-    if self.playingChordNotes.count(note) == 0:
+  def __stopBass(self, note):
+    if self.state['playingChordNotes'].count(note) == 0:
       self.keyboard.setShadow([note])
     self.chordDisplay.setBassShadow(note)
-    self.shadowBassNote = note
-    self.playingBassNote = None
+    self.state['shadowBassNote'] = note
+    self.state['playingBassNote'] = None
 
-  def setChordShadow(self, notes):
-    self.keyboard.reset(self.shadowChordNotes)
-    self.shadowChordNotes = notes
+  def __setChordShadow(self, notes):
+    self.keyboard.reset(self.state['shadowChordNotes'])
+    self.state['shadowChordNotes'] = notes
     self.keyboard.setShadow(notes)
     self.chordDisplay.setChordShadow()
 
-  def setBassShadow(self, note):
-    self.stopBassShadow()
-    self.shadowBassNote = note
-    noteInPlayingChord = self.playingChordNotes.count(note) != 0
+  def __setBassShadow(self, note):
+    self.__stopBassShadow()
+    self.state['shadowBassNote'] = note
+    noteInPlayingChord = self.state['playingChordNotes'].count(note) != 0
     if not noteInPlayingChord:
       self.keyboard.setShadow([note])
     self.chordDisplay.setBassShadow(note)
