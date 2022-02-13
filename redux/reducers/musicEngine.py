@@ -41,6 +41,7 @@ def reducer(state, action):
     return state.set('key', action['data']['key'])
 
   if action == 'me/scaleChanged':
+    print('scale change dispatched')
     return state.set('scale', action['data']['scale'])
 
   elif action == 'me/spreadChanged':
