@@ -53,6 +53,7 @@ class Midi():
   def getCCSetter(self, cc):
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
+      print('cc ' + str(cc) + ' set to ' + str(value))
     return setCCValue
 
   def __noteOff(self, note, player):
