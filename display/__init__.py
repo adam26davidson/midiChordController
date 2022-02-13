@@ -203,6 +203,8 @@ class Display():
     self.state['playingBassNote'] = None
 
   def __setChordShadow(self, notes):
+    print('setChordSHadow notes: ')
+    print(notes)
     self.keyboard.reset(self.state['shadowChordNotes'])
     self.state['shadowChordNotes'] = notes
     self.keyboard.setShadow(notes)
