@@ -2,7 +2,7 @@
 def changeSettingsList(list):
   return{
     'type': 'me/settingsListChanged',
-    'datae': {'settingsList': list}
+    'data': {'settingsList': list}
   }
 
 def changeSetting(setting):
