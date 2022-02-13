@@ -1,4 +1,5 @@
 from .chordEngine import ChordEngine
+from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
 
@@ -6,9 +7,11 @@ class MusicEngine():
 
   def __init__(self):
     self.chordEngine = ChordEngine()
+    self.rhythmEngine = RhythmEngine()
     self.midi = Midi()
 
-    self.chordEngine.subscribe(self.midi.handleNotesMessage)
+    self.chordEngine.subscribe(self.rhythmEngine.handleMessage)
+    self.rhythmEngine.subscribe(self.midi.handleMessage)
 
   def start(self):
     self.midi.start()

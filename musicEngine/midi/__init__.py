@@ -13,9 +13,6 @@ class Midi():
       'velocityMode': 'random', # 'constant' or 'random'
       'velocityDeviation': 15, # 'standard deviation for random velocity'
 
-      'strumMode': 'off', # 'random', 'regular', 'off'
-      'strumInterval': 0.1, # time beween notes or spread of distribution
-      'strumOrder' : 'down', # 'up', 'down', or 'random'
       'playingChordNotes': [],
       'playingBassNote': None,
       'scheduledNotes': [],
@@ -43,7 +40,35 @@ class Midi():
       self.midiOut.open_port(0)
     asyncio.ensure_future(self.__loop())
 
-  def storeNoteOn(self, note, player, channel=None):
+  def handleMessage(self, message):
+    note, player, type = message['note'], message['player'], message['type']
+    if type == 'on':
+      self.__noteOn(note, player)
+    elif type == 'off':
+      self.__noteOff(note, player)
+  
+  def setAfterTouch(self, value):
+    self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
+
+  def getCCSetter(self, cc):
+    def setCCValue(value):
+      self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
+    return setCCValue
+
+  def __noteOff(self, note, player):
+    noteChannel = self.__getNoteChannel(note, player, type)
+    channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
+    self.midiOut.send_message([channelCommand, note, 0])
+    self.__storeNoteOff(note, player, noteChannel)
+  
+  def __noteOn(self, note, player):
+    velocity = self.__getVelocity()
+    noteChannel = self.__getNoteChannel(note, player, 'on')
+    channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
+    self.midiOut.send_message([channelCommand, note, velocity])
+    self.__storeNoteOn(note, player, noteChannel)
+
+  def __storeNoteOn(self, note, player, channel=None):
     if player == 'chord':
       self.state['playingChordNotes'].append(note)
     else:
@@ -80,61 +105,6 @@ class Midi():
       return self.state['chordChannel']
     elif player == 'bass':
       return self.state['bassChannel']
-
-  def handleNotesMessage(self, message):
-    notes, player, type = message['notes'], message['player'], message['type']
-    if type == 'on': 
-      if player == 'chord':
-        self.state['scheduledNotes'] = []
-        if len(self.state['playingChordNotes']) > 0:
-          self.handleNotesMessage({
-            'notes': self.state['playingChordNotes'],
-            'type': 'off',
-            'player': 'chord'
-            })
-      intervals = None
-      if self.state['strumMode'] != 'off' and player == 'chord':
-        intervals = self.__getIntervals(len(notes))
-        notes.sort()
-        
-      for i, note in enumerate(notes):  
-        velocity = self.__getVelocity()
-        noteChannel = self.__getNoteChannel(note, player, type)
-        channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
-        if intervals is None:
-          self.midiOut.send_message([channelCommand, note, velocity])
-          self.storeNoteOn(note, player, noteChannel)
-        else:
-          j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
-          asyncio.ensure_future(self.__scheduleNote(
-            command = channelCommand,
-            note = note,
-            velocity = velocity,
-            interval = intervals[j],
-            channel = noteChannel
-          ))
-      print(f'playingChordNotes: {self.state["playingChordNotes"]}')
-
-    elif type == 'off':
-      if player == 'chord':
-        self.state['scheduledNotes'] = []
-      notes = self.state['playingChordNotes'].copy() if player == 'chord' else notes
-      print(f"notes to be stopped: {notes}")
-      for note in notes:
-        noteChannel = self.__getNoteChannel(note, player, type)
-        channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
-        self.midiOut.send_message([channelCommand, note, 0])
-        self.__storeNoteOff(note, player, noteChannel)
-      print(f"notes not stopped: {self.state['playingChordNotes']}")
-
-
-  def setAfterTouch(self, value):
-    self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
-
-  def getCCSetter(self, cc):
-    def setCCValue(value):
-      self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
-    return setCCValue
 
   def __sendAftertouch(self):
     if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
@@ -196,39 +166,8 @@ class Midi():
     )
     return max(min(value, 127), 0)
 
-  def __getRandomIntervals(self, n):
-    values = random.normal(
-      loc = 0,
-      scale = self.state['strumInterval'],
-      size = n
-    )
-    return [abs(v) for v in values]
-  
-  def __getRegularIntervals(self, n):
-    return [i*self.state['strumInterval'] for i in range(n)]
-
-  def __getIntervals(self, n):
-    intervals = []
-    if self.state['strumMode'] == 'random':
-      intervals = self.__getRandomIntervals(n)
-      if self.state['strumOrder'] != 'random': intervals.sort()
-    elif self.state['strumMode'] == 'regular':
-      intervals = self.__getRegularIntervals(n)
-      intervals = random.permutation(intervals) if self.state['strumOrder'] == 'random' else intervals
-    return intervals
-
   def __getVelocity(self):
     if self.state['velocityMode'] == 'constant':
       return self.state['velocity']
     elif self.state['velocityMode'] == 'random':
       return self.__getRandomVelocity()
-
-  async def __scheduleNote(self, command, note, velocity, interval, channel=None):
-    self.state['scheduledNotes'].append(note)
-    await asyncio.sleep(interval)
-    if note in self.state['scheduledNotes']:
-      self.midiOut.send_message([command, note, velocity])
-      self.storeNoteOn(note, 'chord', channel)
-      self.state['scheduledNotes'].remove(note)
-    else:
-      print('NOTE ' + str(note) + ' CANCELLED')
