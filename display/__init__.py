@@ -67,9 +67,8 @@ class Display():
 
   async def __mainLoop(self):
     while True:
-      print('main display loop')
-      self.__setInversionThumb()
-      self.__setBassPositionThumb()
+      # self.__setInversionThumb()
+      # self.__setBassPositionThumb()
       self.chordDisplay.runAnimationStep()
       self.root.update()
       await asyncio.sleep(ANIMATION_STEP)
