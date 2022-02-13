@@ -31,9 +31,9 @@ class RhythmEngine():
         self.__handleChordOn(message['notes'])
     elif message['player'] == 'bass':
       if message['type'] == 'off':
-        self.__handleChordOff(message['notes'])
+        self.__handleBassOff(message['notes'])
       elif message['type'] == 'on':
-        self.__handleChordOn(message['notes'])
+        self.__handleBassOn(message['notes'])
 
   # takes a dict with the following keys:
   #   'note' (midi note value), 
@@ -113,3 +113,9 @@ class RhythmEngine():
         self.state['scheduledMessages'].pop(removeIndex)
       self.__sendMessage(message)
     self.state['scheduledMessageLocked'] = False
+  
+  def __handleBassOn(self, notes):
+    self.__sendMessage({'note': notes[0], 'type': 'on', 'player': 'bass'})
+  
+  def __handleBassOff(self, notes):
+    self.__sendMessage({'note': notes[0], 'type': 'on', 'player': 'bass'})
