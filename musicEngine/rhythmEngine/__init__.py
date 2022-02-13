@@ -104,7 +104,7 @@ class RhythmEngine():
     for note in notes:
       # remove scheduled message
       messagesToKeep = []
-      for scheduledMessage in enumerate(self.state['scheduledMessages']):
+      for scheduledMessage in self.state['scheduledMessages']:
         if not scheduledMessage['note'] == note: 
           messagesToKeep.append(scheduledMessage)
       self.state['scheduledMessages'] = messagesToKeep
@@ -122,4 +122,4 @@ class RhythmEngine():
     self.__sendMessage({'note': notes[0], 'type': 'on', 'player': 'bass'})
   
   def __handleBassOff(self, notes):
-    self.__sendMessage({'note': notes[0], 'type': 'on', 'player': 'bass'})
+    self.__sendMessage({'note': notes[0], 'type': 'off', 'player': 'bass'})
