@@ -67,6 +67,7 @@ class Display():
 
   async def __mainLoop(self):
     while True:
+      print('main display loop')
       self.__setInversionThumb()
       self.__setBassPositionThumb()
       self.chordDisplay.runAnimationStep()
@@ -75,7 +76,6 @@ class Display():
 
   def __handleStoreUpdate(self):
     meState = thaw(store.get_state()['musicEngine'])
-    print(meState)
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
       self.__setChordShadow(meState['chordShadow'])
