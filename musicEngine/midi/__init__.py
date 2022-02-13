@@ -52,6 +52,7 @@ class Midi():
 
   def getCCSetter(self, cc):
     print('cc setter for cc ' + str(cc) + ' was created')
+    self.state['lastSentCCValues'][cc] = None
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
     return setCCValue
