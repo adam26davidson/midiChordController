@@ -18,6 +18,8 @@ class MusicEngine():
     self.rhythmEngine.start()
 
   def commandMap(self, key):
+    cc1Setter = self.midi.getCCSetter(1)
+    cc2Setter = self.midi.getCCSetter(2)
     map = {
       "SOUTH_CHORD_ON": lambda: self.chordEngine.playChord('south'),
       "SOUTH_CHORD_OFF": self.chordEngine.stopChord,
@@ -66,8 +68,8 @@ class MusicEngine():
       "UPDATE_INVERSION": self.chordEngine.setAnalogInversion,
       "UPDATE_AFTERTOUCH": self.midi.setAfterTouch,
 
-      "UPDATE_MIDI_CC_1": self.midi.getCCSetter(1),
-      "UPDATE_MIDI_CC_2": self.midi.getCCSetter(2)
+      "UPDATE_MIDI_CC_1": cc1Setter,
+      "UPDATE_MIDI_CC_2": cc2Setter
     }
     return map[key]
 
