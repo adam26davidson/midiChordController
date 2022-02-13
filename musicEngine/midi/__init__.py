@@ -132,6 +132,7 @@ class Midi():
             channel = self.state['distChordChannels'][note]
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])
+          print('setting cc ' + cc + ' to ' + val)
         if self.state['playingBassNote'] is not None:
           channel = self.state['bassChannel']
           if self.state['distributeChannels']:
