@@ -90,9 +90,9 @@ class Display():
         self.__playBass(meState['bassNote'])
       else:
         self.__stopBass()
-    elif meState['chordType']['notes'] != self.state['chordType']['notes'] or \
+    elif meState['chordType']['chord'] != self.state['chordType']['notes'] or \
       meState['chordType']['root'] != self.state['chordType']['root']:
-      self.__setChord(meState['chordType']['notes'], meState['chordType']['root'])
+      self.__setChord(meState['chordType']['chord'], meState['chordType']['root'])
     elif meState['inversion'] != self.state['inversion']:
       self.__setInversion(meState['inversion'])
     elif meState['bassPosition'] != self.state['bassPosition']:
