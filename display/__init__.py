@@ -5,6 +5,7 @@ from .keyboard import Keyboard
 from .inversion import Inversion
 from .spread import Spread
 from .textDisplay import TextDisplay
+from pyrsistent import thaw
 import asyncio
 import tkinter as tk
 
@@ -73,7 +74,7 @@ class Display():
       await asyncio.sleep(ANIMATION_STEP)
 
   def __handleStoreUpdate(self):
-    meState = store.get_state()['musicEngine']
+    meState = thaw(store.get_state()['musicEngine'])
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
       self.__setChordShadow(meState['chordShadow'])
