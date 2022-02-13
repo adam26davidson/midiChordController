@@ -67,8 +67,8 @@ class Display():
 
   async def __mainLoop(self):
     while True:
-      self.setInversionThumb()
-      self.setBassPositionThumb()
+      self.__setInversionThumb()
+      self.__setBassPositionThumb()
       self.chordDisplay.runAnimationStep()
       self.root.update()
       await asyncio.sleep(ANIMATION_STEP)
@@ -135,11 +135,11 @@ class Display():
     self.state['inversion'] = inversion
     self.inversion.setActiveRegion(inversion)
 
-  def storeInversionThumb(self, value):
-    self.inversionThumbValue = value
+  def __storeInversionThumb(self, value):
+    self.state['inversionThumbValue'] = value
 
-  def setInversionThumb(self):
-    self.inversion.positionThumb(self.inversionThumbValue)
+  def __setInversionThumb(self):
+    self.inversion.positionThumb(self.state['inversionThumbValue'])
 
   def __setBassPositionRange(self, range, position):
     self.state['bassRange'] = range
@@ -150,11 +150,11 @@ class Display():
     self.state['bassPosition'] = position
     self.bassPosition.setActiveRegion(position)
 
-  def storeBassPositionThumb(self, value):
-    self.bassThumbValue = value
+  def __storeBassPositionThumb(self, value):
+    self.state['bassThumbValue'] = value
 
-  def setBassPositionThumb(self):
-    self.bassPosition.positionThumb(self.bassThumbValue)
+  def __setBassPositionThumb(self):
+    self.bassPosition.positionThumb(self.state['bassThumbValue'])
 
   def __stopChordShadow(self):
     resetNotes = []
