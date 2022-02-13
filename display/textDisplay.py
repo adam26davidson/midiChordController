@@ -29,7 +29,7 @@ class TextDisplay(tk.Frame):
     self.setting.pack(side="left")
 
     # controller dsiplay
-    self.controllerImage = Image.open(PARENT_PATH+"display/images/game-controller.png")
+    self.controllerImage = Image.open(PARENT_PATH+"/display/images/game-controller.png")
     self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
     self.controllerFrame = tk.Frame(self, bg=self.bgColor)
     self.controllerFrame.pack(side="top")
