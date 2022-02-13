@@ -7,7 +7,7 @@ class RhythmEngine():
     self.callbacks = []
     self.state = {
       'strumMode': 'random', # 'random', 'regular', 'off'
-      'strumInterval': 0.4, # time beween notes or spread of distribution
+      'strumInterval': 0.1, # time beween notes or spread of distribution
       'strumOrder' : 'down', # 'up', 'down', or 'random'
       'scheduledMessages': [],
       'scheduledMessageLocked': False
