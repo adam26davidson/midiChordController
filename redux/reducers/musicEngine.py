@@ -28,92 +28,92 @@ def reducer(state, action):
       'chordShadow': []
     })
 
-  if action == 'me/settingsListChanged':
+  if action['type'] == 'me/settingsListChanged':
     return state.set('settingsList', v(action['data']['settingsList']))
 
-  elif action == 'me/settingChanged':
+  elif action['type'] == 'me/settingChanged':
     return state.set('setting', action['data']['setting'])
 
-  elif action == 'me/settingLoadingChanged':
+  elif action['type'] == 'me/settingLoadingChanged':
     return state.set('settingLoading', action['data']['settingLoading'])
 
-  if action == 'me/keyChanged':
+  if action['type'] == 'me/keyChanged':
     return state.set('key', action['data']['key'])
 
-  if action == 'me/scaleChanged':
+  if action['type'] == 'me/scaleChanged':
     print('scale change dispatched')
     return state.set('scale', action['data']['scale'])
 
-  elif action == 'me/spreadChanged':
+  elif action['type'] == 'me/spreadChanged':
     return state.set('spread', action['data']['spread'])
 
-  elif action == 'me/inversionChanged':
+  elif action['type'] == 'me/inversionChanged':
     return state.set('inversion', action['data']['inversion'])
   
-  elif action == 'me/inversionModeChanged':
+  elif action['type'] == 'me/inversionModeChanged':
     return state.set('inversionMode', action['data']['inversionMode'])
 
-  elif action == 'me/inversionRangeChanged':
+  elif action['type'] == 'me/inversionRangeChanged':
     return state.set('inversionRange', action['data']['inversionRange'])
 
-  elif action == 'me/bassPositionChanged':
+  elif action['type'] == 'me/bassPositionChanged':
     return state.set('bassPosition', action['data']['bassPosition'])
 
-  elif action == 'me/bassModeChanged':
+  elif action['type'] == 'me/bassModeChanged':
     return state.set('bassMode', action['data']['bassMode'])
 
-  elif action == 'me/bassRangeChanged':
+  elif action['type'] == 'me/bassRangeChanged':
     return state.set('bassRange', action['data']['bassRange'])
 
-  elif action == 'me/chordOctaveChanged':
+  elif action['type'] == 'me/chordOctaveChanged':
     return state.set('chordOctave', action['data']['chordOctave'])
 
-  elif action == 'me/voiceCountChanged':
+  elif action['type'] == 'me/voiceCountChanged':
     return state.set('voiceCount', action['data']['voiceCount'])
 
-  elif action == 'me/modulationChanged':
+  elif action['type'] == 'me/modulationChanged':
     return state.set('modulation', action['data']['modulation'])
 
-  elif action == 'me/secondaryChanged':
+  elif action['type'] == 'me/secondaryChanged':
     return state.set('secondary', action['data']['secondary'])
 
-  elif action == 'me/bassPlayed':
+  elif action['type'] == 'me/bassPlayed':
     return state.set('bassNote', action['data']['bass'])
 
-  elif action == 'me/bassStopped':
+  elif action['type'] == 'me/bassStopped':
     return state.set('bassNote', None)
 
-  elif action == 'me/bassShadowChanged':
+  elif action['type'] == 'me/bassShadowChanged':
     return state.set('bassShadow', action['data']['bassShadow'])
 
-  elif action == 'me/chordPlayed':
+  elif action['type'] == 'me/chordPlayed':
     return state.set('chordNotes', v(action['data']['chordNotes']))
 
-  elif action == 'me/chordStopped':
+  elif action['type'] == 'me/chordStopped':
     return state.set('chordNotes', v())
 
-  elif action == 'me/chordTypeChanged':
+  elif action['type'] == 'me/chordTypeChanged':
     return state.set('chordType', action['data']['chordType'])
 
-  elif action == 'me/chordShadowChanged':
+  elif action['type'] == 'me/chordShadowChanged':
     return state.set('chordShadow', v(action['data']['chordShadow']))
 
-  elif action == 'me/chordChannelChanged':
+  elif action['type'] == 'me/chordChannelChanged':
     return state.set('chordChannel', action['data']['chordChannel'])
 
-  elif action == 'me/bassChannelChanged':
+  elif action['type'] == 'me/bassChannelChanged':
     return state.set('bassChannel', action['data']['bassChannel'])
 
-  elif action == 'me/distributeChannelsChanged':
+  elif action['type'] == 'me/distributeChannelsChanged':
     return state.set('distributeChannels', action['data']['distributeChannels'])
   
-  elif action == 'me/noteVelocityChanged':
+  elif action['type'] == 'me/noteVelocityChanged':
     return state.set('distributeChannels', action['data']['distributeChannels'])
 
-  elif action == 'me/holdChanged':
+  elif action['type'] == 'me/holdChanged':
     return state.set('hold', action['data']['hold'])
 
-  elif action == 'me/inversionLockChanged':
+  elif action['type'] == 'me/inversionLockChanged':
     return state.set('inversionLock', action['data']['inversionLock'])
     
   else: return state
