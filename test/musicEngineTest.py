@@ -4,10 +4,9 @@ from display import Display
 from redux import store
 
 def musicEngineTest():
+  d = Display()
   c = ControllerManager()
   m = MusicEngine()
-  d = Display()
-
 
   def handleControllerEvent(event):
     if 'value' not in event.keys():
@@ -21,6 +20,6 @@ def musicEngineTest():
   c.subscribe(handleControllerEvent)
   # store.subscribe(handleStateChange)
 
+  d.start()
   m.start()
   c.start()
-  d.start()
