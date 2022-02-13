@@ -137,7 +137,7 @@ class Midi():
   async def __loop(self):
     while True:
       self.__sendAftertouch()
-      self.__sendCCValues()
+      #self.__sendCCValues()
       await asyncio.sleep(MIDI_STEP)
   
   def __combineCommandAndChannel(self, command, channel):
