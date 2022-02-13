@@ -15,6 +15,7 @@ class MusicEngine():
 
   def start(self):
     self.midi.start()
+    self.rhythmEngine.start()
 
   def commandMap(self, key):
     map = {
