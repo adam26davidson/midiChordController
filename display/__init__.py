@@ -74,6 +74,7 @@ class Display():
       await asyncio.sleep(ANIMATION_STEP)
 
   def __handleStoreUpdate(self):
+    print('display store update function')
     meState = thaw(store.get_state()['musicEngine'])
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
