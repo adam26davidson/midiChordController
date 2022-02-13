@@ -51,7 +51,6 @@ class Midi():
     self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
 
   def getCCSetter(self, cc):
-    print('cc setter for cc ' + str(cc) + ' was created')
     self.state['lastSentCCValues'][cc] = None
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
@@ -131,7 +130,6 @@ class Midi():
         for channel in range(0, 15):
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
-        print('setting cc ' + str(cc) + ' to ' + str(val))
         self.state['lastSentCCValues'][cc] = val
 
   async def __loop(self):
