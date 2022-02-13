@@ -128,19 +128,10 @@ class Midi():
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
       if val != self.state['lastSentCCValues'][cc]:
-        for note in self.state['playingChordNotes']:
-          channel = self.state['chordChannel']
-          if self.state['distributeChannels']:
-            channel = self.state['distChordChannels'][note]
+        for channel in range(0, 15):
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
-          self.midiOut.send_message([channelCommand, cc, val])
-          print('setting cc ' + cc + ' to ' + val)
-        if self.state['playingBassNote'] is not None:
-          channel = self.state['bassChannel']
-          if self.state['distributeChannels']:
-            channel = self.state['distBassChannel']
-          channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
-          self.midiOut.send_message([channelCommand, cc, val])
+          self.midiOut.send_message([channelCommand, cc, val])  
+        print('setting cc ' + cc + ' to ' + val)
         self.state['lastSentCCValues'][cc] = val
 
   async def __loop(self):
