@@ -49,7 +49,7 @@ class RhythmEngine():
         self.state['scheduledMessageLocked'] = True
         messagesToKeep = []
         for message in self.state['scheduledMessages']:
-          if message['playAt'] >= time.time():
+          if message['playAt'] <= time.time():
             self.__sendMessage({
               'note': message['note'],
               'type': message['type'],
