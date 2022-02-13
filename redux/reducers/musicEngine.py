@@ -29,7 +29,7 @@ def reducer(state, action):
     })
 
   if action['type'] == 'me/settingsListChanged':
-    return state.set('settingsList', v(action['data']['settingsList']))
+    return state.set('settingsList', action['data']['settingsList'])
 
   elif action['type'] == 'me/settingChanged':
     return state.set('setting', action['data']['setting'])
@@ -87,7 +87,7 @@ def reducer(state, action):
     return state.set('bassShadow', action['data']['bassShadow'])
 
   elif action['type'] == 'me/chordPlayed':
-    return state.set('chordNotes', v(action['data']['chordNotes']))
+    return state.set('chordNotes', action['data']['chordNotes'])
 
   elif action['type'] == 'me/chordStopped':
     return state.set('chordNotes', v())
@@ -96,7 +96,7 @@ def reducer(state, action):
     return state.set('chordType', action['data']['chordType'])
 
   elif action['type'] == 'me/chordShadowChanged':
-    return state.set('chordShadow', v(action['data']['chordShadow']))
+    return state.set('chordShadow', action['data']['chordShadow'])
 
   elif action['type'] == 'me/chordChannelChanged':
     return state.set('chordChannel', action['data']['chordChannel'])
