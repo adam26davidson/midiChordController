@@ -51,6 +51,7 @@ class Midi():
     self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
 
   def getCCSetter(self, cc):
+    print('cc setter for cc ' + str(cc) + ' was created')
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
       print('cc ' + str(cc) + ' set to ' + str(value))
