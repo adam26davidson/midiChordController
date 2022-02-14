@@ -80,7 +80,7 @@ class Display():
       self.__setChordShadow(meState['chordShadow'])
     if meState['chordNotes'] != self.state['playingChordNotes']:
       if len(meState['chordNotes']) > 0:
-        self.__stopChord(self.state['playingChordNotes'])
+        #self.__stopChord(self.state['playingChordNotes'])
         self.__playChord(meState['chordNotes'])
       else:
         self.__stopChord(self.state['playingChordNotes'])
@@ -88,7 +88,7 @@ class Display():
       self.__setBassShadow(meState['bassShadow'])
     if meState['bassNote'] != self.state['playingBassNote']:
       if meState['bassNote'] != None:
-        self.__stopBass(self.state['playingBassNote'])
+        #self.__stopBass(self.state['playingBassNote'])
         self.__playBass(meState['bassNote'])
       else:
         self.__stopBass(self.state['playingBassNote'])
@@ -102,7 +102,7 @@ class Display():
     if meState['inversionRange'] != self.state['inversionRange']:
       self.__setInversionRange(meState['inversionRange'], meState['inversion'])
     if meState['bassRange'] != self.state['bassRange']:
-      self.__setBassPositionRange(meState['bassRange'], meState['bassPosition'])
+      self.__setBassRange(meState['bassRange'], meState['bassPosition'])
     if meState['key'] != self.state['key']:
       self.__setKey(meState['key'])
     if meState['scale'] != self.state['scale']:
@@ -144,7 +144,7 @@ class Display():
   def __setInversionThumb(self):
     self.inversion.positionThumb(self.state['inversionThumbValue'])
 
-  def __setBassPositionRange(self, range, position):
+  def __setBassRange(self, range, position):
     self.state['bassRange'] = range
     self.state['bassPosition'] = position
     self.bassPosition.setMax(range, position)
@@ -205,8 +205,6 @@ class Display():
     self.state['playingBassNote'] = None
 
   def __setChordShadow(self, notes):
-    print('setChordSHadow notes: ')
-    print(notes)
     self.keyboard.reset(self.state['shadowChordNotes'])
     self.state['shadowChordNotes'] = notes
     self.keyboard.setShadow(notes)

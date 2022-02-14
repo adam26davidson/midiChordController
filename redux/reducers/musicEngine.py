@@ -41,14 +41,12 @@ def reducer(state, action):
     return state.set('key', action['data']['key'])
 
   if action['type'] == 'me/scaleChanged':
-    print('scale change dispatched')
     return state.set('scale', action['data']['scale'])
 
   elif action['type'] == 'me/spreadChanged':
     return state.set('spread', action['data']['spread'])
 
   elif action['type'] == 'me/inversionChanged':
-    print('chorNotes: ' + str(state['chordNotes']))
     return state.set('inversion', action['data']['inversion'])
   
   elif action['type'] == 'me/inversionModeChanged':
