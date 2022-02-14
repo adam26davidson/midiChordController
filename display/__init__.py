@@ -97,6 +97,7 @@ class Display():
       if meState['bassNote'] != None:
         #self.__stopBass(self.state['playingBassNote'])
         self.__playBass(meState['bassNote'])
+        print('playBass was called')
       else:
         self.__stopBass(self.state['playingBassNote'])
     if meState['chordType']['chord'] != self.state['chordType']['notes'] or \
