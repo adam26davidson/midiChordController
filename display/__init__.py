@@ -175,14 +175,14 @@ class Display():
       if note != self.state['shadowBassNote']:
         resetNotes.append(note)
     self.keyboard.reset(resetNotes)
-    self.state['shadowChordNotes'] = []
+    #self.state['shadowChordNotes'] = []
 
   def __stopBassShadow(self):
     noteInPlayingChord = self.state['playingChordNotes'].count(self.state['shadowBassNote']) != 0
     noteInShadowChord = self.state['shadowChordNotes'].count(self.state['shadowBassNote']) != 0
     if (not noteInPlayingChord) and (not noteInShadowChord) and self.state['shadowBassNote'] != None:
       self.keyboard.reset([self.state['shadowBassNote']])
-    self.state['shadowBassNote'] = None
+    #self.state['shadowBassNote'] = None
 
   def __setChord(self, chord, root):
     self.state['chordType'] = {'notes': chord, 'root': root}
