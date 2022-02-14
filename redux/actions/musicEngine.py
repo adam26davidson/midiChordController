@@ -98,7 +98,7 @@ def changeSecondary(secondary):
 def playBass(bassNote):
   return{
     'type': 'me/bassPlayed',
-    'data': {'secondary': bassNote}
+    'data': {'bassNote': bassNote}
   }
 
 def stopBass():

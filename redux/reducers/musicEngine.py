@@ -78,7 +78,7 @@ def reducer(state, action):
     return state.set('secondary', action['data']['secondary'])
 
   elif action['type'] == 'me/bassPlayed':
-    return state.set('bassNote', action['data']['bass'])
+    return state.set('bassNote', action['data']['bassNote'])
 
   elif action['type'] == 'me/bassStopped':
     return state.set('bassNote', None)
