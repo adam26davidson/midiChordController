@@ -4,7 +4,7 @@ from display import Display
 from redux import store
 
 def musicEngineTest():
-  #d = Display()
+  d = Display()
   c = ControllerManager()
   m = MusicEngine()
 
@@ -20,6 +20,6 @@ def musicEngineTest():
   c.subscribe(handleControllerEvent)
   # store.subscribe(handleStateChange)
 
-  #d.start()
+  d.start()
   m.start()
   c.start()
