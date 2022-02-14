@@ -19,7 +19,7 @@ def reducer(state, action):
       'setting': 0,
       'octave': 0,
       'voiceCount': 0,
-      'modulation': 'none',
+      'modulation': {'side': 'none', 'scale': []},
       'secondary': 'none',
       'bassNote': 0,
       'bassShadow': 0,
