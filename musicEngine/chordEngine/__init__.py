@@ -117,7 +117,6 @@ class ChordEngine:
     self.__sendNotesOn(notes, player='chord')
     self.__updateBass()
     store.dispatch(actions.playChord(notes))
-
     self.state['playingChordNotes'] = notes
     self.state['chordIsPlaying'] = True
 
@@ -130,10 +129,8 @@ class ChordEngine:
   def playBass(self):
     self.stopBass(buttonUp=False)
     bassNote = self.__getBass()
-
     self.__sendNotesOn([bassNote], player='bass')
     store.dispatch(actions.playBass(bassNote))
-
     self.state['playingBassNote'] = bassNote
     self.state['bassIsPlaying'] = True
 
