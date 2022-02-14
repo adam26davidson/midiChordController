@@ -39,7 +39,7 @@ class Display():
       'shadowChordNotes' : [],
       'playingChordNotes' : [],
       'shadowBassNote' : 48,
-      'playingBassNote' : None,
+      'playingBassNote' : 0,
 
       'inversionThumbValue' : 0,
       'bassThumbValue' : 0,
