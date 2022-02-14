@@ -89,12 +89,13 @@ class RhythmEngine():
     for note in notes:
       # remove scheduled note
       async with self.scheduledNotesLock:
-        self.state['scheduledNotes'].remove(note)
+        if note in self.state['scheduledNotes']:
+          self.state['scheduledNotes'].remove(note)
 
       #send note off
       message = {'note': note,'type': 'off','player': 'chord'}
       self.__sendMessage(message)
-    self.state['scheduledMessageLocked'] = False
+
   
   def __handleBassOn(self, notes):
     self.__sendMessage({'note': notes[0], 'type': 'on', 'player': 'bass'})
