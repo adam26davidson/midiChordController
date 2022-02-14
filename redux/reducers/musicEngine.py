@@ -77,6 +77,7 @@ def reducer(state, action):
     return state.set('secondary', action['data']['secondary'])
 
   elif action['type'] == 'me/bassPlayed':
+    print('bass played and chord notes are: ' + str(state['chordNotes']))
     return state.set('bassNote', action['data']['bassNote'])
 
   elif action['type'] == 'me/bassStopped':
@@ -89,7 +90,7 @@ def reducer(state, action):
     return state.set('chordNotes', action['data']['chordNotes'])
 
   elif action['type'] == 'me/chordStopped':
-    return state.set('chordNotes', v())
+    return state.set('chordNotes', [])
 
   elif action['type'] == 'me/chordTypeChanged':
     return state.set('chordType', action['data']['chordType'])
