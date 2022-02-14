@@ -48,6 +48,7 @@ def reducer(state, action):
     return state.set('spread', action['data']['spread'])
 
   elif action['type'] == 'me/inversionChanged':
+    print('chorNotes: ' + str(state['chordNotes']))
     return state.set('inversion', action['data']['inversion'])
   
   elif action['type'] == 'me/inversionModeChanged':

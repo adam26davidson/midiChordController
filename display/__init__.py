@@ -80,6 +80,7 @@ class Display():
       self.__setChordShadow(meState['chordShadow'])
     if meState['chordNotes'] != self.state['playingChordNotes']:
       if len(meState['chordNotes']) > 0:
+        self.__stopChord(self.state['playingChordNotes'])
         self.__playChord(meState['chordNotes'])
       else:
         self.__stopChord(self.state['playingChordNotes'])
@@ -87,6 +88,7 @@ class Display():
       self.__setBassShadow(meState['bassShadow'])
     if meState['bassNote'] != self.state['playingBassNote']:
       if meState['bassNote'] != None:
+        self.__stopBass(self.state['playingBassNote'])
         self.__playBass(meState['bassNote'])
       else:
         self.__stopBass(self.state['playingBassNote'])
