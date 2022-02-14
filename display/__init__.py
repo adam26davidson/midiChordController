@@ -78,11 +78,13 @@ class Display():
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
       print('chordShadow change')
+      print('    redux - ' + str(meState['chordShadow']))
+      print('    display - ' + str(self.state['shadowChordNotes']))
       self.__setChordShadow(meState['chordShadow'])
     if meState['chordNotes'] != self.state['playingChordNotes']:
       print('chordNote change')
-      print('redux - ' + str(meState['chordNotes']))
-      print('display - ' + str(self.state['playingChordNotes']))
+      print('    redux - ' + str(meState['chordNotes']))
+      print('    display - ' + str(self.state['playingChordNotes']))
 
       if len(meState['chordNotes']) > 0:
         #self.__stopChord(self.state['playingChordNotes'])
