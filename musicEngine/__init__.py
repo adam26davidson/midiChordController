@@ -67,7 +67,7 @@ class MusicEngine():
 
   def start(self):
     self.midi.start()
-    self.rhythmEngine.start() 
+    #self.rhythmEngine.start() 
 
   def controllerEventHandler(self, event):
     controllers = store.get_state()['controllerManager']['controllers']
