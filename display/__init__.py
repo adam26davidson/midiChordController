@@ -50,7 +50,9 @@ class Display():
       'inversionRange': 4,
 
       'key': 0,
-      'scale': []
+      'scale': [],
+      'alternate': 'none',
+      'modulationSide': 'none'
     }
 
     self.keyboard = Keyboard(master=self.root)
@@ -77,47 +79,36 @@ class Display():
     meState = thaw(store.get_state()['musicEngine'])
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
-      print('chordShadow change')
       self.__setChordShadow(meState['chordShadow'])
     if meState['chordNotes'] != self.state['playingChordNotes']:
       if len(meState['chordNotes']) > 0:
-        print('chordNotes change')
         self.__playChord(meState['chordNotes'])
       else:
-        print('chordNotes off')
         self.__stopChord(self.state['playingChordNotes'])
     if meState['bassShadow'] != self.state['shadowBassNote']:
-      print('bassShadow change')
       self.__setBassShadow(meState['bassShadow'])
     if meState['bassNote'] != self.state['playingBassNote']:
       if meState['bassNote'] != None:
-        print('bassNote change')
         self.__playBass(meState['bassNote'])
       else:
-        print('bassNote off')
         self.__stopBass(self.state['playingBassNote'])
     if meState['chordType']['chord'] != self.state['chordType']['notes'] or \
       meState['chordType']['root'] != self.state['chordType']['root']:
-      print('chordType change')
       self.__setChord(meState['chordType']['chord'], meState['chordType']['root'])
     if meState['inversion'] != self.state['inversion']:
-      print('inversion change')
       self.__setInversion(meState['inversion'])
     if meState['bassPosition'] != self.state['bassPosition']:
-      print('bassPosition change')
       self.__setBassPosition(meState['bassPosition'])
     if meState['inversionRange'] != self.state['inversionRange']:
-      print('inversionRange change')
       self.__setInversionRange(meState['inversionRange'], meState['inversion'])
     if meState['bassRange'] != self.state['bassRange']:
-      print('bassRange change')
       self.__setBassRange(meState['bassRange'], meState['bassPosition'])
     if meState['key'] != self.state['key']:
-      print('key change')
       self.__setKey(meState['key'])
     if meState['scale'] != self.state['scale']:
-      print('scale change')
       self.__setScale(meState['scale'])
+    if meState['modulation']['side'] != self.state['modulationSide']:
+      self.__setModulation(meState['modulation']['scale'], meState['modulation']['side'])
 
   def setController(self, text):
     self.textDisplay.setController(text)
@@ -228,6 +219,7 @@ class Display():
       self.keyboard.setShadow([note])
     self.chordDisplay.setBassShadow(note)
 
-  def setModulation(self, newScale, side):
+  def __setModulation(self, newScale, side):
+    self.state['modulationSide'] = side
     self.chordDisplay.setModulation(newScale, side)
 
