@@ -8,16 +8,16 @@ def musicEngineTest():
   c = ControllerManager()
   m = MusicEngine()
 
-  def handleControllerEvent(event):
-    if 'value' not in event.keys():
-      print(event['name'])
+  # def handleControllerEvent(event):
+  #   if 'value' not in event.keys():
+  #     print(event['name'])
 
   # def handleStateChange():
   #   controllers = store.get_state()['controllerManager']['controllers']
   #   waiting = store.get_state()['controllerManager']['waitingForConnection']
 
   c.subscribe(m.controllerEventHandler)
-  c.subscribe(handleControllerEvent)
+  # c.subscribe(handleControllerEvent)
   # store.subscribe(handleStateChange)
 
   d.start()

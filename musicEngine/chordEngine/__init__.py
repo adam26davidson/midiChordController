@@ -57,7 +57,6 @@ class ChordEngine:
 
     self.setSetting(self.state['settingIndex'])
 
-
   def incrementSetting(self):
     self.setSetting((self.state['settingIndex'] + 1) % len(SETTINGS))
 
@@ -115,7 +114,6 @@ class ChordEngine:
     self.__setChordType()
     self.stopChord(buttonUp=False)
     notes = self.__getChord(button)
-    print(notes)
     self.__sendNotesOn(notes, player='chord')
     self.__updateBass()
     store.dispatch(actions.playChord(notes))
@@ -217,7 +215,6 @@ class ChordEngine:
     store.dispatch(actions.changeInversionRange(self.state['inversionRange']))
 
   def incrementBassPosition(self):
-    print('INCREMENTING BASS')
     newPosition = self.state['bassPosition'] + 1
     if abs(newPosition) <= self.state['bassRange']:
       self.setBassPosition(newPosition)

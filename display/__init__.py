@@ -77,8 +77,13 @@ class Display():
     meState = thaw(store.get_state()['musicEngine'])
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
+      print('chordShadow change')
       self.__setChordShadow(meState['chordShadow'])
     if meState['chordNotes'] != self.state['playingChordNotes']:
+      print('chordNote change')
+      print('redux - ' + str(meState['chordNotes']))
+      print('display - ' + str(self.state['playingChordNotes']))
+
       if len(meState['chordNotes']) > 0:
         #self.__stopChord(self.state['playingChordNotes'])
         self.__playChord(meState['chordNotes'])
@@ -106,7 +111,6 @@ class Display():
     if meState['key'] != self.state['key']:
       self.__setKey(meState['key'])
     if meState['scale'] != self.state['scale']:
-      print('display scale set')
       self.__setScale(meState['scale'])
 
   def setController(self, text):
