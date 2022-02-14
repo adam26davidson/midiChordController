@@ -66,6 +66,7 @@ class Midi():
     velocity = self.__getVelocity()
     noteChannel = self.__getNoteChannel(note, player, 'on')
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
+    print(str(note) + '- ON')
     self.midiOut.send_message([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
 
