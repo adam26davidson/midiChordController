@@ -78,32 +78,32 @@ class Display():
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
       self.__setChordShadow(meState['chordShadow'])
-    elif meState['chordNotes'] != self.state['playingChordNotes']:
+    if meState['chordNotes'] != self.state['playingChordNotes']:
       if len(meState['chordNotes']) > 0:
         self.__playChord(meState['chordNotes'])
       else:
         self.__stopChord(self.state['playingChordNotes'])
-    elif meState['bassShadow'] != self.state['shadowBassNote']:
+    if meState['bassShadow'] != self.state['shadowBassNote']:
       self.__setBassShadow(meState['bassShadow'])
-    elif meState['bassNote'] != self.state['playingBassNote']:
+    if meState['bassNote'] != self.state['playingBassNote']:
       if meState['bassNote'] != None:
         self.__playBass(meState['bassNote'])
       else:
         self.__stopBass(self.state['playingBassNote'])
-    elif meState['chordType']['chord'] != self.state['chordType']['notes'] or \
+    if meState['chordType']['chord'] != self.state['chordType']['notes'] or \
       meState['chordType']['root'] != self.state['chordType']['root']:
       self.__setChord(meState['chordType']['chord'], meState['chordType']['root'])
-    elif meState['inversion'] != self.state['inversion']:
+    if meState['inversion'] != self.state['inversion']:
       self.__setInversion(meState['inversion'])
-    elif meState['bassPosition'] != self.state['bassPosition']:
+    if meState['bassPosition'] != self.state['bassPosition']:
       self.__setBassPosition(meState['bassPosition'])
-    elif meState['inversionRange'] != self.state['inversionRange']:
+    if meState['inversionRange'] != self.state['inversionRange']:
       self.__setInversionRange(meState['inversionRange'], meState['inversion'])
-    elif meState['bassRange'] != self.state['bassRange']:
+    if meState['bassRange'] != self.state['bassRange']:
       self.__setBassPositionRange(meState['bassRange'], meState['bassPosition'])
-    elif meState['key'] != self.state['key']:
+    if meState['key'] != self.state['key']:
       self.__setKey(meState['key'])
-    elif meState['scale'] != self.state['scale']:
+    if meState['scale'] != self.state['scale']:
       print('display scale set')
       self.__setScale(meState['scale'])
 
