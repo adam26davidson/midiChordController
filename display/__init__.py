@@ -129,6 +129,7 @@ class Display():
         self.__setSettingLoading()
       else:
         self.state['settingLoading'] = False
+        self.__setSetting(self.state['settingName'])
 
     meMap = None
     for controller in cState['controllers']:
@@ -161,7 +162,8 @@ class Display():
     self.textDisplay.setSetting('Loading...')
 
   def __setSetting(self, text):
-    self.textDisplay.setSetting(text)
+    if not self.state['settingLoading']:
+      self.textDisplay.setSetting(text)
 
   def setAlt(self, alt):
     self.textDisplay.setAlt(alt)
