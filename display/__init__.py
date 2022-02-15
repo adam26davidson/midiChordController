@@ -41,10 +41,8 @@ class Display():
 
       'inversionThumbValue' : 0,
       'inversionMode': 'continuous',
-      'inversionControl': 'NONE',
       'bassThumbValue' : 0,
       'bassMode': 'incremental',
-      'bassPositionControl': 'NONE',
 
       'bassPosition': 0,
       'bassRange': 4,
@@ -165,7 +163,7 @@ class Display():
   
   def __setInversion(self, inversion):
     self.state['inversion'] = inversion
-    self.inversion.setActiveRegion(inversion)
+    self.inversion.setActiveRegion(inversion, self.state['inversionMode'])
 
   def __storeInversionThumb(self, value):
     self.state['inversionThumbValue'] = value
@@ -180,7 +178,7 @@ class Display():
   
   def __setBassPosition(self, position):
     self.state['bassPosition'] = position
-    self.bassPosition.setActiveRegion(position)
+    self.bassPosition.setActiveRegion(position, self.state['bassMode'])
 
   def __storeBassPositionThumb(self, value):
     self.state['bassThumbValue'] = value
