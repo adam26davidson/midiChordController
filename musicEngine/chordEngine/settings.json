@@ -79,7 +79,7 @@
       },
       "right": {
         "type": "modal",
-        "map": [3, 0]
+        "map": [4, 3]
       }
     },
     "chords": {
