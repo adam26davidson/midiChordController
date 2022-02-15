@@ -36,7 +36,7 @@ class Display():
       'settingIndex': -1,
       'settingName': '',
       'settingLoading': False,
-      'controllerName': 'Not Connected'
+      'controllerName': 'Not Connected',
 
       'chordType': {'notes': [], 'root': 0},
       'shadowChordNotes' : [],
