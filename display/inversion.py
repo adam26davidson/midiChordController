@@ -2,10 +2,10 @@ import tkinter as tk
 from constants import *
 
 class Inversion(tk.Canvas):
-  width = 60
+  width = 40
   height = 370
 
-  bgColor = "#1f1f1f"
+  bgColor = "#000000"
   separatorColor = "#2e2e2e"
   shaderColor = "#2e2e2e"
   thumbColor = "#ffffff"
