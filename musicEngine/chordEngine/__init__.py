@@ -157,8 +157,9 @@ class ChordEngine:
         store.dispatch(actions.stopChord())
         self.state['playingChordNotes'] = []
         self.state['chordIsPlaying'] = False
-        for button, state in self.state['chordButtonStates'].items():
-          if state: self.playChord(button)
+        for b, isOn in self.state['chordButtonStates'].items():
+          if isOn: 
+            self.playChord(b)
       
   def stopBass(self, buttonUp=True):
     if not buttonUp or not self.state['hold']:
