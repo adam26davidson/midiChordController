@@ -125,7 +125,6 @@ class Display():
       self.__setSetting(self.state['settingName'])
       print('setting name: ' + self.state['settingName'] )
     if meState['settingLoading'] != self.state['settingLoading']:
-      print(meState['settingLoading'])
       if meState['settingLoading']:
         self.__setSettingLoading()
       else:
@@ -159,6 +158,7 @@ class Display():
     self.textDisplay.setController(text)
   
   def __setSettingLoading(self):
+    self.state['settingLoading'] = True
     self.textDisplay.setSetting('Loading...')
 
   def __setSetting(self, text):
