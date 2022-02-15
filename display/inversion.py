@@ -1,14 +1,15 @@
 import tkinter as tk
 from constants import *
+from .displayConstants import COLORS
 
 class Inversion(tk.Canvas):
   width = 40
   height = 370
 
   bgColor = "#000000"
-  separatorColor = "#2e2e2e"
+  separatorColor = COLORS['chordDim']
   shaderColor = "#2e2e2e"
-  thumbColor = "#ffffff"
+  thumbColor = COLORS['root']
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg=self.bgColor)
@@ -62,6 +63,6 @@ class Inversion(tk.Canvas):
       elif i == (self.activeRegion * -1):
         snapOffset = snap
       y = slotHeight * (i + self.max + 1) + snapOffset
-      separators.append(self.create_line(0, y, self.width, y, fill=self.separatorColor))
+      separators.append(self.create_line(0, y, self.width, y, fill=self.separatorColor width= 2))
 
     self.separators = separators
