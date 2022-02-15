@@ -30,8 +30,6 @@ class Display():
       self.root.destroy()
 
     self.root.bind("<Escape>", close_escape)
-
-
     self.root.configure(bg='black')
 
     self.state = {
@@ -42,7 +40,9 @@ class Display():
       'playingBassNote' : 0,
 
       'inversionThumbValue' : 0,
+      'inversionMode': 'continuous',
       'bassThumbValue' : 0,
+      'bassMode': 'incremental',
 
       'bassPosition': 0,
       'bassRange': 4,
@@ -69,14 +69,16 @@ class Display():
 
   async def __mainLoop(self):
     while True:
-      # self.__setInversionThumb()
+      self.__setInversionThumb()
       # self.__setBassPositionThumb()
       self.chordDisplay.runAnimationStep()
       self.root.update()
       await asyncio.sleep(ANIMATION_STEP)
 
   def __handleStoreUpdate(self):
-    meState = thaw(store.get_state()['musicEngine'])
+    state = store.get_state()
+    meState = thaw(state['musicEngine'])
+    cState = thaw(state['controllerManager'])
 
     if meState['chordShadow'] != self.state['shadowChordNotes']:
       self.__setChordShadow(meState['chordShadow'])
@@ -109,7 +111,26 @@ class Display():
       self.__setScale(meState['scale'])
     if meState['modulation']['side'] != self.state['modulationSide']:
       self.__setModulation(meState['modulation']['scale'], meState['modulation']['side'])
+    
+    meMap = None
+    for controller in cState['controllers']:
+      if controller['role'] == 'primary':
+        meMap = controller['meMap']['map']
+    if meMap['inversionMode'] != self.state['inversionMode']:
+      self.state['inversionMode'] = meMap['inversionMode']
+    if meMap['bassMode'] != self.state['bassMode']:
+      self.state['bassMode'] = meMap['bassMode']
+    
 
+  def controllerEventHandler(self, event):
+    
+    if event['name'] == 'UPDATE_INVERSION' and \
+      self.state['inversionMode'] == 'continuous':
+      self.__storeInversionThumb(event['value'])
+    elif event['name'] == 'UPDATE_BASS_POSITION' and \
+      self.state['bassMode'] == 'continuous':
+      self.__storeBassPositionThumb(event['value'])
+   
   def setController(self, text):
     self.textDisplay.setController(text)
 

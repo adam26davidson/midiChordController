@@ -39,8 +39,8 @@ class Inversion(tk.Canvas):
       yt = (self.height - slotHeight) - snap
       yb = self.height
     else:
-      yt = (slotHeight*region) - snap
-      yb = (slotHeight*(region+1)) + snap 
+      yt = (slotHeight*(region + self.max)) - snap
+      yb = (slotHeight*(region + self.max + 1)) + snap 
     self.activeShader = self.create_rectangle(-1, yt, self.width, yb, fill=self.shaderColor)
     self.drawSeparators()
 
