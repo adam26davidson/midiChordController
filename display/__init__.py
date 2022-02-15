@@ -33,6 +33,10 @@ class Display():
     self.root.configure(bg='black')
 
     self.state = {
+      'settingIndex': -1,
+      'settingName': '',
+      'settingLoading': False,
+
       'chordType': {'notes': [], 'root': 0},
       'shadowChordNotes' : [],
       'playingChordNotes' : [],
@@ -115,7 +119,13 @@ class Display():
       self.__setModulation(meState['modulation']['scale'], meState['modulation']['side'])
     if meState['inversionLock'] != self.state['inversionLocked']:
       self.__setInversionLock(meState['inversionLock'])
-    
+    if meState['setting'] != self.state['settingIndex']:
+      self.state['settingName'] = meState['settingsList'][meState['setting']]
+      self.state['settingIndex'] = meState['setting']
+      self.__setSetting(self.state['settingName'])
+    if meState['settingLoading'] != self.state['settingLoading']:
+      self.__setSettingLoading()
+
     meMap = None
     for controller in cState['controllers']:
       if controller['role'] == 'primary':
@@ -141,8 +151,11 @@ class Display():
    
   def setController(self, text):
     self.textDisplay.setController(text)
+  
+  def __setSettingLoading(self):
+    self.textDisplay.setSetting('Loading...')
 
-  def setSetting(self, text):
+  def __setSetting(self, text):
     self.textDisplay.setSetting(text)
 
   def setAlt(self, alt):

@@ -7,6 +7,8 @@ def reducer(state, action):
       'connectedMidiPort': '',
 
       'settingsList': [],
+      'setting': 0,
+      'settingLoading': False,
       'key': 0,
       'scale': [],
       'spread': 0,
