@@ -36,6 +36,7 @@ class Display():
       'settingIndex': -1,
       'settingName': '',
       'settingLoading': False,
+      'controllerName': 'Not Connected'
 
       'chordType': {'notes': [], 'root': 0},
       'shadowChordNotes' : [],
@@ -132,14 +133,20 @@ class Display():
         self.__setSetting(self.state['settingName'])
 
     meMap = None
+    primary = None
     for controller in cState['controllers']:
       if controller['role'] == 'primary':
+        primary = controller
         meMap = controller['meMap']
     if meMap:
       if meMap['inversionMode'] != self.state['inversionMode']:
         self.state['inversionMode'] = meMap['inversionMode']
       if meMap['bassMode'] != self.state['bassMode']:
         self.state['bassMode'] = meMap['bassMode']
+    if primary: 
+      if primary['name'] != self.state['controllerName']:
+        self.state['controllerName'] = primary['name']
+        self.__setController(primary['name'])
 
   def controllerEventHandler(self, event):
     meMap = None
@@ -154,7 +161,7 @@ class Display():
         meMap[event['name']] == 'UPDATE_BASS_POSITION':
         self.__storeBassPositionThumb(event['value'])
    
-  def setController(self, text):
+  def __setController(self, text):
     self.textDisplay.setController(text)
   
   def __setSettingLoading(self):
@@ -164,12 +171,6 @@ class Display():
   def __setSetting(self, text):
     if not self.state['settingLoading']:
       self.textDisplay.setSetting(text)
-
-  def setAlt(self, alt):
-    self.textDisplay.setAlt(alt)
-
-  def setShift(self, shift):
-    self.textDisplay.setShift(shift)
 
   def __setInversionLock(self, inversionLocked):
     self.state['inversionLocked'] = inversionLocked
