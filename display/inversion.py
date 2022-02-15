@@ -18,7 +18,7 @@ class Inversion(tk.Canvas):
     self.master = master
     self.separators = []
     self.activeShader = None
-    self.thumb = self.create_(0, self.height/2, self.width, self.height/2, fill = self.thumbColor, width=3)
+    self.thumb = self.create_line(0, self.height/2, self.width, self.height/2, fill = self.thumbColor, width=3)
     self.max = 3
     self.activeRegion = 0
     self.pack(side="right", padx=(0,20), pady=(20,0))
@@ -49,7 +49,7 @@ class Inversion(tk.Canvas):
     self.drawSeparators()
     if mode == 'incremental':
       value = (1 / (2*self.max + 1)) * (self.max - region + 0.5)
-      positionThumb
+      self.positionThumb(value)
 
   def positionThumb(self, value):
     y = (self.height/2) - value*(self.height/2)
