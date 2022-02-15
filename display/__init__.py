@@ -116,11 +116,12 @@ class Display():
     for controller in cState['controllers']:
       if controller['role'] == 'primary':
         meMap = controller['meMap']['map']
-    if meMap['inversionMode'] != self.state['inversionMode']:
-      self.state['inversionMode'] = meMap['inversionMode']
-    if meMap['bassMode'] != self.state['bassMode']:
-      self.state['bassMode'] = meMap['bassMode']
-    
+    if meMap:
+      if meMap['inversionMode'] != self.state['inversionMode']:
+        self.state['inversionMode'] = meMap['inversionMode']
+      if meMap['bassMode'] != self.state['bassMode']:
+        self.state['bassMode'] = meMap['bassMode']
+      
 
   def controllerEventHandler(self, event):
     

@@ -17,6 +17,7 @@ def musicEngineTest():
   #   waiting = store.get_state()['controllerManager']['waitingForConnection']
 
   c.subscribe(m.controllerEventHandler)
+  c.subscribe(d.controllerEventHandler)
   # c.subscribe(handleControllerEvent)
   # store.subscribe(handleStateChange)
 
