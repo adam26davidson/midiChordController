@@ -4,7 +4,7 @@ from .displayConstants import FONTS, COLORS
 from PIL import ImageTk, Image 
 
 class TextDisplay(tk.Frame):
-  width = 270
+  width = 300
   height = 350
 
   bgColor = "#000000"
@@ -49,6 +49,7 @@ class TextDisplay(tk.Frame):
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
   def setSetting(self, name):
+    print('setting setting text to '+ name)
     self.setting.configure(text=name)
 
   def setController(self, name):
