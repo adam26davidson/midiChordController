@@ -124,9 +124,9 @@ class Display():
       
 
   def controllerEventHandler(self, event):
-    
     if event['name'] == 'UPDATE_INVERSION' and \
       self.state['inversionMode'] == 'continuous':
+      print('value stored')
       self.__storeInversionThumb(event['value'])
     elif event['name'] == 'UPDATE_BASS_POSITION' and \
       self.state['bassMode'] == 'continuous':
