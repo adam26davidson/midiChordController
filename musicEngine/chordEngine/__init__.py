@@ -47,6 +47,16 @@ class ChordEngine:
       'playingBassNote': None,
       'bassIsPlaying': False,
       'activeChord': 'south',
+      'chordButtonStates': {
+        'north': False,
+        'south': False,
+        'east': False,
+        'west': False,
+      },
+      'modulationButtonStates': {
+        'left': False,
+        'right': False
+      }
     }
 
     store.dispatch(actions.changeKey(self.state['key']))
@@ -109,7 +119,9 @@ class ChordEngine:
     store.dispatch(actions.changeSettingLoading(False))
     self.state['loadingSetting'] = False
 
-  def playChord(self, button):
+  def playChord(self, button, fromButton=False):
+    if fromButton:
+      self.state['chordButtonStates'][button] = True
     self.state['activeChord'] = button
     self.__setChordType()
     self.stopChord(buttonUp=False)
@@ -135,6 +147,8 @@ class ChordEngine:
     self.state['bassIsPlaying'] = True
 
   def stopChord(self, button=None, buttonUp=True):
+    if button != None:
+      self.state['chordButtonStates'][button] = False
     dontStop = self.state['chordIsPlaying'] and button != None \
       and button != self.state['activeChord'] 
     if not dontStop and (not buttonUp or not self.state['hold']):
@@ -143,6 +157,8 @@ class ChordEngine:
         store.dispatch(actions.stopChord())
         self.state['playingChordNotes'] = []
         self.state['chordIsPlaying'] = False
+    for button, state in self.state['chordButtonStates'].items():
+      if state: self.playChord(button)
   
   def stopBass(self, buttonUp=True):
     if not buttonUp or not self.state['hold']:

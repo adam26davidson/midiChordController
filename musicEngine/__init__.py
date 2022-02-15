@@ -14,13 +14,13 @@ class MusicEngine():
     self.rhythmEngine.subscribe(self.midi.handleMessage)
 
     self.commandMap = {
-      "SOUTH_CHORD_ON": lambda: self.chordEngine.playChord('south'),
+      "SOUTH_CHORD_ON": lambda: self.chordEngine.playChord('south', fromButton=True),
       "SOUTH_CHORD_OFF": lambda: self.chordEngine.stopChord(button='south'),
-      "WEST_CHORD_ON": lambda: self.chordEngine.playChord('west'),
+      "WEST_CHORD_ON": lambda: self.chordEngine.playChord('west', fromButton=True),
       "WEST_CHORD_OFF": lambda: self.chordEngine.stopChord(button='west'),
-      "NORTH_CHORD_ON": lambda: self.chordEngine.playChord('north'),
+      "NORTH_CHORD_ON": lambda: self.chordEngine.playChord('north', fromButton=True),
       "NORTH_CHORD_OFF": lambda: self.chordEngine.stopChord(button='north'),
-      "EAST_CHORD_ON": lambda: self.chordEngine.playChord('east'),
+      "EAST_CHORD_ON": lambda: self.chordEngine.playChord('east', fromButton=True),
       "EAST_CHORD_OFF": lambda: self.chordEngine.stopChord(button='east'),
 
       "LEFT_SECONDARY_ON": lambda: self.chordEngine.setSecondary('left'),
