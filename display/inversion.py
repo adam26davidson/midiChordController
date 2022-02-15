@@ -48,7 +48,7 @@ class Inversion(tk.Canvas):
     #self.activeShader = self.create_rectangle(-1, yt, self.width, yb, fill=self.shaderColor)
     self.drawSeparators()
     if mode == 'incremental':
-      value = (1 / (2*self.max + 1)) * (self.max - region + 0.5)
+      value = (2*region) / (2*self.max + 1)
       self.positionThumb(value)
 
   def positionThumb(self, value):
