@@ -27,7 +27,7 @@ class Inversion(tk.Canvas):
   def setMax(self, max, activeRegion):
     self.max = max
     self.activeRegion = activeRegion
-    self.setActiveRegion(activeRegion)
+    self.setActiveRegion(activeRegion, 'continuous')
 
   def setActiveRegion(self, region, mode):
     self.activeRegion = region
