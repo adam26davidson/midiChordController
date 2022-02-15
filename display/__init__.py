@@ -17,6 +17,7 @@ class Display():
 
     self.root.overrideredirect(True)
     self.root.overrideredirect(False)
+    self.root['cursor'] = 'none'
 
     if FULLSCREEN:
       self.root.attributes("-fullscreen", True)

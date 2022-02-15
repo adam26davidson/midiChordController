@@ -134,8 +134,10 @@ class ChordEngine:
     self.state['playingBassNote'] = bassNote
     self.state['bassIsPlaying'] = True
 
-  def stopChord(self, buttonUp=True):
-    if not buttonUp or not self.state['hold']:
+  def stopChord(self, button=None, buttonUp=True):
+    dontStop = self.state['chordIsPlaying'] and button != None \
+      and button != self.state['activeChord'] 
+    if not dontStop and (not buttonUp or not self.state['hold']):
       if self.state['chordIsPlaying']:
         self.__sendNotesOff(self.state['playingChordNotes'], player='chord')
         store.dispatch(actions.stopChord())
