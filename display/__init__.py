@@ -115,7 +115,7 @@ class Display():
     meMap = None
     for controller in cState['controllers']:
       if controller['role'] == 'primary':
-        meMap = controller['meMap']['map']
+        meMap = controller['meMap']
     if meMap:
       if meMap['inversionMode'] != self.state['inversionMode']:
         self.state['inversionMode'] = meMap['inversionMode']
