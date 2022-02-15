@@ -3,7 +3,7 @@ from .info import info
 from redux import store
 from ...controller import Controller
 
-class Wired360Controller():
+class Wired360Controller(Controller):
     def __init__(self, sendEvent):
         super().__init__(sendEvent, info)
 

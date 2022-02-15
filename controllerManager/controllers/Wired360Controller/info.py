@@ -1,8 +1,11 @@
 info = {
   "name": "Xbox 360 Controller",
-  "vendor": 0,
-  "product": 0,
+  "vendor": 1118,
+  "product": 654,
+  'uiMap': "default",
+  "meMap": "default",
   "defaultMusicEngineMap": "default",
+  "compatibleMeMaps": ['gyroInversions', 'default'],
   "controls": {
     "main": {
       # MAIN BUTTONS
