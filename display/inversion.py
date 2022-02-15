@@ -39,9 +39,9 @@ class Inversion(tk.Canvas):
       yt = (self.height - slotHeight) - snap
       yb = self.height
     else:
-      yt = (slotHeight*(region + self.max)) - snap
-      yb = (slotHeight*(region + self.max + 1)) + snap 
-    self.activeShader = self.create_rectangle(-1, yt, self.width, yb, fill=self.shaderColor)
+      yt = (slotHeight*(-1*region + self.max)) - snap
+      yb = (slotHeight*(-1*region + self.max + 1)) + snap 
+    #self.activeShader = self.create_rectangle(-1, yt, self.width, yb, fill=self.shaderColor)
     self.drawSeparators()
 
   def positionThumb(self, value):
@@ -57,9 +57,9 @@ class Inversion(tk.Canvas):
     separators = []
     for i in range(-1*self.max, self.max + 1):
       snapOffset = 0
-      if i == self.activeRegion - 1:
+      if i == (self.activeRegion * -1) - 1:
         snapOffset = snap
-      elif i == self.activeRegion:
+      elif i == (self.activeRegion * -1):
         snapOffset = -1*snap
       y = slotHeight * (i + self.max) + snapOffset
       separators.append(self.create_line(0, y, self.width, y, fill=self.separatorColor))
