@@ -123,11 +123,13 @@ class Display():
       self.state['settingName'] = meState['settingsList'][meState['setting']]
       self.state['settingIndex'] = meState['setting']
       self.__setSetting(self.state['settingName'])
-      print('setting name: ' +self.state['settingName'] )
+      print('setting name: ' + self.state['settingName'] )
     if meState['settingLoading'] != self.state['settingLoading']:
+      print(meState['settingLoading'])
       if meState['settingLoading']:
         self.__setSettingLoading()
       else:
+        self.state['settingLoading'] = False
         self.__setSetting(self.state['settingName'])
 
     meMap = None
