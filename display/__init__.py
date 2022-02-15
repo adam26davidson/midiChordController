@@ -41,6 +41,7 @@ class Display():
 
       'inversionThumbValue' : 0,
       'inversionMode': 'continuous',
+      'inversionLocked': False,
       'bassThumbValue' : 0,
       'bassMode': 'incremental',
 
@@ -69,7 +70,8 @@ class Display():
 
   async def __mainLoop(self):
     while True:
-      self.__setInversionThumb()
+      if not self.state['inversionLocked']:
+        self.__setInversionThumb()
       # self.__setBassPositionThumb()
       self.chordDisplay.runAnimationStep()
       self.root.update()
@@ -111,6 +113,8 @@ class Display():
       self.__setScale(meState['scale'])
     if meState['modulation']['side'] != self.state['modulationSide']:
       self.__setModulation(meState['modulation']['scale'], meState['modulation']['side'])
+    if meState['inversionLock'] != self.state['inversionLocked']:
+      self.__setInversionLock(meState['inversionLock'])
     
     meMap = None
     for controller in cState['controllers']:
@@ -146,6 +150,9 @@ class Display():
 
   def setShift(self, shift):
     self.textDisplay.setShift(shift)
+
+  def __setInversionLock(self, inversionLocked):
+    self.state['inversionLocked'] = inversionLocked
   
   def __setKey(self, key):
     self.state['key'] = key
