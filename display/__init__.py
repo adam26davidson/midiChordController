@@ -130,7 +130,6 @@ class Display():
     if meMap:
       if self.state['inversionMode'] == 'continuous' and \
         meMap[event['name']] == 'UPDATE_INVERSION':
-        print('value stored')
         self.__storeInversionThumb(event['value'])
       elif self.state['bassMode'] == 'continuous' and \
         meMap[event['name']] == 'UPDATE_BASS_POSITION':
