@@ -41,8 +41,10 @@ class Display():
 
       'inversionThumbValue' : 0,
       'inversionMode': 'continuous',
+      'inversionControl': 'NONE',
       'bassThumbValue' : 0,
       'bassMode': 'incremental',
+      'bassPositionControl': 'NONE',
 
       'bassPosition': 0,
       'bassRange': 4,
@@ -121,16 +123,20 @@ class Display():
         self.state['inversionMode'] = meMap['inversionMode']
       if meMap['bassMode'] != self.state['bassMode']:
         self.state['bassMode'] = meMap['bassMode']
-      
 
   def controllerEventHandler(self, event):
-    if event['name'] == 'UPDATE_INVERSION' and \
-      self.state['inversionMode'] == 'continuous':
-      print('value stored')
-      self.__storeInversionThumb(event['value'])
-    elif event['name'] == 'UPDATE_BASS_POSITION' and \
-      self.state['bassMode'] == 'continuous':
-      self.__storeBassPositionThumb(event['value'])
+    meMap = None
+    for controller in store.get_state()['controllerManager']['controllers']:
+      if controller['role'] == 'primary':
+        meMap = controller['meMap']['map']
+    if meMap:
+      if self.state['inversionMode'] == 'continuous' and \
+        meMap[event['name']] == 'UPDATE_INVERSION':
+        print('value stored')
+        self.__storeInversionThumb(event['value'])
+      elif self.state['bassMode'] == 'continuous' and \
+        meMap[event['name']] == 'UPDATE_BASS_POSITION':
+        self.__storeBassPositionThumb(event['value'])
    
   def setController(self, text):
     self.textDisplay.setController(text)
