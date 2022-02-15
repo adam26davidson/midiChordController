@@ -21,7 +21,7 @@ class Inversion(tk.Canvas):
     self.thumb = self.create_line(0, self.height/2, self.width, self.height/2, fill = self.thumbColor, width=3)
     self.max = 3
     self.activeRegion = 0
-    self.pack(side="right", padx=(0,20), pady=(20,0))
+    self.pack(side="right", padx=(20,20), pady=(20,0))
   
 
   def setMax(self, max, activeRegion):
