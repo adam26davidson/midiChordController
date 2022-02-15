@@ -37,14 +37,14 @@ class TextDisplay(tk.Frame):
     self.controller.pack(side="left", padx=(10, 0))
 
     # alt and shift
-    self.functionFrame = tk.Frame(self, bg=self.bgColor)
-    self.functionFrame.pack(side="top", pady=(10, 0))
-    self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.inactiveColor, 
-      font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
-    self.alt.pack(side="left")
-    self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.inactiveColor, 
-      font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
-    self.shift.pack(side="left", padx=(40, 0))
+    # self.functionFrame = tk.Frame(self, bg=self.bgColor)
+    # self.functionFrame.pack(side="top", pady=(10, 0))
+    # self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.inactiveColor, 
+    #   font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
+    # self.alt.pack(side="left")
+    # self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.inactiveColor, 
+    #   font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
+    # self.shift.pack(side="left", padx=(40, 0))
 
     self.pack(side="top", padx=(20,20), pady=(20,20))
 
