@@ -15,13 +15,13 @@ class MusicEngine():
 
     self.commandMap = {
       "SOUTH_CHORD_ON": lambda: self.chordEngine.playChord('south'),
-      "SOUTH_CHORD_OFF": self.chordEngine.stopChord,
+      "SOUTH_CHORD_OFF": lambda: self.chordEngine.stopChord(button='south'),
       "WEST_CHORD_ON": lambda: self.chordEngine.playChord('west'),
-      "WEST_CHORD_OFF": self.chordEngine.stopChord,
+      "WEST_CHORD_OFF": lambda: self.chordEngine.stopChord(button='west'),
       "NORTH_CHORD_ON": lambda: self.chordEngine.playChord('north'),
-      "NORTH_CHORD_OFF": self.chordEngine.stopChord,
+      "NORTH_CHORD_OFF": lambda: self.chordEngine.stopChord(button='north'),
       "EAST_CHORD_ON": lambda: self.chordEngine.playChord('east'),
-      "EAST_CHORD_OFF": self.chordEngine.stopChord,
+      "EAST_CHORD_OFF": lambda: self.chordEngine.stopChord(button='east'),
 
       "LEFT_SECONDARY_ON": lambda: self.chordEngine.setSecondary('left'),
       "RIGHT_SECONDARY_ON": lambda: self.chordEngine.setSecondary('right'),
