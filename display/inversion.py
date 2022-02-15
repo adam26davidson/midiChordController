@@ -58,9 +58,9 @@ class Inversion(tk.Canvas):
     for i in range(-1*self.max, self.max + 1):
       snapOffset = 0
       if i == (self.activeRegion * -1) - 1:
-        snapOffset = snap
+        snapOffset = -snap
       elif i == (self.activeRegion * -1):
-        snapOffset = -1*snap
+        snapOffset = snap
       y = slotHeight * (i + self.max) + snapOffset
       separators.append(self.create_line(0, y, self.width, y, fill=self.separatorColor))
 
