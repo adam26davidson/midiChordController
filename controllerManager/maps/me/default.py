@@ -1,6 +1,8 @@
 default = {
   'name': 'default',
   'displaynName': 'Default GamePad',
+  'inversionMode': 'incremental',
+  'bassMode': 'incremental',
   'map': {
     #MAIN BUTTONS
     "SOUTH_BUTTON_DOWN": "SOUTH_CHORD_ON",

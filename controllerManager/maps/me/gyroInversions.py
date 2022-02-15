@@ -1,6 +1,8 @@
 gyroInversions = {
   'name': 'gyroInversions',
   'displayName': 'Gyro Inversions',
+  'inversionMode': 'continuous',
+  'bassMode': 'incremental',
   'map': {
     #MAIN BUTTONS
     "SOUTH_BUTTON_DOWN": "SOUTH_CHORD_ON",

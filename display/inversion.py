@@ -29,7 +29,7 @@ class Inversion(tk.Canvas):
     self.activeRegion = region
     if self.activeShader:
       self.delete(self.activeShader)
-    slotHeight = self.height / (2 * (self.max + 1))
+    slotHeight = self.height / ((2 * self.max) + 1)
     snap = slotHeight * INVERSION_SNAP
     yt, yb = 0, 0
     if region >= self.max:
@@ -38,15 +38,9 @@ class Inversion(tk.Canvas):
     elif region <= (-1*self.max):
       yt = (self.height - slotHeight) - snap
       yb = self.height
-    elif region == 0:
-      yt = (self.height / 2) - (slotHeight + snap)
-      yb = (self.height / 2) + (slotHeight + snap)
-    elif region > 0:
-      yt = (slotHeight * (self.max - region)) - snap
-      yb = (slotHeight * ((self.max+1) - region)) + snap
-    elif region < 0:
-      yt = ((self.height / 2) + ((-1*region)*slotHeight)) - snap
-      yb = ((self.height / 2) + (((-1*region)+1)*slotHeight)) + snap
+    else:
+      yt = (slotHeight*region) - snap
+      yb = (slotHeight*(region+1)) + snap 
     self.activeShader = self.create_rectangle(-1, yt, self.width, yb, fill=self.shaderColor)
     self.drawSeparators()
 
@@ -56,27 +50,18 @@ class Inversion(tk.Canvas):
     self.tag_raise(self.thumb)
 
   def drawSeparators(self):
-    slotHeight = self.height / (2 * (self.max + 1))
+    slotHeight = self.height / ((2 * self.max) + 1)
     snap = slotHeight * INVERSION_SNAP
     for separator in self.separators:
       self.delete(separator)
     separators = []
-    for i in range(-1*self.max, 0):
+    for i in range(-1*self.max, self.max + 1):
       snapOffset = 0
       if i == self.activeRegion - 1:
         snapOffset = snap
       elif i == self.activeRegion:
         snapOffset = -1*snap
-      y = slotHeight * (-1*i) + (self.height / 2.0) + snapOffset
-      separators.append(self.create_line(0, y, self.width, y, fill=self.separatorColor))
-
-    for i in range(1, self.max + 1):
-      snapOffset = 0
-      if i == self.activeRegion + 1:
-        snapOffset = -1*snap
-      elif i == self.activeRegion:
-        snapOffset = snap
-      y = (slotHeight * ((self.max+1) -i)) + snapOffset
+      y = slotHeight * (i + self.max) + snapOffset
       separators.append(self.create_line(0, y, self.width, y, fill=self.separatorColor))
 
     self.separators = separators
