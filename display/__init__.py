@@ -127,6 +127,8 @@ class Display():
     if meState['settingLoading'] != self.state['settingLoading']:
       if meState['settingLoading']:
         self.__setSettingLoading()
+      else:
+        self.__setSetting(self.state['settingName'])
 
     meMap = None
     for controller in cState['controllers']:
