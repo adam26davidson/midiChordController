@@ -250,7 +250,7 @@ info = {
       0: {
         "name": "TOUCHPAD_X",
         "type": "ANALOG",
-        "range": {"top": 500, "bottom": -500},
+        "range": {"top": 900, "bottom": 0},
         "events":{ 
           "value": "TOUCHPAD_X_UPDATE"
         },
