@@ -25,7 +25,7 @@ class RhythmEngine():
       if message['type'] == 'off':
         asyncio.ensure_future(self.__handleChordOff(message['notes']))
       elif message['type'] == 'on':
-        self.__handleChordOn(message['notes'])
+        asyncio.ensure_future(self.__handleChordOn(message['notes']))
     elif message['player'] == 'bass':
       if message['type'] == 'off':
         self.__handleBassOff(message['notes'])
@@ -70,8 +70,9 @@ class RhythmEngine():
         self.__sendMessage(message)
         self.state['scheduledNotes'].remove(message['note'])
 
-  def __handleChordOn(self, notes):
-      self.state['scheduledNotes'] = []
+  async def __handleChordOn(self, notes):
+      async with self.scheduledNotesLock:
+        self.state['scheduledNotes'] = []
       intervals = None
       if self.state['strumMode'] != 'off':
         intervals = self.__getIntervals(len(notes))
