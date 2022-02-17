@@ -7,7 +7,7 @@ class RhythmEngine():
     self.callbacks = []
     self.scheduledNotesLock = asyncio.Lock()
     self.state = {
-      'strumMode': 'on', # 'random', 'regular', 'off'
+      'strumMode': 'random', # 'random', 'regular', 'off'
       'strumInterval': 0.05, # time beween notes or spread of distribution
       'strumOrder' : 'random', # 'up', 'down', or 'random'
       'scheduledNotes': []
