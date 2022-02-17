@@ -71,8 +71,8 @@ class RhythmEngine():
         self.state['scheduledNotes'].remove(message['note'])
 
   async def __handleChordOn(self, notes):
-      async with self.scheduledNotesLock:
-        self.state['scheduledNotes'] = []
+      # async with self.scheduledNotesLock:
+      #   self.state['scheduledNotes'] = []
       intervals = None
       if self.state['strumMode'] != 'off':
         intervals = self.__getIntervals(len(notes))
