@@ -91,6 +91,10 @@ class Controller(ABC):
       if event.value in config['ignoreValues']:
         ignoreValue = True
 
+    #ensure that value is not erroneously big or small
+    if abs(event.value) > 1.25 * max(range["top"], range["bottom"]):
+      ignoreValue = True
+      
     if not ignoreValue:
 
       # update value history
