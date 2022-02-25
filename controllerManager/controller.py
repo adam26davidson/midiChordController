@@ -79,8 +79,8 @@ class Controller(ABC):
     self.state[control['name']] = event.value
 
   def __sendEvent(self, event):
-    if event['name'] in self.meMap['map'].keys():
-      self.sendEvent(event)
+    #if event['name'] in self.meMap['map'].keys():
+    self.sendEvent(event)
 
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']
