@@ -331,7 +331,7 @@
         "alternateBass": [0, 7],
         "east": {
           "default": {
-            "alternate": [0, 1, 4, 7, 10]
+            "alternate": [1, 4, 7, 10]
           },
           "leftModulation": {
             "root": 5,
@@ -340,7 +340,7 @@
         },
         "north": {
           "default": {
-            "alternate": [0, 1, 4, 7, 10]
+            "alternate": [1, 4, 7, 10]
           }
         }
       },
