@@ -79,8 +79,8 @@ class Controller(ABC):
     self.state[control['name']] = event.value
 
   def __sendEvent(self, event):
-    #if event['name'] in self.meMap['map'].keys():
-    self.sendEvent(event)
+    if event['name'] in self.meMap['map'].keys():
+      self.sendEvent(event)
 
   def processAnalogEvent(self, event, control, controlState):
     range = control['range']
@@ -92,6 +92,11 @@ class Controller(ABC):
         ignoreValue = True
 
     if not ignoreValue:
+
+      # FOR TESTING DELETE THIS --------------------------- !!!! 
+      if control['events']['value'] == "RIGHT_STICK_Y_UPDATE":
+        print('rs value' + str(event.value))
+      # FOR TESTING DELETE THIS --------------------------- !!!!
 
       # update value history
       valueHistory = controlState["valueHistory"]
