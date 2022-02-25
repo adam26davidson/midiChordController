@@ -93,11 +93,6 @@ class Controller(ABC):
 
     if not ignoreValue:
 
-      # FOR TESTING DELETE THIS --------------------------- !!!! 
-      if control['events']['value'] == "RIGHT_STICK_Y_UPDATE":
-        print('rs value' + str(event.value))
-      # FOR TESTING DELETE THIS --------------------------- !!!!
-
       # update value history
       valueHistory = controlState["valueHistory"]
       valueHistory.append(event.value)

@@ -131,7 +131,7 @@ info = {
         "config": { 
           "averageCount": 1, 
           "centeredThreshold": 0.6,
-          "ignoreValues": [0] 
+          "ignoreValues": [0, 589828] 
         }
       },
       1: {
@@ -149,7 +149,7 @@ info = {
         "config": { 
           "averageCount": 1, 
           "centeredThreshold": 0.6,
-          "ignoreValues": [0] 
+          "ignoreValues": [0, 589828] 
         }
       },
       318: {
@@ -172,7 +172,7 @@ info = {
         "config": { 
           "averageCount": 1, 
           "centeredThreshold": 0.6,
-          "ignoreValues": [0] 
+          "ignoreValues": [0, 589828] 
         }
       },
       4: {
@@ -190,7 +190,7 @@ info = {
         "config": { 
           "averageCount": 1, 
           "centeredThreshold": 0.6,
-          "ignoreValues": [0] 
+          "ignoreValues": [0, 589828] 
         }
       }
 
