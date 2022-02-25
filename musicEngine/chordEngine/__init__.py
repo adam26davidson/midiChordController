@@ -450,7 +450,7 @@ class ChordEngine:
     return chordAdjustedOctaves
 
   def __setNumVoices(self, chordNotes):
-    return chordNotes[:self.state['voiceCount']] if self.state['voiceCount'] < len(chordNotes) else chordNotes
+    return chordNotes[-self.state['voiceCount':]] if self.state['voiceCount'] < len(chordNotes) else chordNotes
 
   def __setOctave(self, chordNotes):
     return [note + (self.state['chordOctave'] * 12) for note in chordNotes]
