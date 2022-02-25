@@ -76,8 +76,9 @@ class MusicEngine():
       if controller['role'] == 'primary':
         meMap = controller['meMap']['map']
     
-    command = meMap[event['name']]
-    if 'value' in event.keys():
-      self.commandMap[command](event['value'])
-    else:
-      self.commandMap[command]()
+    if event['name'] in self.commandMap.keys():
+      command = meMap[event['name']]
+      if 'value' in event.keys():
+        self.commandMap[command](event['value'])
+      else:
+        self.commandMap[command]()
