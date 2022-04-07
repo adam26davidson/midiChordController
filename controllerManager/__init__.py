@@ -14,6 +14,7 @@ class ControllerManager():
   
   def start(self):
     asyncio.ensure_future(self.waitForConnection())
+    asyncio.ensure_future(self.checkConnection())
 
   def subscribe(self, callBack):
     self.subscriberCallbacks.append(callBack)
@@ -33,20 +34,24 @@ class ControllerManager():
           connectedController.start()
           self.connectedControllers.append(connectedController)
 
-  async def waitForConnection(self):
+  async def waitForConnection(self, sleepTime=0.25):
     store.dispatch(actions.startWaitingForConnection())
     foundController = False
     connectedController = None
     while (not foundController):
-      for Controller in self.controllerClasses:
-        foundController = Controller.checkIfConnected()
+      for controller in self.controllerClasses:
+        foundController = controller.checkIfConnected()
         if foundController:
-          connectedController = Controller(self.sendEvent)
+          connectedController = controller(self.sendEvent)
           connectedController.start()
           self.connectedControllers.append(connectedController)
           store.dispatch(actions.stopWaitingForConnection())
           break
         await asyncio.sleep(0.25)
-      
+
+  async def checkConnection(self):
+    self.connectedControllers = [c for c in self.connectedControllers if c.checkIfConnected()]
+    self.waitForConnection(0.02)
+
   def handleStoreUpdate(self):
     pass
