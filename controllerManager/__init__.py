@@ -50,8 +50,9 @@ class ControllerManager():
         await asyncio.sleep(0.25)
 
   async def checkConnection(self):
-    self.connectedControllers = [c for c in self.connectedControllers if c.checkIfConnected()]
-    self.waitForConnection(0.02)
+    while True:
+      self.connectedControllers = [c for c in self.connectedControllers if c.checkIfConnected()]
+      self.waitForConnection(0.02)
 
   def handleStoreUpdate(self):
     pass
