@@ -159,6 +159,7 @@ class ChordEngine:
         self.state['bassIsPlaying'] = True
 
     def stopChord(self, button=None, buttonUp=True):
+        dontStop = False
         if button is not None:
             self.state['chordButtonStates'][button] = False
             dontStop = self.state['chordIsPlaying'] and button is not None \
