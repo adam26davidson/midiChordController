@@ -39,10 +39,10 @@ class ChordEngine:
             'chordOctave': 0,
             'spread': 0,
 
-            'voiceCount': 16,
+            'voiceCount': 5,
 
             # can be 'max' or 'absolute'
-            'voiceCountMode': 'max',
+            'voiceCountMode': 'absolute',
             'hold': False,
             'inversionLock': False,
 
@@ -159,7 +159,7 @@ class ChordEngine:
         self.state['bassIsPlaying'] = True
 
     def stopChord(self, button=None, buttonUp=True):
-        dontStop = False
+        dontStop = True
         if button is not None:
             self.state['chordButtonStates'][button] = False
             dontStop = self.state['chordIsPlaying'] and button is not None \
