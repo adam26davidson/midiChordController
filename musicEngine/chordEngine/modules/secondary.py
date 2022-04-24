@@ -129,6 +129,7 @@ class Secondary():
             voiceCount = numNotes + min(spread, voiceCountDiff)
         else:
             spread = Chord.convertSpread(state["spread"], numNotes)
+        spread -= (voiceCount - numNotes)
         pattern = [0]
         if (voiceCount > 1):
             voiceCountPatterns = VOICING_PATTERNS[str(
