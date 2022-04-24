@@ -481,8 +481,7 @@ class ChordEngine:
             root = chord.getRoot(self.state['key'])
             chord = secondary.getChord(self.state, root)
 
-        chordAdjustedNumVoices = self.__setNumVoices(chord)
-        chordAdjustedOctaves = self.__setOctave(chordAdjustedNumVoices)
+        chordAdjustedOctaves = self.__setOctave(chord)
         return chordAdjustedOctaves
 
     def __setNumVoices(self, chordNotes):
