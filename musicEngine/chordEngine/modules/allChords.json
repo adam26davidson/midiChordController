@@ -1,0 +1,28 @@
+{
+    "0": {
+        "end": {
+            "0": {
+                "2": {
+                    "0": {
+                        
+                    }
+                }
+            },
+            "1":
+        },
+        "1" : {
+            "end": {}
+        }
+    }
+}
+
+[0, 4, 7]
+
+allMidiForChord = allChords["0"]["4"]["7"]["end"]
+
+key #0-12
+spread # 0 - 12
+voiceCount #1 - 8
+inversion #-12 - 12
+
+midiNotes = allMidiForChord[key][spread][voiceCount][inversion];
