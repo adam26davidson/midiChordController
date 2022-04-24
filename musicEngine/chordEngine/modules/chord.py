@@ -133,6 +133,7 @@ class Chord:
         spread = 0
         if voiceCount > numNotes:
             spread = Chord.convertSpread(state["spread"], numNotes + 1)
+            spread -= (voiceCount - numNotes)
             voiceCount = numNotes + min(spread, voiceCountDiff)
         else:
             spread = Chord.convertSpread(state["spread"], numNotes)
