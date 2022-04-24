@@ -137,18 +137,18 @@ class ChordEngine:
         store.dispatch(actions.changeSettingLoading(False))
         self.state['loadingSetting'] = False
 
-    def playChord(self, button, fromButton=False):
+    def playChord(self, button=None, fromButton=False):
         if fromButton:
             self.state['chordButtonStates'][button] = True
             self.state['activeChord'] = button
-            self.__setChordType()
-            self.stopChord(buttonUp=False)
-            notes = self.__getChord(button)
-            self.__sendNotesOn(notes, player='chord')
-            self.__updateBass()
-            store.dispatch(actions.playChord(notes))
-            self.state['playingChordNotes'] = notes
-            self.state['chordIsPlaying'] = True
+        self.__setChordType()
+        self.stopChord(buttonUp=False)
+        notes = self.__getChord(button)
+        self.__sendNotesOn(notes, player='chord')
+        self.__updateBass()
+        store.dispatch(actions.playChord(notes))
+        self.state['playingChordNotes'] = notes
+        self.state['chordIsPlaying'] = True
 
     def playBass(self):
         self.stopBass(buttonUp=False)
