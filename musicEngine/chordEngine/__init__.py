@@ -1,6 +1,7 @@
 from .modules.dualChord import DualChord
 from .modules.modulation import Modulation
 from .modules.parseSecondaries import parseSecondaries
+from utils import findAllOctavesInRange
 from constants import SETTINGS, MAX_INVERSION_RANGE, MAX_OCTAVE_SHIFT, \
     MAX_BASS_RANGE, SPREAD_STEPS_PER_OCTAVE, MAX_SPREAD_OCTAVES, \
     MAX_VOICE_COUNT, INVERSION_SNAP
@@ -392,7 +393,7 @@ class ChordEngine:
         allScaleNotes = {}
         for key in range(0, 12):
             scaleNotes[key] = self.__findScaleNotesForKey(key)
-            allScaleNotes[key] = Chord.findAllNotes(scaleNotes[key])
+            allScaleNotes[key] = findAllOctavesInRange(scaleNotes[key])
         return scaleNotes, allScaleNotes
 
     def __sendNotesOn(self, notes, player):
