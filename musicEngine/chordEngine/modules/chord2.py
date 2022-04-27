@@ -6,6 +6,9 @@ DEFAULT_SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class Chord:
+    def init(self):
+        pass
+
     def __init__(self, chord, bass, root, scale=DEFAULT_SCALE):
         self.scale = scale
         self.root = root
@@ -13,7 +16,7 @@ class Chord:
         self.bass = bass
 
         self.rootNotes = self.__findRootNotes()
-        self.notes, self.allNotes = self.__findNotes(self.chord)
+        self.notes, self.allNotes = self.findNotes(self.chord)
         self.bassNotes, self.allBassNotes, \
             self.bassRoots = self.__findBassNotes(self.bass)
 
@@ -40,7 +43,7 @@ class Chord:
             rootNotes[key] = (self.scale[self.root] + key) % 12
         return rootNotes
 
-    def __findNotes(self, chord):
+    def findNotes(self, chord):
         notes = {}
         allNotes = {}
         for key in range(0, 12):
