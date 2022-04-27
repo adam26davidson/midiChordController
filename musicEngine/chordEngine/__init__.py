@@ -123,6 +123,7 @@ class ChordEngine:
         }
 
         types = self.__getChordType(self.state['activeChord'])
+        print(types)
         self.state['chordType'], self.state['rootType'] = types
 
         store.dispatch(actions.changeSetting(setting))
