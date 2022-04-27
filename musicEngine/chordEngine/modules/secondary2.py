@@ -29,6 +29,9 @@ class Secondary(Chord):
         bass = self.__getBassFromNotes(state, allNotes, allRoots)
         return bass
 
+    def getNoteForKey(self, note, key):
+        return (note + key) % 12
+
     def __getNotes(self, targetRoot):
         return self.notes[self.getRoot(targetRoot)]
 

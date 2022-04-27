@@ -37,6 +37,10 @@ class Chord:
         bass = self.__getBassFromNotes(state, allNotes, allRoots)
         return bass
 
+    def getNoteForKey(self, note, key):
+        index = (note + self.root) % len(self.scale)
+        return (self.scale[index] + key) % 12
+
     def __findRootNotes(self):
         rootNotes = {}
         for key in range(0, 12):
@@ -49,8 +53,7 @@ class Chord:
         for key in range(0, 12):
             keyNotes = []
             for note in chord:
-                index = (note + self.root) % len(self.scale)
-                keyNotes.append((self.scale[index] + key) % 12)
+                keyNotes.append(self.getNoteForKey(note, key))
                 keyNotes.sort()
             notes[key] = keyNotes
             allNotes[key] = findAllOctavesInRange(keyNotes)
@@ -59,8 +62,7 @@ class Chord:
     def __findBassNotes(self, degrees):
         roots = {}
         for key in range(0, 12):
-            index = (degrees[0] + self.root) % len(self.scale)
-            roots[key] = (self.scale[index] + key) % 12
+            roots[key] = self.getNoteForKey(degrees[0], key)
         notes, allNotes = self.findNotes(degrees)
         return notes, allNotes, roots
 

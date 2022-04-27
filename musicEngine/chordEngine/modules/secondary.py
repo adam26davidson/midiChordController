@@ -55,6 +55,9 @@ class Secondary():
             self.allMainBassNotes, self.mainBassRoots)
         self.altBassParams = Chord.findBassParams(
             self.allAltBassNotes, self.altBassRoots)
+    
+    def getNoteForKey(self, note, key):
+        return (note + key) % 12
 
     def findNotes(self, chord):
         notes = {}
