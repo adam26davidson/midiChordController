@@ -61,7 +61,7 @@ class Chord:
         for key in range(0, 12):
             index = (degrees[0] + self.root) % len(self.scale)
             roots[key] = (self.scale[index] + key) % 12
-        notes, allNotes = self.__findNotes(degrees)
+        notes, allNotes = self.findNotes(degrees)
         return notes, allNotes, roots
 
     def __convertSpread(spread, chordLength):
