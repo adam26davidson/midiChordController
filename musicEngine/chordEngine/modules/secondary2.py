@@ -2,8 +2,8 @@ from .chord2 import Chord, DEFAULT_SCALE
 
 
 class Secondary(Chord):
-    def __init__(self, chord, bass, interval):
-        self.scale = DEFAULT_SCALE
+    def __init__(self, chord, bass, interval, scale=DEFAULT_SCALE):
+        self.scale = scale
         self.interval = interval
         self.chord = chord
         self.bass = bass
