@@ -17,6 +17,7 @@ class Chord:
 
         self.rootNotes = self.__findRootNotes()
         self.notes, self.allNotes = self.findNotes(self.chord)
+        print(self.notes)
         self.bassNotes, self.allBassNotes, \
             self.bassRoots = self.findBassNotes(self.bass)
 

@@ -431,6 +431,7 @@ class ChordEngine:
             if (self.state['modulation'] == "none"):
                 rootType = chord.getRoot(self.state['key'])
                 chordType = chord.getNoteTypes(self.state)
+                print("chordType: ", chordType)
                 return chordType, rootType
             else:
                 modulation = self.modulations[self.state['modulation']]
