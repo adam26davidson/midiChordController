@@ -10,7 +10,7 @@ class Secondary(Chord):
 
         self.notes, self.allNotes = self.findNotes(self.chord)
         self.bassNotes, self.allBassNotes, \
-            self.bassRoots = self.__findBassNotes(self.bass)
+            self.bassRoots = self.findBassNotes(self.bass)
 
     def getChord(self, state, targetRoot):
         allNotes = self.__getAllNotes(targetRoot)
