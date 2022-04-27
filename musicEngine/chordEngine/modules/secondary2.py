@@ -8,7 +8,7 @@ class Secondary(Chord):
         self.chord = chord
         self.bass = bass
 
-        self.notes, self.allNotes = self.__findChordNotes(self.chord)
+        self.notes, self.allNotes = self.__findNotes(self.chord)
         self.bassNotes, self.allBassNotes, \
             self.bassRoots = self.__findBassNotes(self.bass)
 

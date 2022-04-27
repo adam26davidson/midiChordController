@@ -13,7 +13,7 @@ class Chord:
         self.bass = bass
 
         self.rootNotes = self.__findRootNotes()
-        self.notes, self.allNotes = self.__findChordNotes(self.chord)
+        self.notes, self.allNotes = self.__findNotes(self.chord)
         self.bassNotes, self.allBassNotes, \
             self.bassRoots = self.__findBassNotes(self.bass)
 
@@ -40,7 +40,7 @@ class Chord:
             rootNotes[key] = (self.scale[self.root] + key) % 12
         return rootNotes
 
-    def __findChordNotes(self, chord):
+    def __findNotes(self, chord):
         notes = {}
         allNotes = {}
         for key in range(0, 12):
@@ -58,7 +58,7 @@ class Chord:
         for key in range(0, 12):
             index = (degrees[0] + self.root) % len(self.scale)
             roots[key] = (self.scale[index] + key) % 12
-        notes, allNotes = self.findNotes(degrees)
+        notes, allNotes = self.__findNotes(degrees)
         return notes, allNotes, roots
 
     def __convertSpread(spread, chordLength):
