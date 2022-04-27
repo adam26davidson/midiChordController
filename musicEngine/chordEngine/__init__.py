@@ -1,6 +1,6 @@
-from .modules.chord import Chord
+from .modules.dualChord import DualChord
 from .modules.modulation import Modulation
-from .modules.secondary import parseSecondaries
+from .modules.parseSecondaries import parseSecondaries
 from constants import SETTINGS, MAX_INVERSION_RANGE, MAX_OCTAVE_SHIFT, \
     MAX_BASS_RANGE, SPREAD_STEPS_PER_OCTAVE, MAX_SPREAD_OCTAVES, \
     MAX_VOICE_COUNT, INVERSION_SNAP
@@ -37,7 +37,7 @@ class ChordEngine:
             'inversion': 0,
             'bassPosition': 0,
             'chordOctave': 0,
-            'spread': 0,
+            'spread': SPREAD_STEPS_PER_OCTAVE,
 
             'voiceCount': 5,
 
@@ -108,10 +108,10 @@ class ChordEngine:
         self.state['allScaleNotes'] = allScaleNotes
 
         self.chords = {
-            "south": Chord(scale, self.setting["chords"]["south"]),
-            "west": Chord(scale, self.setting["chords"]["west"]),
-            "north": Chord(scale, self.setting["chords"]["north"]),
-            "east": Chord(scale, self.setting["chords"]["east"])
+            "south": DualChord(scale, self.setting["chords"]["south"]),
+            "west": DualChord(scale, self.setting["chords"]["west"]),
+            "north": DualChord(scale, self.setting["chords"]["north"]),
+            "east": DualChord(scale, self.setting["chords"]["east"])
         }
 
         self.secondaries = parseSecondaries(self.setting["secondaries"])

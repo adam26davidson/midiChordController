@@ -13,6 +13,7 @@ INVERSION_SNAP = 0.15
 ANIMATION_STEP = 1.0/30.0
 MIDI_STEP = 1.0/20.0
 CENTER_NOTE = 65  # center of home chord
+BASS_CENTER = 42
 BASS_OCTAVE_RANGE = {"min": 36, "max": 47}
 VOICING_PATTERNS = json.load(open(PARENT_PATH + "/musicEngine/chordEngine/modules/voicingPatterns/testPatterns.json"))['voicingPatterns']
 SETTINGS = json.load(open(PARENT_PATH + "/musicEngine/chordEngine/settings.json"))

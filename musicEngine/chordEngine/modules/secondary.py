@@ -1,6 +1,4 @@
 from .chord import Chord
-from constants import VOICING_PATTERNS, CENTER_NOTE, SPREAD_STEPS_PER_OCTAVE
-
 
 def parseSecondaries(settings):
     def parseSecondary(setting):
@@ -117,44 +115,8 @@ class Secondary():
             else:
                 return voicings[root][0][0]
 
-    def __getChordNotes(self, state, noteTypes, allNotes):
-        numNotes = len(noteTypes)
-        voiceCount = state["voiceCount"]
-        if state["voiceCountMode"] == "max" and voiceCount > numNotes:
-            voiceCount = numNotes
-        voiceCountDiff = voiceCount - numNotes
-        spread = 0
-        if voiceCount > numNotes:
-            spread = Chord.convertSpread(state["spread"], numNotes + 1)
-            voiceCount = numNotes + min(spread, voiceCountDiff)
-        else:
-            spread = Chord.convertSpread(state["spread"], numNotes)
-        spread -= (voiceCount - numNotes)
-        pattern = [0]
-        if (voiceCount > 1):
-            voiceCountPatterns = VOICING_PATTERNS[str(
-                numNotes)][str(voiceCount)]
-            maxSpread = len(voiceCountPatterns) - 1
-            spread = min(spread, maxSpread)
-            pattern = voiceCountPatterns[spread]
-        spreadSemitones = (state["spread"] / SPREAD_STEPS_PER_OCTAVE) * 12
-        middleBottomNoteTarget = int(CENTER_NOTE - (spreadSemitones / 2))
-        middleBottomNoteIndex = Chord.findClosestNote(
-            middleBottomNoteTarget, allNotes)
-        bottomNoteIndex = middleBottomNoteIndex + state["inversion"]
-        bottomNoteIndex = max(0, bottomNoteIndex)
-        topNoteIndex = pattern[len(pattern) - 1] + bottomNoteIndex
-        if (topNoteIndex > (len(allNotes) - 1)):
-            bottomNoteIndex -= topNoteIndex - (len(allNotes) - 1)
-            topNoteIndex = (len(allNotes) - 1)
-        chord = []
-        for noteOffset in pattern:
-            noteIndex = bottomNoteIndex + noteOffset
-            chord.append(allNotes[noteIndex])
-        return chord
-
-    def getRoot(self, key):
-        return (key + self.interval) % 12
+    def getRoot(self, targetNote):
+        return (targetNote + self.interval) % 12
 
     def getNoteTypes(self, state, key):
         root = self.getRoot(key)
@@ -166,10 +128,10 @@ class Secondary():
     def getChord(self, state, key):
         root = (key + self.interval) % 12
         if state['alternate']:
-            return self.__getChordNotes(state, self.altNotes[root],
+            return Chord.__getChordNotes(state, self.altNotes[root],
                                         self.allAltNotes[root])
         else:
-            return self.__getChordNotes(state, self.mainNotes[root],
+            return Chord.__getChordNotes(state, self.mainNotes[root],
                                         self.allMainNotes[root])
 
     def getBass(self, state, key):
