@@ -109,10 +109,10 @@ class ChordEngine:
         self.state['allScaleNotes'] = allScaleNotes
 
         self.chords = {
-            "south": DualChord(scale, self.setting["chords"]["south"]),
-            "west": DualChord(scale, self.setting["chords"]["west"]),
-            "north": DualChord(scale, self.setting["chords"]["north"]),
-            "east": DualChord(scale, self.setting["chords"]["east"])
+            "south": DualChord(self.setting["chords"]["south"], scale),
+            "west": DualChord(self.setting["chords"]["west"], scale),
+            "north": DualChord(self.setting["chords"]["north"], scale),
+            "east": DualChord(self.setting["chords"]["east"], scale)
         }
 
         self.secondaries = parseSecondaries(self.setting["secondaries"])
