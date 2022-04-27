@@ -6,8 +6,6 @@ DEFAULT_SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class Chord:
-    def init(self):
-        pass
 
     def __init__(self, chord, bass, root, scale=DEFAULT_SCALE):
         self.scale = scale
