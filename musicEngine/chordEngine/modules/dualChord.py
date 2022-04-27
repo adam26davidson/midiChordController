@@ -20,15 +20,15 @@ class DualChord:
 
     def getChord(self, state):
         chord = self.__getChordObject(state)
-        chord.getChord(state)
+        return chord.getChord(state)
 
     def getBass(self, state):
         chord = self.__getChordObject(state)
-        chord.getBass(state)
+        return chord.getBass(state)
 
     def getNoteTypes(self, state):
         chord = self.__getChordObject(state)
-        chord.getNoteTypes(state)
+        return chord.getNoteTypes(state)
 
     def getRoot(self, state):
         return self.main.getRoot(state)
