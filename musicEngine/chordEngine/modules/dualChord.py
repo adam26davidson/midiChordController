@@ -19,22 +19,22 @@ class DualChord:
         )
 
     def getChord(self, state):
-        if state['alternate']:
-            return self.alternate.getChord(state)
-        else:
-            return self.main.getChord(state)
+        chord = self.__getChordObject(state)
+        chord.getChord(state)
 
     def getBass(self, state):
-        if state['alternate']:
-            return self.alternate.getBass(state)
-        else:
-            return self.main.getBass(state)
+        chord = self.__getChordObject(state)
+        chord.getBass(state)
 
     def getNoteTypes(self, state):
-        if state['alternate']:
-            return self.alternate.getNoteTypes(state)
-        else:
-            return self.main.getNoteTypes(state)
+        chord = self.__getChordObject(state)
+        chord.getNoteTypes(state)
 
     def getRoot(self, state):
         return self.main.getRoot(state)
+
+    def __getChordObject(self, state):
+        if state['alternate']:
+            return self.alternate
+        else:
+            return self.main

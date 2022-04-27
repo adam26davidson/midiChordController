@@ -463,14 +463,15 @@ class ChordEngine:
     def __getChord(self, button):
         secState = self.state['secondary']
         chord = self.chords[button]
+        chordNotes = []
         # secondary inactive
         if (secState == "none"):
             if (self.state['modulation'] == "none"):
-                chord = chord.getChord(self.state)
+                chordNotes = chord.getChord(self.state)
             else:
                 modulation = self.modulations[self.state['modulation']]
                 modlessChord = chord.getChord(self.state)
-                chord = modulation.apply(modlessChord, self.__getScale())
+                chordNotes = modulation.apply(modlessChord, self.__getScale())
         # secondary is active
         else:
             modKey = "default"
@@ -480,16 +481,10 @@ class ChordEngine:
                 modKey = "rightModulation"
             secondary = self.secondaries[secState][button][modKey]
             root = chord.getRoot(self.state['key'])
-            chord = secondary.getChord(self.state, root)
+            chordNotes = secondary.getChord(self.state, root)
 
-        chordAdjustedOctaves = self.__setOctave(chord)
+        chordAdjustedOctaves = self.__setOctave(chordNotes)
         return chordAdjustedOctaves
-
-    def __setNumVoices(self, chordNotes):
-        if self.state['voiceCount'] < len(chordNotes):
-            return chordNotes[-self.state['voiceCount']:]
-        else:
-            return chordNotes
 
     def __setOctave(self, chordNotes):
         return [note + (self.state['chordOctave'] * 12) for note in chordNotes]
