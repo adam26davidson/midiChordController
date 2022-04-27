@@ -489,6 +489,7 @@ class ChordEngine:
         return chordAdjustedOctaves
 
     def __setOctave(self, chordNotes):
+        print('chordNotes: ', chordNotes)
         return [note + (self.state['chordOctave'] * 12) for note in chordNotes]
 
     def __getScale(self):
