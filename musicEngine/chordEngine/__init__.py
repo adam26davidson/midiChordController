@@ -450,8 +450,8 @@ class ChordEngine:
                 modKey = "rightModulation"
             secondary = self.secondaries[secState][button][modKey]
             chordRoot = chord.getRoot(self.state['key'])
-            rootType = secondary.getRoot(chordRoot)
-            chordType = secondary.getNoteTypes(chordRoot)
+            rootType = secondary.getRoot(self.state, chordRoot)
+            chordType = secondary.getNoteTypes(self.state, chordRoot)
             chordType.sort()
             return chordType, rootType
 
