@@ -8,9 +8,9 @@ class Secondary(Chord):
         self.chord = chord
         self.bass = bass
 
-        self.notes, self.allNotes = self.findNotes(self.chord)
-        self.bassNotes, self.allBassNotes, \
-            self.bassRoots = self.findBassNotes(self.bass)
+        self.notes, self.allNotes = self.findAllNotes(self.chord)
+        self.bassNotes, self.allBassNotes = self.findAllNotes(self.bass)
+        self.bassRoots, self.allBassRoots = self.findAllNotes([self.bass[0]])
 
     def getChord(self, state, targetRoot):
         allNotes = self.__getAllNotes(targetRoot)
@@ -25,7 +25,7 @@ class Secondary(Chord):
 
     def getBass(self, state, targetRoot):
         allNotes = self.__getAllBassNotes(targetRoot)
-        allRoots = self.__getBassRoots(targetRoot)
+        allRoots = self.__getAllBassRoots(targetRoot)
         bass = self.__getBassFromNotes(state, allNotes, allRoots)
         return bass
 
@@ -41,5 +41,5 @@ class Secondary(Chord):
     def __getAllBassNotes(self, targetRoot):
         return self.allBassNotes[self.getRoot(targetRoot)]
 
-    def __getBassRoots(self, targetRoot):
-        return self.bassRoots[self.getRoot(targetRoot)]
+    def __getAllBassRoots(self, targetRoot):
+        return self.allBassRoots[self.getRoot(targetRoot)]

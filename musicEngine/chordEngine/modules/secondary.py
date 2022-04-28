@@ -43,8 +43,8 @@ class Secondary():
         self.altBass = setting["alternateBass"]
 
         # find actual notes and all midi notes for each key
-        self.mainNotes, self.allMainNotes = self.findNotes(self.main)
-        self.altNotes, self.allAltNotes = self.findNotes(self.alt)
+        self.mainNotes, self.allMainNotes = self.findAllNotes(self.main)
+        self.altNotes, self.allAltNotes = self.findAllNotes(self.alt)
         self.mainBassNotes, self.allMainBassNotes, self.mainBassRoots = self.findBassNotes(
             self.mainBass)
         self.altBassNotes, self.allAltBassNotes, self.altBassRoots = self.findBassNotes(
@@ -59,13 +59,13 @@ class Secondary():
     def getNoteForKey(self, note, key):
         return (note + key) % 12
 
-    def findNotes(self, chord):
+    def findAllNotes(self, chord):
         notes = {}
         allNotes = {}
         for key in range(0, 12):
             notes[key] = []
             for note in chord:
-                notes[key].append((note + key) % 12)
+                notes[key].append(self.getNoteForKey(note, key))
             notes[key].sort()
             allNotes[key] = Chord.findAllNotes(notes[key])
         return notes, allNotes
@@ -74,7 +74,7 @@ class Secondary():
         roots = {}
         for key in range(0, 12):
             roots[key] = (notes[0] + key) % 12
-        notes, allNotes = self.findNotes(notes)
+        notes, allNotes = self.findAllNotes(notes)
         return notes, allNotes, roots
 
     def getBassFromParams(self, state, key, params, allNotes):

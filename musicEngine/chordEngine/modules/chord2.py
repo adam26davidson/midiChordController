@@ -14,10 +14,9 @@ class Chord:
         self.bass = bass
 
         self.rootNotes = self.__findRootNotes()
-        self.notes, self.allNotes = self.findNotes(self.chord)
-        print(self.notes)
-        self.bassNotes, self.allBassNotes, \
-            self.bassRoots = self.findBassNotes(self.bass)
+        self.notes, self.allNotes = self.findAllNotes(self.chord)
+        self.bassNotes, self.allBassNotes = self.findAllNotes(self.bass)
+        self.bassRoots, self.allBassRoots = self.findAllNotes([self.bass[0]])
 
     def getChord(self, state):
         allNotes = self.__getAllNotes(state['key'])
@@ -32,7 +31,7 @@ class Chord:
 
     def getBass(self, state):
         allNotes = self.__getAllBassNotes(state['key'])
-        allRoots = self.__getBassRoots(state['key'])
+        allRoots = self.__getAllBassRoots(state['key'])
         bass = self.__getBassFromNotes(state, allNotes, allRoots)
         return bass
 
@@ -46,24 +45,17 @@ class Chord:
             rootNotes[key] = (self.scale[self.root] + key) % 12
         return rootNotes
 
-    def findNotes(self, chord):
+    def findAllNotes(self, noteDegrees):
         notes = {}
         allNotes = {}
         for key in range(0, 12):
             keyNotes = []
-            for note in chord:
+            for note in noteDegrees:
                 keyNotes.append(self.getNoteForKey(note, key))
                 keyNotes.sort()
             notes[key] = keyNotes
             allNotes[key] = findAllOctavesInRange(keyNotes)
         return notes, allNotes
-
-    def findBassNotes(self, degrees):
-        roots = {}
-        for key in range(0, 12):
-            roots[key] = self.getNoteForKey(degrees[0], key)
-        notes, allNotes = self.findNotes(degrees)
-        return notes, allNotes, roots
 
     def __convertSpread(spread, chordLength):
         spreadsPerOct = chordLength - 1
@@ -115,9 +107,7 @@ class Chord:
     def __getChordFromNotes(self, state, allNotes):
         params = self.__getPatternParams(state)
         pattern = self.__getChordPattern(*params)
-        print('__getChordFromNotes allNotes: ', allNotes)
         chord = self.__getChordFromPattern(state, pattern, allNotes)
-        print("__getChordFromNotes chord: ", chord)
         return chord
 
     def __getBassFromNotes(self, state, allNotes, allRoots):
@@ -138,5 +128,5 @@ class Chord:
     def __getAllBassNotes(self, key):
         return self.allBassNotes[key]
 
-    def __getBassRoots(self, key):
-        return self.bassRoots[key]
+    def __getAllBassRoots(self, key):
+        return self.allBassRoots[key]
