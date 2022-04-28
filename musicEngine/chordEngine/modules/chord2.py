@@ -23,8 +23,8 @@ class Chord:
         chord = self.__getChordFromNotes(state, allNotes)
         return chord
 
-    def getRoot(self, key):
-        return self.rootNotes[key]
+    def getRoot(self, state):
+        return self.rootNotes[state['key']]
 
     def getNoteTypes(self, state):
         return self.__getNotes(state['key'])
