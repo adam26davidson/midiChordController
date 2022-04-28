@@ -30,6 +30,7 @@ class Secondary(Chord):
         return self.__getNotes(targetRoot)
 
     def getNoteForKey(self, note, key):
+        print("secondary getNoteForKey called")
         return (note + key) % 12
 
     def __getNotes(self, targetRoot):

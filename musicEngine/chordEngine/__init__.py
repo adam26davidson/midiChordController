@@ -123,7 +123,6 @@ class ChordEngine:
         }
 
         types = self.__getChordType(self.state['activeChord'])
-        print(types)
         self.state['chordType'], self.state['rootType'] = types
 
         store.dispatch(actions.changeSetting(setting))
@@ -431,7 +430,6 @@ class ChordEngine:
             if (self.state['modulation'] == "none"):
                 rootType = chord.getRoot(self.state)
                 chordType = chord.getNoteTypes(self.state)
-                print("chordType: ", chordType)
                 return chordType, rootType
             else:
                 modulation = self.modulations[self.state['modulation']]
@@ -489,7 +487,6 @@ class ChordEngine:
         return chordAdjustedOctaves
 
     def __setOctave(self, chordNotes):
-        print('chordNotes: ', chordNotes)
         return [note + (self.state['chordOctave'] * 12) for note in chordNotes]
 
     def __getScale(self):
