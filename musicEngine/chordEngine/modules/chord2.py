@@ -115,6 +115,7 @@ class Chord:
     def __getChordFromNotes(self, state, allNotes):
         params = self.__getPatternParams(state)
         pattern = self.__getChordPattern(*params)
+        print('__getChordFromNotes allNotes: ', allNotes)
         chord = self.__getChordFromPattern(state, pattern, allNotes)
         print("__getChordFromNotes chord: ", chord)
         return chord
