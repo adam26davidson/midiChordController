@@ -109,7 +109,7 @@ class Chord:
         chord = []
         for noteOffset in pattern:
             noteIndex = bottomNoteIndex + noteOffset
-            chord.append(self.allNotes[noteIndex])
+            chord.append(allNotes[noteIndex])
         return chord
 
     def __getChordFromNotes(self, state, allNotes):
