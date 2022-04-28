@@ -35,7 +35,7 @@ class DualChord:
         return chord.getRoot(*args)
 
     def __getChordObject(self, state, targetNote):
-        args = (state) if targetNote is not None else (state, targetNote)
+        args = (state) if targetNote is None else (state, targetNote)
         if state['alternate']:
             return self.alternate, args
         else:
