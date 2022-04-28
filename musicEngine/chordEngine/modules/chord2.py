@@ -20,7 +20,7 @@ class Chord:
 
     def getChord(self, state):
         allNotes = self.__getAllNotes(state['key'])
-        chord = self.__getChordFromNotes(state, allNotes)
+        chord = self.getChordFromNotes(state, allNotes)
         return chord
 
     def getRoot(self, state):
@@ -32,7 +32,7 @@ class Chord:
     def getBass(self, state):
         allNotes = self.__getAllBassNotes(state['key'])
         allRoots = self.__getAllBassRoots(state['key'])
-        bass = self.__getBassFromNotes(state, allNotes, allRoots)
+        bass = self.getBassFromNotes(state, allNotes, allRoots)
         return bass
 
     def getNoteForKey(self, note, key):
@@ -104,13 +104,13 @@ class Chord:
             chord.append(allNotes[noteIndex])
         return chord
 
-    def __getChordFromNotes(self, state, allNotes):
+    def getChordFromNotes(self, state, allNotes):
         params = self.__getPatternParams(state)
         pattern = self.__getChordPattern(*params)
         chord = self.__getChordFromPattern(state, pattern, allNotes)
         return chord
 
-    def __getBassFromNotes(self, state, allNotes, allRoots):
+    def getBassFromNotes(self, state, allNotes, allRoots):
         centerIndexInRoots = findClosestNote(BASS_CENTER, allRoots)
         centerNote = allRoots[centerIndexInRoots]
         centerIndex = findClosestNote(centerNote, allNotes)

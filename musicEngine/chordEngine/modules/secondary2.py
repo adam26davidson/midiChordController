@@ -14,13 +14,13 @@ class Secondary(Chord):
 
     def getChord(self, state, targetRoot):
         allNotes = self.__getAllNotes(targetRoot)
-        chord = self.__getChordFromNotes(state, allNotes)
+        chord = self.getChordFromNotes(state, allNotes)
         return chord
 
     def getBass(self, state, targetRoot):
         allNotes = self.__getAllBassNotes(targetRoot)
         allRoots = self.__getAllBassRoots(targetRoot)
-        bass = self.__getBassFromNotes(state, allNotes, allRoots)
+        bass = self.getBassFromNotes(state, allNotes, allRoots)
         return bass
 
     def getRoot(self, state, targetRoot):
