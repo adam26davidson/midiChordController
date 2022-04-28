@@ -429,13 +429,13 @@ class ChordEngine:
         # secondary inactive
         if (secState == "none"):
             if (self.state['modulation'] == "none"):
-                rootType = chord.getRoot(self.state['key'])
+                rootType = chord.getRoot(self.state)
                 chordType = chord.getNoteTypes(self.state)
                 print("chordType: ", chordType)
                 return chordType, rootType
             else:
                 modulation = self.modulations[self.state['modulation']]
-                root = chord.getRoot(self.state['key'])
+                root = chord.getRoot(self.state)
                 rootType = modulation.applyOne(root, self.__getScale()) % 12
                 rawTypes = chord.getNoteTypes(self.state)
                 moddedTypes = modulation.apply(rawTypes, self.__getScale())
@@ -449,7 +449,7 @@ class ChordEngine:
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
             secondary = self.secondaries[secState][button][modKey]
-            chordRoot = chord.getRoot(self.state['key'])
+            chordRoot = chord.getRoot(self.state)
             rootType = secondary.getRoot(self.state, chordRoot)
             chordType = secondary.getNoteTypes(self.state, chordRoot)
             chordType.sort()
@@ -482,7 +482,7 @@ class ChordEngine:
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
             secondary = self.secondaries[secState][button][modKey]
-            root = chord.getRoot(self.state['key'])
+            root = chord.getRoot(self.state)
             chordNotes = secondary.getChord(self.state, root)
 
         chordAdjustedOctaves = self.__setOctave(chordNotes)
@@ -517,7 +517,7 @@ class ChordEngine:
                 modKey = "rightModulation"
 
         secondary = self.secondaries[secLabel][chordLabel][modKey]
-        return secondary.getBass(self.state, chord.getRoot(self.state['key']))
+        return secondary.getBass(self.state, chord.getRoot(self.state))
 
     def __updateChord(self):
         if (self.state['chordIsPlaying']):
