@@ -132,7 +132,7 @@ class Chord:
         return self.notes[key]
 
     def __getAllNotes(self, key):
-        return self.notes[key]
+        return self.allNotes[key]
 
     def __getAllBassNotes(self, key):
         return self.allBassNotes[key]
