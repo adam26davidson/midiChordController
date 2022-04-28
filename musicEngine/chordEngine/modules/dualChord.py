@@ -18,23 +18,25 @@ class DualChord:
             rootOrInterval, scale
         )
 
-    def getChord(self, state):
-        chord = self.__getChordObject(state)
-        return chord.getChord(state)
+    def getChord(self, state, targetNote=None):
+        chord, args = self.__getChordObject(state, targetNote)
+        return chord.getChord(*args)
 
-    def getBass(self, state):
-        chord = self.__getChordObject(state)
-        return chord.getBass(state)
+    def getBass(self, state, targetNote=None):
+        chord, args = self.__getChordObject(state, targetNote)
+        return chord.getBass(*args)
 
-    def getNoteTypes(self, state):
-        chord = self.__getChordObject(state)
-        return chord.getNoteTypes(state)
+    def getNoteTypes(self, state, targetNote=None):
+        chord, args = self.__getChordObject(state, targetNote)
+        return chord.getNoteTypes(*args)
 
-    def getRoot(self, state):
-        return self.main.getRoot(state)
+    def getRoot(self, state, targetNote=None):
+        chord, args = self.__getChordObject(state, targetNote)
+        return chord.getRoot(*args)
 
-    def __getChordObject(self, state):
+    def __getChordObject(self, state, targetNote):
+        args = (state) if targetNote is not None else (state, targetNote)
         if state['alternate']:
-            return self.alternate
+            return self.alternate, args
         else:
-            return self.main
+            return self.main, args

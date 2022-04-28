@@ -17,17 +17,17 @@ class Secondary(Chord):
         chord = self.__getChordFromNotes(state, allNotes)
         return chord
 
-    def getRoot(self, targetRoot):
-        return (targetRoot + self.interval) % 12
-
-    def getNoteTypes(self, targetRoot):
-        return self.__getNotes(targetRoot)
-
     def getBass(self, state, targetRoot):
         allNotes = self.__getAllBassNotes(targetRoot)
         allRoots = self.__getAllBassRoots(targetRoot)
         bass = self.__getBassFromNotes(state, allNotes, allRoots)
         return bass
+
+    def getRoot(self, state, targetRoot):
+        return (targetRoot + self.interval) % 12
+
+    def getNoteTypes(self, state, targetRoot):
+        return self.__getNotes(targetRoot)
 
     def getNoteForKey(self, note, key):
         return (note + key) % 12
