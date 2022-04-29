@@ -46,6 +46,7 @@ class Display():
             'shadowBassNote': 48,
             'playingBassNote': 0,
             'chordOctave': 0,
+            'voiceCount': 0,
 
             'inversionThumbValue': 0,
             'inversionMode': 'continuous',
@@ -146,6 +147,9 @@ class Display():
         if meState['chordOctave'] != self.state['chordOctave']:
             self.state['chordOctave'] = meState['chordOctave']
             self.__setOctave(self.state['chordOctave'])
+        if meState['voiceCount'] != self.state['voiceCount']:
+            self.state['voiceCount'] = meState['voiceCount']
+            self.__setVoiceCount(self.state['voiceCount'])
 
         meMap = None
         primary = None
@@ -300,3 +304,6 @@ class Display():
 
     def __setOctave(self, octave):
         self.textDisplay.setOctave(octave)
+
+    def __setVoiceCount(self, voiceCount):
+        self.textDisplay.setVoices(voiceCount)

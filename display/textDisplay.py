@@ -97,6 +97,17 @@ class TextDisplay(tk.Frame):
         self.octaveValue.pack(side="left")
         self.octaveFrame.pack(side='top', pady=(10, 0))
 
+        self.voicesFrame = tk.Frame(self, bg=self.bgColor)
+        self.voicesLabel = tk.Label(
+            self.voicesFrame, text="voices: ",
+            bg=self.bgColor, fg=self.color, font=mediumFont)
+        self.voicesValue = tk.Label(
+            self.voicesFrame, text="0",
+            bg=self.bgColor, fg=self.activeColor, font=bigFont)
+        self.voicesLabel.pack(side="left")
+        self.voicesValue.pack(side="left")
+        self.voicesFrame.pack(side='top', pady=(10, 0))
+
         self.pack(side="top", padx=(20, 20), pady=(20, 20))
 
     def setSetting(self, name):
@@ -124,3 +135,6 @@ class TextDisplay(tk.Frame):
 
     def setOctave(self, octave):
         self.octaveValue.configure(text=str(octave))
+
+    def setVoices(self, voices):
+        self.voicesValue.configure(text=str(voices))
