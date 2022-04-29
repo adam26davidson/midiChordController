@@ -1,4 +1,6 @@
-import json, os
+import json
+import os
+
 PARENT_PATH = os.path.dirname(os.path.abspath(__file__))
 FULLSCREEN = True
 MIN_NOTE = 21
@@ -15,5 +17,9 @@ MIDI_STEP = 1.0/20.0
 CENTER_NOTE = 65  # center of home chord
 BASS_CENTER = 42
 BASS_OCTAVE_RANGE = {"min": 36, "max": 47}
-VOICING_PATTERNS = json.load(open(PARENT_PATH + "/musicEngine/chordEngine/modules/voicingPatterns/testPatterns.json"))['voicingPatterns']
-SETTINGS = json.load(open(PARENT_PATH + "/musicEngine/chordEngine/settings.json"))
+VOICING_PATTERN_PATH = \
+    "/musicEngine/chordEngine/modules/voicingPatterns/voicingPatterns.json"
+VOICING_PATTERNS = json.load(open(
+    PARENT_PATH + VOICING_PATTERN_PATH))['voicingPatterns']
+SETTINGS = json.load(open(
+    PARENT_PATH + "/musicEngine/chordEngine/settings.json"))

@@ -110,12 +110,12 @@ def reducer(state, action):
 
     elif action['type'] == 'me/distributeChannelsChanged':
         return state.set(
-            'distributeChannels', 
+            'distributeChannels',
             action['data']['distributeChannels'])
 
     elif action['type'] == 'me/noteVelocityChanged':
         return state.set(
-            'distributeChannels', 
+            'distributeChannels',
             action['data']['distributeChannels'])
 
     elif action['type'] == 'me/holdChanged':

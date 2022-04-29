@@ -1,4 +1,5 @@
 class Modulation():
+
     def __init__(self, scale, setting):
         self.scale = scale
         if setting["type"] == "modal":
@@ -18,7 +19,6 @@ class Modulation():
         for c in range(0, cycles):
             val = scalePattern.pop(0)
             scalePattern.append(val)
-        # convert scalePattern back to
         explicitMap = []
         for i in range(0, 12):
             if scalePattern[i]:
@@ -38,9 +38,7 @@ class Modulation():
         return modNotes
 
     def applyOne(self, note, scale):
-        # the index of the note in the scale
         index = scale.index(note % 12)
-        # print(index)
         return note + self.offsets[index]
 
     def applyToScale(self):

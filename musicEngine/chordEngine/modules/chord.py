@@ -1,154 +1,96 @@
-from constants import VOICING_PATTERNS, SPREAD_STEPS_PER_OCTAVE, \
-    CENTER_NOTE, MIN_NOTE, MAX_NOTE, BASS_OCTAVE_RANGE
+from constants import BASS_CENTER, VOICING_PATTERNS, SPREAD_STEPS_PER_OCTAVE, \
+    CENTER_NOTE
+from utils import findAllOctavesInRange, findClosestNote
+
+DEFAULT_SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class Chord:
-    def __init__(self, scale, setting):
 
-        self.scale = scale  # set scale for convenience
-        self.root = setting["root"]  # index of the root in key agnostic scale
+    def __init__(self, chord, bass, root, scale=DEFAULT_SCALE):
+        self.scale = scale
+        self.root = root
+        self.chord = chord
+        self.bass = bass
 
-        # indices of chord notes in key agnostic scale
-        self.main = setting["main"]
-        # indices of alternate chord notes in key agnostic scale
-        self.mainBass = setting["mainBass"]
-        # indices of alternate chord notes in key agnostic scale
-        self.alt = setting["alternate"]
-        # indices of alternate chord notes in key agnostic scale
-        self.altBass = setting["alternateBass"]
+        self.rootNotes = self.__findRootNotes()
+        self.notes, self.allNotes = self.findAllNotes(self.chord)
+        self.bassNotes, self.allBassNotes = self.findAllNotes(self.bass)
+        self.bassRoots, self.allBassRoots = self.findAllNotes([self.bass[0]])
 
-        self.rootNotes = self.findRootNotes()  # set root note for each key
+    def getChord(self, state):
+        allNotes = self.__getAllNotes(state['key'])
+        chord = self.getChordFromNotes(state, allNotes)
+        return chord
 
-        # find chord and bass notes for each key
-        self.mainNotes, self.allMainNotes = self.findNotes(self.main)
-        self.altNotes, self.allAltNotes = self.findNotes(self.alt)
-        self.mainBassNotes, self.allMainBassNotes, self.mainBassRoots = self.findBassNotes(
-            self.mainBass)
-        self.altBassNotes, self.allAltBassNotes, self.altBassRoots = self.findBassNotes(
-            self.altBass)
+    def getRoot(self, state):
+        return self.rootNotes[state['key']]
 
-        # find the home inversion, number of top and bottom inversions
-        self.mainBassParams = Chord.findBassParams(
-            self.allMainBassNotes, self.mainBassRoots)
-        self.altBassParams = Chord.findBassParams(
-            self.allAltBassNotes, self.altBassRoots)
+    def getNoteTypes(self, state):
+        return self.__getNotes(state['key'])
 
-    # find all octaves of the specified array of notes
-    def findAllNotes(notes, min=MIN_NOTE, max=MAX_NOTE):
-        completedNotes = []
-        midiNotes = []
-        for note in notes:
-            # ensure no duplicates
-            if completedNotes.count(note) == 0:
-                for i in range(min, max + 1):
-                    if i % 12 == note:
-                        midiNotes.append(i)
-                completedNotes.append(note)
-        midiNotes.sort()
-        return midiNotes
+    def getBass(self, state):
+        allNotes = self.__getAllBassNotes(state['key'])
+        allRoots = self.__getAllBassRoots(state['key'])
+        bass = self.getBassFromNotes(state, allNotes, allRoots)
+        return bass
 
-    # set the root of the chord for each key
-    def findRootNotes(self):
+    def getNoteForKey(self, note, key):
+        index = (note + self.root) % len(self.scale)
+        return (self.scale[index] + key) % 12
+
+    def __findRootNotes(self):
         rootNotes = {}
         for key in range(0, 12):
             rootNotes[key] = (self.scale[self.root] + key) % 12
         return rootNotes
 
-    def findNotes(self, chord):
-        # set main chord notes
+    def findAllNotes(self, noteDegrees):
         notes = {}
         allNotes = {}
         for key in range(0, 12):
             keyNotes = []
-            for note in chord:
-                index = (note + self.root) % len(self.scale)
-                keyNotes.append((self.scale[index] + key) % 12)
+            for note in noteDegrees:
+                keyNotes.append(self.getNoteForKey(note, key))
                 keyNotes.sort()
-            notes[key] = keyNotes  # chord notes for key
-            # all octaves of chord notes for key
-            allNotes[key] = Chord.findAllNotes(keyNotes)
+            notes[key] = keyNotes
+            allNotes[key] = findAllOctavesInRange(keyNotes)
         return notes, allNotes
 
-    def findBassNotes(self, degrees):
-        roots = {}
-        for key in range(0, 12):
-            index = (degrees[0] + self.root) % len(self.scale)
-            roots[key] = (self.scale[index] + key) % 12
-        notes, allNotes = self.findNotes(degrees)
-        return notes, allNotes, roots
-
-    def findBassParams(allNotes, roots):
-        params = {}
-        for k in range(0, 12):
-            params[k] = {}
-            for n in range(0, len(allNotes[k])):
-                inRange = allNotes[k][n] >= BASS_OCTAVE_RANGE["min"] \
-                    and allNotes[k][n] <= BASS_OCTAVE_RANGE["max"]
-                isRoot = allNotes[k][n] % 12 == roots[k]
-                if inRange and isRoot:
-                    params[k] = {
-                        "center": n,
-                        "topCount": (len(allNotes[k]) - n) - 1,
-                        "bottomCount": n
-                    }
-                    break
-        return params
-
-    def convertSpread(spread, chordLength):
+    def __convertSpread(spread, chordLength):
         spreadsPerOct = chordLength - 1
         spreadOctaves = (spread * (1 / SPREAD_STEPS_PER_OCTAVE)) - 1
         return int(spreadOctaves*spreadsPerOct)
 
-    def getBassFromParams(self, state, params, allNotes):
-        p = state['bassPosition']
-        key = state['key']
-        if p <= params[key]["topCount"] and p >= (-1*params[key]["bottomCount"]):
-            return allNotes[key][params[key]["center"] + p]
-        elif p > params[key]["topCount"]:
-            return allNotes[key][len(allNotes[key]) - 1]
-        elif p < (-1*params[key]["bottomCount"]):
-            return allNotes[key][0]
+    def __getChordPattern(self, numNotes, voiceCount, spread):
+        pattern = [0]
+        if (voiceCount > 1):
+            voiceCountPatterns = VOICING_PATTERNS[str(
+                numNotes)][str(voiceCount)]
+            maxSpread = len(voiceCountPatterns) - 1
+            newSpread = min(spread, maxSpread)
+            pattern = voiceCountPatterns[newSpread]
+        return pattern
 
-    def findClosestNote(targetNote, allNotes):
-        upperIndex = 0
-        for index in range(0, len(allNotes)):
-            if allNotes[index] > targetNote:
-                upperIndex = index
-                break
-            elif (index == len(allNotes) - 1):
-                return index
-        if (upperIndex == 0):
-            return 0
-        upperDistance = abs(allNotes[upperIndex] - targetNote)
-        lowerDistance = abs(allNotes[upperIndex - 1] - targetNote)
-        if upperDistance < lowerDistance:
-            return upperIndex
-        else:
-            return upperIndex - 1
-
-    def __getChordNotes(state, noteTypes, allNotes):
-        numNotes = len(noteTypes)
+    def __getPatternParams(self, state):
+        numNotes = len(self.chord)
         voiceCount = state["voiceCount"]
         if state["voiceCountMode"] == "max" and voiceCount > numNotes:
             voiceCount = numNotes
         voiceCountDiff = voiceCount - numNotes
         spread = 0
         if voiceCount > numNotes:
-            spread = Chord.convertSpread(state["spread"], numNotes + 1)
-            voiceCount = numNotes + min(spread, voiceCountDiff)
+            spread = Chord.__convertSpread(state["spread"], numNotes + 1)
         else:
-            spread = Chord.convertSpread(state["spread"], numNotes)
+            spread = Chord.__convertSpread(state["spread"], numNotes)
+        voiceCount = numNotes + min(spread, voiceCountDiff)
         spread -= (voiceCount - numNotes)
-        pattern = [0]
-        if (voiceCount > 1):
-            voiceCountPatterns = VOICING_PATTERNS[str(
-                numNotes)][str(voiceCount)]
-            maxSpread = len(voiceCountPatterns) - 1
-            spread = min(spread, maxSpread)
-            pattern = voiceCountPatterns[spread]
+        return numNotes, voiceCount, spread
+
+    def __getChordFromPattern(self, state, pattern, allNotes):
         spreadSemitones = (state["spread"] / SPREAD_STEPS_PER_OCTAVE) * 12
         middleBottomNoteTarget = int(CENTER_NOTE - (spreadSemitones / 2))
-        middleBottomNoteIndex = Chord.findClosestNote(
+        middleBottomNoteIndex = findClosestNote(
             middleBottomNoteTarget, allNotes)
         bottomNoteIndex = middleBottomNoteIndex + state["inversion"]
         bottomNoteIndex = max(0, bottomNoteIndex)
@@ -162,27 +104,29 @@ class Chord:
             chord.append(allNotes[noteIndex])
         return chord
 
-    def getRoot(self, key):
-        (key + self.interval) % 12 if self.secondary else self.rootNotes[key]
+    def getChordFromNotes(self, state, allNotes):
+        params = self.__getPatternParams(state)
+        pattern = self.__getChordPattern(*params)
+        chord = self.__getChordFromPattern(state, pattern, allNotes)
+        return chord
 
-    def getNoteTypes(self, state):
-        if state['alternate']:
-            return self.altNotes[state['key']]
-        else:
-            return self.mainNotes[state['key']]
+    def getBassFromNotes(self, state, allNotes, allRoots):
+        centerIndexInRoots = findClosestNote(BASS_CENTER, allRoots)
+        centerNote = allRoots[centerIndexInRoots]
+        centerIndex = findClosestNote(centerNote, allNotes)
+        index = centerIndex + state['bassPosition']
+        maxIndex = len(allNotes) - 1
+        index = max(min(index, maxIndex), 0)
+        return allNotes[index]
 
-    def getChord(self, state):
-        if state['alternate']:
-            return Chord.__getChordNotes(state, self.altNotes[state['key']],
-                                         self.allAltNotes[state['key']])
-        else:
-            return Chord.__getChordNotes(state, self.mainNotes[state['key']],
-                                         self.allMainNotes[state['key']])
+    def __getNotes(self, key):
+        return self.notes[key]
 
-    def getBass(self, state):
-        if state['alternate']:
-            return self.getBassFromParams(state, self.altBassParams,
-                                          self.allAltBassNotes)
-        else:
-            return self.getBassFromParams(state, self.mainBassParams,
-                                          self.allMainBassNotes)
+    def __getAllNotes(self, key):
+        return self.allNotes[key]
+
+    def __getAllBassNotes(self, key):
+        return self.allBassNotes[key]
+
+    def __getAllBassRoots(self, key):
+        return self.allBassRoots[key]

@@ -1,8 +1,9 @@
-from .chord2 import Chord, DEFAULT_SCALE
-from .secondary2 import Secondary
+from .chord import Chord, DEFAULT_SCALE
+from .secondary import Secondary
 
 
 class DualChord:
+
     def __init__(self, setting, scale=DEFAULT_SCALE, isSecondary=False):
         ChordClass = Secondary if isSecondary else Chord
         rootOrInterval = setting['interval'] if isSecondary \
