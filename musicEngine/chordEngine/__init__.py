@@ -348,7 +348,7 @@ class ChordEngine:
             self.stopBass(buttonUp=False)
         else:
             self.state['hold'] = True
-        store.dispatch(actions.changeHold(self.state['chordOctave']))
+        store.dispatch(actions.changeHold(self.state['hold']))
 
     def toggleInversionLock(self):
         self.state['inversionLock'] = not self.state['inversionLock']

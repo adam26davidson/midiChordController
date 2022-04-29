@@ -65,7 +65,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.holdIcon.pack(side="left")
         self.holdText.pack(side="left")
-        self.holdFrame.pack(side='left')
+        self.holdFrame.pack(side='left', padx=(0, 10))
 
         self.inversionLockFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
         self.inversionLockIcon = tk.Label(
