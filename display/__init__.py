@@ -48,7 +48,8 @@ class Display():
 
             'inversionThumbValue': 0,
             'inversionMode': 'continuous',
-            'inversionLocked': False,
+            'inversionLock': False,
+            'hold': False,
             'bassThumbValue': 0,
             'bassMode': 'incremental',
 
@@ -77,7 +78,7 @@ class Display():
 
     async def __mainLoop(self):
         while True:
-            if not self.state['inversionLocked']:
+            if not self.state['inversionLock']:
                 self.__setInversionThumb()
             # self.__setBassPositionThumb()
             self.chordDisplay.runAnimationStep()
@@ -123,8 +124,6 @@ class Display():
         if meState['modulation']['side'] != self.state['modulationSide']:
             self.__setModulation(
                 meState['modulation']['scale'], meState['modulation']['side'])
-        if meState['inversionLock'] != self.state['inversionLocked']:
-            self.__setInversionLock(meState['inversionLock'])
         if meState['setting'] != self.state['settingIndex']:
             self.state['settingName'] = \
                 meState['settingsList'][meState['setting']]
@@ -184,9 +183,6 @@ class Display():
     def __setSetting(self, text):
         if not self.state['settingLoading']:
             self.textDisplay.setSetting(text)
-
-    def __setInversionLock(self, inversionLocked):
-        self.state['inversionLocked'] = inversionLocked
 
     def __setKey(self, key):
         self.state['key'] = key
@@ -295,5 +291,5 @@ class Display():
     def __setHold(self, hold):
         self.textDisplay.setHold(hold)
 
-    def __setinversionLock(self, inversionLock):
+    def __setInversionLock(self, inversionLock):
         self.textDisplay.setInversionLock(inversionLock)
