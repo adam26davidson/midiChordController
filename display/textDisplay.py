@@ -24,11 +24,12 @@ class TextDisplay(tk.Frame):
 
         # setting dsiplay
         self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
-        self.settingFrame.pack(side="top")
+        self.settingFrame.pack(side="top", anchor="nw")
         tk.Label(self.settingFrame, text="Setting: ", fg=self.inactiveColor,
                  bg=self.bgColor, font=smallFont).pack(side="left")
         self.setting = tk.Label(
-            self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
+            self.settingFrame, text="Loading...",
+            bg=self.bgColor, fg=self.color, font=bigFont)
         self.setting.pack(side="left")
 
         # controller dsiplay
@@ -46,7 +47,7 @@ class TextDisplay(tk.Frame):
 
         # lock and hold
         self.lockFrame = tk.Frame(self, bg=self.bgColor)
-        self.lockFrame.pack(side="top", anchor="nw")
+        self.lockFrame.pack(side="top", anchor="nw", pady=10)
 
         self.lockedImage = Image.open(
             PARENT_PATH + "/display/images/padlock.png")
