@@ -36,7 +36,7 @@ class TextDisplay(tk.Frame):
             PARENT_PATH+"/display/images/game-controller.png")
         self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
         self.controllerFrame = tk.Frame(self, bg=self.bgColor)
-        self.controllerFrame.pack(side="left")
+        self.controllerFrame.pack(side="top", anchor="nw")
         tk.Label(self.controllerFrame, image=self.controllerIcon,
                  bg=self.bgColor).pack(side="left")
         self.controller = tk.Label(
@@ -46,7 +46,7 @@ class TextDisplay(tk.Frame):
 
         # lock and hold
         self.lockFrame = tk.Frame(self, bg=self.bgColor)
-        self.lockFrame.pack(side="left", pady=(10, 0))
+        self.lockFrame.pack(side="top", anchor="nw")
 
         self.lockedImage = Image.open(
             PARENT_PATH + "/display/images/padlock.png")
@@ -95,7 +95,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.activeColor, font=bigFont)
         self.octaveLabel.pack(side="left")
         self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side='left', pady=(0, 0))
+        self.octaveFrame.pack(side="top", anchor="nw")
 
         self.voicesFrame = tk.Frame(self, bg=self.bgColor)
         self.voicesLabel = tk.Label(
@@ -106,7 +106,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.activeColor, font=bigFont)
         self.voicesLabel.pack(side="left")
         self.voicesValue.pack(side="left")
-        self.voicesFrame.pack(side='left', pady=(0, 0))
+        self.voicesFrame.pack(side="top", anchor="nw")
 
         self.pack(side="top", padx=(20, 20), pady=(20, 20))
 
