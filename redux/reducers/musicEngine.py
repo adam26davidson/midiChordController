@@ -23,7 +23,7 @@ def reducer(state, action):
             'bassMode': 'incremental',
             'bassRange': 0,
             'setting': 0,
-            'octave': 0,
+            'chordOctave': 0,
             'voiceCount': 0,
             'modulation': {'side': 'none', 'scale': []},
             'secondary': 'none',

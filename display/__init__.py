@@ -45,6 +45,7 @@ class Display():
             'playingChordNotes': [],
             'shadowBassNote': 48,
             'playingBassNote': 0,
+            'chordOctave': 0,
 
             'inversionThumbValue': 0,
             'inversionMode': 'continuous',
@@ -142,6 +143,9 @@ class Display():
         if meState['inversionLock'] != self.state['inversionLock']:
             self.state['inversionLock'] = meState['inversionLock']
             self.__setInversionLock(self.state['inversionLock'])
+        if meState['chordOctave'] != self.state['chordOctave']:
+            self.state['chordOctave'] = meState['chordOctave']
+            self.__setOctave(self.state['chordOctave'])
 
         meMap = None
         primary = None
@@ -293,3 +297,6 @@ class Display():
 
     def __setInversionLock(self, inversionLock):
         self.textDisplay.setInversionLock(inversionLock)
+
+    def __setOctave(self, octave):
+        self.textDisplay.setOctave(octave)

@@ -86,6 +86,17 @@ class TextDisplay(tk.Frame):
         self.holdText.pack(side="left")
         self.holdFrame.pack(side='left', padx=(20, 0))
 
+        self.octaveFrame = tk.Frame(self, bg=self.bgColor)
+        self.octaveLabel = tk.Label(
+            self.octaveFrame, text="Octave: ",
+            bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
+        self.octaveValue = tk.Label(
+            self.octaveFrame, text="0",
+            bg=self.bgColor, fg=self.activeColor, font=mediumFont)
+        self.octaveLabel.pack(side="left")
+        self.octaveValue.pack(side="left")
+        self.octaveFrame.pack(side='top', pady=(10, 0))
+
         self.pack(side="top", padx=(20, 20), pady=(20, 20))
 
     def setSetting(self, name):
@@ -110,3 +121,6 @@ class TextDisplay(tk.Frame):
         else:
             self.holdText.configure(fg=self.inactiveColor)
             self.holdIcon.configure(image=self.holdInactiveIcon)
+
+    def setOctave(self, octave):
+        self.octaveValue.configure(text=str(octave))
