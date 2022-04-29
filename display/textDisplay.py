@@ -56,17 +56,6 @@ class TextDisplay(tk.Frame):
             PARENT_PATH + "/display/images/padlock-unlock.png")
         self.unlockedIcon = ImageTk.PhotoImage(self.unlockedImage)
 
-        self.holdFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
-        self.holdIcon = tk.Label(
-            self.holdFrame, image=self.unlockedIcon,
-            bg=self.bgColor, padx=5)
-        self.holdText = tk.Label(
-            self.holdFrame, text="Hold",
-            bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
-        self.holdIcon.pack(side="left")
-        self.holdText.pack(side="left")
-        self.holdFrame.pack(side='left', padx=(0, 10))
-
         self.inversionLockFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
         self.inversionLockIcon = tk.Label(
             self.inversionLockFrame, image=self.unlockedIcon,
@@ -78,16 +67,16 @@ class TextDisplay(tk.Frame):
         self.inversionLockText.pack(side="left")
         self.inversionLockFrame.pack(side='left')
 
-
-        # alt and shift
-        # self.functionFrame = tk.Frame(self, bg=self.bgColor)
-        # self.functionFrame.pack(side="top", pady=(10, 0))
-        # self.alt = tk.Label(self.functionFrame, text="alt", bg=self.bgColor, fg=self.inactiveColor,
-        #   font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
-        # self.alt.pack(side="left")
-        # self.shift = tk.Label(self.functionFrame, text="shift", bg=self.bgColor, fg=self.inactiveColor,
-        #   font=mediumFont, highlightbackground=self.inactiveColor, highlightthickness=2, padx=5)
-        # self.shift.pack(side="left", padx=(40, 0))
+        self.holdFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
+        self.holdIcon = tk.Label(
+            self.holdFrame, image=self.unlockedIcon,
+            bg=self.bgColor, padx=5)
+        self.holdText = tk.Label(
+            self.holdFrame, text="Hold",
+            bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
+        self.holdIcon.pack(side="left")
+        self.holdText.pack(side="left")
+        self.holdFrame.pack(side='left', padx=(20, 0))
 
         self.pack(side="top", padx=(20, 20), pady=(20, 20))
 
