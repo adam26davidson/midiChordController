@@ -95,7 +95,7 @@ class TextDisplay(tk.Frame):
     def setController(self, name):
         self.controller.configure(text=name)
 
-    def setInverionLock(self, active):
+    def setInversionLock(self, active):
         if active:
             self.inversionLockText.configure(fg=self.activeColor)
             self.inversionLockIcon.configure(image=self.lockedIcon)
