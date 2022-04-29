@@ -69,7 +69,7 @@ class TextDisplay(tk.Frame):
             self.inversionLockFrame, image=self.unlockedIcon,
             bg=self.bgColor, padx=5)
         self.inversionLockText = tk.Label(
-            self.inversionLockFrame, text="Inv lock",
+            self.inversionLockFrame, text="inv lock",
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.inversionLockIcon.pack(side="left")
         self.inversionLockText.pack(side="left")
@@ -80,7 +80,7 @@ class TextDisplay(tk.Frame):
             self.holdFrame, image=self.holdInactiveIcon,
             bg=self.bgColor, padx=5)
         self.holdText = tk.Label(
-            self.holdFrame, text="Hold",
+            self.holdFrame, text="hold",
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.holdIcon.pack(side="left")
         self.holdText.pack(side="left")
@@ -88,11 +88,11 @@ class TextDisplay(tk.Frame):
 
         self.octaveFrame = tk.Frame(self, bg=self.bgColor)
         self.octaveLabel = tk.Label(
-            self.octaveFrame, text="Octave: ",
-            bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
+            self.octaveFrame, text="octave: ",
+            bg=self.bgColor, fg=self.color, font=mediumFont)
         self.octaveValue = tk.Label(
             self.octaveFrame, text="0",
-            bg=self.bgColor, fg=self.activeColor, font=mediumFont)
+            bg=self.bgColor, fg=self.activeColor, font=bigFont)
         self.octaveLabel.pack(side="left")
         self.octaveValue.pack(side="left")
         self.octaveFrame.pack(side='top', pady=(10, 0))
