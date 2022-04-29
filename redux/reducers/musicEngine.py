@@ -18,6 +18,7 @@ def reducer(state, action):
             'inversionMode': 'continuous',  # incremental or continuous
             'inversionRange': 0,
             'inversionLock': False,
+            'hold': False,
             'bassPosition': 0,
             'bassMode': 'incremental',
             'bassRange': 0,
