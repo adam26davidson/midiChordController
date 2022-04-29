@@ -56,6 +56,14 @@ class TextDisplay(tk.Frame):
             PARENT_PATH + "/display/images/padlock-unlock.png")
         self.unlockedIcon = ImageTk.PhotoImage(self.unlockedImage)
 
+        self.holdActiveImage = Image.open(
+            PARENT_PATH + "/display/images/hold-active.png")
+        self.holdActiveIcon = ImageTk.PhotoImage(self.holdActiveImage)
+
+        self.holdInactiveImage = Image.open(
+            PARENT_PATH + "/display/images/hold-inactive.png")
+        self.holdInactiveIcon = ImageTk.PhotoImage(self.holdInactiveImage)
+
         self.inversionLockFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
         self.inversionLockIcon = tk.Label(
             self.inversionLockFrame, image=self.unlockedIcon,
@@ -69,7 +77,7 @@ class TextDisplay(tk.Frame):
 
         self.holdFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
         self.holdIcon = tk.Label(
-            self.holdFrame, image=self.unlockedIcon,
+            self.holdFrame, image=self.holdInactiveIcon,
             bg=self.bgColor, padx=5)
         self.holdText = tk.Label(
             self.holdFrame, text="Hold",
@@ -87,18 +95,18 @@ class TextDisplay(tk.Frame):
     def setController(self, name):
         self.controller.configure(text=name)
 
-    def setHold(self, active):
-        self.__setLabelLock(
-            self.holdText, self.holdIcon, active)
-
-    def setInversionLock(self, active):
-        self.__setLabelLock(
-            self.inversionLockText, self.inversionLockIcon, active)
-
-    def __setLabelLock(self, label, icon, active):
+    def setInverionLock(self, active):
         if active:
-            label.configure(fg=self.activeColor)
-            icon.configure(image=self.lockedIcon)
+            self.inversionLockText.configure(fg=self.activeColor)
+            self.inversionLockIcon.configure(image=self.lockedIcon)
         else:
-            label.configure(fg=self.inactiveColor)
-            icon.configure(image=self.unlockedIcon)
+            self.inversionLockText.configure(fg=self.inactiveColor)
+            self.inversionLockIcon.configure(image=self.unlockedIcon)
+
+    def setHold(self, active):
+        if active:
+            self.holdText.configure(fg=self.activeColor)
+            self.holdIcon.configure(image=self.holdActiveIcon)
+        else:
+            self.holdText.configure(fg=self.inactiveColor)
+            self.holdIcon.configure(image=self.holdInactiveIcon)
