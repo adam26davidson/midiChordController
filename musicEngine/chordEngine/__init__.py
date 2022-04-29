@@ -40,7 +40,7 @@ class ChordEngine:
             'chordOctave': 0,
             'spread': SPREAD_STEPS_PER_OCTAVE,
 
-            'voiceCount': 5,
+            'voiceCount': 4,
 
             # can be 'max' or 'absolute'
             'voiceCountMode': 'absolute',
@@ -81,6 +81,8 @@ class ChordEngine:
         store.dispatch(iAction)
         bPAction = actions.changeBassPosition(self.state['bassPosition'])
         store.dispatch(bPAction)
+        vCAction = actions.changeVoiceCount(self.state['voiceCount'])
+        store.dispatch(vCAction)
 
         self.setSetting(self.state['settingIndex'])
 
