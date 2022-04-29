@@ -65,16 +65,19 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.holdIcon.pack(side="left")
         self.holdText.pack(side="left")
+        self.holdFrame.pack(side='left')
 
         self.inversionLockFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
         self.inversionLockIcon = tk.Label(
-            self.holdFrame, image=self.unlockedIcon,
+            self.inversionLockFrame, image=self.unlockedIcon,
             bg=self.bgColor, padx=5)
         self.inversionLockText = tk.Label(
-            self.holdFrame, text="Inv lock",
+            self.inversionLockFrame, text="Inv lock",
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.inversionLockIcon.pack(side="left")
         self.inversionLockText.pack(side="left")
+        self.inversionLockFrame.pack(side='left')
+
 
         # alt and shift
         # self.functionFrame = tk.Frame(self, bg=self.bgColor)
