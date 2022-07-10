@@ -12,6 +12,7 @@ class Midi():
       'midiOutputConnected': False,
       'midiOutputController': None,
       'midiOutputPortNumber': 1, # default
+
       'velocity': 100, # constant velocity or center of random distribution
       'velocityMode': 'random', # 'constant' or 'random'
       'velocityDeviation': 15, # 'standard deviation for random velocity'
@@ -27,6 +28,7 @@ class Midi():
       'chordChannel': 0,
       'bassChannel': 0,
 
+      'usePolyphonicAfterTouch': False, # default is to use channel aftertouch
       'afterTouch': 0,
       'lastSentAfterTouch': 0,
       'CCValues': {},
@@ -148,7 +150,13 @@ class Midi():
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
         self.midiOut.send_message([channelCommand, bassNote, self.state['afterTouch']])
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
-        
+  
+  def __sendAfterTouch(self):
+    if self.state['usePolyphonicAfterTouch']:
+      self.__sendPolyphonicAftertouch()
+    else:
+      self.__sendChannelAfterTouch()
+
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
       if val != self.state['lastSentCCValues'][cc]:
@@ -160,8 +168,7 @@ class Midi():
   async def __loop(self):
     while True:
       if self.state['midiOutputController'] in self.midiOut.get_ports():
-        # self.__sendPolyphonicAftertouch()
-        self.__sendChannelAfterTouch()
+        self.__sendAfterTouch()
         self.__sendCCValues()
       else:
         self.__reconnect()
@@ -173,7 +180,6 @@ class Midi():
       self.state['midiOutputConnected'] = False
 
     self.availableOutputPorts = self.midiOut.get_ports()
-    print(self.availableOutputPorts)
     if len(self.availableOutputPorts) > 1:
       self.midiOut.open_port(self.state['midiOutputPortNumber'])
       self.state['midiOutputController'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
