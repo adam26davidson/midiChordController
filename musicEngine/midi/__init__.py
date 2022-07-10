@@ -10,7 +10,7 @@ class Midi():
     self.midiOut = MidiOut()
     self.state = {
       'midiOutputConnected': False,
-      'midiOutputController': None,
+      'midiOutputControllerName': '',
       'midiOutputPortNumber': 1, # default
 
       'velocity': 100, # constant velocity or center of random distribution
@@ -43,7 +43,7 @@ class Midi():
     print(self.availableOutputPorts)
     if len(self.availableOutputPorts) > 1:
       self.midiOut.open_port(self.state['midiOutputPortNumber'])
-      self.state['midiOutputController'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
+      self.state['midiOutputControllerName'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
       self.state['midiOutputConnected'] = True
     asyncio.ensure_future(self.__loop())
 
@@ -65,6 +65,28 @@ class Midi():
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
     return setCCValue
+
+  async def __loop(self):
+    while True:
+      self.availableOutputPorts = self.midiOut.get_ports()
+      if self.state['midiOutputControllerName'] in self.availableOutputPorts:
+        self.__sendAfterTouch()
+        self.__sendCCValues()
+      else:
+        self.__reconnect()
+      await asyncio.sleep(MIDI_STEP)
+
+  def __reconnect(self):
+    if self.midiOut.is_port_open():
+      self.midiOut.close_port()
+      self.state['midiOutputConnected'] = False
+
+    if len(self.availableOutputPorts) > 1:
+      self.midiOut.open_port(self.state['midiOutputPortNumber'])
+      self.state['midiOutputControllerName'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
+      self.state['midiOutputConnected'] = True
+    else:
+      self.state['midiOutputControllerName'] = ''
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, type)
@@ -164,28 +186,6 @@ class Midi():
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
         self.state['lastSentCCValues'][cc] = val
-
-  async def __loop(self):
-    while True:
-      if self.state['midiOutputController'] in self.midiOut.get_ports():
-        self.__sendAfterTouch()
-        self.__sendCCValues()
-      else:
-        self.__reconnect()
-      await asyncio.sleep(MIDI_STEP)
-
-  def __reconnect(self):
-    if self.midiOut.is_port_open():
-      self.midiOut.close_port()
-      self.state['midiOutputConnected'] = False
-
-    self.availableOutputPorts = self.midiOut.get_ports()
-    if len(self.availableOutputPorts) > 1:
-      self.midiOut.open_port(self.state['midiOutputPortNumber'])
-      self.state['midiOutputController'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
-      self.state['midiOutputConnected'] = True
-    else:
-      self.state['midiOutputController'] = None
   
   def __combineCommandAndChannel(self, command, channel):
     return ((command & 0xf0) | (channel & 0xf))
