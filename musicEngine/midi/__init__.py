@@ -9,6 +9,7 @@ class Midi():
   def __init__(self):
     self.midiOut = MidiOut()
     self.state = {
+      'midiOutputConnected': False,
       'midiOutputController': None,
       'midiOutputPortNumber': 1, # default
       'velocity': 100, # constant velocity or center of random distribution
@@ -41,9 +42,13 @@ class Midi():
     if len(self.availableOutputPorts) > 1:
       self.midiOut.open_port(self.state['midiOutputPortNumber'])
       self.state['midiOutputController'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
+      self.state['midiOutputConnected'] = True
     asyncio.ensure_future(self.__loop())
 
   def handleMessage(self, message):
+    if not self.state['midiOutputConnected']:
+      return None
+
     note, player, type = message['note'], message['player'], message['type']
     if type == 'on':
       self.__noteOn(note, player)
@@ -163,12 +168,16 @@ class Midi():
       await asyncio.sleep(MIDI_STEP)
 
   def __reconnect(self):
-    if self.midiOut.is_port_open(): self.midiOut.close_port()
+    if self.midiOut.is_port_open():
+      self.midiOut.close_port()
+      self.state['midiOutputConnected'] = False
+
     self.availableOutputPorts = self.midiOut.get_ports()
     print(self.availableOutputPorts)
     if len(self.availableOutputPorts) > 1:
       self.midiOut.open_port(self.state['midiOutputPortNumber'])
       self.state['midiOutputController'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
+      self.state['midiOutputConnected'] = True
     else:
       self.state['midiOutputController'] = None
   
