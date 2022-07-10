@@ -8,11 +8,11 @@ def remove(data):
   return {
     'type': 'controllerManager/controllerRemoved',
     'data': data
-  } 
+  }
 
 def updateMap(data):
   return {
-    'type': 'controllerManager/controllerRemoved',
+    'type': 'controllerManager/controllerMapUpdated',
     'data': data
   } 
 
