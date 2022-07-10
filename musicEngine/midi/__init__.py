@@ -9,6 +9,7 @@ class Midi():
   def __init__(self):
     self.midiOut = MidiOut()
     self.state = {
+      'midiOutputController': None,
       'velocity': 100, # constant velocity or center of random distribution
       'velocityMode': 'random', # 'constant' or 'random'
       'velocityDeviation': 15, # 'standard deviation for random velocity'
@@ -36,8 +37,9 @@ class Midi():
   def start(self):
     self.availableOutputPorts = self.midiOut.get_ports()
     print(self.availableOutputPorts)
-    if len(self.availableOutputPorts) > 0:
+    if len(self.availableOutputPorts) > 1:
       self.midiOut.open_port(1)
+      self.state['midiOutputController'] = self.availableOutputPorts[1]
     asyncio.ensure_future(self.__loop())
 
   def handleMessage(self, message):
@@ -112,7 +114,7 @@ class Midi():
     if self.state['afterTouch'] == self.state['lastSentAfterTouch']:
       return None
 
-    aftertouchValue = self.state['afterTouch'] # & 0x7F
+    aftertouchValue = self.state['afterTouch']
     channel = self.state['distChordChannels'][note] if self.state['distributeChannels'] else self.state['chordChannel']
     channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
     self.midiOut.send_message([channelCommand, aftertouchValue])
@@ -124,7 +126,7 @@ class Midi():
 
     self.state['lastSentAfterTouch'] = self.state['afterTouch']
 
-  def __sendAftertouch(self):
+  def __sendPolyphonicAftertouch(self):
     if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
       for note in self.state['playingChordNotes']:
         channel = self.state['chordChannel']
@@ -151,8 +153,8 @@ class Midi():
 
   async def __loop(self):
     while True:
-      if self.midiOut.is_port_open:
-        # self.__sendAftertouch()
+      if self.state['midiOutputController'] in self.midiOut.get_ports():
+        # self.__sendPolyphonicAftertouch()
         self.__sendChannelAfterTouch()
         self.__sendCCValues()
       else:
@@ -162,8 +164,11 @@ class Midi():
   def __reconnect(self):
     self.availableOutputPorts = self.midiOut.get_ports()
     print(self.availableOutputPorts)
-    if len(self.availableOutputPorts) > 0:
+    if len(self.availableOutputPorts) > 1:
       self.midiOut.open_port(1)
+      self.state['midiOutputController'] = self.availableOutputPorts[1]
+    else:
+      self.state['midiOutputController'] = None
   
   def __combineCommandAndChannel(self, command, channel):
     return ((command & 0xf0) | (channel & 0xf))
