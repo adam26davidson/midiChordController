@@ -82,7 +82,8 @@ class Display():
         while True:
             if not self.state['inversionLock']:
                 self.__setInversionThumb()
-            # self.__setBassPositionThumb()
+            if self.state['bassMode'] == 'continuous':
+                self.__setBassPositionThumb()
             self.chordDisplay.runAnimationStep()
             self.root.update()
             await asyncio.sleep(ANIMATION_STEP)
