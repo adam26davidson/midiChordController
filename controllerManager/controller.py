@@ -52,7 +52,7 @@ class Controller(ABC):
     store.dispatch(actions.add(data))
     #REMOVE LATER
     print("bassMode:")
-    print(store.get_state()['controllers'][0]['meMap']['bassMode'])
+    print(store.get_state()['controllerManager']['controllers'][0]['meMap']['bassMode'])
 
   async def deviceReadLoop(self, device):
     async for event in self.devices[device].async_read_loop():
