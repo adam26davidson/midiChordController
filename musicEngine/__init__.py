@@ -45,6 +45,8 @@ class MusicEngine():
             "INCREMENT_BASS_POSITION": self.chordEngine.incrementBassPosition,
             "DECREMENT_BASS_POSITION": self.chordEngine.decrementBassPosition,
 
+            "UPDATE_BASS_POSITION": self.chordEngine.setAnalogBassPosition,
+
             "INCREMENT_VOICE_COUNT": self.chordEngine.incrementVoiceCount,
             "DECREMENT_VOICE_COUNT": self.chordEngine.decrementVoiceCount,
 
