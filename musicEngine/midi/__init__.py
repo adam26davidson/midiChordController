@@ -22,7 +22,7 @@ class Midi():
       'distChordChannels': {},
       'distBassChannel': 0,
       'chordChannel': 0,
-      'bassChannel': 0,
+      'bassChannel': 1,
 
       'afterTouch': 0,
       'lastSentAfterTouch': 0,
