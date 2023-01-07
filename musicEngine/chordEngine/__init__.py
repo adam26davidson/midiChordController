@@ -1,6 +1,7 @@
 from .modules.dualChord import DualChord
 from .modules.modulation import Modulation
 from .modules.parseSecondaries import parseSecondaries
+from .controlState import ControlState
 from utils import findAllOctavesInRange
 from constants import SETTINGS, MAX_INVERSION_RANGE, MAX_OCTAVE_SHIFT, \
     MAX_BASS_RANGE, SPREAD_STEPS_PER_OCTAVE, MAX_SPREAD_OCTAVES, \
@@ -17,6 +18,7 @@ class ChordEngine:
         settingsList = [s['name'] for s in SETTINGS]
         store.dispatch(actions.changeSettingsList(settingsList))
         self.callbacks = []
+        self.controlState = ControlState()
         self.state = {
             'settingIndex': settingIndex,
             'loadingSetting': False,
@@ -70,6 +72,7 @@ class ChordEngine:
                 'left': False,
                 'right': False
             }
+            
         }
         kAction = actions.changeKey(self.state['key'])
         store.dispatch(kAction)
@@ -140,12 +143,12 @@ class ChordEngine:
         store.dispatch(actions.changeSettingLoading(False))
         self.state['loadingSetting'] = False
 
-    def playChord(self, button=None, fromButton=False):
-        if fromButton:
+    def playChord(self, button=None):
+        if button is not None:
             self.state['chordButtonStates'][button] = True
             self.state['activeChord'] = button
         self.__setChordType()
-        self.stopChord(buttonUp=False)
+        self.stopChord()
         notes = self.__getChord(button)
         self.__sendNotesOn(notes, player='chord')
         self.__updateBass()
@@ -154,6 +157,7 @@ class ChordEngine:
         self.state['chordIsPlaying'] = True
 
     def playBass(self):
+        print("PLAYBASS()")
         self.stopBass(buttonUp=False)
         bassNote = self.__getBass()
         self.__sendNotesOn([bassNote], player='bass')
@@ -161,12 +165,12 @@ class ChordEngine:
         self.state['playingBassNote'] = bassNote
         self.state['bassIsPlaying'] = True
 
-    def stopChord(self, button=None, buttonUp=True):
+    def stopChord(self, button=None):
         if button is not None:
             self.state['chordButtonStates'][button] = False
         # dontStop = self.state['chordIsPlaying'] and button is not None \
         #     and button != self.state['activeChord']
-        if (not buttonUp or not self.state['hold']):
+        if (button is None or not self.state['hold']):
             if self.state['chordIsPlaying']:
                 playingNotes = self.state['playingChordNotes']
                 self.__sendNotesOff(playingNotes, player='chord')
@@ -178,7 +182,7 @@ class ChordEngine:
                 #     self.playChord(b)
 
     def stopBass(self, buttonUp=True):
-        if not buttonUp or not self.state['hold']:
+        if not (buttonUp and self.state['hold']):
             if self.state['bassIsPlaying']:
                 playingBass = self.state['playingBassNote']
                 self.__sendNotesOff([playingBass], player='bass')
