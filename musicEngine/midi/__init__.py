@@ -21,8 +21,8 @@ class Midi():
       'occupiedChannels': {},
       'distChordChannels': {},
       'distBassChannel': 0,
-      'chordChannel': 0,
-      'bassChannel': 1,
+      'chordChannel': 1,
+      'bassChannel': 0,
 
       'afterTouch': 0,
       'lastSentAfterTouch': 0,
