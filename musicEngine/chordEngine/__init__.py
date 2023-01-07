@@ -101,7 +101,7 @@ class ChordEngine:
     def setSetting(self, setting):
         self.state['loadingSetting'] = True
         store.dispatch(actions.changeSettingLoading(True))
-        self.stopChord(buttonUp=False)
+        self.stopChord()
         self.stopBass(buttonUp=False)
         self.state['settingIndex'] = setting
         self.setting = SETTINGS[setting]
@@ -350,7 +350,7 @@ class ChordEngine:
     def toggleHold(self):
         if self.state['hold']:
             self.state['hold'] = False
-            self.stopChord(buttonUp=False)
+            self.stopChord()
             self.stopBass(buttonUp=False)
         else:
             self.state['hold'] = True
