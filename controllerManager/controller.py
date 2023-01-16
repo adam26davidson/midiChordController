@@ -16,7 +16,7 @@ class Controller(ABC):
     state = {} 
     for device in info['controls'].keys():
       state = {**state, **self.createState(self.info['controls'][device])}
-    
+
     self.state = state
 
   @staticmethod
@@ -42,7 +42,7 @@ class Controller(ABC):
     for key in devices.keys():
       asyncio.ensure_future(self.deviceReadLoop(key))
     data = {
-      'id': id, 
+      'id': id,
       'name': self.info['name'],
       'role': role,
       'meMap': self.meMap,
@@ -50,6 +50,9 @@ class Controller(ABC):
       'compatibleMeMaps': self.info['compatibleMeMaps']
     }
     store.dispatch(actions.add(data))
+    #REMOVE LATER
+    print("bassMode:")
+    print(store.get_state()['controllerManager']['controllers'][0]['meMap']['bassMode'])
 
   async def deviceReadLoop(self, device):
     async for event in self.devices[device].async_read_loop():

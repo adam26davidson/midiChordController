@@ -9,6 +9,10 @@ class Midi():
   def __init__(self):
     self.midiOut = MidiOut()
     self.state = {
+      'midiOutputConnected': False,
+      'midiOutputControllerName': '',
+      'midiOutputPortNumber': 1, # default
+
       'velocity': 100, # constant velocity or center of random distribution
       'velocityMode': 'random', # 'constant' or 'random'
       'velocityDeviation': 15, # 'standard deviation for random velocity'
@@ -21,9 +25,10 @@ class Midi():
       'occupiedChannels': {},
       'distChordChannels': {},
       'distBassChannel': 0,
-      'chordChannel': 0,
+      'chordChannel': 1,
       'bassChannel': 0,
 
+      'usePolyphonicAfterTouch': False, # default is to use channel aftertouch
       'afterTouch': 0,
       'lastSentAfterTouch': 0,
       'CCValues': {},
@@ -36,11 +41,16 @@ class Midi():
   def start(self):
     self.availableOutputPorts = self.midiOut.get_ports()
     print(self.availableOutputPorts)
-    if len(self.availableOutputPorts) > 0:
-      self.midiOut.open_port(1)
+    if len(self.availableOutputPorts) > 1:
+      self.midiOut.open_port(self.state['midiOutputPortNumber'])
+      self.state['midiOutputControllerName'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
+      self.state['midiOutputConnected'] = True
     asyncio.ensure_future(self.__loop())
 
   def handleMessage(self, message):
+    if not self.state['midiOutputConnected']:
+      return None
+
     note, player, type = message['note'], message['player'], message['type']
     if type == 'on':
       self.__noteOn(note, player)
@@ -55,6 +65,28 @@ class Midi():
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
     return setCCValue
+
+  async def __loop(self):
+    while True:
+      self.availableOutputPorts = self.midiOut.get_ports()
+      if self.state['midiOutputControllerName'] in self.availableOutputPorts:
+        self.__sendAfterTouch()
+        self.__sendCCValues()
+      else:
+        self.__reconnect()
+      await asyncio.sleep(MIDI_STEP)
+
+  def __reconnect(self):
+    if self.midiOut.is_port_open():
+      self.midiOut.close_port()
+      self.state['midiOutputConnected'] = False
+
+    if len(self.availableOutputPorts) > 1:
+      self.midiOut.open_port(self.state['midiOutputPortNumber'])
+      self.state['midiOutputControllerName'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
+      self.state['midiOutputConnected'] = True
+    else:
+      self.state['midiOutputControllerName'] = ''
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, type)
@@ -108,7 +140,23 @@ class Midi():
     elif player == 'bass':
       return self.state['bassChannel']
 
-  def __sendAftertouch(self):
+  def __sendChannelAfterTouch(self):
+    if self.state['afterTouch'] == self.state['lastSentAfterTouch']:
+      return None
+
+    aftertouchValue = self.state['afterTouch']
+    channel = self.state['distChordChannels'][note] if self.state['distributeChannels'] else self.state['chordChannel']
+    channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
+    self.midiOut.send_message([channelCommand, aftertouchValue])
+
+    if self.state['playingBassNote']:
+      channel = self.state['distBassChannel'] if self.state['distributeChannels'] else self.state['bassChannel']
+      channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
+      self.midiOut.send_message([channelCommand, aftertouchValue])
+
+    self.state['lastSentAfterTouch'] = self.state['afterTouch']
+
+  def __sendPolyphonicAftertouch(self):
     if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
       for note in self.state['playingChordNotes']:
         channel = self.state['chordChannel']
@@ -124,7 +172,13 @@ class Midi():
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
         self.midiOut.send_message([channelCommand, bassNote, self.state['afterTouch']])
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
-        
+  
+  def __sendAfterTouch(self):
+    if self.state['usePolyphonicAfterTouch']:
+      self.__sendPolyphonicAftertouch()
+    else:
+      self.__sendChannelAfterTouch()
+
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
       if val != self.state['lastSentCCValues'][cc]:
@@ -132,21 +186,6 @@ class Midi():
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
         self.state['lastSentCCValues'][cc] = val
-
-  async def __loop(self):
-    while True:
-      if self.midiOut.is_port_open:
-        self.__sendAftertouch()
-        self.__sendCCValues()
-      else:
-        self.__reconnect()
-      await asyncio.sleep(MIDI_STEP)
-
-  def __reconnect(self):
-    self.availableOutputPorts = self.midiOut.get_ports()
-    print(self.availableOutputPorts)
-    if len(self.availableOutputPorts) > 0:
-      self.midiOut.open_port(1)
   
   def __combineCommandAndChannel(self, command, channel):
     return ((command & 0xf0) | (channel & 0xf))

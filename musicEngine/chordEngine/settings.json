@@ -327,18 +327,14 @@
         "interval": 7,
         "main": [0, 4, 7, 10],
         "mainBass": [0, 7],
-        "alternate": [0, 2, 4, 7, 10],
+        "alternate": [2, 4, 7, 10],
         "alternateBass": [0, 7],
-        "east": {
+        "south": {
           "default": {
             "alternate": [1, 4, 7, 10]
-          },
-          "leftModulation": {
-            "root": 5,
-            "main": [0, 4, 7]
           }
         },
-        "north": {
+        "west": {
           "default": {
             "alternate": [1, 4, 7, 10]
           }
