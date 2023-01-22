@@ -1,4 +1,5 @@
 from .chordEngine import ChordEngine
+from .chordEngine.controlState import ChordButton
 from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
@@ -15,14 +16,14 @@ class MusicEngine():
         self.rhythmEngine.subscribe(self.midi.handleMessage)
 
         self.commandMap = {
-            "SOUTH_CHORD_ON": lambda: self.chordEngine.playChord('south'),
-            "SOUTH_CHORD_OFF": lambda: self.chordEngine.stopChord('south'),
-            "WEST_CHORD_ON": lambda: self.chordEngine.playChord('west'),
-            "WEST_CHORD_OFF": lambda: self.chordEngine.stopChord('west'),
-            "NORTH_CHORD_ON": lambda: self.chordEngine.playChord('north'),
-            "NORTH_CHORD_OFF": lambda: self.chordEngine.stopChord('north'),
-            "EAST_CHORD_ON": lambda: self.chordEngine.playChord('east'),
-            "EAST_CHORD_OFF": lambda: self.chordEngine.stopChord('east'),
+            "SOUTH_CHORD_ON": lambda: self.chordEngine.chordButtonOn(ChordButton.SOUTH),
+            "SOUTH_CHORD_OFF": lambda: self.chordEngine.chordButtonOff(ChordButton.SOUTH),
+            "WEST_CHORD_ON": lambda: self.chordEngine.chordButtonOn(ChordButton.WEST),
+            "WEST_CHORD_OFF": lambda: self.chordEngine.chordButtonOff(ChordButton.WEST),
+            "NORTH_CHORD_ON": lambda: self.chordEngine.chordButtonOn(ChordButton.NORTH),
+            "NORTH_CHORD_OFF": lambda: self.chordEngine.chordButtonOff(ChordButton.NORTH),
+            "EAST_CHORD_ON": lambda: self.chordEngine.chordButtonOn(ChordButton.EAST),
+            "EAST_CHORD_OFF": lambda: self.chordEngine.chordButtonOff(ChordButton.EAST),
 
             "LEFT_SECONDARY_ON": lambda: self.chordEngine.setSecondary(
                 'left'),
