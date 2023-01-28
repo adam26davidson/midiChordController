@@ -1,8 +1,13 @@
+from enum import Enum
+
+class ChordButton(Enum):
+    SOUTH = "south"
+    WEST = "west"
+    NORTH = "north"
+    EAST = "east"
+
 class ControlState :
-    southChordOn = False
-    northChordOn = False
-    westChordOn = False
-    eastChordOn = False
+    buttonQueue = []
 
     bassOn = False
 
