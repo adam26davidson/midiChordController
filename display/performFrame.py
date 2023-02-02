@@ -50,12 +50,12 @@ class PerformFrame(tk.Frame):
             'modulationSide': 'none'
         }
 
-        self.keyboard = Keyboard(master=self.root)
-        self.spread = Spread(master=self.root)
-        self.inversion = Inversion(master=self.root)
-        self.bassPosition = Inversion(master=self.root)
-        self.chordDisplay = ChordDisplay(master=self.root)
-        self.textDisplay = TextDisplay(master=self.root)
+        self.keyboard = Keyboard(master=self)
+        self.spread = Spread(master=self)
+        self.inversion = Inversion(master=self)
+        self.bassPosition = Inversion(master=self)
+        self.chordDisplay = ChordDisplay(master=self)
+        self.textDisplay = TextDisplay(master=self)
 
         self.pack()
 
