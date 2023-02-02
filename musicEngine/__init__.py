@@ -12,6 +12,8 @@ class MusicEngine():
         self.rhythmEngine = RhythmEngine()
         self.midi = Midi()
 
+        self.processControllerEvents = True
+
         self.chordEngine.subscribe(self.rhythmEngine.handleMessage)
         self.rhythmEngine.subscribe(self.midi.handleMessage)
 
@@ -80,14 +82,15 @@ class MusicEngine():
         self.midi.start()
 
     def controllerEventHandler(self, event):
-        controllers = store.get_state()['controllerManager']['controllers']
-        meMap = None
-        for controller in controllers:
-            if controller['role'] == 'primary':
-                meMap = controller['meMap']['map']
+        if (self.processControllerEvents):
+            controllers = store.get_state()['controllerManager']['controllers']
+            meMap = None
+            for controller in controllers:
+                if controller['role'] == 'primary':
+                    meMap = controller['meMap']['map']
 
-        command = meMap[event['name']]
-        if 'value' in event.keys():
-            self.commandMap[command](event['value'])
-        else:
-            self.commandMap[command]()
+            command = meMap[event['name']]
+            if 'value' in event.keys():
+                self.commandMap[command](event['value'])
+            else:
+                self.commandMap[command]()
