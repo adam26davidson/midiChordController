@@ -59,7 +59,9 @@ class PerformFrame(tk.Frame):
 
         self.pack()
 
-    def handleStoreUpdate(self):
+        store.subscribe(self.__handleStoreUpdate)
+
+    def __handleStoreUpdate(self):
         state = store.get_state()
         meState = thaw(state['musicEngine'])
         cState = thaw(state['controllerManager'])
