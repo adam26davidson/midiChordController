@@ -57,6 +57,7 @@ class Display():
             if controller['role'] == 'primary':
                 uiMap = controller['uiMap']['map']
         if (event['name'] in uiMap.keys()):
+            print(event['name']) # testing
             command = uiMap[event['name']]
             if (command in self.commandMap.keys()):
                 self.commandMap[command]()
