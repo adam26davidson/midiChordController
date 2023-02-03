@@ -522,7 +522,7 @@ class ChordEngine:
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
 
-        secondary = self.secondaries[secLabel][chordLabel][modKey]
+        secondary = self.secondaries[secLabel][chordLabel.value][modKey]
         return secondary.getBass(self.state, chord.getRoot(self.state))
 
     def __updateChord(self):
