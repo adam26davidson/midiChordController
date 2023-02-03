@@ -58,7 +58,9 @@ class Display():
                 uiMap = controller['uiMap']['map']
         
         command = uiMap[event['name']]
-        self.commandMap[command]()
+        if (command in self.commandMap.keys()):
+            self.commandMap[command]()
+            
         self.performFrame.handleControllerEvent(event)
     
     def toggleMenu(self):
