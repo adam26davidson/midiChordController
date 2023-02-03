@@ -145,7 +145,7 @@ class PerformFrame(tk.Frame):
         for controller in controllers:
             if controller['role'] == 'primary':
                 meMap = controller['meMap']['map']
-        if meMap:
+        if event['name'] in meMap.keys():
             if self.state['inversionMode'] == 'continuous' and \
                     meMap[event['name']] == 'UPDATE_INVERSION':
                 self.__storeInversionThumb(event['value'])
