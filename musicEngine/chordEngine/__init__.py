@@ -455,7 +455,7 @@ class ChordEngine:
                 modKey = "leftModulation"
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
-            secondary = self.secondaries[secState][button][modKey]
+            secondary = self.secondaries[secState][button.value][modKey]
             chordRoot = chord.getRoot(self.state)
             rootType = secondary.getRoot(self.state, chordRoot)
             chordType = secondary.getNoteTypes(self.state, chordRoot)
