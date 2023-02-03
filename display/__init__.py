@@ -50,6 +50,6 @@ class Display():
         for controller in controllers:
             if controller['role'] == 'primary':
                 uiMap = controller['uiMap']['map']
-        if uiMap:
-            
+        #if uiMap:
+
         self.performFrame.handleControllerEvent(event)
