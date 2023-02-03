@@ -37,9 +37,10 @@ class Display():
         self.commandMap = {
             "MENU": self.toggleMenu
         }
-
-        self.performFrame = PerformFrame(self.root)
-        self.settingsMenuFrame = SettingsMenuFrame(self.root)
+        self.root.frames = [
+            PerformFrame(self.root), 
+            SettingsMenuFrame(self.root)
+        ]
 
     def start(self):
         asyncio.ensure_future(self.__mainLoop())
@@ -67,10 +68,10 @@ class Display():
     def toggleMenu(self):
         if (self.state.activeFrame == "SETTINGS_MENU"):
             self.state.activeFrame = "PERFORM"
-            self.performFrame.tkraise()
+            self.root.frames[PerformFrame].tkraise()
         else:
             self.state.activeFrame = "SETTINGS_MENU"
-            self.settingsMenuFrame.tkraise()
+            self.root.frames[SettingsMenuFrame].tkraise()
         
         store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
 
