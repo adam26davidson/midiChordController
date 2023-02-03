@@ -14,4 +14,4 @@ class SettingsMenuFrame(tk.Frame):
             relief="flat", 
             bg="#000000")
 
-        self.grid(row=0, column=0, expand=True)
+        self.grid(row=0, column=0, sticky='nsew')
