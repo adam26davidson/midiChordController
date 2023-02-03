@@ -35,7 +35,7 @@ class Display():
         self.state = DisplayState()
 
         self.commandMap = {
-            "MENU": self.toggleMenu()
+            "MENU": self.toggleMenu
         }
 
         self.performFrame = PerformFrame(self.root)
