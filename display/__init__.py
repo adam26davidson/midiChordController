@@ -37,19 +37,17 @@ class Display():
         self.commandMap = {
             "MENU": self.toggleMenu
         }
-        self.root.frames = [
-            PerformFrame(self.root), 
-            SettingsMenuFrame(self.root)
-        ]
-        self.performFrameNum = 0
-        self.settingsMenuFrameNum = 1
+
+        self.performFrame = PerformFrame(self.root)
+        self.settingsMenuFrame = SettingsMenuFrame(self.root)
 
     def start(self):
         asyncio.ensure_future(self.__mainLoop())
 
     async def __mainLoop(self):
         while True:
-            self.root.frames[self.performFrameNum].updateFrame()
+            if self.state.activeFrame == 'PERFORM':     
+                self.performFrame.updateFrame()
             self.root.update()
             await asyncio.sleep(ANIMATION_STEP)
 
@@ -60,20 +58,19 @@ class Display():
             if controller['role'] == 'primary':
                 uiMap = controller['uiMap']['map']
         if (event['name'] in uiMap.keys()):
-            print(event['name']) # testing
             command = uiMap[event['name']]
             if (command in self.commandMap.keys()):
                 self.commandMap[command]()
 
-        self.root.frames[self.performFrameNum].handleControllerEvent(event)
+        self.performFrame.handleControllerEvent(event)
     
     def toggleMenu(self):
         if (self.state.activeFrame == "SETTINGS_MENU"):
             self.state.activeFrame = "PERFORM"
-            self.root.frames[self.performFrameNum].tkraise()
+            self.performFrame.tkraise()
         else:
             self.state.activeFrame = "SETTINGS_MENU"
-            self.root.frames[self.settingsMenuFrameNum].tkraise()
+            self.settingsMenuFrame.tkraise()
         
         store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
 
