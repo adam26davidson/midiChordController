@@ -103,6 +103,7 @@ info = {
                 "events": {1: "DPAD_DOWN", 0: "DPAD_Y_OFF", -1: "DPAD_UP"}
             },
 
+            # START BUTTON
             316: {
                 "name": "START_BUTTON",
                 "type": "BUTTON",

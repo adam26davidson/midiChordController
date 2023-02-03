@@ -11,6 +11,9 @@ default = {
     "DPAD_UP": "UP",
     "DPAD_DOWN": "DOWN",
 
+    #START
+    "START_BUTTON_DOWN": "MENU",
+
     #LEFT STICK
     "LEFT_STICK_UP": "UP",
     "LEFT_STICK_DOWN": "DOWN",
@@ -27,6 +30,5 @@ default = {
     "RIGHT_BUMPER_DOWN": "PAGE_RIGHT",
     "LEFT_BUMPER_DOWN": "PAGE_LEFT",
 
-    
   }
 }

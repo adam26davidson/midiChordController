@@ -3,6 +3,7 @@ from .chordEngine.controlState import ChordButton
 from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
+from pyrsistent import thaw
 
 
 class MusicEngine():
@@ -16,6 +17,8 @@ class MusicEngine():
 
         self.chordEngine.subscribe(self.rhythmEngine.handleMessage)
         self.rhythmEngine.subscribe(self.midi.handleMessage)
+
+        store.subscribe(self.__handleStoreUpdate)
 
         self.commandMap = {
             "SOUTH_CHORD_ON": lambda: self.chordEngine.chordButtonOn(ChordButton.SOUTH),
@@ -94,3 +97,12 @@ class MusicEngine():
                 self.commandMap[command](event['value'])
             else:
                 self.commandMap[command]()
+    
+    def __handleStoreUpdate(self):
+        state = store.get_state()
+        displayState = thaw(state['display'])
+        
+        if (displayState['activeFrame'] == "PERFORM"):
+            self.processControllerEvents = True
+        else:
+            self.processControllerEvents = False
