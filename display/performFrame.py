@@ -55,7 +55,7 @@ class PerformFrame(tk.Frame):
         self.chordDisplay = ChordDisplay(master=self)
         self.textDisplay = TextDisplay(master=self)
 
-        self.pack()
+        self.grid(row=0, column=0, sticky="nsew")
 
         store.subscribe(self.__handleStoreUpdate)
 

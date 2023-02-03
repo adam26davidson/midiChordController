@@ -18,4 +18,4 @@ class SettingsMenuFrame(tk.Frame):
         self.performButton = tk.Button(self, height=20, width=20, text='TEST', bg='#ffffff')
         self.performButton.pack()
         self.controller = controller
-        self.pack()
+        self.grid(row=0, column=0, sticky="nsew")
