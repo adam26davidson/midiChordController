@@ -9,3 +9,5 @@ def reducer(state, action):
     
     if action['type'] == 'ui/activeFrameChanged':
         return state.set('activeFrame', action['data']['activeFrame'])
+    else:
+        return state
