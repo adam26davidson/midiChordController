@@ -41,13 +41,15 @@ class Display():
             PerformFrame(self.root), 
             SettingsMenuFrame(self.root)
         ]
+        self.performFrameNum = 0
+        self.settingsMenuFrameNum = 1
 
     def start(self):
         asyncio.ensure_future(self.__mainLoop())
 
     async def __mainLoop(self):
         while True:
-            self.root.frames[PerformFrame].updateFrame()
+            self.root.frames[self.performFrameNum].updateFrame()
             self.root.update()
             await asyncio.sleep(ANIMATION_STEP)
 
@@ -63,15 +65,15 @@ class Display():
             if (command in self.commandMap.keys()):
                 self.commandMap[command]()
 
-        self.root.frames[PerformFrame].handleControllerEvent(event)
+        self.root.frames[self.performFrameNum].handleControllerEvent(event)
     
     def toggleMenu(self):
         if (self.state.activeFrame == "SETTINGS_MENU"):
             self.state.activeFrame = "PERFORM"
-            self.root.frames[PerformFrame].tkraise()
+            self.root.frames[self.performFrameNum].tkraise()
         else:
             self.state.activeFrame = "SETTINGS_MENU"
-            self.root.frames[SettingsMenuFrame].tkraise()
+            self.root.frames[self.settingsMenuFrameNum].tkraise()
         
         store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
 
