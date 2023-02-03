@@ -1,4 +1,3 @@
-from constants import FULLSCREEN, ANIMATION_STEP
 from redux import store
 from .chordDisplay import ChordDisplay
 from .keyboard import Keyboard
@@ -6,7 +5,6 @@ from .inversion import Inversion
 from .spread import Spread
 from .textDisplay import TextDisplay
 from pyrsistent import thaw
-import asyncio
 import tkinter as tk
 
 

@@ -46,4 +46,10 @@ class Display():
             await asyncio.sleep(ANIMATION_STEP)
 
     def controllerEventHandler(self, event):
+        controllers = store.get_state()['controllerManager']['controllers']
+        for controller in controllers:
+            if controller['role'] == 'primary':
+                uiMap = controller['uiMap']['map']
+        if uiMap:
+            
         self.performFrame.handleControllerEvent(event)

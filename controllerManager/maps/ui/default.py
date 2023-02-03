@@ -26,5 +26,7 @@ default = {
     #BUMPERS
     "RIGHT_BUMPER_DOWN": "PAGE_RIGHT",
     "LEFT_BUMPER_DOWN": "PAGE_LEFT",
+
+    
   }
 }

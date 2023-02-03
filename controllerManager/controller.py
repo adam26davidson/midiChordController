@@ -75,6 +75,9 @@ class Controller(ABC):
         self.processButtonEvent(event, control)
       elif control['type'] == 'ANALOG':
         self.processAnalogEvent(event, control, controlState)
+    else: # just for testing take this out
+      print(event)
+
 
   def processButtonEvent(self, event, control):
     eventName = control['events'][event.value]
