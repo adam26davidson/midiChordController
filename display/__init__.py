@@ -39,7 +39,7 @@ class Display():
         }
 
         self.performFrame = PerformFrame(self.root)
-        self.settingsMenuFrame = SettingsMenuFrame(self.root)
+        self.settingsMenuFrame = SettingsMenuFrame(self.root, self.root)
 
     def start(self):
         asyncio.ensure_future(self.__mainLoop())
