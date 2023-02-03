@@ -39,7 +39,7 @@ class Keyboard(tk.Canvas):
       "above": {"played": [], "shadow": []},
       "below": {"played": [], "shadow": []}
     }
-    self.pack(side="bottom", pady=(0,20))
+    self.pack(side="bottom", pady=(0,20), padx=(15, 15))
 
     self.root = 0
     self.chord = None

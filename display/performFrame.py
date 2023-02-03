@@ -14,7 +14,7 @@ class PerformFrame(tk.Frame):
     width = 800
 
     def __init__(self, container):
-        super().__init__(container, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
+        super().__init__(container, highlightthickness=0, relief="flat", bg="#000000")
 
         self.state = {
             'settingIndex': -1,
@@ -55,7 +55,7 @@ class PerformFrame(tk.Frame):
         self.chordDisplay = ChordDisplay(master=self)
         self.textDisplay = TextDisplay(master=self)
 
-        self.grid(row=0, column=0, sticky="nsew")
+        self.grid(row=0, column=0, expand=True,)
 
         store.subscribe(self.__handleStoreUpdate)
 
