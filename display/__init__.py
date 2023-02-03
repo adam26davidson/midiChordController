@@ -57,12 +57,14 @@ class Display():
         for controller in controllers:
             if controller['role'] == 'primary':
                 uiMap = controller['uiMap']['map']
+                
         if (event['name'] in uiMap.keys()):
             command = uiMap[event['name']]
             if (command in self.commandMap.keys()):
                 self.commandMap[command]()
 
-        self.performFrame.handleControllerEvent(event)
+        if self.state.activeFrame == 'PERFORM':  
+            self.performFrame.handleControllerEvent(event)
     
     def toggleMenu(self):
         if (self.state.activeFrame == "SETTINGS_MENU"):
