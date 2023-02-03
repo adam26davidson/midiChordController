@@ -92,16 +92,17 @@ class MusicEngine():
                 if controller['role'] == 'primary':
                     meMap = controller['meMap']['map']
 
-            command = meMap[event['name']]
-            if 'value' in event.keys():
-                self.commandMap[command](event['value'])
-            else:
-                self.commandMap[command]()
+            if (event['name'] in meMap.keys()):
+                command = meMap[event['name']]
+                if 'value' in event.keys():
+                    self.commandMap[command](event['value'])
+                else:
+                    self.commandMap[command]()
     
     def __handleStoreUpdate(self):
         state = store.get_state()
         displayState = thaw(state['display'])
-        
+
         if (displayState['activeFrame'] == "PERFORM"):
             self.processControllerEvents = True
         else:
