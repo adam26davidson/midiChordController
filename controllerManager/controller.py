@@ -75,7 +75,7 @@ class Controller(ABC):
         self.processButtonEvent(event, control)
       elif control['type'] == 'ANALOG':
         self.processAnalogEvent(event, control, controlState)
-    elif (event.code not in ['04', '03', '01', '05']): # just for testing take this out
+    elif (event.code not in [4, 3, 1, 5]): # just for testing take this out
       print(event)
 
 
