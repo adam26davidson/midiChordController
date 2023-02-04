@@ -21,8 +21,10 @@ class MenuItem(tk.Button):
             highlightthickness=0, 
             relief="flat",
             background="#000000",
+            activebackground="#000000",
             borderwidth=self.border,
-            foreground=self.activeColor,
+            foreground=self.inactiveColor,
+            activeforeground=self.activeColor,
             font=self.bigFont,
             text=text)
         
