@@ -10,8 +10,6 @@ import tkinter as tk
 
 class Display():
     def __init__(self):
-        self.height = 480
-        self.width = 800
         self.root = tk.Tk()
 
         self.root.overrideredirect(True)
@@ -38,8 +36,8 @@ class Display():
             "MENU": self.toggleMenu
         }
 
-        self.performFrame = PerformFrame(self.root)
         self.settingsMenuFrame = SettingsMenuFrame(self.root)
+        self.performFrame = PerformFrame(self.root)
 
     def start(self):
         asyncio.ensure_future(self.__mainLoop())
