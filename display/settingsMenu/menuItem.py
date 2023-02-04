@@ -8,7 +8,7 @@ class MenuItem(tk.Button):
     width = 100
     border = 5
 
-    inactiveColor = COLORS['chordDim']
+    inactiveColor = COLORS['chord']
     activeColor = COLORS['root']
 
     bigFont = FONTS["big"]
@@ -16,13 +16,16 @@ class MenuItem(tk.Button):
     def __init__(self, container, text):
         super().__init__(
             container, 
-            highlightthickness=self.border, 
+            width=10,
+            height=3,
+            highlightthickness=self.border,
+            highlightcolor=self.activeColor,
             relief="flat",
             background="#000000",
-            activebackground="#000000",
+            activebackground=self.activeColor,
             borderwidth=self.border,
             foreground=self.inactiveColor,
-            activeforeground=self.activeColor,
+            activeforeground="#000000",
             font=self.bigFont,
             text=text)
         
