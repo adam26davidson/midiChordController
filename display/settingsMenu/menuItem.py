@@ -1,29 +1,28 @@
 from redux import store
-from ..displayConstants import COLORS
+from ..displayConstants import COLORS, FONTS
 import tkinter as tk
 
-class MenuItem(tk.Canvas):
+class MenuItem(tk.Button):
 
-    radius = 80
+    height = 80
+    width = 100
     border = 5
 
-    inactiveColor = COLORS['chord']
+    inactiveColor = COLORS['chordDim']
     activeColor = COLORS['root']
 
+    bigFont = FONTS["big"]
 
     def __init__(self, container, text):
         super().__init__(
             container, 
+            height = self.height,
+            width=self.width,
             highlightthickness=0, 
             relief="flat",
-            bg="#000000")
+            bg="#000000",
+            bd=self.border,
+            font=self.bigFont,
+            text=text)
         
-        self.create_oval(
-            self.border/2, 
-            self.border/2, 
-            self.radius*2, 
-            self.radius*2,
-            fill="#000000", 
-            outline=self.inactiveColor, 
-            width=self.border)
 
