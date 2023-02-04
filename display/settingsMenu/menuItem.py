@@ -4,8 +4,8 @@ import tkinter as tk
 
 class MenuItem(tk.Canvas):
 
-    radius = 50
-    border = 3
+    radius = 100
+    border = 5
 
     inactiveColor = COLORS['chord']
     activeColor = COLORS['root']
