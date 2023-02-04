@@ -15,7 +15,7 @@ class MenuItem(tk.Canvas):
         super().__init__(
             container, 
             highlightthickness=0, 
-            relief="flat", 
+            relief="flat",
             bg="#000000")
         
         self.create_oval(

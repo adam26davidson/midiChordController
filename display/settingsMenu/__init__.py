@@ -13,9 +13,9 @@ class SettingsMenuFrame(tk.Frame):
             container, 
             highlightthickness=0, 
             relief="flat", 
-            bg="#000000")
+            bg="#ffffff")
+
+        self.grid(row=0, column=0, sticky='nsew')
 
         self.performItem = MenuItem(self, "PERFORM")
         self.performItem.place(relx=0.5, rely=0.5, anchor='center')
-        
-        self.grid(row=0, column=0, sticky='nsew')
