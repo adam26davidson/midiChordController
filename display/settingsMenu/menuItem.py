@@ -18,7 +18,11 @@ class MenuItem(tk.Canvas):
             relief="flat", 
             bg="#000000")
         
-        self.create_oval(0, 0, self.radius, self.radius,
+        self.create_oval(
+            self.border/2, 
+            self.border/2, 
+            self.radius*2, 
+            self.radius*2,
             fill="#000000", 
             outline=self.inactiveColor, 
             width=self.border)
