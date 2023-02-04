@@ -16,8 +16,6 @@ class MenuItem(tk.Button):
     def __init__(self, container, text):
         super().__init__(
             container, 
-            height = self.height,
-            width=self.width,
             highlightthickness=0, 
             relief="flat",
             background="#000000",

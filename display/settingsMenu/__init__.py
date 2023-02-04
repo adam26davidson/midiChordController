@@ -13,7 +13,7 @@ class SettingsMenuFrame(tk.Frame):
             container, 
             highlightthickness=0, 
             relief="flat", 
-            bg="#ffffff")
+            bg="#000000")
 
         self.performItem = MenuItem(self, "PERFORM")
         self.performItem.place(relx=0.5, rely=0.5, anchor='center')
