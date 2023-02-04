@@ -16,8 +16,8 @@ class MenuItem(tk.Button):
     def __init__(self, container, text):
         super().__init__(
             container, 
-            width=10,
-            height=3,
+            width=12,
+            height=4,
             highlightthickness=self.border,
             highlightcolor=self.activeColor,
             highlightbackground="#000000",
