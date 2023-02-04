@@ -25,7 +25,7 @@ class SettingsMenuFrame(tk.Frame):
         self.chordButton.place(relx=0.5, rely=0.8, anchor='center')
 
         self.strumButton = MenuItem(self, "STRUM")
-        self.strumButton.place(relx=0.15, rely=0.5, anchor='center')
+        self.strumButton.place(relx=0.2, rely=0.5, anchor='center')
 
         self.performButton.focus_set()
 
