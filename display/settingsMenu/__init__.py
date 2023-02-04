@@ -15,7 +15,10 @@ class SettingsMenuFrame(tk.Frame):
             relief="flat", 
             bg="#000000")
 
-        self.performItem = MenuItem(self, "PERFORM")
-        self.performItem.place(relx=0.5, rely=0.5, anchor='center')
+        self.performButton = MenuItem(self, "PERFORM")
+        self.performButton.place(relx=0.5, rely=0.5, anchor='center')
+
+        self.midiButton = MenuItem(self, "MIDI SETTINGS")
+        self.midiButton.place(relx=0.5, rely=0.2, anchor='center')
 
         self.grid(row=0, column=0, sticky='nsew')
