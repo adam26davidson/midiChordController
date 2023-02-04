@@ -20,10 +20,12 @@ class MenuItem(tk.Button):
             height=3,
             highlightthickness=self.border,
             highlightcolor=self.activeColor,
+            highlightbackground="#000000",
             relief="flat",
             background="#000000",
+            bd=0,
             activebackground=self.activeColor,
-            foreground=self.activeColor,
+            foreground=self.inactiveColor,
             activeforeground="#000000",
             font=self.bigFont,
             text=text)
