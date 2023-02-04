@@ -17,5 +17,5 @@ class SettingsMenuFrame(tk.Frame):
 
         self.grid(row=0, column=0, sticky='nsew')
 
-        self.performItem = MenuItem("PERFORM")
+        self.performItem = MenuItem(self, "PERFORM")
         self.performItem.place(relx=0.5, rely=0.5, anchor='center')
