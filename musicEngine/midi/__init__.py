@@ -108,6 +108,8 @@ class Midi():
         self.__noteOff(note, 'bass')
         self.state['bassChannel'] = channel
         self.__noteOn(note, 'bass')
+      else:
+        self.state['bassChannel'] = channel
   
   def __setChordChannel(self, channel):
     if (channel < 0 or channel > 15):
@@ -117,9 +119,8 @@ class Midi():
         notes = self.state['playingChordNotes']
         for note in notes:
           self.__noteOff(note, 'chord')
-        self.state['chordChannel'] = channel
-        for note in notes:
-          self.__noteOn(note, 'chord')
+          
+      self.state['chordChannel'] = channel
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, type)
