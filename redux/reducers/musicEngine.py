@@ -7,6 +7,8 @@ def reducer(state, action):
         return freeze({
             'availableMidiPorts': [],
             'connectedMidiPort': '',
+            'bassChannel': 0,
+            'chordChannel': 0,
 
             'settingsList': [],
             'setting': 0,
