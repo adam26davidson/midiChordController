@@ -1,6 +1,7 @@
 from rtmidi import MidiOut, MidiIn
 from redux import store
 from redux.actions import musicEngine as actions
+from pyrsistent import thaw
 from rtmidi.midiconstants import *
 from constants import *
 from numpy import random, copy
