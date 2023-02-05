@@ -13,7 +13,7 @@ class MenuItem(tk.Button):
 
     bigFont = FONTS["big"]
 
-    def __init__(self, container, text):
+    def __init__(self, container, text, callback):
         super().__init__(
             container, 
             width=12,
@@ -28,5 +28,6 @@ class MenuItem(tk.Button):
             foreground=self.inactiveColor,
             activeforeground="#000000",
             font=self.bigFont,
-            text=text)
+            text=text,
+            command=callback)
         
