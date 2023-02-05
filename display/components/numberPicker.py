@@ -37,7 +37,7 @@ class NumberPicker(SettingControl):
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
     def incrementNumber(self):
-        if self.state.number + 1 > self.max:
+        if self.state.number + 1 <= self.max:
             self.state.number += 1
         else:
             self.state.number = self.min
@@ -46,7 +46,7 @@ class NumberPicker(SettingControl):
         self.callback(self.state.number)
 
     def decrementNumber(self):
-        if self.state.number - 1 < self.min:
+        if self.state.number - 1 >= self.min:
             self.state.number -= 1
         else:
             self.state.number = self.max
