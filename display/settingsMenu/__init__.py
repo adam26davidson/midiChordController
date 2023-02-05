@@ -8,7 +8,7 @@ from .menuItem import MenuItem
 class SettingsMenuFrame(tk.Frame):
 
     config = {
-        "PERFROM": {"relx": 0.5, "rely": 0.5},
+        "PERFORM": {"relx": 0.5, "rely": 0.5},
         "MIDI": {"relx": 0.5, "rely": 0.2},
         "CHORD": {"relx": 0.5, "rely": 0.8},
         "STRUM": {"relx": 0.22, "rely": 0.5},
@@ -31,7 +31,7 @@ class SettingsMenuFrame(tk.Frame):
                 rely=self.config[key]['rely'], 
                 anchor='center')
 
-        self.buttons['PERFROM'].focus_set()
+        self.buttons['PERFORM'].focus_set()
 
         self.grid(row=0, column=0, sticky='nsew')
 

@@ -8,7 +8,7 @@ import tkinter as tk
 
 class NumberPicker(SettingControl):
 
-    mediumFont = FONTS["medium"]
+    font = FONTS["big"]
 
     bgColor = '#000000'
     color = COLORS['chord']
@@ -28,32 +28,34 @@ class NumberPicker(SettingControl):
             text=self.state.number,
             bg=self.bgColor, 
             fg=self.color, 
-            font=self.mediumFont)
+            font=self.font)
         
         self.rightButton = tk.Button(self.contentsFrame, 
+            highlightthickness=0, 
             relief="flat",
             bg="#000000",
             bd=0,
             activebackground=self.activeColor,
             fg=self.color,
             activeforeground="#000000",
-            font=self.mediumFont,
-            text='>')
+            font=self.font,
+            text='\u25B6')
     
         self.leftButton = tk.Button(self.contentsFrame, 
+            highlightthickness=0,
             relief="flat",
             bg="#000000",
             bd=0,
             activebackground=self.activeColor,
             fg=self.color,
             activeforeground="#000000",
-            font=self.mediumFont,
-            text='<')
+            font=self.font,
+            text='\u25C0')
         
-        self.leftButton.pack(side='left')
-        self.number.pack(side='left')
-        self.rightButton.pack(side='left')
-        self.contentsFrame.pack(side='top')
+        self.leftButton.pack(side='left', padx=2, pady=2)
+        self.number.pack(side='left', padx=2, pady=2)
+        self.rightButton.pack(side='left', padx=2, pady=2)
+        self.contentsFrame.pack(side='top', padx=2, pady=2)
 
 
 class NumberPickerState():
