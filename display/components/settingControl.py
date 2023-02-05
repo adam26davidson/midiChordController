@@ -10,7 +10,7 @@ class SettingControl(tk.Frame):
     font = FONTS["small"]
 
     bgColor = '#000000'
-    color = COLORS['chordColorDim']
+    color = COLORS['chordDim']
 
     def __init__(self, container, name):
         super().__init__(

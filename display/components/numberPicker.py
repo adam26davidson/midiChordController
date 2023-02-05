@@ -11,8 +11,8 @@ class NumberPicker(SettingControl):
     mediumFont = FONTS["medium"]
 
     bgColor = '#000000'
-    color = COLORS['chordColor']
-    activeColor = COLORS['rootColor']
+    color = COLORS['chord']
+    activeColor = COLORS['root']
 
     def __init__(self, container, name):
         super().__init__(container, name)
