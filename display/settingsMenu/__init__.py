@@ -1,12 +1,19 @@
 from redux import store
 from pyrsistent import thaw
+from redux import store
+from redux.actions import display as actions
 import tkinter as tk
 from .menuItem import MenuItem
 
 class SettingsMenuFrame(tk.Frame):
 
-    height = 480
-    width = 800
+    config = {
+        "PERFROM": {"relx": 0.5, "rely": 0.5},
+        "MIDI": {"relx": 0.5, "rely": 0.2},
+        "CHORD": {"relx": 0.5, "rely": 0.8},
+        "STRUM": {"relx": 0.22, "rely": 0.5},
+        "PATCHES": {"relx": 0.78, "rely": 0.5},
+    }
 
     def __init__(self, container):
         super().__init__(
@@ -14,19 +21,19 @@ class SettingsMenuFrame(tk.Frame):
             highlightthickness=0, 
             relief="flat", 
             bg="#000000")
+        
+        self.buttons = {}
 
-        self.performButton = MenuItem(self, "PERFORM")
-        self.performButton.place(relx=0.5, rely=0.5, anchor='center')
+        for key in self.config.keys():
+            self.buttons[key] = MenuItem(self, key, self.getButtonHandler(key))
+            self.buttons[key].place(
+                relx=self.config[key]['relx'], 
+                rely=self.config[key]['rely'], 
+                anchor='center')
 
-        self.midiButton = MenuItem(self, "MIDI")
-        self.midiButton.place(relx=0.5, rely=0.2, anchor='center')
-
-        self.chordButton = MenuItem(self, "CHORD")
-        self.chordButton.place(relx=0.5, rely=0.8, anchor='center')
-
-        self.strumButton = MenuItem(self, "STRUM")
-        self.strumButton.place(relx=0.22, rely=0.5, anchor='center')
-
-        self.performButton.focus_set()
+        self.buttons['PERFROM'].focus_set()
 
         self.grid(row=0, column=0, sticky='nsew')
+
+    def getButtonHandler(self, frame):
+        return lambda: store.dispatch(actions.changeActiveFrame(frame))

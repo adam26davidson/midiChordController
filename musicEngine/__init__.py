@@ -30,12 +30,9 @@ class MusicEngine():
             "EAST_CHORD_ON": lambda: self.chordEngine.chordButtonOn(ChordButton.EAST),
             "EAST_CHORD_OFF": lambda: self.chordEngine.chordButtonOff(ChordButton.EAST),
 
-            "LEFT_SECONDARY_ON": lambda: self.chordEngine.setSecondary(
-                'left'),
-            "RIGHT_SECONDARY_ON": lambda: self.chordEngine.setSecondary(
-                'right'),
-            "SECONDARY_OFF": lambda: self.chordEngine.setSecondary(
-                'none'),
+            "LEFT_SECONDARY_ON": lambda: self.chordEngine.setSecondary('left'),
+            "RIGHT_SECONDARY_ON": lambda: self.chordEngine.setSecondary('right'),
+            "SECONDARY_OFF": lambda: self.chordEngine.setSecondary('none'),
 
             "OCTAVE_UP": self.chordEngine.incrementChordOctave,
             "OCTAVE_DOWN": self.chordEngine.decrementChordOctave,
@@ -57,14 +54,10 @@ class MusicEngine():
             "INCREMENT_SPREAD": self.chordEngine.incrementSpread,
             "DECREMENT_SPREAD": self.chordEngine.decrementSpread,
 
-            "RIGHT_MODULATION_ON": lambda: self.chordEngine.setModulation(
-                'right'),
-            "RIGHT_MODULATION_OFF": lambda: self.chordEngine.setModulation(
-                'none'),
-            "LEFT_MODULATION_ON": lambda: self.chordEngine.setModulation(
-                'left'),
-            "LEFT_MODULATION_OFF": lambda: self.chordEngine.setModulation(
-                'none'),
+            "RIGHT_MODULATION_ON": lambda: self.chordEngine.setModulation('right'),
+            "RIGHT_MODULATION_OFF": lambda: self.chordEngine.setModulation('none'),
+            "LEFT_MODULATION_ON": lambda: self.chordEngine.setModulation('left'),
+            "LEFT_MODULATION_OFF": lambda: self.chordEngine.setModulation('none'),
 
             "ALTERNATE_ON": lambda: self.chordEngine.setAlternate(True),
             "ALTERNATE_OFF": lambda: self.chordEngine.setAlternate(False),
@@ -103,7 +96,7 @@ class MusicEngine():
         state = store.get_state()
         displayState = thaw(state['display'])
 
-        if (displayState['activeFrame'] == "PERFORM"):
-            self.processControllerEvents = True
-        else:
-            self.processControllerEvents = False
+        # if (displayState['activeFrame'] == "PERFORM"):
+        #     self.processControllerEvents = True
+        # else:
+        #     self.processControllerEvents = False

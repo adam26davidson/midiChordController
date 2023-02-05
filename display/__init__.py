@@ -3,6 +3,7 @@ from redux import store
 from redux.actions import display as actions
 from .performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
+from .midiSettings import MidiSettingsFrame
 from pyrsistent import thaw
 import asyncio
 import tkinter as tk
@@ -36,8 +37,13 @@ class Display():
             "MENU": self.toggleMenu
         }
 
-        self.settingsMenuFrame = SettingsMenuFrame(self.root)
-        self.performFrame = PerformFrame(self.root)
+        self.frames = {}
+
+        self.frames["MIDI"] = MidiSettingsFrame(self.root)
+        self.frames["MENU"] = SettingsMenuFrame(self.root)
+        self.frames["PERFORM"] = PerformFrame(self.root)
+
+        store.subscribe(self.__handleStoreUpdate)
 
     def start(self):
         asyncio.ensure_future(self.__mainLoop())
@@ -45,7 +51,7 @@ class Display():
     async def __mainLoop(self):
         while True:
             if self.state.activeFrame == 'PERFORM':     
-                self.performFrame.updateFrame()
+                self.frames["PERFORM"].updateFrame()
             self.root.update()
             await asyncio.sleep(ANIMATION_STEP)
 
@@ -62,15 +68,25 @@ class Display():
                 self.commandMap[command]()
 
         if self.state.activeFrame == 'PERFORM':  
-            self.performFrame.handleControllerEvent(event)
+            self.frames["PERFORM"].handleControllerEvent(event)
+
+    def __handleStoreUpdate(self):
+        state = store.get_state()
+        displayState = thaw(state['display'])
+        if (displayState['activeFrame'] != self.state.activeFrame):
+            if (displayState['activeFrame'] in self.frames.keys()):
+                self.state.activeFrame = displayState['activeFrame']
+                self.frames[displayState['activeFrame']].tkraise()
+            else:
+                store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
     
     def toggleMenu(self):
-        if (self.state.activeFrame == "SETTINGS_MENU"):
+        if (self.state.activeFrame == "MENU"):
             self.state.activeFrame = "PERFORM"
-            self.performFrame.tkraise()
+            self.frames["PERFORM"].tkraise()
         else:
-            self.state.activeFrame = "SETTINGS_MENU"
-            self.settingsMenuFrame.tkraise()
+            self.state.activeFrame = "MENU"
+            self.frames["MENU"].tkraise()
         
         store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
 

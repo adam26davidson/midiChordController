@@ -23,7 +23,7 @@ class MenuItem(tk.Button):
             highlightbackground="#000000",
             relief="flat",
             background="#000000",
-            bd=0,
+            bd=self.border,
             activebackground=self.activeColor,
             foreground=self.inactiveColor,
             activeforeground="#000000",
