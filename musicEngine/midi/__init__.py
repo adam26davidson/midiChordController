@@ -4,7 +4,8 @@ from redux.actions import musicEngine as actions
 from pyrsistent import thaw
 from rtmidi.midiconstants import *
 from constants import *
-from numpy import random, copy
+from numpy import random
+import copy
 import asyncio, math
 
 class Midi():
@@ -116,11 +117,14 @@ class Midi():
       store.dispatch(actions.changeChordChannel(self.state['chordChannel']))
     else:
       if len(self.state['playingChordNotes']) > 0:
-        notes = self.state['playingChordNotes']
+        notes = copy.deepcopy(self.state['playingChordNotes'])
         for note in notes:
           self.__noteOff(note, 'chord')
-          
-      self.state['chordChannel'] = channel
+        self.state['chordChannel'] = channel
+        for note in notes:
+          self.__noteOn(note, 'chord')
+      else:
+        self.state['chordChannel'] = channel
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, type)
