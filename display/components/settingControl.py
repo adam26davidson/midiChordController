@@ -20,6 +20,6 @@ class SettingControl(tk.Frame):
             text=name,
             bg='#000000', 
             fg=COLORS['chordDim'], 
-            font=self.font)
+            font=FONTS["small"])
 
         self.settingLabel.pack(side='top', anchor="nw")
