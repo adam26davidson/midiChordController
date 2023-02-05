@@ -27,9 +27,9 @@ class NumberPicker(SettingControl):
         self.rightButton = ArrowButton(self.contentsFrame, 'right')
         self.leftButton = ArrowButton(self.contentsFrame, 'left')
         
-        self.leftButton.pack(side='left', padx=(3, 3), pady=(3, 5))
-        self.number.pack(side='left', padx=(2, 2), pady=(3, 3))
-        self.rightButton.pack(side='left', padx=(3, 3), pady=(3, 5))
+        self.leftButton.pack(side='left', padx=(3, 3), pady=(3, 6))
+        self.number.pack(side='left', padx=(3, 3), pady=(3, 3))
+        self.rightButton.pack(side='left', padx=(3, 3), pady=(3, 6))
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
 class ArrowButton(tk.Button):
@@ -44,8 +44,8 @@ class ArrowButton(tk.Button):
             relief="flat",
             bg="#000000",
             height=2,
-            width=2,
-            bd=0,
+            width=3,
+            bd=4,
             activebackground=COLORS['root'],
             fg=COLORS['chord'],
             activeforeground="#000000",

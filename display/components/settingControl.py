@@ -7,8 +7,6 @@ import tkinter as tk
 
 class SettingControl(tk.Frame):
 
-    font = FONTS["small"]
-
     def __init__(self, container, name):
         super().__init__(
             container, 
@@ -20,6 +18,6 @@ class SettingControl(tk.Frame):
             text=name,
             bg='#000000', 
             fg=COLORS['chordDim'], 
-            font=FONTS["small"])
+            font=FONTS["medium"])
 
         self.settingLabel.pack(side='top', anchor="nw")
