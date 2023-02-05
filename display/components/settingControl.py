@@ -9,9 +9,6 @@ class SettingControl(tk.Frame):
 
     font = FONTS["small"]
 
-    bgColor = '#000000'
-    color = COLORS['chordDim']
-
     def __init__(self, container, name):
         super().__init__(
             container, 
@@ -21,8 +18,8 @@ class SettingControl(tk.Frame):
 
         self.settingLabel = tk.Label(self,
             text=name,
-            bg=self.bgColor, 
-            fg=self.color, 
+            bg='#000000', 
+            fg=COLORS['chordDim'], 
             font=self.font)
 
-        self.settingLabel.pack(side='top')
+        self.settingLabel.pack(side='top', anchor="nw")

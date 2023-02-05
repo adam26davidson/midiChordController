@@ -17,8 +17,8 @@ class MidiSettingsFrame(tk.Frame):
         self.bassChannel = NumberPicker(self, 'bass channel')
         self.chordChannel = NumberPicker(self, 'chord channel')
 
-        self.chordChannel.pack(side='left')
-        self.bassChannel.pack(side='left')
+        self.chordChannel.pack(side='left', anchor="nw")
+        self.bassChannel.pack(side='left', anchor="nw")
 
         self.grid(row=0, column=0, sticky='nsew')
 
