@@ -4,7 +4,6 @@ from pyrsistent import thaw
 from redux import store
 from redux.actions import display as actions
 import tkinter as tk
-from .menuItem import MenuItem
 
 class MidiSettingsFrame(tk.Frame):
 
