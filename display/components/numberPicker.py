@@ -49,7 +49,7 @@ class ArrowButton(tk.Button):
             activebackground=COLORS['root'],
             fg=COLORS['chord'],
             activeforeground="#000000",
-            font=self.font,
+            font=FONTS["big"],
             text=text)
 
 class NumberPickerState():
