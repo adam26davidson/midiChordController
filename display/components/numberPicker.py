@@ -28,8 +28,8 @@ class NumberPicker(SettingControl):
             fg=COLORS['chord'], 
             font=FONTS["big"])
         
-        self.rightButton = ArrowButton(self.contentsFrame, 'right')
-        self.leftButton = ArrowButton(self.contentsFrame, 'left')
+        self.rightButton = ArrowButton(self.contentsFrame, 'right', self.incrementNumber)
+        self.leftButton = ArrowButton(self.contentsFrame, 'left', self.decrementNumber)
         
         self.leftButton.pack(side='left', padx=(3, 3), pady=(3, 6))
         self.number.pack(side='left', padx=(4, 4), pady=(3, 3))
@@ -44,11 +44,20 @@ class NumberPicker(SettingControl):
 
         self.number.configure(text=str(self.state.number))
         self.callback(self.state.number)
+
+    def decrementNumber(self):
+        if self.state.number - 1 < self.min:
+            self.state.number -= 1
+        else:
+            self.state.number = self.max
+
+        self.number.configure(text=str(self.state.number))
+        self.callback(self.state.number)
         
 
 class ArrowButton(tk.Button):
 
-    def __init__(self, container, side):
+    def __init__(self, container, side, callback):
         text = '\u25B6'
         if side == 'left':
             text = '\u25C0'
@@ -65,7 +74,8 @@ class ArrowButton(tk.Button):
             activeforeground="#000000",
             font=FONTS["big"],
             disabledforeground=COLORS['chordDim'],
-            text=text)
+            text=text,
+            command=callback)
 
 
 class NumberPickerState():
