@@ -1,5 +1,6 @@
 from rtmidi import MidiOut, MidiIn
 from redux import store
+from redux.actions import musicEngine as actions
 from rtmidi.midiconstants import *
 from constants import *
 from numpy import random, copy
@@ -19,13 +20,12 @@ class Midi():
 
       'playingChordNotes': [],
       'playingBassNote': None,
-      'scheduledNotes': [],
 
       'distributeChannels': False,
       'occupiedChannels': {},
       'distChordChannels': {},
       'distBassChannel': 0,
-      'chordChannel': 1,
+      'chordChannel': 0,
       'bassChannel': 0,
 
       'usePolyphonicAfterTouch': False, # default is to use channel aftertouch
@@ -37,6 +37,8 @@ class Midi():
 
     for channel in range(0, 15):
       self.state['occupiedChannels'][channel] = None
+
+    store.subscribe(self.__handleStoreUpdate)
 
   def start(self):
     self.availableOutputPorts = self.midiOut.get_ports()
@@ -65,6 +67,14 @@ class Midi():
     def setCCValue(value):
       self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
     return setCCValue
+  
+  def __handleStoreUpdate(self):
+    state = store.get_state()
+    meState = thaw(state['musicEngine'])
+    if (meState['bassChannel'] != self.state['bassChannel']):
+      self.__setBassChannel(meState['bassChannel'])
+    if (meState['chordChannel'] != self.state['chordChannel']):
+      self.__setChordChannel(meState['chordChannel'])
 
   async def __loop(self):
     while True:
@@ -87,6 +97,28 @@ class Midi():
       self.state['midiOutputConnected'] = True
     else:
       self.state['midiOutputControllerName'] = ''
+
+  def __setBassChannel(self, channel):
+    if (channel < 0 or channel > 15):
+      store.dispatch(actions.changeBassChannel(self.state['bassChannel']))
+    else:
+      if self.state['playingBassNote']:
+        note = self.state['playingBassNote']
+        self.__noteOff(note, 'bass')
+        self.state['bassChannel'] = channel
+        self.__noteOn(note, 'bass')
+  
+  def __setChordChannel(self, channel):
+    if (channel < 0 or channel > 15):
+      store.dispatch(actions.changeChordChannel(self.state['chordChannel']))
+    else:
+      if len(self.state['playingChordNotes']) > 0:
+        notes = self.state['playingChordNotes']
+        for note in notes:
+          self.__noteOff(note, 'chord')
+        self.state['chordChannel'] = channel
+        for note in notes:
+          self.__noteOn(note, 'chord')
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, type)

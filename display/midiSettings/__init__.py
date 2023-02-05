@@ -1,5 +1,6 @@
 from ..components.numberPicker import NumberPicker
 from redux import store
+from redux.actions import musicEngine as meActions
 from pyrsistent import thaw
 from redux import store
 from redux.actions import display as actions
@@ -14,12 +15,17 @@ class MidiSettingsFrame(tk.Frame):
             relief="flat", 
             bg="#000000")
         
-        self.bassChannel = NumberPicker(self, 'bass ch')
-        self.chordChannel = NumberPicker(self, 'chord ch')
+        self.bassChannel = NumberPicker(self, name='bass ch', min=1, max=16, callback=self.setBassChannel)
+        self.chordChannel = NumberPicker(self, name='chord ch', min=1, max=16, callback=self.setChordChannel)
 
         self.chordChannel.pack(side='left', anchor="nw")
         self.bassChannel.pack(side='left', anchor="nw")
 
         self.grid(row=0, column=0, sticky='nsew')
 
+    def setBassChannel(self, channel):
+        store.dispatch(meActions.changeBassChannel(channel - 1))
+
+    def setChordChannel(self, channel):
+        store.dispatch(meActions.changeChordChannel(channel - 1))
 
