@@ -53,6 +53,16 @@ class NumberPicker(SettingControl):
 
         self.number.configure(text=str(self.state.number))
         self.callback(self.state.number)
+
+    def setDisabled(self):
+        self.rightButton.setDisabled()
+        self.leftButton.setDisabled()
+        self.number.configure(fg=COLORS['chordDim'])
+    
+    def setEnabled(self):
+        self.rightButton.setEnabled()
+        self.leftButton.setEnabled()
+        self.number.configure(fg=COLORS['chord'])
         
 
 class ArrowButton(tk.Button):
@@ -76,6 +86,12 @@ class ArrowButton(tk.Button):
             disabledforeground=COLORS['chordDim'],
             text=text,
             command=callback)
+
+    def setDisabled(self):
+        self.configure(state=tk.DISABLED)
+    
+    def setEnabled(self):
+        self.configure(state=tk.NORMAL)
 
 
 class NumberPickerState():

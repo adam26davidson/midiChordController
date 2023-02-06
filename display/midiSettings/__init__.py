@@ -1,4 +1,5 @@
 from ..components.numberPicker import NumberPicker
+from ..components.buttonGroup import ButtonGroup
 from redux import store
 from redux.actions import musicEngine as meActions
 from pyrsistent import thaw
@@ -15,8 +16,14 @@ class MidiSettingsFrame(tk.Frame):
             relief="flat", 
             bg="#000000")
         
+        self.state = MidiSetingsState()
+        
         self.bassChannel = NumberPicker(self, name='bass ch', min=1, max=16, callback=self.setBassChannel)
         self.chordChannel = NumberPicker(self, name='chord ch', min=1, max=16, callback=self.setChordChannel)
+        self.distributeChannels = ButtonGroup(self, 
+            name='distribute channels',
+            optionsList=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
+            callback=self.setDistributeChannels)
 
         self.chordChannel.pack(side='left', anchor="nw")
         self.bassChannel.pack(side='left', anchor="nw")
@@ -28,4 +35,9 @@ class MidiSettingsFrame(tk.Frame):
 
     def setChordChannel(self, channel):
         store.dispatch(meActions.changeChordChannel(channel - 1))
+    
+    def setDistributeChannels(self, value):
+        store.dispatch(meActions.changeDistributeChannels(value))
 
+class MidiSetingsState():
+    distributeChannels = False

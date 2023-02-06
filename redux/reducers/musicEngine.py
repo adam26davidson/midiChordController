@@ -9,6 +9,7 @@ def reducer(state, action):
             'connectedMidiPort': '',
             'bassChannel': 0,
             'chordChannel': 0,
+            'distributeChannels': False
 
             'settingsList': [],
             'setting': 0,
