@@ -188,10 +188,9 @@ class Midi():
         return self.__distributeChannel(note)
       else:
         if player == 'chord':
-          channel =  self.state['distChordChannels'][note]
+          return self.state['distChordChannels'][note]
         else:
-          channel =  self.state['distBassChannel']
-        return channel
+          return self.state['distBassChannel']
     elif player == 'chord':
       return self.state['chordChannel']
     elif player == 'bass':
