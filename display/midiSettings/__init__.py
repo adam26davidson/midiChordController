@@ -27,6 +27,7 @@ class MidiSettingsFrame(tk.Frame):
 
         self.chordChannel.pack(side='left', anchor="nw")
         self.bassChannel.pack(side='left', anchor="nw")
+        self.distributeChannels.pack(side='left', anchor="nw")
 
         self.grid(row=0, column=0, sticky='nsew')
 
