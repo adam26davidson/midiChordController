@@ -172,10 +172,10 @@ class Midi():
   def __storeNoteOff(self, note, player, channel=None):
     if self.state['distributeChannels']:
       self.__openChannel(note, player)
-      if player == 'chord':
-        self.state['distChordChannels'][note] = None
-      else:
-        self.state['distBassChannel'] = None
+      # if player == 'chord':
+      #   self.state['distChordChannels'][note] = None
+      # else:
+      #   self.state['distBassChannel'] = None
     if player == 'chord':
       if note in self.state['playingChordNotes']:
         self.state['playingChordNotes'].remove(note)
