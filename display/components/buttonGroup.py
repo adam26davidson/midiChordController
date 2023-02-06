@@ -25,7 +25,8 @@ class ButtonGroup(SettingControl):
 
         for option in optionsList:
             self.buttons[option['name']] = SingleButton(self.contentsFrame, option, self.setSelectedButton)
-        
+            self.buttons[option['name']].pack()
+
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
     
     def setSelectedButton(self, value, name):
