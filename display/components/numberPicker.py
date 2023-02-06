@@ -25,7 +25,7 @@ class NumberPicker(SettingControl):
         self.number = tk.Label(self.contentsFrame, 
             text=self.state.number,
             bg='#000000', 
-            fg=COLORS['chord'], 
+            fg=COLORS['root'], 
             font=FONTS["big"])
         
         self.rightButton = ArrowButton(self.contentsFrame, 'right', self.incrementNumber)
@@ -79,9 +79,9 @@ class ArrowButton(tk.Button):
             height=2,
             width=3,
             bd=4,
-            activebackground=COLORS['root'],
+            activebackground="#000000",
             fg=COLORS['chord'],
-            activeforeground="#000000",
+            activeforeground=COLORS['root'],
             font=FONTS["big"],
             disabledforeground=COLORS['chordDim'],
             text=text,
