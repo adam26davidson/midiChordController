@@ -78,7 +78,7 @@ class ArrowButton(tk.Button):
             bg="#000000",
             height=2,
             width=3,
-            bd=4,
+            bd=0,
             activebackground="#000000",
             fg=COLORS['chord'],
             activeforeground=COLORS['root'],

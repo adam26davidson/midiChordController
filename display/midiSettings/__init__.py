@@ -39,6 +39,12 @@ class MidiSettingsFrame(tk.Frame):
     
     def setDistributeChannels(self, value):
         store.dispatch(meActions.changeDistributeChannels(value))
+        if (value):
+            self.chordChannel.setDisabled()
+            self.bassChannel.setDisabled()
+        else:
+            self.chordChannel.setEnabled()
+            self.chordChannel.setEnabled()
 
 class MidiSetingsState():
     distributeChannels = False

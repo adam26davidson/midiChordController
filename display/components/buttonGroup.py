@@ -27,7 +27,7 @@ class ButtonGroup(SettingControl):
             self.buttons[option['name']] = SingleButton(self.contentsFrame, option, self.setSelectedButton)
             self.buttons[option['name']].pack(side='left')
 
-        self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
+        self.contentsFrame.pack(side='top', anchor='nw', padx=(4, 4), pady=(4, 4))
     
     def setSelectedButton(self, value, name):
         self.buttons[self.state.activebutton].setUnSelected()
@@ -44,8 +44,8 @@ class SingleButton(tk.Button):
         super().__init__(container,
             highlightthickness=0, 
             relief="flat",
-            height=2,
-            width=4,
+            height=3,
+            width=5,
             bd=4,
             bg="#000000",
             activebackground="#000000",
@@ -70,8 +70,8 @@ class SingleButton(tk.Button):
         self.configure(
             bg="#000000",
             activebackground="#000000",
-            fg=COLORS['root'],
-            activeforeground=COLORS['root'])
+            fg=COLORS['chord'],
+            activeforeground=COLORS['chord'])
 
 
 class ButtonGroupState():

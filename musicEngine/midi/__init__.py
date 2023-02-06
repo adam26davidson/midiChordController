@@ -77,6 +77,8 @@ class Midi():
       self.__setBassChannel(meState['bassChannel'])
     if (meState['chordChannel'] != self.state['chordChannel']):
       self.__setChordChannel(meState['chordChannel'])
+    if (meState['distributeChannels'] != self.state['distributeChannels']):
+      self.__setDistributeChannels(meState['distributeChannels'])
 
   async def __loop(self):
     while True:
@@ -125,6 +127,20 @@ class Midi():
           self.__noteOn(note, 'chord')
       else:
         self.state['chordChannel'] = channel
+
+  def __setDistributeChannels(self, distribute):
+    if len(self.state['playingChordNotes']) > 0 or self.state['playingBassNote']:
+      chordNotes = copy.deepcopy(self.state['playingChordNotes'])
+      bassNote = self.state['playingBassNote']
+      self.__noteOff(bassNote, 'chord')
+      for note in chordNotes:
+        self.__noteOff(note, 'chord')
+      self.state['distributeChannels'] = distribute
+      for note in chordNotes:
+        self.__noteOn(note, 'chord')
+      self.__noteOn(bassNote, 'chord')
+    else:
+      self.state['distributeChannels'] = distribute
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, type)
