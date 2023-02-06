@@ -199,9 +199,15 @@ class Midi():
       return None
 
     aftertouchValue = self.state['afterTouch']
-    channel = self.state['distChordChannels'][note] if self.state['distributeChannels'] else self.state['chordChannel']
-    channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
-    self.midiOut.send_message([channelCommand, aftertouchValue])
+    if self.state['distributeChannels']:
+      channels = self.state['occupiedChannels']
+      for channel in channels:
+        channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
+        self.midiOut.send_message([channelCommand, aftertouchValue])
+    else:
+      channel = self.state['chordChannel']
+      channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
+      self.midiOut.send_message([channelCommand, aftertouchValue])
 
     if self.state['playingBassNote']:
       channel = self.state['distBassChannel'] if self.state['distributeChannels'] else self.state['bassChannel']
