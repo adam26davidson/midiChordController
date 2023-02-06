@@ -143,7 +143,8 @@ class Midi():
       self.state['distributeChannels'] = distribute
 
   def __noteOff(self, note, player):
-    noteChannel = self.__getNoteChannel(note, player, type)
+    noteChannel = self.__getNoteChannel(note, player, 'off')
+    print('OFF -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
     self.midiOut.send_message([channelCommand, note, 0])
     self.__storeNoteOff(note, player, noteChannel)
@@ -151,6 +152,7 @@ class Midi():
   def __noteOn(self, note, player):
     velocity = self.__getVelocity()
     noteChannel = self.__getNoteChannel(note, player, 'on')
+    print('ON -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
     #print(str(note) + '- ON')
     self.midiOut.send_message([channelCommand, note, velocity])
@@ -169,6 +171,7 @@ class Midi():
 
   def __storeNoteOff(self, note, player, channel=None):
     if self.state['distributeChannels']:
+      self.__openChannel(note, player)
       if player == 'chord':
         self.state['distChordChannels'][note] = None
       else:
@@ -184,11 +187,11 @@ class Midi():
       if type == 'on':
         return self.__distributeChannel(note)
       else:
-        self.__openChannel(note)
         if player == 'chord':
-          return self.state['distChordChannels'][note]
+          channel =  self.state['distChordChannels'][note]
         else:
-          return self.state['distBassChannel']
+          channel =  self.state['distBassChannel']
+        return channel
     elif player == 'chord':
       return self.state['chordChannel']
     elif player == 'bass':
@@ -256,11 +259,11 @@ class Midi():
           self.state['occupiedChannels'][channel] = note
           return channel
   
-  def __openChannel(self, note):
-    if note in self.state['distChordChannels'].keys():
+  def __openChannel(self, note, player):
+    if player == 'chord':
       channel = self.state['distChordChannels'][note]
       self.state['occupiedChannels'][channel] = None
-    elif note == self.state['playingBassNote']:
+    elif player == 'bass':
       channel = self.state['distBassChannel']
       self.state['occupiedChannels'][channel] = None
 
