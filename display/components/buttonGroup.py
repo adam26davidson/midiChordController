@@ -24,7 +24,7 @@ class ButtonGroup(SettingControl):
         self.buttons = {}
 
         for option in optionsList:
-            self.buttons[option['name']] = SingleButton(self, self.contentsFrame, option, self.setSelectedButton)
+            self.buttons[option['name']] = SingleButton(self.contentsFrame, option, self.setSelectedButton)
         
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
     
@@ -39,7 +39,7 @@ class SingleButton(tk.Button):
     def __init__(self, container, option, callback):
         self.value = option['value']
         self.name = option['name']
-        self.callback
+        self.callback = callback
         super().__init__(container,
             highlightthickness=0, 
             relief="flat",
