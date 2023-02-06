@@ -37,10 +37,10 @@ class Midi():
       'lastSentCCValues': {}
     }
 
-    for channel in range(0, 15):
+    for channel in range(0, 16):
       self.state['occupiedChannels'][channel] = None
     
-    for note in range(0, 127):
+    for note in range(0, 128):
       self.state['distChordChannels'][note] = 0
 
     store.subscribe(self.__handleStoreUpdate)
