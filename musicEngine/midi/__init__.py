@@ -260,6 +260,9 @@ class Midi():
     if note in self.state['distChordChannels'].keys():
       channel = self.state['distChordChannels'][note]
       self.state['occupiedChannels'][channel] = None
+    elif note == self.state['playingBassNote']:
+      channel = self.state['distBassChannel']
+      self.state['occupiedChannels'][channel] = None
 
   def __getRandomVelocity(self):
     value = random.normal(
