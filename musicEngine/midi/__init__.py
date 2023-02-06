@@ -247,7 +247,7 @@ class Midi():
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
       if val != self.state['lastSentCCValues'][cc]:
-        for channel in range(0, 15):
+        for channel in range(0, 16):
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
         self.state['lastSentCCValues'][cc] = val

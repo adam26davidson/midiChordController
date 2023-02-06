@@ -95,7 +95,7 @@ class ChordEngine:
     def setSetting(self, setting):
         self.state['loadingSetting'] = True
         store.dispatch(actions.changeSettingLoading(True))
-        self.stopChord()
+        self.stopChord(force=True)
         self.stopBass(buttonUp=False)
         self.state['settingIndex'] = setting
         self.setting = SETTINGS[setting]
@@ -141,7 +141,7 @@ class ChordEngine:
         if button is not None:
             self.state['activeChord'] = button
         self.__setChordType()
-        self.stopChord()
+        self.stopChord(force=True)
         notes = self.__getChord(button)
         self.__sendNotesOn(notes, player='chord')
         self.__updateBass()
@@ -176,8 +176,8 @@ class ChordEngine:
             button = self.controlState.buttonQueue[-1]
             self.playChord(button)
 
-    def stopChord(self):
-        if (not self.state['hold'] and self.state['chordIsPlaying']):
+    def stopChord(self, force=False):
+        if ((not self.state['hold'] and self.state['chordIsPlaying']) or force):
             playingNotes = self.state['playingChordNotes']
             self.__sendNotesOff(playingNotes, player='chord')
             store.dispatch(actions.stopChord())
