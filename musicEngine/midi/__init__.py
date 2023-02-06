@@ -144,7 +144,7 @@ class Midi():
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
-    print('OFF -- note: {note}, channel: {noteChannel}, player: {player}')
+    print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
     self.midiOut.send_message([channelCommand, note, 0])
     self.__storeNoteOff(note, player, noteChannel)
@@ -152,7 +152,7 @@ class Midi():
   def __noteOn(self, note, player):
     velocity = self.__getVelocity()
     noteChannel = self.__getNoteChannel(note, player, 'on')
-    print('ON -- note: {note}, channel: {noteChannel}, player: {player}')
+    print(f'ON -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
     #print(str(note) + '- ON')
     self.midiOut.send_message([channelCommand, note, velocity])
