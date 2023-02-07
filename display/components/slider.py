@@ -27,9 +27,9 @@ class Slider(SettingControl):
             bd=0,
             from_=self.min,
             to=self.max,
-            bg=COLORS['darkGrey'],
+            bg=COLORS['root'],
             orient='horizontal',
-            troughcolor="#000000",
+            troughcolor=COLORS['darkGrey'],
             width=40,
             sliderlength=50,
             sliderrelief='flat',
@@ -37,7 +37,8 @@ class Slider(SettingControl):
             fg=COLORS['root'],
             relief='flat',
             highlightthickness=0,
-            activebackground=COLORS['root']
+            activebackground=COLORS['root'],
+            showvalue=False
             )
         
         self.slider.pack(side='left')
