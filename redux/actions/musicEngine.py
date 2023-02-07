@@ -171,6 +171,12 @@ def changeVelocityDeviation(deviation):
     'data': {'velocityDeviation': deviation}
   }
 
+def changeAftertouchMode(aftertouchMode):
+  return {
+    'type': 'me/aftertouchModeChanged',
+    'data': {'aftertouchMode': aftertouchMode}
+  }
+
 def changeHold(hold):
   return {
     'type': 'me/holdChanged',

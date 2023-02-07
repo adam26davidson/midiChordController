@@ -31,9 +31,9 @@ class MidiSettingsFrame(SettingsPage):
             selected='NO',
             callback=self.setDistributeChannels)
 
+        self.distributeChannels.pack(side='left', anchor="nw")
         self.chordChannel.pack(side='left', anchor="nw")
         self.bassChannel.pack(side='left', anchor="nw")
-        self.distributeChannels.pack(side='left', anchor="nw")
 
         self.channelFrame.grid(row=1, column=0, sticky='new', padx=(5, 5))
 
@@ -45,7 +45,7 @@ class MidiSettingsFrame(SettingsPage):
         self.velocityMode = ButtonGroup(self.velocityFrame,
             name='velocity mode',
             optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
-            selected='CONST',
+            selected='RAND',
             callback=self.setVelocityMode)
         
         self.slidersFrame = SettingsContainer(self.velocityFrame)
@@ -64,13 +64,21 @@ class MidiSettingsFrame(SettingsPage):
             value=10,
             callback=self.setVelocityDeviation)
 
-        self.velocityMode.pack(side='left', anchor="nw")
+        self.velocityMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
 
-        self.velocity.pack(side='top', anchor="nw")
-        self.velocityDeviation.pack(side='top', anchor="nw")
+        self.velocity.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
+        self.velocityDeviation.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.slidersFrame.pack(side='left', anchor="nw")
         
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
+
+        self.aftertouchMode = ButtonGroup(self.velocityFrame,
+            name='aftertouch mode',
+            optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
+            selected='CHAN',
+            callback=self.setAftertouchMode)
+        
+        self.aftertouchMode.grid(row=3, column=0, sticky='new', pady=(5, 5), padx=(5, 5))
 
 
     def setBassChannel(self, channel):
@@ -86,7 +94,7 @@ class MidiSettingsFrame(SettingsPage):
             self.bassChannel.setDisabled()
         else:
             self.chordChannel.setEnabled()
-            self.chordChannel.setEnabled()
+            self.bassChannel.setEnabled()
     
     def setVelocityMode(self, mode):
         if mode == 'constant':
@@ -100,6 +108,9 @@ class MidiSettingsFrame(SettingsPage):
     
     def setVelocityDeviation(self, deviation):
         store.dispatch(meActions.changeVelocityDeviation(deviation))
+
+    def setAftertouchMode(self, mode):
+        store.dispatch(meActions.changeAftertouchMode(mode))
 
 class MidiSetingsState():
     distributeChannels = False

@@ -13,6 +13,7 @@ def reducer(state, action):
             'velocity': 100,
             'velocityMode': 'random',
             'velocityDeviation': 10,
+            'aftertouchMode': 'channel',
 
             'settingsList': [],
             'setting': 0,
@@ -126,6 +127,9 @@ def reducer(state, action):
 
     elif action['type'] == 'me/velocityDeviationChanged':
         return state.set('velocityDeviation', action['data']['velocityDeviation'])
+    
+    elif action['type'] == 'me/aftertouchModeChanged':
+        return state.set('aftertouchMode', action['data']['aftertouchMode'])
 
     elif action['type'] == 'me/holdChanged':
         return state.set('hold', action['data']['hold'])

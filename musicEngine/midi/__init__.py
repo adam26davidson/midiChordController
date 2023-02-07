@@ -30,7 +30,7 @@ class Midi():
       'chordChannel': 0,
       'bassChannel': 0,
 
-      'usePolyphonicAfterTouch': False, # default is to use channel aftertouch
+      'aftertouchMode': 'channel', # 'channel' or 'poly'. default is to use channel aftertouch
       'afterTouch': 0,
       'lastSentAfterTouch': 0,
       'CCValues': {},
@@ -88,6 +88,8 @@ class Midi():
       self.__setVelocityMode(meState['velocityMode'])
     if (meState['velocityDeviation'] != self.state['velocityDeviation']):
       self.__setVelocityDeviation(meState['velocityDeviation'])
+    if (meState['aftertouchMode'] != self.state['aftertouchMode']):
+      self.__setAftertouchMode(meState['aftertouchMode'])
     
 
   async def __loop(self):
@@ -160,6 +162,9 @@ class Midi():
 
   def __setVelocityDeviation(self, deviation):
     self.state['velocityDeviation'] = deviation
+  
+  def __setAftertouchMode(self, aftertouchMode):
+    self.state['aftertouchMode'] = aftertouchMode
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
@@ -262,7 +267,7 @@ class Midi():
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
   
   def __sendAfterTouch(self):
-    if self.state['usePolyphonicAfterTouch']:
+    if self.state['aftertouchMode']:
       self.__sendPolyphonicAftertouch()
     else:
       self.__sendChannelAfterTouch()
