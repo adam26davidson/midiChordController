@@ -44,8 +44,6 @@ class SettingsPage(tk.Frame):
             text='\u25C0 MENU',
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
 
-        separator = tk.Separator(x, orient='vertical')
-
         self.menuButton.place(rely=0.5, relx=0.1, anchor='center')
         self.title.place(rely=0.5, relx=0.5, anchor='center')
         self.titleFrame.grid(row=0, column=0, sticky='new', )
