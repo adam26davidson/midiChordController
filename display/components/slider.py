@@ -54,15 +54,16 @@ class Slider(SettingControl):
         self.slider.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(5, 5))
 
-    def sliderCallback(self):
-        value = self.state.number.get()
+    def sliderCallback(self, value):
         self.callback(value)
 
     def setDisabled(self):
-        self.slider.configure(state=tk.DISABLED)
+        self.slider.configure(state=tk.DISABLED, bg=COLORS['chordDim'])
+        self.number.configure(fg=COLORS['chordDim'])
     
     def setEnabled(self):
-        self.slider.configure(state=tk.NORMAL)
+        self.slider.configure(state=tk.NORMAL, bg=COLORS['root'])
+        self.number.configure(fg=COLORS['root'])
 
 
 class SliderState():
