@@ -13,7 +13,7 @@ class SettingsPage(tk.Frame):
             container, 
             highlightthickness=0, 
             relief="flat", 
-            bg="#f0f0f0")
+            bg="#000000")
 
         self.titleFrame = tk.Frame(self, 
             highlightthickness=0, 
@@ -25,7 +25,7 @@ class SettingsPage(tk.Frame):
         self.title = tk.Label(self.titleFrame,
             text=name,
             bg='#000000', 
-            fg=COLORS['chord'], 
+            fg=COLORS['root'], 
             font=FONTS["big"],
             justify='center')
         
