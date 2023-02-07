@@ -184,6 +184,13 @@ class Midi():
         self.state['playingChordNotes'].remove(note)
     else:
       self.state['playingBassNote'] = None
+      
+    # this is here just in case a channel gets stuck on occupied
+    if self.state['distributeChannels'] \
+      and len(self.state['playingChordNotes']) == 0 \
+      and self.state['playingBassNote'] == None:
+      for channel in range(0, 16):
+        self.state['occupiedChannels'][channel] = None
   
   def __getNoteChannel(self, note, player, type):
     if self.state['distributeChannels']:

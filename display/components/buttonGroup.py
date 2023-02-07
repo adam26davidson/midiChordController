@@ -8,7 +8,7 @@ import tkinter as tk
 
 class ButtonGroup(SettingControl):
 
-    def __init__(self, container, name, optionsList, callback):
+    def __init__(self, container, name, optionsList, selected, callback):
         super().__init__(container, name)
 
         self.optionsList = optionsList
@@ -26,6 +26,8 @@ class ButtonGroup(SettingControl):
         for option in optionsList:
             self.buttons[option['name']] = SingleButton(self.contentsFrame, option, self.setSelectedButton)
             self.buttons[option['name']].pack(side='left')
+        
+        self.buttons[selected].setSelected()
 
         self.contentsFrame.pack(side='top', anchor='nw', padx=(4, 4), pady=(4, 4))
     

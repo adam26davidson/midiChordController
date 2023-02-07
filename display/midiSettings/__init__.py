@@ -1,5 +1,6 @@
 from ..components.numberPicker import NumberPicker
 from ..components.buttonGroup import ButtonGroup
+from ..components.settingsPage import SettingsPage
 from redux import store
 from redux.actions import musicEngine as meActions
 from pyrsistent import thaw
@@ -7,14 +8,11 @@ from redux import store
 from redux.actions import display as actions
 import tkinter as tk
 
-class MidiSettingsFrame(tk.Frame):
+class MidiSettingsFrame(SettingsPage):
 
     def __init__(self, container):
         super().__init__(
-            container, 
-            highlightthickness=0, 
-            relief="flat", 
-            bg="#000000")
+            container, 'MIDI SETTINGS')
         
         self.state = MidiSetingsState()
         
@@ -23,6 +21,7 @@ class MidiSettingsFrame(tk.Frame):
         self.distributeChannels = ButtonGroup(self, 
             name='distribute channels',
             optionsList=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
+            selected='NO',
             callback=self.setDistributeChannels)
 
         self.chordChannel.pack(side='left', anchor="nw")
