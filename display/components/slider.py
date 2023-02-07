@@ -27,7 +27,7 @@ class Slider(SettingControl):
             bd=5,
             from_=self.min,
             to=self.max,
-            bg="#000000",
+            bg=COLORS['root'],
             orient='horizontal',
             troughcolor=COLORS['darkGrey'],
             width=40,
@@ -37,7 +37,7 @@ class Slider(SettingControl):
             fg=COLORS['root'],
             relief='flat',
             highlightthickness=0,
-            highlightbackground=COLORS['chordDim']
+            activebackground=COLORS['root']
             )
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
