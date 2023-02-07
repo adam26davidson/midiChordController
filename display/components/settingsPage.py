@@ -31,7 +31,7 @@ class SettingsPage(tk.Frame):
             relief="flat",
             bg="#000000",
             height=2,
-            width=3,
+            width=7,
             bd=0,
             activebackground="#000000",
             fg=COLORS['chord'],
@@ -41,9 +41,10 @@ class SettingsPage(tk.Frame):
             text='\u25C0 MENU',
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
 
-        self.titleFrame.grid(row=0, column=0, sticky='new')
         self.menuButton.pack(side='left')
-        self.title.pack(side='top')
+        self.title.pack(side='left', fill='X')
+        self.titleFrame.grid(row=0, column=0, sticky='new')
+
 
         self.grid(row=0, column=0, sticky='nsew')
 

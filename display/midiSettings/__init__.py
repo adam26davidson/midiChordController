@@ -35,7 +35,6 @@ class MidiSettingsFrame(SettingsPage):
 
         self.channelFrame.grid(row=1, column=0, sticky='new')
 
-        self.grid(row=0, column=0, sticky='nsew')
 
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))
