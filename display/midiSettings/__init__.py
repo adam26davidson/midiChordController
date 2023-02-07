@@ -2,6 +2,7 @@ from ..components.numberPicker import NumberPicker
 from ..components.buttonGroup import ButtonGroup
 from ..components.settingsPage import SettingsPage
 from ..components.slider import Slider
+from ..components.settingsContainer import SettingsContainer
 from redux import store
 from redux.actions import musicEngine as meActions
 from pyrsistent import thaw
@@ -46,15 +47,17 @@ class MidiSettingsFrame(SettingsPage):
             optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
             selected='CONST',
             callback=self.setVelocityMode)
+        
+        self.slidersFrame = SettingsContainer(self.velocityFrame)
 
-        self.velocity = Slider(self.velocityFrame, 
+        self.velocity = Slider(self.slidersFrame, 
             name='velocity',
             min=0,
             max=127,
             value=100,
             callback=self.setVelocity)
         
-        self.velocityDeviation = Slider(self.velocityFrame, 
+        self.velocityDeviation = Slider(self.slidersFrame, 
             name='velocity deviation',
             min=0,
             max=64,
@@ -62,9 +65,11 @@ class MidiSettingsFrame(SettingsPage):
             callback=self.setVelocityDeviation)
 
         self.velocityMode.pack(side='left', anchor="nw")
-        self.velocity.pack(side='left', anchor="nw")
-        self.velocityDeviation.pack(side='left', anchor="nw")
 
+        self.velocity.pack(side='top', anchor="nw")
+        self.velocityDeviation.pack(side='top', anchor="nw")
+        self.slidersFrame.pack(side='left', anchor="nw")
+        
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
 
