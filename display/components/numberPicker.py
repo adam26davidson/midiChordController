@@ -24,6 +24,7 @@ class NumberPicker(SettingControl):
 
         self.number = tk.Label(self.contentsFrame, 
             text=self.state.number,
+            width=2,
             bg='#000000', 
             fg=COLORS['root'], 
             font=FONTS["big"])
@@ -32,7 +33,7 @@ class NumberPicker(SettingControl):
         self.leftButton = ArrowButton(self.contentsFrame, 'left', self.decrementNumber)
         
         self.leftButton.pack(side='left', padx=(3, 3), pady=(3, 6))
-        self.number.pack(side='left', padx=(4, 4), pady=(3, 3))
+        self.number.pack(side='left', padx=(3, 3), pady=(3, 3))
         self.rightButton.pack(side='left', padx=(3, 3), pady=(3, 6))
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
@@ -76,13 +77,13 @@ class ArrowButton(tk.Button):
             highlightthickness=0, 
             relief="flat",
             bg="#000000",
-            height=3,
+            height=2,
             width=3,
             bd=0,
             activebackground="#000000",
             fg=COLORS['chordDim'],
             activeforeground=COLORS['root'],
-            font=FONTS["big"],
+            font=FONTS["biggest"],
             disabledforeground=COLORS['chordDim'],
             text=text,
             command=callback)
