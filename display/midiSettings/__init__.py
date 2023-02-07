@@ -1,6 +1,7 @@
 from ..components.numberPicker import NumberPicker
 from ..components.buttonGroup import ButtonGroup
 from ..components.settingsPage import SettingsPage
+from ..components.slider import Slider
 from redux import store
 from redux.actions import musicEngine as meActions
 from pyrsistent import thaw
@@ -46,8 +47,15 @@ class MidiSettingsFrame(SettingsPage):
             selected='CONST',
             callback=self.setVelocityMode)
 
+        self.velocity = Slider(self.velocityFrame, 
+            name='velocity',
+            min=0,
+            max=127,
+            callback=self.setVelocity)
+
         self.velocityMode.pack(side='left', anchor="nw")
-        
+        self.velocity.pack(side='left', anchor="nw")
+
         self.velocityFrame.grid(row=2, column=0, sticky='new')
 
 
@@ -67,6 +75,9 @@ class MidiSettingsFrame(SettingsPage):
             self.chordChannel.setEnabled()
     
     def setVelocityMode(self, mode):
+        return None
+    
+    def setVelocity(self, velocity):
         return None
 
 class MidiSetingsState():
