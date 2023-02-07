@@ -35,6 +35,21 @@ class MidiSettingsFrame(SettingsPage):
 
         self.channelFrame.grid(row=1, column=0, sticky='new')
 
+        self.velocityFrame = tk.Frame(self, 
+            highlightthickness=0, 
+            relief="flat", 
+            bg="#000000")
+        
+        self.velocityMode = ButtonGroup(self.velocityFrame,
+            name='velocity mode',
+            optionsList=[{'name': 'CONSTANT', 'value': 'constant'}, {'name': 'RANDOM', 'value': 'random'}],
+            selected='CONSTANT',
+            callback=self.setVelocityMode)
+
+        self.velocityMode.pack(side='left', anchor="nw")
+        
+        self.velocityFrame.grid(row=1, column=0, sticky='new')
+
 
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))
@@ -50,6 +65,9 @@ class MidiSettingsFrame(SettingsPage):
         else:
             self.chordChannel.setEnabled()
             self.chordChannel.setEnabled()
+    
+    def setVelocityMode(self, mode):
+        return None
 
 class MidiSetingsState():
     distributeChannels = False

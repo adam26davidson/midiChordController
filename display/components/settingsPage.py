@@ -25,8 +25,8 @@ class SettingsPage(tk.Frame):
         self.title = tk.Label(self.titleFrame,
             text=name,
             bg='#000000', 
-            fg=COLORS['root'], 
-            font=FONTS["biggest"],
+            fg=COLORS['chord'], 
+            font=FONTS["big"],
             justify='center')
         
         self.menuButton = tk.Button(self.titleFrame,
@@ -43,6 +43,8 @@ class SettingsPage(tk.Frame):
             disabledforeground=COLORS['chordDim'],
             text='\u25C0 MENU',
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
+
+        separator = tk.Separator(x, orient='vertical')
 
         self.menuButton.place(rely=0.5, relx=0.1, anchor='center')
         self.title.place(rely=0.5, relx=0.5, anchor='center')

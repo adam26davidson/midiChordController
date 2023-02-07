@@ -76,7 +76,7 @@ class ArrowButton(tk.Button):
             highlightthickness=0, 
             relief="flat",
             bg="#000000",
-            height=2,
+            height=3,
             width=3,
             bd=0,
             activebackground="#000000",
