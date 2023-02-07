@@ -55,7 +55,7 @@ class Slider(SettingControl):
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(5, 5))
 
     def sliderCallback(self, value):
-        self.callback(value)
+        self.callback(int(value))
 
     def setDisabled(self):
         self.slider.configure(state=tk.DISABLED, bg=COLORS['chordDim'])
