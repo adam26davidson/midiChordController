@@ -37,10 +37,7 @@ class MidiSettingsFrame(SettingsPage):
 
         self.channelFrame.grid(row=1, column=0, sticky='new', padx=(5, 5))
 
-        self.velocityFrame = tk.Frame(self, 
-            highlightthickness=0, 
-            relief="flat", 
-            bg="#000000")
+        self.velocityFrame = SettingsContainer(self)
         
         self.velocityMode = ButtonGroup(self.velocityFrame,
             name='velocity mode',
@@ -72,7 +69,7 @@ class MidiSettingsFrame(SettingsPage):
         
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        self.aftertouchMode = ButtonGroup(self.velocityFrame,
+        self.aftertouchMode = ButtonGroup(self,
             name='aftertouch mode',
             optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
             selected='CHAN',
