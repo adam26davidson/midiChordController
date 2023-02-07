@@ -27,9 +27,9 @@ class Slider(SettingControl):
             bd=0,
             from_=self.min,
             to=self.max,
-            bg="#000000",
+            bg=COLORS['darkGrey'],
             orient='horizontal',
-            troughcolor=COLORS['darkGrey'],
+            troughcolor="#000000",
             width=40,
             sliderlength=50,
             sliderrelief='flat',
@@ -39,7 +39,7 @@ class Slider(SettingControl):
             highlightthickness=0,
             activebackground=COLORS['root']
             )
-        self.slider.unbind('<Leave>')
+        self.slider.winfo_
         
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
