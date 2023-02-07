@@ -10,6 +10,9 @@ def reducer(state, action):
             'bassChannel': 0,
             'chordChannel': 0,
             'distributeChannels': False,
+            'velocity': 100,
+            'velocityMode': 'random',
+            'velocityDeviation': 10,
 
             'settingsList': [],
             'setting': 0,
