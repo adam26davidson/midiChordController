@@ -39,7 +39,7 @@ class Slider(SettingControl):
             highlightthickness=0,
             activebackground=COLORS['root']
             )
-        for slave in self.slider.slaves:
+        for slave in self.slider.slaves():
             print(slave.winfo_width())
         
         self.slider.pack(side='left')
