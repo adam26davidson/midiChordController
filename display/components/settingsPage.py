@@ -13,7 +13,7 @@ class SettingsPage(tk.Frame):
             container, 
             highlightthickness=0, 
             relief="flat", 
-            bg="#000000")
+            bg="#f0f0f0")
 
         self.titleFrame = tk.Frame(self, 
             highlightthickness=0, 
@@ -46,7 +46,6 @@ class SettingsPage(tk.Frame):
         self.menuButton.place(rely=0.5, relx=0.25, anchor='center')
         self.title.place(rely=0.5, relx=0.5, anchor='center')
         self.titleFrame.grid(row=0, column=0, sticky='new')
-
 
         self.grid(row=0, column=0, sticky='nsew')
 
