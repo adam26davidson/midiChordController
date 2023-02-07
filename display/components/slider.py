@@ -31,7 +31,7 @@ class Slider(SettingControl):
             sliderlength=30,
             sliderrelief='flat',
             font=FONTS['medium'],
-            fg=COLORS['root']
+            fg=COLORS['root'],
             relief='flat'
             )
         self.slider.pack(side='left')
