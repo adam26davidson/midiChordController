@@ -29,7 +29,7 @@ class Slider(SettingControl):
             to=self.max,
             bg="#000000",
             orient='horizontal',
-            troughcolor=COLORS['chordDim'],
+            troughcolor=COLORS['darkGrey'],
             width=50,
             sliderlength=50,
             sliderrelief='flat',
