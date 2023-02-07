@@ -22,6 +22,13 @@ class Slider(SettingControl):
             relief="flat", 
             bg="#000000")
 
+        self.number = tk.Label(self.contentsFrame, 
+            textvariable=self.state.number
+            bg='#000000', 
+            fg=COLORS['root'], 
+            font=FONTS["big"],
+            )
+
         self.slider = tk.Scale(self.contentsFrame, 
             length=500,
             bd=0,
@@ -38,12 +45,15 @@ class Slider(SettingControl):
             relief='flat',
             highlightthickness=0,
             activebackground=COLORS['root'],
-            showvalue=False
+            showvalue=False,
+            variable=self.state.number
             )
         
+        self.number.pack(side='left')
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
+    def update()
 
     # def setDisabled(self):
     #     self.rightButton.setDisabled()
@@ -58,7 +68,7 @@ class Slider(SettingControl):
 
 class SliderState():
     disabled = False
-    number = 0
+    number = tk.IntVar()
 
     def __init__(self, number):
-        self.number = number
+        self.number.set(number)
