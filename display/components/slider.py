@@ -24,7 +24,7 @@ class Slider(SettingControl):
 
         self.slider = tk.Scale(self.contentsFrame, 
             length=400,
-            bd=0,
+            bd=5,
             from_=self.min,
             to=self.max,
             bg="#000000",
@@ -32,7 +32,7 @@ class Slider(SettingControl):
             troughcolor=COLORS['chordDim'],
             width=50,
             sliderlength=50,
-            sliderrelief='flat',
+            sliderrelief='raised',
             font=FONTS['medium'],
             fg=COLORS['root'],
             relief='flat',
