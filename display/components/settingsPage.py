@@ -19,7 +19,8 @@ class SettingsPage(tk.Frame):
             highlightthickness=0, 
             relief="flat", 
             bg="#000000",
-            height=100)
+            height=70,
+            width=container.winfo_width())
         
         self.title = tk.Label(self.titleFrame,
             text=name,
@@ -43,9 +44,9 @@ class SettingsPage(tk.Frame):
             text='\u25C0 MENU',
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
 
-        self.menuButton.place(rely=0.5, relx=0.25, anchor='center')
+        self.menuButton.place(anchor='e')
         self.title.place(rely=0.5, relx=0.5, anchor='center')
-        self.titleFrame.grid(row=0, column=0, sticky='new')
+        self.titleFrame.grid(row=0, column=0, sticky='new', )
 
         self.grid(row=0, column=0, sticky='nsew')
 
