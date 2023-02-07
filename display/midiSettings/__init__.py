@@ -75,7 +75,7 @@ class MidiSettingsFrame(SettingsPage):
             selected='CHAN',
             callback=self.setAftertouchMode)
         
-        self.aftertouchMode.grid(row=3, column=0, sticky='new', pady=(5, 5), padx=(5, 5))
+        self.aftertouchMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
 
 
     def setBassChannel(self, channel):
