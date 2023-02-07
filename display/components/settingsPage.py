@@ -22,7 +22,7 @@ class SettingsPage(tk.Frame):
         
         self.title = tk.Label(self.titleFrame,
             text=name,
-            bg='#0f0f0f', 
+            bg='#000000', 
             fg=COLORS['chord'], 
             font=FONTS["big"],
             justify='center')
@@ -42,8 +42,8 @@ class SettingsPage(tk.Frame):
             text='\u25C0 MENU',
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
 
-        self.menuButton.pack(side='left')
-        self.title.pack(side='left', fill='x')
+        self.menuButton.place(rely=0.5, relx=0.25, anchor='center')
+        self.title.place(rely=0.5, relx=0.5, anchor='center')
         self.titleFrame.grid(row=0, column=0, sticky='new')
 
 
