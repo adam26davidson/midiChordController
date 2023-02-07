@@ -32,7 +32,7 @@ class Slider(SettingControl):
             troughcolor=COLORS['chordDim'],
             width=50,
             sliderlength=50,
-            sliderrelief='raised',
+            sliderrelief='flat',
             font=FONTS['medium'],
             fg=COLORS['root'],
             relief='flat',
