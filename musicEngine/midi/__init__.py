@@ -82,6 +82,13 @@ class Midi():
       self.__setChordChannel(meState['chordChannel'])
     if (meState['distributeChannels'] != self.state['distributeChannels']):
       self.__setDistributeChannels(meState['distributeChannels'])
+    if (meState['velocity'] != self.state['velocity']):
+      self.__setVelocity(meState['velocity'])
+    if (meState['velocityMode'] != self.state['velocityMode']):
+      self.__setVelocityMode(meState['velocityMode'])
+    if (meState['velocityDeviation'] != self.state['velocityDeviation']):
+      self.__setVelocityDeviation(meState['velocityDeviation'])
+    
 
   async def __loop(self):
     while True:
@@ -145,6 +152,15 @@ class Midi():
     else:
       self.state['distributeChannels'] = distribute
 
+  def __setVelocity(self, velocity):
+    self.state['velocity'] = velocity
+  
+  def __setVelocityMode(self, mode):
+    self.state['velocityMode'] = mode
+
+  def __setVelocityDeviation(self, deviation):
+    self.state['velocityDeviation'] = deviation
+
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
     print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
@@ -184,7 +200,7 @@ class Midi():
         self.state['playingChordNotes'].remove(note)
     else:
       self.state['playingBassNote'] = None
-      
+
     # this is here just in case a channel gets stuck on occupied
     if self.state['distributeChannels'] \
       and len(self.state['playingChordNotes']) == 0 \

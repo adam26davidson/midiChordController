@@ -113,14 +113,16 @@ def reducer(state, action):
         return state.set('bassChannel', action['data']['bassChannel'])
 
     elif action['type'] == 'me/distributeChannelsChanged':
-        return state.set(
-            'distributeChannels',
-            action['data']['distributeChannels'])
+        return state.set('distributeChannels', action['data']['distributeChannels'])
 
-    elif action['type'] == 'me/noteVelocityChanged':
-        return state.set(
-            'distributeChannels',
-            action['data']['distributeChannels'])
+    elif action['type'] == 'me/velocityChanged':
+        return state.set('velocity', action['data']['velocity'])
+
+    elif action['type'] == 'me/velocityModeChanged':
+        return state.set('velocityMode', action['data']['velocityMode'])
+
+    elif action['type'] == 'me/velocityDeviationChanged':
+        return state.set('velocityDeviation', action['data']['velocityDeviation'])
 
     elif action['type'] == 'me/holdChanged':
         return state.set('hold', action['data']['hold'])

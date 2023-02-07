@@ -8,14 +8,14 @@ import tkinter as tk
 
 class Slider(SettingControl):
 
-    def __init__(self, container, name, min, max, callback):
+    def __init__(self, container, name, min, max, value, callback):
         super().__init__(container, name)
 
         self.max = max
         self.min = min
         self.callback = callback
 
-        self.state = SliderState(self, self.min)
+        self.state = SliderState(self, value)
 
         self.contentsFrame = tk.Frame(self, 
             highlightthickness=0, 
@@ -47,23 +47,22 @@ class Slider(SettingControl):
             highlightthickness=0,
             activebackground=COLORS['root'],
             showvalue=False,
-            variable=self.state.number
-            )
+            variable=self.state.number,
+            command=self.sliderCallback)
         
         self.number.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.slider.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(5, 5))
 
+    def sliderCallback(self):
+        value = self.state.number.get()
+        self.callback(value)
 
-    # def setDisabled(self):
-    #     self.rightButton.setDisabled()
-    #     self.leftButton.setDisabled()
-    #     self.number.configure(fg=COLORS['chordDim'])
+    def setDisabled(self):
+        self.slider.configure(state=tk.DISABLED)
     
-    # def setEnabled(self):
-    #     self.rightButton.setEnabled()
-    #     self.leftButton.setEnabled()
-    #     self.number.configure(fg=COLORS['chord'])
+    def setEnabled(self):
+        self.slider.configure(state=tk.NORMAL)
 
 
 class SliderState():

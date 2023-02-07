@@ -153,10 +153,22 @@ def changeDistributeChannels(distributeChannels):
     'data': {'distributeChannels': distributeChannels}
   }
 
-def changeNoteVelocity(velocity):
+def changeVelocity(velocity):
   return {
-    'type': 'me/noteVelocityChanged',
-    'data': {'noteVelocity': velocity}
+    'type': 'me/velocityChanged',
+    'data': {'velocity': velocity}
+  }
+
+def changeVelocityMode(mode):
+  return {
+    'type': 'me/velocityModeChanged',
+    'data': {'velocityMode': mode}
+  }
+
+def changeVelocityDeviation(deviation):
+  return {
+    'type': 'me/velocityDeviationChanged',
+    'data': {'velocityDeviation': deviation}
   }
 
 def changeHold(hold):

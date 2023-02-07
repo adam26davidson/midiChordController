@@ -51,10 +51,19 @@ class MidiSettingsFrame(SettingsPage):
             name='velocity',
             min=0,
             max=127,
+            value=100,
             callback=self.setVelocity)
+        
+        self.velocityDeviation = Slider(self.velocityFrame, 
+            name='velocity deviation',
+            min=0,
+            max=64,
+            value=10,
+            callback=self.setVelocityDeviation)
 
         self.velocityMode.pack(side='left', anchor="nw")
         self.velocity.pack(side='left', anchor="nw")
+        self.velocityDeviation.pack(side='left', anchor="nw")
 
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
@@ -75,10 +84,17 @@ class MidiSettingsFrame(SettingsPage):
             self.chordChannel.setEnabled()
     
     def setVelocityMode(self, mode):
-        return None
+        if mode == 'constant':
+            self.velocityDeviation.setDisabled()
+        if mode == 'random':
+            self.velocityDeviation.setEnabled()
+        store.dispatch(meActions.changeVelocityMode(mode))
     
     def setVelocity(self, velocity):
-        return None
+        store.dispatch(meActions.changeVelocity(velocity))
+    
+    def setVelocityDeviation(self, deviation):
+        store.dispatch(meActions.changeVelocityDeviation(deviation))
 
 class MidiSetingsState():
     distributeChannels = False
