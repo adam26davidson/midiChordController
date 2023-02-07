@@ -69,7 +69,7 @@ class MidiSettingsFrame(SettingsPage):
         
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        self.aftertouchMode = ButtonGroup(self,
+        self.aftertouchMode = ButtonGroup(self.velocityFrame,
             name='aftertouch mode',
             optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
             selected='CHAN',
