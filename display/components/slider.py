@@ -39,7 +39,6 @@ class Slider(SettingControl):
             highlightthickness=0,
             activebackground=COLORS['root']
             )
-        self.slider.winfo_
         
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
