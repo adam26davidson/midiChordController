@@ -18,7 +18,8 @@ class SettingsPage(tk.Frame):
         self.titleFrame = tk.Frame(self, 
             highlightthickness=0, 
             relief="flat", 
-            bg="#000000")
+            bg="#000000",
+            height=100)
         
         self.title = tk.Label(self.titleFrame,
             text=name,
