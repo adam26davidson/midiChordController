@@ -19,14 +19,14 @@ class SettingsPage(tk.Frame):
             highlightthickness=0, 
             relief="flat", 
             bg="#000000",
-            height=70,
+            height=80,
             width=800)
         
         self.title = tk.Label(self.titleFrame,
             text=name,
             bg='#000000', 
             fg=COLORS['root'], 
-            font=FONTS["big"],
+            font=FONTS["biggest"],
             justify='center')
         
         self.menuButton = tk.Button(self.titleFrame,
