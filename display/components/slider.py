@@ -23,20 +23,21 @@ class Slider(SettingControl):
             bg="#000000")
 
         self.slider = tk.Scale(self.contentsFrame, 
-            length=400,
+            length=500,
             bd=5,
             from_=self.min,
             to=self.max,
             bg="#000000",
             orient='horizontal',
             troughcolor=COLORS['darkGrey'],
-            width=50,
+            width=40,
             sliderlength=50,
             sliderrelief='flat',
-            font=FONTS['medium'],
+            font=FONTS['big'],
             fg=COLORS['root'],
             relief='flat',
-            highlightthickness=0
+            highlightthickness=0,
+            highlightbackground=COLORS['chordDim']
             )
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
