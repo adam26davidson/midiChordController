@@ -30,12 +30,13 @@ class Slider(SettingControl):
             bg="#000000",
             orient='horizontal',
             troughcolor=COLORS['chordDim'],
-            width=40,
-            sliderlength=40,
+            width=50,
+            sliderlength=50,
             sliderrelief='flat',
             font=FONTS['medium'],
             fg=COLORS['root'],
-            relief='flat'
+            relief='flat',
+            highlightthickness=0
             )
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
