@@ -42,7 +42,7 @@ class SettingsPage(tk.Frame):
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
 
         self.menuButton.pack(side='left')
-        self.title.pack(side='left', fill='X')
+        self.title.pack(side='left', fill='x')
         self.titleFrame.grid(row=0, column=0, sticky='new')
 
 
