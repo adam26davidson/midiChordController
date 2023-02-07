@@ -24,10 +24,10 @@ class Slider(SettingControl):
 
         self.slider = tk.Scale(self.contentsFrame, 
             length=500,
-            bd=5,
+            bd=0,
             from_=self.min,
             to=self.max,
-            bg=COLORS['root'],
+            bg="#000000",
             orient='horizontal',
             troughcolor=COLORS['darkGrey'],
             width=40,
