@@ -23,7 +23,7 @@ class Slider(SettingControl):
             bg="#000000")
 
         self.number = tk.Label(self.contentsFrame, 
-            textvariable=self.state.number
+            textvariable=self.state.number,
             bg='#000000', 
             fg=COLORS['root'], 
             font=FONTS["big"],
@@ -53,7 +53,6 @@ class Slider(SettingControl):
         self.slider.pack(side='left')
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
-    def update()
 
     # def setDisabled(self):
     #     self.rightButton.setDisabled()
