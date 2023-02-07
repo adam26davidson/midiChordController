@@ -15,7 +15,7 @@ class Slider(SettingControl):
         self.min = min
         self.callback = callback
 
-        self.state = SliderState(self.min)
+        self.state = SliderState(self, self.min)
 
         self.contentsFrame = tk.Frame(self, 
             highlightthickness=0, 
@@ -67,7 +67,6 @@ class Slider(SettingControl):
 
 class SliderState():
     disabled = False
-    number = tk.IntVar()
 
-    def __init__(self, number):
-        self.number.set(number)
+    def __init__(self, container, number):
+        self.number = tk.IntVar(container, value=number)
