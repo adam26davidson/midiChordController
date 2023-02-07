@@ -42,13 +42,13 @@ class MidiSettingsFrame(SettingsPage):
         
         self.velocityMode = ButtonGroup(self.velocityFrame,
             name='velocity mode',
-            optionsList=[{'name': 'CONSTANT', 'value': 'constant'}, {'name': 'RANDOM', 'value': 'random'}],
-            selected='CONSTANT',
+            optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
+            selected='CONST',
             callback=self.setVelocityMode)
 
         self.velocityMode.pack(side='left', anchor="nw")
         
-        self.velocityFrame.grid(row=1, column=0, sticky='new')
+        self.velocityFrame.grid(row=2, column=0, sticky='new')
 
 
     def setBassChannel(self, channel):
