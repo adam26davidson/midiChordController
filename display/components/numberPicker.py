@@ -80,7 +80,7 @@ class ArrowButton(tk.Button):
             width=3,
             bd=0,
             activebackground="#000000",
-            fg=COLORS['chord'],
+            fg=COLORS['chordDim'],
             activeforeground=COLORS['root'],
             font=FONTS["big"],
             disabledforeground=COLORS['chordDim'],

@@ -52,7 +52,7 @@ class Slider(SettingControl):
         
         self.number.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.slider.pack(side='left', pady=(4, 4), padx=(4, 4))
-        self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
+        self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(5, 5))
 
 
     # def setDisabled(self):

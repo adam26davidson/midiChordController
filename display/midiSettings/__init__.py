@@ -34,7 +34,7 @@ class MidiSettingsFrame(SettingsPage):
         self.bassChannel.pack(side='left', anchor="nw")
         self.distributeChannels.pack(side='left', anchor="nw")
 
-        self.channelFrame.grid(row=1, column=0, sticky='new')
+        self.channelFrame.grid(row=1, column=0, sticky='new', padx=(5, 5))
 
         self.velocityFrame = tk.Frame(self, 
             highlightthickness=0, 
@@ -56,7 +56,7 @@ class MidiSettingsFrame(SettingsPage):
         self.velocityMode.pack(side='left', anchor="nw")
         self.velocity.pack(side='left', anchor="nw")
 
-        self.velocityFrame.grid(row=2, column=0, sticky='new')
+        self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
 
     def setBassChannel(self, channel):

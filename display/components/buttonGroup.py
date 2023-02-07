@@ -51,7 +51,7 @@ class SingleButton(tk.Button):
             bd=4,
             bg="#000000",
             activebackground="#000000",
-            fg=COLORS['chord'],
+            fg=COLORS['chordDim'],
             activeforeground=COLORS['chord'],
             font=FONTS["medium"],
             disabledforeground=COLORS['chordDim'],
@@ -72,8 +72,8 @@ class SingleButton(tk.Button):
         self.configure(
             bg="#000000",
             activebackground="#000000",
-            fg=COLORS['chord'],
-            activeforeground=COLORS['chord'])
+            fg=COLORS['chordDim'],
+            activeforeground=COLORS['chordDim'])
 
 
 class ButtonGroupState():
