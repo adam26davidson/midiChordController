@@ -24,7 +24,8 @@ class SettingsPage(tk.Frame):
             text=name,
             bg='#000000', 
             fg=COLORS['chord'], 
-            font=FONTS["big"])
+            font=FONTS["big"],
+            justify='center')
         
         self.menuButton = tk.Button(self.titleFrame,
             highlightthickness=0, 
