@@ -67,8 +67,8 @@ class MidiSettingsFrame(SettingsPage):
             selected='CHAN',
             callback=self.setAftertouchMode)
         
-        self.velocityMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
-        self.aftertouchMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
+        self.velocityMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
+        self.aftertouchMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
 
         self.velocity.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.velocityDeviation.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
