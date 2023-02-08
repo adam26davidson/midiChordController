@@ -38,12 +38,20 @@ class MidiSettingsFrame(SettingsPage):
         self.channelFrame.grid(row=1, column=0, sticky='new', padx=(5, 5))
 
         self.velocityFrame = SettingsContainer(self)
+
+        self.velocityLeftFrame = SettingsContainer(self.velocityFrame)
         
-        self.velocityMode = ButtonGroup(self.velocityFrame,
+        self.velocityMode = ButtonGroup(self.velocityLeftFrame,
             name='velocity mode',
             optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
             selected='RAND',
             callback=self.setVelocityMode)
+
+        self.aftertouchMode = ButtonGroup(self.velocityLeftFrame,
+            name='aftertouch mode',
+            optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
+            selected='CHAN',
+            callback=self.setAftertouchMode)
         
         self.slidersFrame = SettingsContainer(self.velocityFrame)
 
@@ -61,14 +69,10 @@ class MidiSettingsFrame(SettingsPage):
             value=10,
             callback=self.setVelocityDeviation)
 
-        self.aftertouchMode = ButtonGroup(self.velocityFrame,
-            name='aftertouch mode',
-            optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
-            selected='CHAN',
-            callback=self.setAftertouchMode)
         
         self.velocityMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.aftertouchMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
+        self.velocityLeftFrame.pack(side='left', anchor="nw")
 
         self.velocity.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.velocityDeviation.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
