@@ -186,8 +186,6 @@ class Midi():
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
         self.state['lastSentCCValues'][cc] = val
-<<<<<<< HEAD
-=======
 
   async def __loop(self):
     while True:
@@ -203,7 +201,6 @@ class Midi():
     print(self.availableOutputPorts)
     if len(self.availableOutputPorts) > 0:
       self.midiOut.open_port(1)
->>>>>>> ecc5e9f (Added autoconnect for midi too, have not tested yet)
   
   def __combineCommandAndChannel(self, command, channel):
     return ((command & 0xf0) | (channel & 0xf))
