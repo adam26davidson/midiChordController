@@ -18,10 +18,7 @@ class MidiSettingsFrame(SettingsPage):
         
         self.state = MidiSetingsState()
 
-        self.channelFrame = tk.Frame(self, 
-            highlightthickness=0, 
-            relief="flat", 
-            bg="#000000")
+        self.channelFrame = SettingsContainer(self)
 
         self.bassChannel = NumberPicker(self.channelFrame, name='bass ch', min=1, max=16, callback=self.setBassChannel)
         self.chordChannel = NumberPicker(self.channelFrame, name='chord ch', min=1, max=16, callback=self.setChordChannel)
@@ -31,9 +28,9 @@ class MidiSettingsFrame(SettingsPage):
             selected='NO',
             callback=self.setDistributeChannels)
 
-        self.distributeChannels.pack(side='left', anchor="nw")
-        self.chordChannel.pack(side='left', anchor="nw")
-        self.bassChannel.pack(side='left', anchor="nw")
+        self.distributeChannels.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
+        self.chordChannel.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
+        self.bassChannel.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
 
         self.channelFrame.grid(row=1, column=0, sticky='new', padx=(5, 5))
 

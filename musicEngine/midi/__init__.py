@@ -10,11 +10,10 @@ import asyncio, math
 
 class Midi():
   def __init__(self):
-    self.midiOut = MidiOut()
+    self.midiOutInstances = []
     self.state = {
       'midiOutputConnected': False,
-      'midiOutputControllerName': '',
-      'midiOutputPortNumber': 1, # default
+      'midiOutputControllerNames': [],
 
       'velocity': 100, # constant velocity or center of random distribution
       'velocityMode': 'random', # 'constant' or 'random'
@@ -46,12 +45,14 @@ class Midi():
     store.subscribe(self.__handleStoreUpdate)
 
   def start(self):
-    self.availableOutputPorts = self.midiOut.get_ports()
+    self.availableOutputPorts = MidiOut.get_ports()
     print(self.availableOutputPorts)
-    if len(self.availableOutputPorts) > 1:
-      self.midiOut.open_port(self.state['midiOutputPortNumber'])
-      self.state['midiOutputControllerName'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
-      self.state['midiOutputConnected'] = True
+    for i in range(1, len(self.availableOutputPorts)):
+      midiOut = MidiOut()
+      midiOut.open_port(i)
+      self.midiOutInstances.append(midiOut)
+      self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
+
     asyncio.ensure_future(self.__loop())
 
   def handleMessage(self, message):
@@ -94,8 +95,8 @@ class Midi():
 
   async def __loop(self):
     while True:
-      self.availableOutputPorts = self.midiOut.get_ports()
-      if self.state['midiOutputControllerName'] in self.availableOutputPorts:
+      self.availableOutputPorts = MidiOut.get_ports()
+      if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
         self.__sendAfterTouch()
         self.__sendCCValues()
       else:
@@ -103,16 +104,18 @@ class Midi():
       await asyncio.sleep(MIDI_STEP)
 
   def __reconnect(self):
-    if self.midiOut.is_port_open():
-      self.midiOut.close_port()
-      self.state['midiOutputConnected'] = False
+    for midiOut in self.midiOutInstances:
+      if midiOut.is_port_open():
+        midiOut.close_port()
+        del midiOut
 
-    if len(self.availableOutputPorts) > 1:
-      self.midiOut.open_port(self.state['midiOutputPortNumber'])
-      self.state['midiOutputControllerName'] = self.availableOutputPorts[self.state['midiOutputPortNumber']]
-      self.state['midiOutputConnected'] = True
-    else:
-      self.state['midiOutputControllerName'] = ''
+    self.midiOutInstances = []
+    self.state['midiOutputControllerNames'] = []
+    for i in range(1, len(self.availableOutputPorts)):
+      midiOut = MidiOut()
+      midiOut.open_port(i)
+      self.midiOutInstances.append(midiOut)
+      self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
 
   def __setBassChannel(self, channel):
     if (channel < 0 or channel > 15):
@@ -165,12 +168,16 @@ class Midi():
   
   def __setAftertouchMode(self, aftertouchMode):
     self.state['aftertouchMode'] = aftertouchMode
+  
+  def __sendMidiMessage(self, message):
+    for midiOut in self.midiOutInstances:
+      midiOut.send_message(message)
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
     print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
-    self.midiOut.send_message([channelCommand, note, 0])
+    self.__sendMidiMessage([channelCommand, note, 0])
     self.__storeNoteOff(note, player, noteChannel)
   
   def __noteOn(self, note, player):
@@ -179,7 +186,7 @@ class Midi():
     print(f'ON -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
     #print(str(note) + '- ON')
-    self.midiOut.send_message([channelCommand, note, velocity])
+    self.__sendMidiMessage([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
 
   def __storeNoteOn(self, note, player, channel=None):
@@ -236,16 +243,16 @@ class Midi():
       channels = self.state['occupiedChannels']
       for channel in channels:
         channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
-        self.midiOut.send_message([channelCommand, aftertouchValue])
+        self.__sendMidiMessage([channelCommand, aftertouchValue])
     else:
       channel = self.state['chordChannel']
       channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
-      self.midiOut.send_message([channelCommand, aftertouchValue])
+      self.__sendMidiMessage([channelCommand, aftertouchValue])
 
     if self.state['playingBassNote']:
       channel = self.state['distBassChannel'] if self.state['distributeChannels'] else self.state['bassChannel']
       channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
-      self.midiOut.send_message([channelCommand, aftertouchValue])
+      self.__sendMidiMessage([channelCommand, aftertouchValue])
 
     self.state['lastSentAfterTouch'] = self.state['afterTouch']
 
@@ -256,14 +263,14 @@ class Midi():
         if self.state['distributeChannels']:
           channel = self.state['distChordChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
-        self.midiOut.send_message([channelCommand, note, self.state['afterTouch']])
+        self.__sendMidiMessage([channelCommand, note, self.state['afterTouch']])
       if self.state['playingBassNote'] is not None:
         bassNote = self.state['playingBassNote']
         channel = self.state['bassChannel']
         if self.state['distributeChannels']:
           channel = self.state['distBassChannel']
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
-        self.midiOut.send_message([channelCommand, bassNote, self.state['afterTouch']])
+        self.__sendMidiMessage([channelCommand, bassNote, self.state['afterTouch']])
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
   
   def __sendAfterTouch(self):
@@ -277,7 +284,7 @@ class Midi():
       if val != self.state['lastSentCCValues'][cc]:
         for channel in range(0, 16):
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
-          self.midiOut.send_message([channelCommand, cc, val])  
+          self.__sendMidiMessage([channelCommand, cc, val])  
         self.state['lastSentCCValues'][cc] = val
   
   def __combineCommandAndChannel(self, command, channel):

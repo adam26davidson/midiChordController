@@ -3,7 +3,7 @@ from redux import store
 from redux.actions import display as actions
 from .performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
-from .midiSettings import MidiSettingsFrame
+from .settingsPages.midiSettings import MidiSettingsFrame
 from pyrsistent import thaw
 import asyncio
 import tkinter as tk
