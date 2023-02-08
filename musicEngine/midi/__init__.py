@@ -10,6 +10,7 @@ import asyncio, math
 
 class Midi():
   def __init__(self):
+    self.utilityMidiOut = MidiOut()
     self.midiOutInstances = []
     self.state = {
       'midiOutputConnected': False,
@@ -45,7 +46,7 @@ class Midi():
     store.subscribe(self.__handleStoreUpdate)
 
   def start(self):
-    self.availableOutputPorts = MidiOut().get_ports()
+    self.availableOutputPorts = self.utilityMidiOut.get_ports()
     print(self.availableOutputPorts)
     for i in range(1, len(self.availableOutputPorts)):
       midiOut = MidiOut()
@@ -95,7 +96,7 @@ class Midi():
 
   async def __loop(self):
     while True:
-      self.availableOutputPorts = MidiOut().get_ports()
+      self.availableOutputPorts = self.utilityMidiOut.get_ports()
       if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
         self.__sendAfterTouch()
         self.__sendCCValues()
