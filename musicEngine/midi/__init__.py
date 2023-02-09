@@ -174,6 +174,7 @@ class Midi():
   
   def __sendMidiMessage(self, message):
     for midiOut in self.midiOutInstances:
+      print(f'sending message{message}')
       midiOut.send_message(message)
 
   def __noteOff(self, note, player):
