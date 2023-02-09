@@ -5,6 +5,7 @@ from pyrsistent import thaw
 from rtmidi.midiconstants import *
 from constants import *
 from numpy import random
+from datetime import datetime
 import copy
 import asyncio, math
 
@@ -107,10 +108,11 @@ class Midi():
 
   def __reconnect(self):
     print('RECONNECTING MIDI')
+    print(self.availableOutputPorts)
     for midiOut in self.midiOutInstances:
       if midiOut.is_port_open():
         midiOut.close_port()
-        midiOut.delete()
+      midiOut.delete()
 
     self.midiOutInstances = []
     self.state['midiOutputControllerNames'] = []
@@ -204,7 +206,7 @@ class Midi():
       else:
         self.state['distBassChannel'] = channel
 
-  def __storeNoteOff(self, note, player, channel=None):
+  def __storeNoteOff(self, note, player):
     if self.state['distributeChannels']:
       self.__openChannel(note, player)
       # if player == 'chord':
@@ -261,21 +263,28 @@ class Midi():
     self.state['lastSentAfterTouch'] = self.state['afterTouch']
 
   def __sendPolyphonicAftertouch(self):
-    if self.state['afterTouch'] != self.state['lastSentAfterTouch']:
-      for note in self.state['playingChordNotes']:
-        channel = self.state['chordChannel']
-        if self.state['distributeChannels']:
-          channel = self.state['distChordChannels'][note]
-        channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
-        self.__sendMidiMessage([channelCommand, note, self.state['afterTouch']])
-      if self.state['playingBassNote']:
-        bassNote = self.state['playingBassNote']
-        channel = self.state['bassChannel']
-        if self.state['distributeChannels']:
-          channel = self.state['distBassChannel']
-        channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
-        self.__sendMidiMessage([channelCommand, bassNote, self.state['afterTouch']])
-      self.state['lastSentAfterTouch'] = self.state['afterTouch']
+    if self.state['afterTouch'] == self.state['lastSentAfterTouch']:
+      return None
+    
+    print(f"sending aftertouch at {datetime.now()}")
+
+    # send poly aftertouch for each chord note
+    for note in self.state['playingChordNotes']:
+      channel = self.state['chordChannel']
+      if self.state['distributeChannels']:
+        channel = self.state['distChordChannels'][note]
+      channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
+      self.__sendMidiMessage([channelCommand, note, self.state['afterTouch']])
+
+    #send poly aftertouch for bass note
+    if self.state['playingBassNote']:
+      bassNote = self.state['playingBassNote']
+      channel = self.state['bassChannel']
+      if self.state['distributeChannels']:
+        channel = self.state['distBassChannel']
+      channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
+      self.__sendMidiMessage([channelCommand, bassNote, self.state['afterTouch']])
+    self.state['lastSentAfterTouch'] = self.state['afterTouch']
   
   def __sendAfterTouch(self):
     if self.state['aftertouchMode']=='poly':
