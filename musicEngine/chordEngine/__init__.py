@@ -150,7 +150,7 @@ class ChordEngine:
         self.state['chordIsPlaying'] = True
 
     def playBass(self):
-        print("PLAYBASS()")
+        #print("PLAYBASS()")
         self.stopBass(buttonUp=False)
         bassNote = self.__getBass()
         self.__sendNotesOn([bassNote], player='bass')

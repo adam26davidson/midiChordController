@@ -96,6 +96,7 @@ class Midi():
     
 
   async def __loop(self):
+    lastTime = 
     while True:
       self.availableOutputPorts = self.utilityMidiOut.get_ports()
       #print(all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']))
@@ -278,7 +279,7 @@ class Midi():
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
   
   def __sendAfterTouch(self):
-    if self.state['aftertouchMode']:
+    if self.state['aftertouchMode'=='poly']:
       self.__sendPolyphonicAftertouch()
     else:
       self.__sendChannelAfterTouch()
