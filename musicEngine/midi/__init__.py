@@ -97,15 +97,12 @@ class Midi():
 
   async def __loop(self):
     while True:
-      self.__sendAfterTouch()
-      self.__sendCCValues()
-      #self.availableOutputPorts = self.utilityMidiOut.get_ports()
-      #print(all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']))
-      # if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
-      #   self.__sendAfterTouch()
-      #   self.__sendCCValues()
-      # else:
-      #   self.__reconnect()
+      self.availableOutputPorts = self.utilityMidiOut.get_ports()
+      if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
+        self.__sendAfterTouch()
+        self.__sendCCValues()
+      else:
+        self.__reconnect()
       await asyncio.sleep(MIDI_STEP)
 
   def __reconnect(self):
@@ -194,6 +191,7 @@ class Midi():
     #print(str(note) + '- ON')
     self.__sendMidiMessage([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
+    self.__sendAfterTouch()
 
   def __storeNoteOn(self, note, player, channel=None):
     if player == 'chord':
@@ -270,7 +268,7 @@ class Midi():
           channel = self.state['distChordChannels'][note]
         channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
         self.__sendMidiMessage([channelCommand, note, self.state['afterTouch']])
-      if self.state['playingBassNote'] is not None:
+      if self.state['playingBassNote']:
         bassNote = self.state['playingBassNote']
         channel = self.state['bassChannel']
         if self.state['distributeChannels']:
