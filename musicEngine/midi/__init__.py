@@ -51,7 +51,7 @@ class Midi():
     for i in range(1, len(self.availableOutputPorts)):
       midiOut = MidiOut()
       midiOut.open_port(i)
-      print(midiOut.is_port_open())
+      #print(midiOut.is_port_open())
       self.midiOutInstances.append(midiOut)
       self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
 
@@ -98,7 +98,7 @@ class Midi():
   async def __loop(self):
     while True:
       self.availableOutputPorts = self.utilityMidiOut.get_ports()
-      print(all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']))
+      #print(all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']))
       if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
         self.__sendAfterTouch()
         self.__sendCCValues()
@@ -174,12 +174,11 @@ class Midi():
   
   def __sendMidiMessage(self, message):
     for midiOut in self.midiOutInstances:
-      print(f'sending message{message}')
       midiOut.send_message(message)
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
-    print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
+    #print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
     self.__sendMidiMessage([channelCommand, note, 0])
     self.__storeNoteOff(note, player, noteChannel)
@@ -187,7 +186,7 @@ class Midi():
   def __noteOn(self, note, player):
     velocity = self.__getVelocity()
     noteChannel = self.__getNoteChannel(note, player, 'on')
-    print(f'ON -- note: {note}, channel: {noteChannel}, player: {player}')
+    #print(f'ON -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
     #print(str(note) + '- ON')
     self.__sendMidiMessage([channelCommand, note, velocity])
