@@ -107,6 +107,7 @@ class Midi():
       await asyncio.sleep(MIDI_STEP)
 
   def __reconnect(self):
+    print('RECONNECTING MIDI')
     for midiOut in self.midiOutInstances:
       if midiOut.is_port_open():
         midiOut.close_port()
