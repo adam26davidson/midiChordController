@@ -79,7 +79,6 @@ class MidiSettingsFrame(SettingsPage):
 
         
 
-
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))
 

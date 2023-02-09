@@ -278,7 +278,7 @@ class Midi():
       self.state['lastSentAfterTouch'] = self.state['afterTouch']
   
   def __sendAfterTouch(self):
-    if self.state['aftertouchMode'=='poly']:
+    if self.state['aftertouchMode']=='poly':
       self.__sendPolyphonicAftertouch()
     else:
       self.__sendChannelAfterTouch()
