@@ -51,8 +51,10 @@ class Midi():
     for i in range(1, len(self.availableOutputPorts)):
       midiOut = MidiOut()
       midiOut.open_port(i)
+      print(midiOut.is_port_open())
       self.midiOutInstances.append(midiOut)
       self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
+      print(f'connected to ')
 
     asyncio.ensure_future(self.__loop())
 
