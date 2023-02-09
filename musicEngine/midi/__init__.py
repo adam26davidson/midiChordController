@@ -266,7 +266,7 @@ class Midi():
     if self.state['afterTouch'] == self.state['lastSentAfterTouch']:
       return None
     
-    print(f"sending aftertouch at {datetime.now()}")
+    print(f"sending aftertouch {self.state['afterTouch']} at {datetime.now()}")
 
     # send poly aftertouch for each chord note
     for note in self.state['playingChordNotes']:

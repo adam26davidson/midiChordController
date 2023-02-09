@@ -13,7 +13,7 @@ def reducer(state, action):
             'velocity': 100,
             'velocityMode': 'random',
             'velocityDeviation': 10,
-            'aftertouchMode': 'channel',
+            'aftertouchMode': 'poly',
 
             'settingsList': [],
             'setting': 0,
