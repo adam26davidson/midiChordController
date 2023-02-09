@@ -11,13 +11,11 @@ import asyncio, math
 
 class Midi():
   def __init__(self):
-    # self.utilityMidiOut = MidiOut()
-    # self.midiOutInstances = []
-    self.midiOut = MidiOut()
+    self.utilityMidiOut = MidiOut()
+    self.midiOutInstances = []
     self.state = {
       'midiOutputConnected': False,
-      #'midiOutputControllerNames': [],
-      'midiOutputControllerName': '',
+      'midiOutputControllerNames': [],
 
       'velocity': 100, # constant velocity or center of random distribution
       'velocityMode': 'random', # 'constant' or 'random'
@@ -49,18 +47,14 @@ class Midi():
     store.subscribe(self.__handleStoreUpdate)
 
   def start(self):
-    self.availableOutputPorts = self.midiOut.get_ports()
+    self.availableOutputPorts = self.utilityMidiOut.get_ports()
     print(self.availableOutputPorts)
-    portNum = len(self.availableOutputPorts) - 1
-    if len(self.availableOutputPorts) > 1:
-      self.midiOut.open_port(portNum)
-      self.state['midiOutputControllerName'] = self.availableOutputPorts[portNum]
-    # for i in range(1, len(self.availableOutputPorts)):
-    #   midiOut = MidiOut()
-    #   midiOut.open_port(i)
-    #   #print(midiOut.is_port_open())
-    #   self.midiOutInstances.append(midiOut)
-    #   self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
+
+    for i in range(1, len(self.availableOutputPorts)):
+      midiOut = MidiOut()
+      midiOut.open_port(i)
+      self.midiOutInstances.append(midiOut)
+      self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
 
     asyncio.ensure_future(self.__loop())
 
@@ -104,8 +98,8 @@ class Midi():
 
   async def __loop(self):
     while True:
-      self.availableOutputPorts = self.midiOut.get_ports()
-      if self.state['midiOutputControllerName'] in self.availableOutputPorts:
+      self.availableOutputPorts = self.utilityMidiOut.get_ports()
+      if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
         self.__sendAfterTouch()
         self.__sendCCValues()
       else:
@@ -114,28 +108,30 @@ class Midi():
 
   def __reconnect(self):
     print('RECONNECTING MIDI')
+
+    # if self.midiOut.is_port_open():
+    #   self.midiOut.close_port()
+
+    for midiOut in self.midiOutInstances:
+      if midiOut.is_port_open():
+        midiOut.close_port()
+      midiOut.delete()
+    
+    self.availableOutputPorts = self.utilityMidiOut.get_ports()
     print(self.availableOutputPorts)
 
-    if self.midiOut.is_port_open():
-      self.midiOut.close_port()
+    # portNum = len(self.availableOutputPorts) - 1
+    # if len(self.availableOutputPorts) > 1:
+    #   self.midiOut.open_port(portNum)
+    #   self.state['midiOutputControllerName'] = self.availableOutputPorts[portNum]
 
-    # for midiOut in self.midiOutInstances:
-    #   if midiOut.is_port_open():
-    #     midiOut.close_port()
-    #   midiOut.delete()
-
-    portNum = len(self.availableOutputPorts) - 1
-    if len(self.availableOutputPorts) > 1:
-      self.midiOut.open_port(portNum)
-      self.state['midiOutputControllerName'] = self.availableOutputPorts[portNum]
-
-    # self.midiOutInstances = []
-    # self.state['midiOutputControllerNames'] = []
-    # for i in range(1, len(self.availableOutputPorts)):
-    #   midiOut = MidiOut()
-    #   midiOut.open_port(i)
-    #   self.midiOutInstances.append(midiOut)
-    #   self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
+    self.midiOutInstances = []
+    self.state['midiOutputControllerNames'] = []
+    for i in range(1, len(self.availableOutputPorts)):
+      midiOut = MidiOut()
+      midiOut.open_port(i)
+      self.midiOutInstances.append(midiOut)
+      self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
 
   def __setBassChannel(self, channel):
     if (channel < 0 or channel > 15):
@@ -190,9 +186,9 @@ class Midi():
     self.state['aftertouchMode'] = aftertouchMode
   
   def __sendMidiMessage(self, message):
-    self.midiOut.send_message(message)
-    # for midiOut in self.midiOutInstances:
-    #   midiOut.send_message(message)
+    # self.midiOut.send_message(message)
+    for midiOut in self.midiOutInstances:
+      midiOut.send_message(message)
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
