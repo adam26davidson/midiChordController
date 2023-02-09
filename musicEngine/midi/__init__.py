@@ -98,20 +98,17 @@ class Midi():
 
   async def __loop(self):
     while True:
-      self.availableOutputPorts = self.utilityMidiOut.get_ports()
-      if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
+      ports = self.utilityMidiOut.get_ports()
+      if self.availableOutputPorts == ports:
         self.__sendAfterTouch()
         self.__sendCCValues()
       else:
+        self.availableOutputPorts = ports
         self.__reconnect()
       await asyncio.sleep(MIDI_STEP)
 
   def __reconnect(self):
-    print('RECONNECTING MIDI')
-
-    # if self.midiOut.is_port_open():
-    #   self.midiOut.close_port()
-
+    print("RECONNECTING TO MIDI OUTPUTS")
     for midiOut in self.midiOutInstances:
       if midiOut.is_port_open():
         midiOut.close_port()
@@ -119,11 +116,6 @@ class Midi():
     
     self.availableOutputPorts = self.utilityMidiOut.get_ports()
     print(self.availableOutputPorts)
-
-    # portNum = len(self.availableOutputPorts) - 1
-    # if len(self.availableOutputPorts) > 1:
-    #   self.midiOut.open_port(portNum)
-    #   self.state['midiOutputControllerName'] = self.availableOutputPorts[portNum]
 
     self.midiOutInstances = []
     self.state['midiOutputControllerNames'] = []
