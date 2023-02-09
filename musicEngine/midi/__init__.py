@@ -96,7 +96,6 @@ class Midi():
     
 
   async def __loop(self):
-    lastTime = 
     while True:
       self.availableOutputPorts = self.utilityMidiOut.get_ports()
       #print(all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']))
