@@ -208,7 +208,7 @@ class Midi():
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
     self.__sendMidiMessage([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
-    self.__sendAfterTouch()
+    self.__sendAfterTouch(force=True)
 
   def __storeNoteOn(self, note, player, channel=None):
     if player == 'chord':
@@ -255,8 +255,8 @@ class Midi():
     elif player == 'bass':
       return self.state['bassChannel']
 
-  def __sendChannelAfterTouch(self):
-    if self.state['afterTouch'] == self.state['lastSentAfterTouch']:
+  def __sendChannelAfterTouch(self, force=False):
+    if not force and (self.state['afterTouch'] == self.state['lastSentAfterTouch']):
       return None
 
     aftertouchValue = self.state['afterTouch']
@@ -277,8 +277,8 @@ class Midi():
 
     self.state['lastSentAfterTouch'] = self.state['afterTouch']
 
-  def __sendPolyphonicAftertouch(self):
-    if self.state['afterTouch'] == self.state['lastSentAfterTouch']:
+  def __sendPolyphonicAftertouch(self, force=False):
+    if not force and (self.state['afterTouch'] == self.state['lastSentAfterTouch']):
       return None
     
     print(f"sending aftertouch {self.state['afterTouch']} at {datetime.now()}")
@@ -302,11 +302,11 @@ class Midi():
 
     self.state['lastSentAfterTouch'] = self.state['afterTouch']
   
-  def __sendAfterTouch(self):
+  def __sendAfterTouch(self, force=False):
     if self.state['aftertouchMode']=='poly':
-      self.__sendPolyphonicAftertouch()
+      self.__sendPolyphonicAftertouch(force)
     else:
-      self.__sendChannelAfterTouch()
+      self.__sendChannelAfterTouch(force)
 
   def __sendCCValues(self):
     for cc, val in self.state['CCValues'].items():
