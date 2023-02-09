@@ -54,13 +54,12 @@ class Midi():
       print(midiOut.is_port_open())
       self.midiOutInstances.append(midiOut)
       self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
-      print(f'connected to ')
 
     asyncio.ensure_future(self.__loop())
 
   def handleMessage(self, message):
-    if not self.state['midiOutputConnected']:
-      return None
+    # if not self.state['midiOutputConnected']:
+    #   return None
 
     note, player, type = message['note'], message['player'], message['type']
     if type == 'on':
@@ -99,6 +98,7 @@ class Midi():
   async def __loop(self):
     while True:
       self.availableOutputPorts = self.utilityMidiOut.get_ports()
+      print(all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']))
       if all(port in self.availableOutputPorts for port in self.state['midiOutputControllerNames']):
         self.__sendAfterTouch()
         self.__sendCCValues()
@@ -110,7 +110,7 @@ class Midi():
     for midiOut in self.midiOutInstances:
       if midiOut.is_port_open():
         midiOut.close_port()
-        del midiOut
+        midiOut.delete()
 
     self.midiOutInstances = []
     self.state['midiOutputControllerNames'] = []
