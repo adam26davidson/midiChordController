@@ -8,7 +8,7 @@ import tkinter as tk
 
 class Slider(SettingControl):
 
-    def __init__(self, container, name, min, max, value, callback):
+    def __init__(self, container, name, min, max, value, callback, resolution=1, digits=0):
         super().__init__(container, name)
 
         self.max = max
@@ -35,6 +35,8 @@ class Slider(SettingControl):
             bd=0,
             from_=self.min,
             to=self.max,
+            resolution=resolution,
+            digits=digits,
             bg=COLORS['root'],
             orient='horizontal',
             troughcolor=COLORS['darkGrey'],
@@ -70,4 +72,4 @@ class SliderState():
     disabled = False
 
     def __init__(self, container, number):
-        self.number = tk.IntVar(container, value=number)
+        self.number = tk.StringVar(container, value=number)

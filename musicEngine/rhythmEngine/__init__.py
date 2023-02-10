@@ -1,6 +1,8 @@
 from numpy import random
 import asyncio
 import time
+from pyrsistent import thaw
+from redux import store
 
 class RhythmEngine():
   def __init__(self):
@@ -12,6 +14,7 @@ class RhythmEngine():
       'strumOrder' : 'random', # 'up', 'down', or 'random'
       'scheduledNotes': []
     }
+    store.subscribe(self.__handleStoreUpdate)
 
   def subscribe(self, callback):
     self.callbacks.append(callback)
@@ -39,6 +42,25 @@ class RhythmEngine():
   def __sendMessage(self, message):
     for callback in self.callbacks:
       callback(message)
+    
+  def __handleStoreUpdate(self):
+    state = store.get_state()
+    meState = thaw(state['musicEngine'])
+    if (meState['strumMode'] != self.state['strumMode']):
+      self.__setStrumMode(meState['strumMode'])
+    if (meState['strumInterval'] != self.state['strumInterval']):
+      self.__setStrumInterval(meState['strumInterval'])
+    if (meState['strumOrder'] != self.state['strumOrder']):
+      self.__setStrumOrder(meState['strumOrder'])
+
+  def __setStrumMode(self, mode):
+    self.state['strumMode'] == mode
+  
+  def __setStrumInterval(self, interval):
+    self.state['strumInterval'] == interval
+  
+  def __setStrumOrder(self, order):
+    self.state['strumOrder'] == order
 
   def __getRandomIntervals(self, n):
     values = random.normal(

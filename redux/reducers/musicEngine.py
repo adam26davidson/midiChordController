@@ -15,6 +15,10 @@ def reducer(state, action):
             'velocityDeviation': 10,
             'aftertouchMode': 'poly',
 
+            'strumMode': 'regular', # 'random', 'regular', 'off'
+            'strumInterval': 0.02, # time beween notes or spread of distribution
+            'strumOrder' : 'random', # 'up', 'down', or 'random'
+
             'settingsList': [],
             'setting': 0,
             'settingLoading': False,
@@ -136,6 +140,15 @@ def reducer(state, action):
 
     elif action['type'] == 'me/inversionLockChanged':
         return state.set('inversionLock', action['data']['inversionLock'])
+    
+    elif action['type'] == 'me/strumModeChanged':
+        return state.set('strumMode', action['data']['strumMode'])
+    
+    elif action['type'] == 'me/strumIntervalChanged':
+        return state.set('strumInterval', action['data']['strumInterval'])
+    
+    elif action['type'] == 'me/strumOrderChanged':
+        return state.set('strumOrder', action['data']['strumOrder'])
 
     else:
         return state

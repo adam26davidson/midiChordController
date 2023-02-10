@@ -36,6 +36,27 @@ class ButtonGroup(SettingControl):
         self.buttons[name].setSelected()
         self.state.activebutton = name
         self.callback(value) 
+    
+    def setDisabled(self):
+        for buttonName in self.buttons.keys():
+            button = self.buttons[buttonName]
+            button.configure(state=tk.DISABLED)
+            if buttonName == self.state.activebutton:
+                button.configure(
+                    bg=COLORS['chordDim'],
+                    fg='#000000'
+                )
+    
+    def setEnabled(self):
+        for buttonName in self.buttons.keys():
+            button = self.buttons[buttonName]
+            button.configure(state=tk.NORMAL)
+            if buttonName == self.state.activebutton:
+                button.configure(
+                    bg=COLORS['root'],
+                    fg='#000000'
+                )
+                
 
 class SingleButton(tk.Button):
 

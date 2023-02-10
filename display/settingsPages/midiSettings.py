@@ -15,8 +15,6 @@ class MidiSettingsFrame(SettingsPage):
     def __init__(self, container):
         super().__init__(
             container, 'MIDI SETTINGS')
-        
-        self.state = MidiSetingsState()
 
         self.channelFrame = SettingsContainer(self)
 
@@ -109,6 +107,3 @@ class MidiSettingsFrame(SettingsPage):
 
     def setAftertouchMode(self, mode):
         store.dispatch(meActions.changeAftertouchMode(mode))
-
-class MidiSetingsState():
-    distributeChannels = False

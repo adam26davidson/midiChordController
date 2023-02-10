@@ -188,3 +188,21 @@ def changeInversionLock(lock):
     'type': 'me/inversionLockChanged',
     'data': {'inversionLock': lock}
   }
+
+def changeStrumMode(mode):
+  return {
+    'type': 'me/strumModeChanged',
+    'data': {'strumMode': mode}
+  }
+
+def changeStrumInterval(interval):
+  return {
+    'type': 'me/strumIntervalChanged',
+    'data': {'strumInterval': interval}
+  }
+
+def changeStrumOrder(order):
+  return {
+    'type': 'me/strumOrderChanged',
+    'data': {'strumOrder': order}
+  }

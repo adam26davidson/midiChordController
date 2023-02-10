@@ -4,6 +4,7 @@ from redux.actions import display as actions
 from .performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
 from .settingsPages.midiSettings import MidiSettingsFrame
+from .settingsPages.strumSettings import StrumSettingsFrame
 from pyrsistent import thaw
 import asyncio
 import tkinter as tk
@@ -42,6 +43,7 @@ class Display():
         self.frames["MIDI"] = MidiSettingsFrame(self.root)
         self.frames["MENU"] = SettingsMenuFrame(self.root)
         self.frames["PERFORM"] = PerformFrame(self.root)
+        self.frames["STRUM"] = StrumSettingsFrame(self.root)
 
         store.subscribe(self.__handleStoreUpdate)
 
