@@ -54,13 +54,13 @@ class RhythmEngine():
       self.__setStrumOrder(meState['strumOrder'])
 
   def __setStrumMode(self, mode):
-    self.state['strumMode'] == mode
+    self.state['strumMode'] = mode
   
   def __setStrumInterval(self, interval):
-    self.state['strumInterval'] == interval
+    self.state['strumInterval'] = interval
   
   def __setStrumOrder(self, order):
-    self.state['strumOrder'] == order
+    self.state['strumOrder'] = order
 
   def __getRandomIntervals(self, n):
     values = random.normal(

@@ -40,10 +40,10 @@ class Display():
 
         self.frames = {}
 
+        self.frames["STRUM"] = StrumSettingsFrame(self.root)
         self.frames["MIDI"] = MidiSettingsFrame(self.root)
         self.frames["MENU"] = SettingsMenuFrame(self.root)
         self.frames["PERFORM"] = PerformFrame(self.root)
-        self.frames["STRUM"] = StrumSettingsFrame(self.root)
 
         store.subscribe(self.__handleStoreUpdate)
 
