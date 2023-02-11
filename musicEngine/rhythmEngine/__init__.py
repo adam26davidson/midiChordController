@@ -1,18 +1,18 @@
 from numpy import random
 import asyncio
 import time
+import uuid
 from pyrsistent import thaw
 from redux import store
 
 class RhythmEngine():
   def __init__(self):
     self.callbacks = []
-    self.scheduledNotesLock = asyncio.Lock()
+    self.scheduledNotes = ScheduledNotes()
     self.state = {
       'strumMode': 'regular', # 'random', 'regular', 'off'
       'strumInterval': 0.02, # time beween notes or spread of distribution
       'strumOrder' : 'random', # 'up', 'down', or 'random'
-      'scheduledNotes': []
     }
     store.subscribe(self.__handleStoreUpdate)
 
@@ -81,43 +81,37 @@ class RhythmEngine():
     elif self.state['strumMode'] == 'regular':
       intervals = self.__getRegularIntervals(n)
       intervals = random.permutation(intervals) if self.state['strumOrder'] == 'random' else intervals
+    elif self.state['strumMode'] == 'off':
+      intervals = [] * n
     return intervals
   
   async def __scheduleMessage(self, message, delay):
-    async with self.scheduledNotesLock:
-      self.state['scheduledNotes'].append(message['note'])
-    await asyncio.sleep(delay)
-    async with self.scheduledNotesLock:
-      if message['note'] in self.state['scheduledNotes']:
-        self.__sendMessage(message)
-        self.state['scheduledNotes'].remove(message['note'])
+    scheduledNote = ScheduledNote(message['note'])
+    await self.scheduledNotes.addScheduledNote(scheduledNote)
 
-  def __handleChordOn(self, notes):
-      self.state['scheduledNotes'] = []
+    await asyncio.sleep(delay)
+
+    if await self.scheduledNotes.isNoteStillScheduled(scheduledNote):
+      self.__sendMessage(message)
+      await self.scheduledNotes.removeScheduledNote(scheduledNote)
+
+  async def __handleChordOn(self, notes):
+      await self.scheduledNotes.removeAll()
       intervals = None
-      if self.state['strumMode'] != 'off':
-        intervals = self.__getIntervals(len(notes))
-        notes.sort()
+      intervals = self.__getIntervals(len(notes))
+      notes.sort()
       for i, note in enumerate(notes):  
-        if intervals is None:
-          self.__sendMessage({'note': note, 'type': 'on', 'player': 'chord'})
-        else:
-          j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
-          message = {'note': note, 'type': 'on', 'player': 'chord'}
-          asyncio.ensure_future(self.__scheduleMessage(message, intervals[j]))
+        j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
+        message = {'note': note, 'type': 'on', 'player': 'chord'}
+        asyncio.ensure_future(self.__scheduleMessage(message, intervals[j]))
 
   async def scheduledNotesOff(self, notes):
-    for note in notes:
-      # remove scheduled note
-      async with self.scheduledNotesLock:
-        if note in self.state['scheduledNotes']:
-          self.state['scheduledNotes'].remove(note)
+    self.scheduledNotes.removeNotes(notes)
   
   async def __handleChordOff(self, notes):
     await self.scheduledNotesOff(notes)
     for note in notes:
-      #send note off
-      message = {'note': note,'type': 'off','player': 'chord'}
+      message = {'note': note, 'type': 'off', 'player': 'chord'}
       self.__sendMessage(message)
 
   
@@ -126,3 +120,50 @@ class RhythmEngine():
   
   def __handleBassOff(self, notes):
     self.__sendMessage({'note': notes[0], 'type': 'off', 'player': 'bass'})
+  
+class ScheduledNotes():
+  notes = {}
+
+  def __init__(self):
+    self.lock = asyncio.Lock()
+    for note in range(0, 128):
+      self.notes[str(note)] = []
+
+  async def addScheduledNote(self, scheduledNote):
+    async with self.lock:
+      self.notes[str(scheduledNote.note)].append(scheduledNote)
+
+  async def removeScheduledNote(self, scheduledNote):
+    async with self.lock:
+      scheduledNotes = self.notes[str(scheduledNote.note)]
+      for note in scheduledNotes:
+        if note.id == scheduledNote.id:
+          scheduledNotes.remove(scheduledNote)
+          return None
+
+  async def removeNote(self, note):
+    async with self.lock:
+      self.notes[str(note)] = []
+
+  async def removeNotes(self, notes):
+    async with self.lock:
+      for note in notes:
+        self.removeNote(note)
+  
+  async def isNoteStillScheduled(self, scheduledNote):
+    async with self.lock:
+      for note in self.notes[str(scheduledNote.note)]:
+        if note.id == scheduledNote.id:
+          return True
+      return False
+  
+  async def removeAll(self):
+    async with self.lock:
+      for note in range(0, 128):
+        self.notes[str(note)] = []
+
+
+class ScheduledNote():
+  def __init__(self, note):
+    self.note = note
+    self.id = f"{note}-{time.time_ns()}-{random.randint(1000000)}"

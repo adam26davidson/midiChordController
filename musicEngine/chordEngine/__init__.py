@@ -174,7 +174,8 @@ class ChordEngine:
             self.stopChord()
         else:
             button = self.controlState.buttonQueue[-1]
-            self.playChord(button)
+            if not self.state['chordIsPlaying'] or self.state['activeChord'] != button:
+                self.playChord(button)
 
     def stopChord(self, force=False):
         if ((not self.state['hold'] and self.state['chordIsPlaying']) or force):
