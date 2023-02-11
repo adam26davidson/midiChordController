@@ -26,7 +26,7 @@ class StrumSettingsFrame(SettingsPage):
                 {'name': 'REG', 'value': 'regular'},
                 {'name': 'OFF', 'value': 'off'},
             ],
-            selected='RAND',
+            selected='REG',
             callback=self.setStrumMode)
         
         self.strumOrder = ButtonGroup(self.topFrame, 
@@ -44,7 +44,7 @@ class StrumSettingsFrame(SettingsPage):
             min=0,
             max=2,
             resolution=0.005,
-            digits=3,
+            digits=4,
             value=0.02,
             callback=self.setStrumInterval)
 

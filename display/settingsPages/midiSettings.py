@@ -75,7 +75,6 @@ class MidiSettingsFrame(SettingsPage):
         
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        
 
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))

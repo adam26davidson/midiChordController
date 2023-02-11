@@ -40,7 +40,7 @@ class Slider(SettingControl):
             bg=COLORS['root'],
             orient='horizontal',
             troughcolor=COLORS['darkGrey'],
-            width=40,
+            width=50,
             sliderlength=50,
             sliderrelief='flat',
             font=FONTS['big'],

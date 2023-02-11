@@ -14,7 +14,7 @@ class ButtonGroup(SettingControl):
         self.optionsList = optionsList
         self.callback = callback
 
-        self.state = ButtonGroupState(optionsList[0]['name'])
+        self.state = ButtonGroupState(selected)
 
         self.contentsFrame = tk.Frame(self, 
             highlightthickness=0, 
