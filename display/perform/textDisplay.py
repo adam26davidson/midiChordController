@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants import PARENT_PATH
-from .displayConstants import FONTS, COLORS
+from ..displayConstants import FONTS, COLORS
 from PIL import ImageTk, Image
 
 

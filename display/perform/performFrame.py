@@ -1,5 +1,5 @@
 from redux import store
-from .chordDisplay import ChordDisplay
+from ..chordDisplay import ChordDisplay
 from .keyboard import Keyboard
 from .inversion import Inversion
 from .spread import Spread

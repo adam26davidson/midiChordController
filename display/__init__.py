@@ -1,7 +1,7 @@
 from constants import FULLSCREEN, ANIMATION_STEP
 from redux import store
 from redux.actions import display as actions
-from .performFrame import PerformFrame
+from .perform.performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
 from .settingsPages.midiSettings import MidiSettingsFrame
 from .settingsPages.strumSettings import StrumSettingsFrame

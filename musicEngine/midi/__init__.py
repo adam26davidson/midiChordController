@@ -197,10 +197,11 @@ class Midi():
     self.__sendMidiMessage([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
     self.__sendAfterTouch(force=True)
-    store.dispatch(actions.playChord(self.state['playingChordNotes']))
+    if player == 'chord':
+      store.dispatch(actions.playChord(self.state['playingChordNotes']))
 
   def __storeNoteOn(self, note, player, channel=None):
-    if player == 'chord':
+    if player == 'chord' and note not in self.state['playingChordNotes']:
       self.state['playingChordNotes'].append(note)
     else:
       self.state['playingBassNote'] = note
