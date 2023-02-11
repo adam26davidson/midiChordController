@@ -29,7 +29,7 @@ class RhythmEngine():
       if message['type'] == 'off':
         asyncio.ensure_future(self.__handleChordOff(message['notes']))
       elif message['type'] == 'on':
-        asyncio.ensure_future(self.__handleChordOn(message['notes']))
+        self.__handleChordOn(message['notes'])
     elif message['player'] == 'bass':
       if message['type'] == 'off':
         self.__handleBassOff(message['notes'])
@@ -83,7 +83,7 @@ class RhythmEngine():
       intervals = self.__getRegularIntervals(n)
       intervals = random.permutation(intervals) if self.state['strumOrder'] == 'random' else intervals
     elif self.state['strumMode'] == 'off':
-      intervals = [] * n
+      intervals = [0] * n
     return intervals
   
   async def __scheduleMessage(self, message, delay):
@@ -96,9 +96,8 @@ class RhythmEngine():
       self.__sendMessage(message)
       await self.scheduledNotes.removeScheduledNote(scheduledNote)
 
-  async def __handleChordOn(self, notes):
-    async with self.chordLock:
-      await self.scheduledNotes.removeAll()
+  def __handleChordOn(self, notes):
+      self.scheduledNotes.removeAll()
       intervals = None
       intervals = self.__getIntervals(len(notes))
       notes.sort()
@@ -108,11 +107,10 @@ class RhythmEngine():
         asyncio.ensure_future(self.__scheduleMessage(message, intervals[j]))
   
   async def __handleChordOff(self, notes):
-    async with self.chordLock:
-      await self.scheduledNotes.removeAll()
-      for note in notes:
-        message = {'note': note, 'type': 'off', 'player': 'chord'}
-        self.__sendMessage(message)
+    self.scheduledNotes.removeAll()
+    for note in notes:
+      message = {'note': note, 'type': 'off', 'player': 'chord'}
+      self.__sendMessage(message)
 
   
   def __handleBassOn(self, notes):
@@ -157,10 +155,9 @@ class ScheduledNotes():
           return True
       return False
   
-  async def removeAll(self):
-    async with self.lock:
-      for note in range(0, 128):
-        self.notes[str(note)] = []
+  def removeAll(self):
+    for note in range(0, 128):
+      self.notes[str(note)] = []
 
 
 class ScheduledNote():
