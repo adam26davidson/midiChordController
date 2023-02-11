@@ -145,7 +145,7 @@ class ChordEngine:
         notes = self.__getChord(button)
         self.__sendNotesOn(notes, player='chord')
         self.__updateBass()
-        store.dispatch(actions.playChord(notes))
+        #store.dispatch(actions.playChord(notes))
         self.state['playingChordNotes'] = notes
         self.state['chordIsPlaying'] = True
 

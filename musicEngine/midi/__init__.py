@@ -197,6 +197,7 @@ class Midi():
     self.__sendMidiMessage([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
     self.__sendAfterTouch(force=True)
+    store.dispatch(actions.playChord(self.state['playingChordNotes']))
 
   def __storeNoteOn(self, note, player, channel=None):
     if player == 'chord':
