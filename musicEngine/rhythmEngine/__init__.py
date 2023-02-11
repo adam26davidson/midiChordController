@@ -104,12 +104,9 @@ class RhythmEngine():
       j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
       message = {'note': note, 'type': 'on', 'player': 'chord'}
       asyncio.ensure_future(self.__scheduleMessage(message, intervals[j]))
-
-  async def scheduledNotesOff(self, notes):
-    await self.scheduledNotes.removeNotes(notes)
   
   async def __handleChordOff(self, notes):
-    await self.scheduledNotesOff(notes)
+    await self.scheduledNotes.removeAll()
     for note in notes:
       message = {'note': note, 'type': 'off', 'player': 'chord'}
       self.__sendMessage(message)
