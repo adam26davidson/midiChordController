@@ -25,7 +25,7 @@ class Slider(SettingControl):
         self.number = tk.Label(self.contentsFrame, 
             textvariable=self.state.number,
             bg='#000000', 
-            width=3,
+            width=4,
             fg=COLORS['root'], 
             font=FONTS["big"],
             )

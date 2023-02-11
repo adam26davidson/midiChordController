@@ -42,7 +42,7 @@ class StrumSettingsFrame(SettingsPage):
         self.strumInterval = Slider(self.bottomFrame, 
             name='strum interval',
             min=0,
-            max=2,
+            max=1,
             resolution=0.005,
             digits=4,
             value=0.02,
