@@ -159,9 +159,11 @@ class ChordEngine:
         self.state['bassIsPlaying'] = True
 
     def chordButtonOff(self, button):
+        lastButton = self.controlState.buttonQueue[-1]
         if self.controlState.buttonQueue.count(button) > 0:
             self.controlState.buttonQueue.remove(button)
-        self.updateChordFromControlState()
+        if button == lastButton:
+            self.updateChordFromControlState()
     
     def chordButtonOn(self, button):
         if self.controlState.buttonQueue.count(button) > 0:
