@@ -148,7 +148,7 @@ class ScheduledNotes():
   async def removeNotes(self, notes):
     async with self.lock:
       for note in notes:
-        self.removeNote(note)
+        await self.removeNote(note)
   
   async def isNoteStillScheduled(self, scheduledNote):
     async with self.lock:
