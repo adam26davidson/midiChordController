@@ -5,6 +5,7 @@ from .perform.performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
 from .settingsPages.midiSettings import MidiSettingsFrame
 from .settingsPages.strumSettings import StrumSettingsFrame
+from .settingsPages.chordSettings import ChordSettingsFrame
 from pyrsistent import thaw
 import asyncio
 import tkinter as tk
@@ -40,6 +41,7 @@ class Display():
 
         self.frames = {}
 
+        self.frames["CHORD"] = ChordSettingsFrame(self.root)
         self.frames["STRUM"] = StrumSettingsFrame(self.root)
         self.frames["MIDI"] = MidiSettingsFrame(self.root)
         self.frames["MENU"] = SettingsMenuFrame(self.root)

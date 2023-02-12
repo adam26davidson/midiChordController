@@ -23,6 +23,7 @@ def reducer(state, action):
             'setting': 0,
             'settingLoading': False,
             'key': 0,
+            'transposeIncrement': 1,
             'scale': [],
             'spread': SPREAD_STEPS_PER_OCTAVE,
             'inversion': 0,
@@ -149,6 +150,9 @@ def reducer(state, action):
     
     elif action['type'] == 'me/strumOrderChanged':
         return state.set('strumOrder', action['data']['strumOrder'])
+    
+    elif action['type'] == 'me/transposeIncrementChanged':
+        return state.set('transposeIncrement', action['data']['transposeIncrement'])
 
     else:
         return state

@@ -206,3 +206,9 @@ def changeStrumOrder(order):
     'type': 'me/strumOrderChanged',
     'data': {'strumOrder': order}
   }
+
+def changeTransposeIncrement(increment):
+  return {
+    'type': 'me/transposeIncrementChanged',
+    'data': {'transposeIncrement': increment}
+  }

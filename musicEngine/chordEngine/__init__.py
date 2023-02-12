@@ -7,6 +7,7 @@ from constants import SETTINGS, MAX_INVERSION_RANGE, MAX_OCTAVE_SHIFT, \
     MAX_BASS_RANGE, SPREAD_STEPS_PER_OCTAVE, MAX_SPREAD_OCTAVES, \
     MAX_VOICE_COUNT, INVERSION_SNAP
 from redux import store
+from pyrsistent import thaw
 from redux.actions import musicEngine as actions
 import math
 
@@ -30,6 +31,7 @@ class ChordEngine:
             # 0 is C, 1 is C# etc.
             'key': 0,
             'inversionRange': 4,
+            'transposeIncrement': 1,
 
             # can be "incremental" or "continuous"
             'inversionMode': 'incremental',
@@ -82,6 +84,21 @@ class ChordEngine:
         store.dispatch(vCAction)
 
         self.setSetting(self.state['settingIndex'])
+
+        store.subscribe(self.__handleStoreUpdate)
+
+    def __handleStoreUpdate(self):
+        state = store.get_state()
+        meState = thaw(state['musicEngine'])
+        if (meState['transposeIncrement'] != self.state['transposeIncrement']):
+            self.setTransposeIncrement(meState['transposeIncrement'])
+        if (meState['inversionRange'] != self.state['inversionRange']):
+            self.setInversionRange(meState['inversionRange'])
+        if (meState['bassRange'] != self.state['bassRange']):
+            self.setBassRange(meState['bassRange'])
+
+    def setTransposeIncrement(self, increment):
+        self.state['transposeIncrement'] = increment
 
     def incrementSetting(self):
         self.setSetting((self.state['settingIndex'] + 1) % len(SETTINGS))
@@ -256,10 +273,8 @@ class ChordEngine:
         oldInversion = self.state['inversion']
         self.state['inversion'] = max(min(oldInversion, range), -1*range)
         self.__updateChord()
-        iAction = actions.changeInversion(self.state['inversion'])
-        store.dispatch(iAction)
-        irAction = actions.changeInversionRange(self.state['inversionRange'])
-        store.dispatch(irAction)
+        store.dispatch(actions.changeInversion(self.state['inversion']))
+        store.dispatch(actions.changeInversionRange(self.state['inversionRange']))
 
     def incrementBassPosition(self):
         newPosition = self.state['bassPosition'] + 1
@@ -285,8 +300,8 @@ class ChordEngine:
         oldBP = self.state['bassPosition']
         self.state['bassPosition'] = max(min(oldBP, range), -1*range)
         self.__updateBass()
-        store.dispatch(actions.changeInversion(self.state['bassPosition']))
-        store.dispatch(actions.changeInversionRange(self.state['bassRange']))
+        store.dispatch(actions.changeBassPosition(self.state['bassPosition']))
+        store.dispatch(actions.changeBassRange(self.state['bassRange']))
 
     def setSpread(self, spread):
         maxSpread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
@@ -311,10 +326,10 @@ class ChordEngine:
             self.__updateBass()
 
     def incrementKey(self):
-        self.setKey(self.state['key'] + 1)
+        self.setKey(self.state['key'] + self.state['transposeIncrement'])
 
     def decrementKey(self):
-        self.setKey(self.state['key'] + 11)
+        self.setKey(self.state['key'] + 12 - self.state['transposeIncrement'])
 
     def setVoiceCount(self, count):
         count = max(min(count, MAX_VOICE_COUNT), 1)

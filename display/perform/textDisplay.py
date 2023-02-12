@@ -109,7 +109,7 @@ class TextDisplay(tk.Frame):
         self.voicesValue.pack(side="left")
         self.voicesFrame.pack(side="top", anchor="nw")
 
-        self.pack(side="top", padx=(20, 20), pady=(20, 20))
+        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(20, 20))
 
     def setSetting(self, name):
         print('setting setting text to ' + name)
