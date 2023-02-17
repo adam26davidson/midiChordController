@@ -39,7 +39,7 @@ class ButtonGroup(SettingControl):
     
     def setValue(self, value):
         button = None
-        for b in self.buttons.values:
+        for b in self.buttons.values():
             if b.value == value:
                 button = b
 
