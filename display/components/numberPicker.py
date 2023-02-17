@@ -8,14 +8,14 @@ import tkinter as tk
 
 class NumberPicker(SettingControl):
 
-    def __init__(self, container, name, min, max, callback):
+    def __init__(self, container, name, min, max, value, callback):
         super().__init__(container, name)
 
         self.max = max
         self.min = min
         self.callback = callback
 
-        self.state = NumberPickerState(self.min)
+        self.state = NumberPickerState(value)
 
         self.contentsFrame = tk.Frame(self, 
             highlightthickness=0, 
@@ -64,6 +64,13 @@ class NumberPicker(SettingControl):
         self.rightButton.setEnabled()
         self.leftButton.setEnabled()
         self.number.configure(fg=COLORS['chord'])
+    
+    def setValue(self, value):
+        self.state.number = value
+        self.number.configure(text=str(self.state.number))
+    
+    def getValue(self):
+        return self.state.number
         
 
 class ArrowButton(tk.Button):

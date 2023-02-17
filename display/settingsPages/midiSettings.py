@@ -5,6 +5,7 @@ from ..components.slider import Slider
 from ..components.settingsContainer import SettingsContainer
 from redux import store
 from redux.actions import musicEngine as meActions
+from redux.settingsStorage import SettingsStorageUtility
 from pyrsistent import thaw
 from redux import store
 from redux.actions import display as actions
@@ -18,8 +19,20 @@ class MidiSettingsFrame(SettingsPage):
 
         self.channelFrame = SettingsContainer(self)
 
-        self.bassChannel = NumberPicker(self.channelFrame, name='bass ch', min=1, max=16, callback=self.setBassChannel)
-        self.chordChannel = NumberPicker(self.channelFrame, name='chord ch', min=1, max=16, callback=self.setChordChannel)
+        self.bassChannel = NumberPicker(self.channelFrame, 
+            name='bass ch', 
+            min=1, 
+            max=16, 
+            value=1,
+            callback=self.setBassChannel)
+
+        self.chordChannel = NumberPicker(self.channelFrame, 
+            name='chord ch', 
+            min=1, 
+            max=16, 
+            value=1,
+            callback=self.setChordChannel)
+
         self.distributeChannels = ButtonGroup(self.channelFrame, 
             name='distribute channels',
             optionsList=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
@@ -75,12 +88,38 @@ class MidiSettingsFrame(SettingsPage):
         
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
+        store.subscribe(self.__handleStoreUpdate)
+
+        self.settingsStorage = SettingsStorageUtility()
+
+
+    def __handleStoreUpdate(self):
+        state = store.get_state()
+        meState = thaw(state['musicEngine'])
+
+        if meState['velocity'] != self.velocity.getValue():
+            self.velocity.setValue(meState['velocity'])
+        if meState['velocityMode'] != self.velocityMode.getValue():
+            self.velocityMode.setValue(meState['velocityMode'])
+        if meState['velocityDeviation'] != self.velocityDeviation.getValue():
+            self.velocityDeviation.setValue(meState['velocityDeviation'])
+        if meState['chordChannel'] != self.chordChannel.getValue():
+            self.chordChannel.setValue(meState['chordChannel'])
+        if meState['bassChannel'] != self.bassChannel.getValue():
+            self.bassChannel.setValue(meState['bassChannel'])
+        if meState['distributeChannels'] != self.distributeChannels.getValue():
+            self.distributeChannels.setValue(meState['distributeChannels'])
+        if meState['aftertouchMode'] != self.aftertouchMode.getValue():
+            self.aftertouchMode.setValue(meState['aftertouchMode'])
+        
 
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))
+        self.settingsStorage.saveSettings()
 
     def setChordChannel(self, channel):
         store.dispatch(meActions.changeChordChannel(channel - 1))
+        self.settingsStorage.saveSettings()
     
     def setDistributeChannels(self, value):
         store.dispatch(meActions.changeDistributeChannels(value))
@@ -90,6 +129,7 @@ class MidiSettingsFrame(SettingsPage):
         else:
             self.chordChannel.setEnabled()
             self.bassChannel.setEnabled()
+        self.settingsStorage.saveSettings()
     
     def setVelocityMode(self, mode):
         if mode == 'constant':
@@ -97,12 +137,16 @@ class MidiSettingsFrame(SettingsPage):
         if mode == 'random':
             self.velocityDeviation.setEnabled()
         store.dispatch(meActions.changeVelocityMode(mode))
+        self.settingsStorage.saveSettings()
     
     def setVelocity(self, velocity):
         store.dispatch(meActions.changeVelocity(velocity))
+        self.settingsStorage.saveSettings()
     
     def setVelocityDeviation(self, deviation):
         store.dispatch(meActions.changeVelocityDeviation(deviation))
+        self.settingsStorage.saveSettings()
 
     def setAftertouchMode(self, mode):
         store.dispatch(meActions.changeAftertouchMode(mode))
+        self.settingsStorage.saveSettings()

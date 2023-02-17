@@ -1,0 +1,51 @@
+from pathlib import Path
+from constants import PARENT_PATH
+from redux.actions import musicEngine as actions
+from pyrsistent import thaw
+from redux import store
+import json
+
+
+class SettingsStorageUtility():
+
+    settingsFileDirectory = f'{PARENT_PATH}/userSettings.json'
+
+    savedMusicEngineSettings = {
+        'bassChannel': actions.changeBassChannel,
+        'chordChannel': actions.changeChordChannel,
+        'distributeChannels': actions.changeDistributeChannels,
+        'velocity': actions.changeVelocity,
+        'velocityMode': actions.changeVelocityMode,
+        'velocityDeviation': actions.changeVelocityDeviation,
+        'aftertouchMode': actions.changeAftertouchMode,
+        'strumMode': actions.changeStrumMode,
+        'strumInterval': actions.changeStrumInterval,
+        'strumOrder': actions.changeStrumOrder,
+        'key': actions.changeKey,
+        'inversionRange': actions.changeInversionRange,
+        'bassRange': actions.changeBassRange,
+        'transposeIncrement': actions.changeTransposeIncrement
+    }
+    
+    def loadSettings(self):
+        settingsFilePath = Path(self.settingsFileDirectory)
+
+        if ( not settingsFilePath.is_file()):
+            return None
+
+        settingsFromFile = json.load(open(self.settingsFileDirectory))
+
+        for setting in self.savedMusicEngineSettings.keys():
+            if settingsFromFile.hasKey(setting):
+                self.savedMusicEngineSettings[setting](settingsFromFile[setting])
+
+    def saveSettings(self):
+        settingsToSave = {}
+
+        state = store.get_state()
+        meState = thaw(state['musicEngine'])
+        for setting in self.savedMusicEngineSettings.keys():
+            settingsToSave[setting] = meState[setting]
+        
+        json.dump(settingsToSave, self.settingsFileDirectory)
+        

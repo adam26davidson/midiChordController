@@ -5,8 +5,8 @@ from ..components.slider import Slider
 from ..components.settingsContainer import SettingsContainer
 from redux import store
 from redux.actions import musicEngine as meActions
+from redux.settingsStorage import SettingsStorageUtility
 from pyrsistent import thaw
-from redux import store
 from redux.actions import display as actions
 import tkinter as tk
 
@@ -55,9 +55,25 @@ class StrumSettingsFrame(SettingsPage):
         self.strumInterval.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.bottomFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
         
+        store.subscribe(self.__handleStoreUpdate)
+
+        self.settingsStorage = SettingsStorageUtility()
+
+
+    def __handleStoreUpdate(self):
+        state = store.get_state()
+        meState = thaw(state['musicEngine'])
+
+        if meState['strumMode'] != self.strumMode.getValue():
+            self.strumMode.setValue(meState['strumMode'])
+        if meState['strumInterval'] != self.strumInterval.getValue():
+            self.strumInterval.setValue(meState['strumInterval'])
+        if meState['strumOrder'] != self.strumOrder.getValue():
+            self.strumOrder.setValue(meState['strumOrder'])
 
     def setStrumMode(self, mode):
         store.dispatch(meActions.changeStrumMode(mode))
+        self.settingsStorage.saveSettings()
         if mode == 'off':
             self.strumInterval.setDisabled()
             self.strumOrder.setDisabled()
@@ -67,6 +83,8 @@ class StrumSettingsFrame(SettingsPage):
     
     def setStrumInterval(self, interval):
         store.dispatch(meActions.changeStrumInterval(interval))
+        self.settingsStorage.saveSettings()
 
     def setStrumOrder(self, order):
         store.dispatch(meActions.changeStrumOrder(order))
+        self.settingsStorage.saveSettings()
