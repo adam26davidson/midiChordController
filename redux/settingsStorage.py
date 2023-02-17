@@ -46,6 +46,7 @@ class SettingsStorageUtility():
         meState = thaw(state['musicEngine'])
         for setting in self.savedMusicEngineSettings.keys():
             settingsToSave[setting] = meState[setting]
-        
-        json.dump(settingsToSave, self.settingsFileDirectory)
+            
+        with open(self.settingsFileDirectory, "w") as outfile:
+            json.dump(settingsToSave, outfile)
         
