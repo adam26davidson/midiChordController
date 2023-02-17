@@ -39,6 +39,7 @@ class SettingsStorageUtility():
 
         for setting in self.savedMusicEngineSettings.keys():
             if setting in settingsFromFile.keys():
+                print(f'loading {setting}')
                 self.savedMusicEngineSettings[setting](settingsFromFile[setting])
         
         self.loadingSettings = False
