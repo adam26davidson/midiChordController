@@ -7,7 +7,7 @@ import json
 
 class SettingsStorageUtility():
 
-    loadingSettings = False
+    loadingSettings = True
 
     settingsFileDirectory = f'{PARENT_PATH}/userSettings.json'
 

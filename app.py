@@ -19,8 +19,6 @@ class App():
         if (self.useDisplay):
             self.controllerManager.subscribe(
                 self.display.controllerEventHandler)
-                
-        settingsStorageUtility.loadSettings()
         
 
     def start(self):
@@ -28,5 +26,7 @@ class App():
             self.display.start()
         self.musicEngine.start()
         self.controllerManager.start()
+
+        settingsStorageUtility.loadSettings()
         
         asyncio.get_event_loop().run_forever()
