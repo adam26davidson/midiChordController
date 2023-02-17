@@ -38,7 +38,7 @@ class SettingsStorageUtility():
         settingsFromFile = json.load(open(self.settingsFileDirectory))
 
         for setting in self.savedMusicEngineSettings.keys():
-            if settingsFromFile.hasKey(setting):
+            if setting in settingsFromFile.keys():
                 self.savedMusicEngineSettings[setting](settingsFromFile[setting])
         
         self.loadingSettings = False
