@@ -2,7 +2,7 @@ import asyncio
 from display import Display
 from musicEngine import MusicEngine
 from controllerManager import ControllerManager
-from redux.settingsStorage import SettingsStorageUtility
+from redux.settingsStorage import settingsStorageUtility
 
 
 class App():
@@ -20,14 +20,13 @@ class App():
             self.controllerManager.subscribe(
                 self.display.controllerEventHandler)
         
-        self.settingsStorage = SettingsStorageUtility()
 
     def start(self):
         if (self.useDisplay):
             self.display.start()
         self.musicEngine.start()
         self.controllerManager.start()
-        
+
         asyncio.get_event_loop().run_forever()
 
-        SettingsStorageUtility.loadSettings()
+        settingsStorageUtility.loadSettings()

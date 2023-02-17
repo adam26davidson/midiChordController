@@ -6,7 +6,7 @@ from ..components.settingsContainer import SettingsContainer
 from constants import MAX_INVERSION_RANGE, MAX_BASS_RANGE
 from redux import store
 from redux.actions import musicEngine as meActions
-from redux.settingsStorage import SettingsStorageUtility
+from redux.settingsStorage import settingsStorageUtility
 from pyrsistent import thaw
 from redux.actions import display as actions
 import tkinter as tk
@@ -48,8 +48,6 @@ class ChordSettingsFrame(SettingsPage):
         
         store.subscribe(self.__handleStoreUpdate)
 
-        self.settingsStorage = SettingsStorageUtility()
-
 
     def __handleStoreUpdate(self):
         state = store.get_state()
@@ -64,9 +62,12 @@ class ChordSettingsFrame(SettingsPage):
 
     def setTransposeIncrement(self, increment):
         store.dispatch(meActions.changeTransposeIncrement(increment))
+        settingsStorageUtility.saveSettings()
     
     def setInversionRange(self, range):
         store.dispatch(meActions.changeInversionRange(range))
+        settingsStorageUtility.saveSettings
 
     def setBassRange(self, range):
         store.dispatch(meActions.changeBassRange(range))
+        settingsStorageUtility.saveSettings()

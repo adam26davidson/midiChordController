@@ -5,7 +5,7 @@ from ..components.slider import Slider
 from ..components.settingsContainer import SettingsContainer
 from redux import store
 from redux.actions import musicEngine as meActions
-from redux.settingsStorage import SettingsStorageUtility
+from redux.settingsStorage import settingsStorageUtility
 from pyrsistent import thaw
 from redux import store
 from redux.actions import display as actions
@@ -90,8 +90,6 @@ class MidiSettingsFrame(SettingsPage):
 
         store.subscribe(self.__handleStoreUpdate)
 
-        self.settingsStorage = SettingsStorageUtility()
-
 
     def __handleStoreUpdate(self):
         state = store.get_state()
@@ -115,11 +113,11 @@ class MidiSettingsFrame(SettingsPage):
 
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()
 
     def setChordChannel(self, channel):
         store.dispatch(meActions.changeChordChannel(channel - 1))
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()
     
     def setDistributeChannels(self, value):
         store.dispatch(meActions.changeDistributeChannels(value))
@@ -129,7 +127,7 @@ class MidiSettingsFrame(SettingsPage):
         else:
             self.chordChannel.setEnabled()
             self.bassChannel.setEnabled()
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()
     
     def setVelocityMode(self, mode):
         if mode == 'constant':
@@ -137,16 +135,16 @@ class MidiSettingsFrame(SettingsPage):
         if mode == 'random':
             self.velocityDeviation.setEnabled()
         store.dispatch(meActions.changeVelocityMode(mode))
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()
     
     def setVelocity(self, velocity):
         store.dispatch(meActions.changeVelocity(velocity))
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()
     
     def setVelocityDeviation(self, deviation):
         store.dispatch(meActions.changeVelocityDeviation(deviation))
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()
 
     def setAftertouchMode(self, mode):
         store.dispatch(meActions.changeAftertouchMode(mode))
-        self.settingsStorage.saveSettings()
+        settingsStorageUtility.saveSettings()

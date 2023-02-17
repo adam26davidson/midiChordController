@@ -5,8 +5,9 @@ from pyrsistent import thaw
 from redux import store
 import json
 
-
 class SettingsStorageUtility():
+
+    loadingSettings = False
 
     settingsFileDirectory = f'{PARENT_PATH}/userSettings.json'
 
@@ -28,6 +29,7 @@ class SettingsStorageUtility():
     }
     
     def loadSettings(self):
+        self.loadingSettings = True
         settingsFilePath = Path(self.settingsFileDirectory)
 
         if ( not settingsFilePath.is_file()):
@@ -38,15 +40,20 @@ class SettingsStorageUtility():
         for setting in self.savedMusicEngineSettings.keys():
             if settingsFromFile.hasKey(setting):
                 self.savedMusicEngineSettings[setting](settingsFromFile[setting])
+        
+        self.loadingSettings = False
 
     def saveSettings(self):
-        settingsToSave = {}
+        if not self.loadingSettings:
+            settingsToSave = {}
 
-        state = store.get_state()
-        meState = thaw(state['musicEngine'])
-        for setting in self.savedMusicEngineSettings.keys():
-            settingsToSave[setting] = meState[setting]
-            
-        with open(self.settingsFileDirectory, "w") as outfile:
-            json.dump(settingsToSave, outfile)
-        
+            state = store.get_state()
+            meState = thaw(state['musicEngine'])
+            for setting in self.savedMusicEngineSettings.keys():
+                settingsToSave[setting] = meState[setting]
+
+            with open(self.settingsFileDirectory, "w") as outfile:
+                json.dump(settingsToSave, outfile)
+
+
+settingsStorageUtility = SettingsStorageUtility()
