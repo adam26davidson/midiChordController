@@ -88,7 +88,6 @@ class SingleButton(tk.Button):
             activeforeground=COLORS['chord'],
             disabledforeground='#000000',
             font=FONTS["medium"],
-            disabledforeground=COLORS['chordDim'],
             text=option['name'],
             command=self.__onClick)
         
