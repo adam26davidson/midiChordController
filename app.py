@@ -8,8 +8,6 @@ from redux.settingsStorage import settingsStorageUtility
 class App():
 
     def __init__(self, args):
-        settingsStorageUtility.loadSettings()
-
         self.useDisplay = args.display
         if (self.useDisplay):
             self.display = Display()
@@ -21,6 +19,8 @@ class App():
         if (self.useDisplay):
             self.controllerManager.subscribe(
                 self.display.controllerEventHandler)
+                
+        settingsStorageUtility.loadSettings()
         
 
     def start(self):
