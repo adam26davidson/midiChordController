@@ -8,6 +8,8 @@ from redux.settingsStorage import settingsStorageUtility
 class App():
 
     def __init__(self, args):
+        settingsStorageUtility.loadSettings()
+
         self.useDisplay = args.display
         if (self.useDisplay):
             self.display = Display()
@@ -26,6 +28,5 @@ class App():
             self.display.start()
         self.musicEngine.start()
         self.controllerManager.start()
-
-        settingsStorageUtility.loadSettings()
+        
         asyncio.get_event_loop().run_forever()
