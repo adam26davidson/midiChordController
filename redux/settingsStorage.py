@@ -22,10 +22,15 @@ class SettingsStorageUtility():
         'strumMode': actions.changeStrumMode,
         'strumInterval': actions.changeStrumInterval,
         'strumOrder': actions.changeStrumOrder,
-        'key': actions.changeKey,
+        
         'inversionRange': actions.changeInversionRange,
         'bassRange': actions.changeBassRange,
-        'transposeIncrement': actions.changeTransposeIncrement
+        'transposeIncrement': actions.changeTransposeIncrement,
+
+        'key': actions.changeKey,
+        'spread': actions.changeSpread,
+        'voiceCount': actions.changeVoiceCount,
+        'chordOctave': actions.changeChordOctave
     }
     
     def loadSettings(self):

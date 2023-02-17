@@ -9,6 +9,7 @@ from constants import SETTINGS, MAX_INVERSION_RANGE, MAX_OCTAVE_SHIFT, \
 from redux import store
 from pyrsistent import thaw
 from redux.actions import musicEngine as actions
+from redux.settingsStorage import settingsStorageUtility
 import math
 
 
@@ -309,6 +310,7 @@ class ChordEngine:
         self.state['spread'] = spread
         self.__updateChord()
         store.dispatch(actions.changeSpread(self.state['spread']))
+        settingsStorageUtility.saveSettings()
 
     def incrementSpread(self):
         self.setSpread(self.state['spread'] + 1)
@@ -321,6 +323,7 @@ class ChordEngine:
         if self.state['key'] != key:
             self.state['key'] = key
             store.dispatch(actions.changeKey(key))
+            settingsStorageUtility.saveSettings()
             self.__setChordType()
             self.__updateChord()
             self.__updateBass()
@@ -336,6 +339,7 @@ class ChordEngine:
         self.state['voiceCount'] = count
         self.__updateChord()
         store.dispatch(actions.changeVoiceCount(self.state['voiceCount']))
+        settingsStorageUtility.saveSettings()
 
     def incrementVoiceCount(self):
         self.setVoiceCount(self.state['voiceCount'] + 1)
@@ -360,6 +364,7 @@ class ChordEngine:
         self.state['chordOctave'] = clamped
         self.__updateChord()
         store.dispatch(actions.changeChordOctave(self.state['chordOctave']))
+        settingsStorageUtility.saveSettings()
 
     def incrementChordOctave(self):
         self.setChordOctave(self.state['chordOctave'] + 1)
