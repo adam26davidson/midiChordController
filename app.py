@@ -27,4 +27,5 @@ class App():
         self.musicEngine.start()
         self.controllerManager.start()
 
+        settingsStorageUtility.loadSettings()
         asyncio.get_event_loop().run_forever()
