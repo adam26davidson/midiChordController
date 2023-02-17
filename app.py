@@ -22,11 +22,10 @@ class App():
         
 
     def start(self):
+        settingsStorageUtility.loadSettings()
         if (self.useDisplay):
             self.display.start()
         self.musicEngine.start()
         self.controllerManager.start()
 
         asyncio.get_event_loop().run_forever()
-
-        settingsStorageUtility.loadSettings()
