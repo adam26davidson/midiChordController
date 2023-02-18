@@ -97,6 +97,14 @@ class ChordEngine:
             self.setInversionRange(meState['inversionRange'])
         if (meState['bassRange'] != self.state['bassRange']):
             self.setBassRange(meState['bassRange'])
+        if (meState['key'] != self.state['key']):
+            self.setKey(meState['key'])
+        if (meState['spread'] != self.state['spread']):
+            self.setSpread(meState['spread'])
+        if (meState['chordOctave'] != self.state['chordOctave']):
+            self.setChordOctave(meState['chordOctave'])
+        if (meState['voiceCount'] != self.state['voiceCount']):
+            self.setVoiceCount(meState['voiceCount'])
 
     def setTransposeIncrement(self, increment):
         self.state['transposeIncrement'] = increment
