@@ -38,13 +38,13 @@ class SettingsPage(tk.Frame):
             bd=0,
             activebackground="#000000",
             fg=COLORS['chord'],
-            activeforeground=COLORS['root'],
+            activeforeground=COLORS['chord'],
             font=FONTS["big"],
             disabledforeground=COLORS['chordDim'],
             text='\u25C0 MENU',
             command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
 
-        self.menuButton.place(rely=0.5, relx=0.1, anchor='center')
+        self.menuButton.place(rely=0.5, relx=0.08, anchor='center')
         self.title.place(rely=0.5, relx=0.5, anchor='center')
         self.titleFrame.grid(row=0, column=0, sticky='new', )
 

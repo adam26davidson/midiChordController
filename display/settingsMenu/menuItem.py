@@ -24,9 +24,9 @@ class MenuItem(tk.Button):
             relief="flat",
             background="#000000",
             bd=self.border,
-            activebackground=self.activeColor,
+            activebackground="#000000",
             foreground=self.inactiveColor,
-            activeforeground="#000000",
+            activeforeground=self.inactiveColor,
             font=self.bigFont,
             text=text,
             command=callback)
