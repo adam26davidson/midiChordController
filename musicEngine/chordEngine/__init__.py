@@ -316,10 +316,10 @@ class ChordEngine:
         maxSpread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
         spread = max(min(spread, maxSpread), 0)
         self.state['spread'] = spread
-        self.__updateChord()
         store.dispatch(actions.changeSpread(self.state['spread']))
         settingsStorageUtility.saveSettings()
-
+        self.__updateChord()
+        
     def incrementSpread(self):
         self.setSpread(self.state['spread'] + 1)
 
@@ -370,9 +370,9 @@ class ChordEngine:
     def setChordOctave(self, octave):
         clamped = max(min(octave, MAX_OCTAVE_SHIFT), -1*MAX_OCTAVE_SHIFT)
         self.state['chordOctave'] = clamped
-        self.__updateChord()
         store.dispatch(actions.changeChordOctave(self.state['chordOctave']))
         settingsStorageUtility.saveSettings()
+        self.__updateChord()
 
     def incrementChordOctave(self):
         self.setChordOctave(self.state['chordOctave'] + 1)
