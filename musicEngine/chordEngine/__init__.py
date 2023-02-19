@@ -345,9 +345,9 @@ class ChordEngine:
     def setVoiceCount(self, count):
         count = max(min(count, MAX_VOICE_COUNT), 1)
         self.state['voiceCount'] = count
-        self.__updateChord()
         store.dispatch(actions.changeVoiceCount(self.state['voiceCount']))
         settingsStorageUtility.saveSettings()
+        self.__updateChord()
 
     def incrementVoiceCount(self):
         self.setVoiceCount(self.state['voiceCount'] + 1)
