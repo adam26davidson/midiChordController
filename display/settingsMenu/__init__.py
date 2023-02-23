@@ -33,6 +33,11 @@ class SettingsMenuFrame(tk.Frame):
 
         self.buttons['PERFORM'].focus_set()
 
+        self.buttons['PATCHES'].configure(
+            state = tk.DISABLED,
+            
+        )
+
         self.grid(row=0, column=0, sticky='nsew')
 
     def getButtonHandler(self, frame):

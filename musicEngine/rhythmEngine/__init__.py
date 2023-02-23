@@ -27,7 +27,10 @@ class RhythmEngine():
   def handleMessage(self, message):
     if message['player'] == 'chord':
       if message['type'] == 'off':
-        asyncio.ensure_future(self.__handleChordOff(message['notes']))
+        if self.state['strumMode'] == 'off':
+          self.__handleChordOffSync(message['notes'])
+        else:
+          asyncio.ensure_future(self.__handleChordOff(message['notes']))
       elif message['type'] == 'on':
         self.__handleChordOn(message['notes'])
     elif message['player'] == 'bass':
@@ -55,6 +58,7 @@ class RhythmEngine():
       self.__setStrumOrder(meState['strumOrder'])
 
   def __setStrumMode(self, mode):
+    self.scheduledNotes.removeAll()
     self.state['strumMode'] = mode
   
   def __setStrumInterval(self, interval):
@@ -98,19 +102,27 @@ class RhythmEngine():
 
   def __handleChordOn(self, notes):
       self.scheduledNotes.removeAll()
-      intervals = None
-      intervals = self.__getIntervals(len(notes))
-      notes.sort()
-      for i, note in enumerate(notes):  
-        j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
-        message = {'note': note, 'type': 'on', 'player': 'chord'}
-        asyncio.ensure_future(self.__scheduleMessage(message, intervals[j]))
+      if (self.state['strumMode'] != 'off'):
+        intervals = None
+        intervals = self.__getIntervals(len(notes))
+        notes.sort()
+        for i, note in enumerate(notes):  
+          j = i if self.state['strumOrder'] != 'down' else (len(notes) - 1) -i
+          message = {'note': note, 'type': 'on', 'player': 'chord'}
+          asyncio.ensure_future(self.__scheduleMessage(message, intervals[j]))
+      else:
+        for note in notes:
+          message = {'note': note, 'type': 'on', 'player': 'chord'}
+          self.__sendMessage(message)
   
-  async def __handleChordOff(self, notes):
+  def __handleChordOffSync(self, notes):
     self.scheduledNotes.removeAll()
     for note in notes:
       message = {'note': note, 'type': 'off', 'player': 'chord'}
       self.__sendMessage(message)
+  
+  async def __handleChordOff(self, notes):
+    self.__handleChordOffSync(notes)
 
   
   def __handleBassOn(self, notes):
