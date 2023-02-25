@@ -242,9 +242,11 @@ class Midi():
     if player == 'chord':
       if self.state['distributeChannels']:
         if type == 'on':
-          return self.__distributeChannel(note)
+          return self.__distributeChannel()
         else:
           return self.state['distChordChannels'][note]
+      else:
+        return self.state['chordChannel']
     elif player == 'bass':
       return self.state['bassChannel']
 
@@ -310,7 +312,7 @@ class Midi():
   def __combineCommandAndChannel(self, command, channel):
     return ((command & 0xf0) | (channel & 0xf))
 
-  def __distributeChannel(self, note):
+  def __distributeChannel(self):
       for channel in range(0, 16):
         if not self.state['occupiedChannels'][channel]:
           self.state['occupiedChannels'][channel] = True
