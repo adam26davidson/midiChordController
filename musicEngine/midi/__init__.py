@@ -27,7 +27,6 @@ class Midi():
       'distributeChannels': False,
       'occupiedChannels': {},
       'distChordChannels': {},
-      'distBassChannel': 0,
       'chordChannel': 0,
       'bassChannel': 0,
 
@@ -39,7 +38,7 @@ class Midi():
     }
 
     for channel in range(0, 16):
-      self.state['occupiedChannels'][channel] = None
+      self.state['occupiedChannels'][channel] = False
     
     for note in range(0, 128):
       self.state['distChordChannels'][note] = 0
@@ -129,6 +128,19 @@ class Midi():
     if (channel < 0 or channel > 15):
       store.dispatch(actions.changeBassChannel(self.state['bassChannel']))
     else:
+      
+      # if chord is playing and distribute channels is on, stop chord
+      if self.state['distributeChannels'] and len(self.state['playingChordNotes']) > 0:
+        chordNotes = copy.deepcopy(self.state['playingChordNotes'])
+        for note in chordNotes:
+          self.__noteOff(note, 'chord')
+
+      # open up old bass channel
+      self.state['occupiedChannels'][self.state['bassChannel']] = False
+      # close new bass channel
+      self.state['occupiedChannels'][channel] = True
+
+      #update bass to play on new channel, set state bass channel
       if self.state['playingBassNote']:
         note = self.state['playingBassNote']
         self.__noteOff(note, 'bass')
@@ -136,6 +148,11 @@ class Midi():
         self.__noteOn(note, 'bass')
       else:
         self.state['bassChannel'] = channel
+      
+      # replay distributed chord
+      if self.state['distributeChannels'] and len(self.state['playingChordNotes']) > 0:
+        for note in chordNotes:
+          self.__noteOn(note, 'chord')
   
   def __setChordChannel(self, channel):
     if (channel < 0 or channel > 15):
@@ -154,14 +171,11 @@ class Midi():
   def __setDistributeChannels(self, distribute):
     if len(self.state['playingChordNotes']) > 0 or self.state['playingBassNote']:
       chordNotes = copy.deepcopy(self.state['playingChordNotes'])
-      bassNote = self.state['playingBassNote']
-      self.__noteOff(bassNote, 'chord')
       for note in chordNotes:
         self.__noteOff(note, 'chord')
       self.state['distributeChannels'] = distribute
       for note in chordNotes:
         self.__noteOn(note, 'chord')
-      self.__noteOn(bassNote, 'chord')
     else:
       self.state['distributeChannels'] = distribute
 
@@ -205,19 +219,12 @@ class Midi():
       self.state['playingChordNotes'].append(note)
     else:
       self.state['playingBassNote'] = note
-    if self.state['distributeChannels']:
-      if player == 'chord':
-        self.state['distChordChannels'][note] = channel
-      else:
-        self.state['distBassChannel'] = channel
+    if self.state['distributeChannels'] and player == 'chord':
+      self.state['distChordChannels'][note] = channel
 
   def __storeNoteOff(self, note, player):
     if self.state['distributeChannels']:
       self.__openChannel(note, player)
-      # if player == 'chord':
-      #   self.state['distChordChannels'][note] = None
-      # else:
-      #   self.state['distBassChannel'] = None
     if player == 'chord':
       if note in self.state['playingChordNotes']:
         self.state['playingChordNotes'].remove(note)
@@ -229,19 +236,15 @@ class Midi():
       and len(self.state['playingChordNotes']) == 0 \
       and self.state['playingBassNote'] == None:
       for channel in range(0, 16):
-        self.state['occupiedChannels'][channel] = None
+        self.state['occupiedChannels'][channel] = False
   
   def __getNoteChannel(self, note, player, type):
-    if self.state['distributeChannels']:
-      if type == 'on':
-        return self.__distributeChannel(note)
-      else:
-        if player == 'chord':
-          return self.state['distChordChannels'][note]
+    if player == 'chord':
+      if self.state['distributeChannels']:
+        if type == 'on':
+          return self.__distributeChannel(note)
         else:
-          return self.state['distBassChannel']
-    elif player == 'chord':
-      return self.state['chordChannel']
+          return self.state['distChordChannels'][note]
     elif player == 'bass':
       return self.state['bassChannel']
 
@@ -251,7 +254,9 @@ class Midi():
 
     aftertouchValue = self.state['afterTouch']
     if self.state['distributeChannels']:
-      channels = self.state['occupiedChannels']
+      channels = filter(
+        lambda x: self.state['occupiedChannels'][x], 
+        self.state['occupiedChannels'].keys())
       for channel in channels:
         channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
         self.__sendMidiMessage([channelCommand, aftertouchValue])
@@ -261,7 +266,7 @@ class Midi():
       self.__sendMidiMessage([channelCommand, aftertouchValue])
 
     if self.state['playingBassNote']:
-      channel = self.state['distBassChannel'] if self.state['distributeChannels'] else self.state['bassChannel']
+      channel = self.state['bassChannel']
       channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
       self.__sendMidiMessage([channelCommand, aftertouchValue])
 
@@ -283,8 +288,6 @@ class Midi():
     if self.state['playingBassNote']:
       bassNote = self.state['playingBassNote']
       channel = self.state['bassChannel']
-      if self.state['distributeChannels']:
-        channel = self.state['distBassChannel']
       channelCommand = self.__combineCommandAndChannel(POLY_AFTERTOUCH, channel)
       self.__sendMidiMessage([channelCommand, bassNote, self.state['afterTouch']])
 
@@ -309,17 +312,14 @@ class Midi():
 
   def __distributeChannel(self, note):
       for channel in range(0, 16):
-        if self.state['occupiedChannels'][channel] is None:
-          self.state['occupiedChannels'][channel] = note
+        if not self.state['occupiedChannels'][channel]:
+          self.state['occupiedChannels'][channel] = True
           return channel
   
   def __openChannel(self, note, player):
     if player == 'chord':
       channel = self.state['distChordChannels'][note]
-      self.state['occupiedChannels'][channel] = None
-    elif player == 'bass':
-      channel = self.state['distBassChannel']
-      self.state['occupiedChannels'][channel] = None
+      self.state['occupiedChannels'][channel] = False
 
   def __getRandomVelocity(self):
     value = random.normal(
