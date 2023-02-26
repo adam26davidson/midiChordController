@@ -133,8 +133,8 @@ class Midi():
     else:
       
       # if chord is playing and distribute channels is on, stop chord
-      if self.state['distributeChannels'] and len(self.state['playingChordNotes']) > 0:
-        chordNotes = copy.deepcopy(self.state['playingChordNotes'])
+      chordNotes = copy.deepcopy(self.state['playingChordNotes'])
+      if self.state['distributeChannels'] and len(chordNotes) > 0:
         for note in chordNotes:
           self.__noteOff(note, 'chord')
 
@@ -152,8 +152,8 @@ class Midi():
       else:
         self.state['bassChannel'] = channel
       
-      # replay distributed chord
-      if self.state['distributeChannels'] and len(self.state['playingChordNotes']) > 0:
+      # replay re-distributed chord
+      if self.state['distributeChannels'] and len(chordNotes) > 0:
         for note in chordNotes:
           self.__noteOn(note, 'chord')
   
