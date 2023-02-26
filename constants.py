@@ -2,7 +2,7 @@ import json
 import os
 
 PARENT_PATH = os.path.dirname(os.path.abspath(__file__))
-FULLSCREEN = False
+FULLSCREEN = True
 MIN_NOTE = 21
 MAX_NOTE = 108
 MAX_VOICE_COUNT = 10
