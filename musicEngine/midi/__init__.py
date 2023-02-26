@@ -38,7 +38,7 @@ class Midi():
     }
 
     for channel in range(0, 16):
-      if self.state['basschannel'] == channel:
+      if self.state['bassChannel'] == channel:
         self.state['occupiedChannels'][channel] = True
       else:
         self.state['occupiedChannels'][channel] = False
