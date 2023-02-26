@@ -29,10 +29,10 @@ class ControllerManager():
     connectedController = None
     while (not foundController):
       for controller in self.controllerClasses:
-        foundController = controller.checkIfConnected()
+        foundController = controller.checkForNewConnections()
         if foundController:
           connectedController = controller(self.sendEvent)
-          connectedController.start()
+          connectedController.open()
           self.connectedControllers.append(connectedController)
           store.dispatch(actions.stopWaitingForConnection())
           break
@@ -40,9 +40,19 @@ class ControllerManager():
 
   async def checkConnection(self):
     while True:
-      self.connectedControllers = [c for c in self.connectedControllers if c.checkIfConnected()]
+      self.connectedControllers = self.getUpdatedConnectedControllersList()
       if not self.connectedControllers:
-        self.waitForConnection(0.02)
+        await self.waitForConnection()
+      await asyncio.sleep(0.25)
+  
+  def getUpdatedConnectedControllersList(self):
+    newConnectedControllerList = []
+    for controller in self.connectedControllers:
+      if controller.checkIfStillConnected():
+        newConnectedControllerList.append(controller)
+      else:
+        controller.close()
+    return newConnectedControllerList
 
   def handleStoreUpdate(self):
     pass
