@@ -314,6 +314,7 @@ class Midi():
 
   def __distributeChannel(self):
       for channel in range(0, 16):
+        print(f"{channel}: {self.state['occupiedChannels'][channel]}")
         if not self.state['occupiedChannels'][channel]:
           self.state['occupiedChannels'][channel] = True
           return channel
