@@ -123,10 +123,8 @@ class MidiSettingsFrame(SettingsPage):
         store.dispatch(meActions.changeDistributeChannels(value))
         if (value):
             self.chordChannel.setDisabled()
-            self.bassChannel.setDisabled()
         else:
             self.chordChannel.setEnabled()
-            self.bassChannel.setEnabled()
         settingsStorageUtility.saveSettings()
     
     def setVelocityMode(self, mode):

@@ -223,7 +223,7 @@ class Midi():
       self.state['distChordChannels'][note] = channel
 
   def __storeNoteOff(self, note, player):
-    if self.state['distributeChannels']:
+    if self.state['distributeChannels'] and player == 'chord':
       self.__openChannel(note, player)
     if player == 'chord':
       if note in self.state['playingChordNotes']:
