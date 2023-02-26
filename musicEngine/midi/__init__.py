@@ -241,6 +241,8 @@ class Midi():
       for channel in range(0, 16):
         if channel != self.state['bassChannel']:
           self.state['occupiedChannels'][channel] = False
+        else:
+          self.state['occupiedChannels'][channel] = True
   
   def __getNoteChannel(self, note, player, type):
     if player == 'chord':
