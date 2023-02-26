@@ -8,6 +8,10 @@ import evdev
 class Controller(ABC):
 
   def __init__(self, sendEvent, info):
+    self.id = None
+    self.data = None
+    self.isConnected = False
+    self.devices = None
     self.sendEvent = sendEvent
     self.info = info
     self.meMap = meMaps[self.info['meMap']]
@@ -20,7 +24,7 @@ class Controller(ABC):
     self.state = state
 
   @staticmethod
-  def checkIfConnected(info):
+  def checkForNewConnections(info):
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     connectedControllers = store.get_state()['controllerManager']['controllers']
     connectedIds = [c['id'] for c in connectedControllers]
@@ -32,7 +36,12 @@ class Controller(ABC):
         return True
     return False
 
-  def start(self, id, devices):
+  def checkIfStillConnected(self):
+    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+    connectedIds = [d.uniq for d in devices]
+    return self.id in connectedIds
+
+  def open(self, id, devices):
     self.id = id
     self.devices = devices
     connectedControllers = store.get_state()['controllerManager']['controllers']
@@ -41,7 +50,7 @@ class Controller(ABC):
     if 'primary' in roles: role = 'secondary'
     for key in devices.keys():
       asyncio.ensure_future(self.deviceReadLoop(key))
-    data = {
+    self.data = {
       'id': id,
       'name': self.info['name'],
       'role': role,
@@ -49,14 +58,26 @@ class Controller(ABC):
       'uiMap': self.uiMap,
       'compatibleMeMaps': self.info['compatibleMeMaps']
     }
-    store.dispatch(actions.add(data))
+    self.isConnected = True
+    store.dispatch(actions.add(self.data))
     #REMOVE LATER
     print("bassMode:")
     print(store.get_state()['controllerManager']['controllers'][0]['meMap']['bassMode'])
 
+  def close(self):
+    self.isConnected = False
+    store.dispatch(actions.remove(self.data))
+    print(f"Closing connection for {self.info['product']}:{self.info['vendor']}:{self.id}")
+
   async def deviceReadLoop(self, device):
-    async for event in self.devices[device].async_read_loop():
-      self.processEvent(event, device)
+    try:
+      eventReadLoopGenerator = self.devices[device].async_read_loop()
+      async for event in eventReadLoopGenerator:
+        if self.isConnected:
+          self.processEvent(event, device)
+    except Exception as e:
+      self.isConnected = False
+      print("cannot read event from async_read_loop")
 
   def createState(self, controls):
     state = {}

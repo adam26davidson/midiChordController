@@ -7,7 +7,7 @@ class Wired360Controller(Controller):
     def __init__(self, sendEvent):
         super().__init__(sendEvent, info)
 
-    def start(self):
+    def open(self):
         availableDevices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         connectedControllers = store.get_state()['controllerManager']['controllers']
         connectedIds = [c['id'] for c in connectedControllers]
@@ -20,10 +20,10 @@ class Wired360Controller(Controller):
             if (vendorMatch and productMatch and newId):
                 devices['main'] = device
                 id = device.uniq
-        super().start(id, devices)
+        super().open(id, devices)
 
     @staticmethod
-    def checkIfConnected():
-        return Controller.checkIfConnected(info)
+    def checkForNewConnections():
+        return Controller.checkForNewConnections(info)
 
     

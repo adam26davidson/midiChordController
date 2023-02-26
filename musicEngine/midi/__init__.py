@@ -186,6 +186,7 @@ class Midi():
           channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
           self.midiOut.send_message([channelCommand, cc, val])  
         self.state['lastSentCCValues'][cc] = val
+
   
   def __combineCommandAndChannel(self, command, channel):
     return ((command & 0xf0) | (channel & 0xf))
