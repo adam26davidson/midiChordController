@@ -140,14 +140,13 @@ class Midi():
 
       # open up old bass channel
       self.state['occupiedChannels'][self.state['bassChannel']] = False
-      # close new bass channel
-      self.state['occupiedChannels'][channel] = True
 
       #update bass to play on new channel, set state bass channel
       if self.state['playingBassNote']:
         note = self.state['playingBassNote']
         self.__noteOff(note, 'bass')
         self.state['bassChannel'] = channel
+        self.state['occupiedChannels'][channel] = True
         self.__noteOn(note, 'bass')
       else:
         self.state['bassChannel'] = channel
@@ -241,8 +240,6 @@ class Midi():
       for channel in range(0, 16):
         if channel != self.state['bassChannel']:
           self.state['occupiedChannels'][channel] = False
-        else:
-          self.state['occupiedChannels'][channel] = True
   
   def __getNoteChannel(self, note, player, type):
     if player == 'chord':
