@@ -7,8 +7,9 @@ class DualShock4(Controller):
 
   def __init__(self, sendEvent):
     super().__init__(sendEvent, info)
+    self.id = None
 
-  def start(self):
+  def open(self):
     availableDevices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     foundDevice = False
     connectedControllers = store.get_state()['controllerManager']['controllers']
@@ -30,9 +31,9 @@ class DualShock4(Controller):
           devices['touch'] = device
         elif isCorrectId:
           devices['main'] = device
-    super().start(id, devices)
+    super().open(id, devices)
 
   @staticmethod
-  def checkIfConnected():
-    return Controller.checkIfConnected(info)
+  def checkForNewConnections():
+    return Controller.checkForNewConnections(info)
 
