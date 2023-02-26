@@ -38,7 +38,10 @@ class Midi():
     }
 
     for channel in range(0, 16):
-      self.state['occupiedChannels'][channel] = False
+      if self.state['basschannel'] == channel:
+        self.state['occupiedChannels'][channel] = True
+      else:
+        self.state['occupiedChannels'][channel] = False
     
     for note in range(0, 128):
       self.state['distChordChannels'][note] = 0
@@ -198,7 +201,7 @@ class Midi():
 
   def __noteOff(self, note, player):
     noteChannel = self.__getNoteChannel(note, player, 'off')
-    #print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
+    print(f'OFF -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_OFF, noteChannel)
     self.__sendMidiMessage([channelCommand, note, 0])
     self.__storeNoteOff(note, player)
@@ -206,7 +209,7 @@ class Midi():
   def __noteOn(self, note, player):
     velocity = self.__getVelocity()
     noteChannel = self.__getNoteChannel(note, player, 'on')
-    #print(f'ON -- note: {note}, channel: {noteChannel}, player: {player}')
+    print(f'ON -- note: {note}, channel: {noteChannel}, player: {player}')
     channelCommand = self.__combineCommandAndChannel(NOTE_ON, noteChannel)
     self.__sendMidiMessage([channelCommand, note, velocity])
     self.__storeNoteOn(note, player, noteChannel)
