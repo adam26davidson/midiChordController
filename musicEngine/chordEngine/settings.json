@@ -341,11 +341,11 @@
         }
       },
       "right": {
-        "interval": 1,
-        "main": [0, 4, 6, 11],
-        "mainBass": [0, 6],
-        "alternate": [0, 2, 4, 9],
-        "alternateBass": [0, 7]
+        "interval": 4,
+        "main": [3, 4, 8, 10],
+        "mainBass": [0, 8],
+        "alternate": [-4, -2, 2, 4],
+        "alternateBass": [-6, 2]
       }
     }
   },
