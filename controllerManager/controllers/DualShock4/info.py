@@ -2,9 +2,9 @@ info = {
     "name": "DualShock4",
     "vendor": 1356,
     "product": 2508,
-    "meMap": "touchpadBass",
+    "meMap": "touchpadCC",
     'uiMap': 'default',
-    "compatibleMeMaps": ['gyroInversions', 'default', 'touchpadBass'],
+    "compatibleMeMaps": ['gyroInversions', 'default', 'touchpadBass','touchpadCC'],
     "controls": {
         "main": {
             # MAIN BUTTONS
