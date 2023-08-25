@@ -1,3 +1,5 @@
+from . import store
+
 def getActiveMeMap():
     meMap = None
 
@@ -6,5 +8,5 @@ def getActiveMeMap():
         if controller['role'] == 'primary':
             meMap = controller['meMap']['map']
             break
-        
+
     return meMap
