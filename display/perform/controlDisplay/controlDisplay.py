@@ -18,15 +18,30 @@ class ControlDisplay(tk.Canvas):
         
         self.master = master
 
+        self.ControllerConnected = False
         meMap = ReduxUtils.getActiveMeMap()
         abrevs = CONTROL_ABREVIATIONS
-
-        self.createMainButtons(meMap, abrevs)
-        self.createStartButton(meMap, abrevs)
-        self.createDpadButtons(meMap, abrevs)
-        #self.createJoySticks(meMap, abrevs)
+        
+        if meMap != None:
+            self.ControllerConnected = True
+            self.createMainButtons(meMap, abrevs)
+            self.createStartButton(meMap, abrevs)
+            self.createDpadButtons(meMap, abrevs)
+            #self.createJoySticks(meMap, abrevs)
 
         self.pack(side="right", padx=(20, 20), pady=(20, 0))
+
+        store.subscribe(self.__handleStoreUpdate)
+
+    def __handleStoreUpdate(self):
+        meMap = ReduxUtils.getActiveMeMap()
+        if meMap != None:
+            abrevs = CONTROL_ABREVIATIONS
+            self.ControllerConnected = True
+            self.createMainButtons(meMap, abrevs)
+            self.createStartButton(meMap, abrevs)
+            self.createDpadButtons(meMap, abrevs)
+            #self.createJoySticks(meMap, abrevs)
 
     def createMainButtons(self, meMap, abrevs):
 
