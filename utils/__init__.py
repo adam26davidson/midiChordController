@@ -1,6 +1,5 @@
 from constants import MIN_NOTE, MAX_NOTE
 
-
 # find all octaves of the specified array of notes
 def findAllOctavesInRange(notes, min=MIN_NOTE, max=MAX_NOTE):
     completedNotes = []

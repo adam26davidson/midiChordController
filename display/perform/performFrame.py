@@ -1,5 +1,6 @@
-from redux import store
+from redux import store, utils as ReduxUtils
 from ..chordDisplay import ChordDisplay
+from .controlDisplay.controlDisplay import ControlDisplay
 from .keyboard import Keyboard
 from .inversion import Inversion
 from .spread import Spread
@@ -54,6 +55,7 @@ class PerformFrame(tk.Frame):
         self.bassPosition = Inversion(master=self)
         self.chordDisplay = ChordDisplay(master=self)
         self.textDisplay = TextDisplay(master=self)
+        self.controlDisplay = ControlDisplay(master=self)
 
         self.grid(row=0, column=0, sticky='nsew',)
 
@@ -129,6 +131,8 @@ class PerformFrame(tk.Frame):
             if controller['role'] == 'primary':
                 primary = controller
                 meMap = controller['meMap']
+                break
+
         if meMap:
             if meMap['inversionMode'] != self.state['inversionMode']:
                 self.state['inversionMode'] = meMap['inversionMode']
@@ -140,11 +144,7 @@ class PerformFrame(tk.Frame):
                 self.__setController(primary['name'])
 
     def handleControllerEvent(self, event):
-        meMap = None
-        controllers = store.get_state()['controllerManager']['controllers']
-        for controller in controllers:
-            if controller['role'] == 'primary':
-                meMap = controller['meMap']['map']
+        meMap = ReduxUtils.getActiveMeMap()
         if event['name'] in meMap.keys():
             if self.state['inversionMode'] == 'continuous' and \
                     meMap[event['name']] == 'UPDATE_INVERSION':
