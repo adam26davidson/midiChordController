@@ -29,7 +29,7 @@ class ControlDisplay(tk.Canvas):
             self.createDpadButtons(meMap, abrevs)
             #self.createJoySticks(meMap, abrevs)
 
-        self.pack(side="right", padx=(20, 20), pady=(20, 0))
+        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(20, 20))
 
         store.subscribe(self.__handleStoreUpdate)
 
@@ -56,7 +56,7 @@ class ControlDisplay(tk.Canvas):
             
         centerX = self.unitSize * 7.5
         centerY = self.unitSize * 11
-        self.startButton = CircularButton(self, abrevs[meMap["START_BUTTON_DOWN"]], centerX, centerY, self.unitSize)
+        #self.startButton = CircularButton(self, abrevs[meMap["START_BUTTON_DOWN"]], centerX, centerY, self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
         self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN", self.unitSize)
