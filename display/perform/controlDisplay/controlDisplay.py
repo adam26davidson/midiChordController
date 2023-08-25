@@ -10,7 +10,7 @@ class ControlDisplay(tk.Canvas):
     width = 300
 
     def __init__(self, master=None):
-        super().__init__(master, width=40, height=370,
+        super().__init__(master, width=self.width, height=(self.width / 15) * 14,
                          highlightthickness=0, relief="flat", bg="#000000")
         
         self.unitSize = self.width / 15
