@@ -6,7 +6,7 @@ from PIL import ImageTk, Image
 
 class TextDisplay(tk.Frame):
     width = 300
-    height = 200
+    height = 150
 
     bgColor = "#000000"
     color = COLORS["chord"]
