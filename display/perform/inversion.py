@@ -4,7 +4,7 @@ from ..displayConstants import COLORS
 
 
 class Inversion(tk.Canvas):
-    width = 40
+    width = 20
     height = 370
 
     thumbRadius = 3

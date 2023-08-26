@@ -8,7 +8,7 @@ from ..displayConstants import COLORS, FONTS
 class ChordDisplay(tk.Canvas):
   height = 350
   width = 300
-  radius = 120
+  radius = 110
 
   smallNoteRadius = 16
   largeNoteRadius = 18
@@ -47,7 +47,7 @@ class ChordDisplay(tk.Canvas):
     self.keyText = self.createKeyText()
     self.bass = self.createBassNote()
     #self.bassPlayed = self.createBassPlayedNote()
-    self.pack(side="right", pady=(30, 0), padx=(0,40))
+    self.pack(side="right", pady=(20, 0), padx=(0,20))
 
   def createKeyText(self):
     x = self.width / 2
