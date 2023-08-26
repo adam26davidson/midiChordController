@@ -74,7 +74,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.inversionLockIcon.pack(side="left")
         self.inversionLockText.pack(side="left")
-        self.inversionLockFrame.pack(side='left')
+        #self.inversionLockFrame.pack(side='left')
 
         self.holdFrame = tk.Frame(self.lockFrame, bg=self.bgColor)
         self.holdIcon = tk.Label(
@@ -85,7 +85,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.inactiveColor, font=mediumFont)
         self.holdIcon.pack(side="left")
         self.holdText.pack(side="left")
-        self.holdFrame.pack(side='left', padx=(20, 0))
+        #self.holdFrame.pack(side='left', padx=(20, 0))
 
         self.octaveFrame = tk.Frame(self, bg=self.bgColor)
         self.octaveLabel = tk.Label(
@@ -96,7 +96,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.activeColor, font=bigFont)
         self.octaveLabel.pack(side="left")
         self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side="top", anchor="nw")
+        #self.octaveFrame.pack(side="top", anchor="nw")
 
         self.voicesFrame = tk.Frame(self, bg=self.bgColor)
         self.voicesLabel = tk.Label(
@@ -107,7 +107,7 @@ class TextDisplay(tk.Frame):
             bg=self.bgColor, fg=self.activeColor, font=bigFont)
         self.voicesLabel.pack(side="left")
         self.voicesValue.pack(side="left")
-        self.voicesFrame.pack(side="top", anchor="nw")
+        #self.voicesFrame.pack(side="top", anchor="nw")
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=(20, 20))
 
