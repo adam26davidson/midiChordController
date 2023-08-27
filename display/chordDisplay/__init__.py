@@ -68,7 +68,7 @@ class ChordDisplay(tk.Canvas):
         self.chordName = ""
         self.notes = self.createNotes()
         self.keyText = self.createKeyText()
-        self.chordNameText = self.createCordNameText()
+        self.chordNameText = self.createChordNameText()
         self.bass = self.createBassNote()
         # self.bassPlayed = self.createBassPlayedNote()
         self.pack(side="right", pady=(20, 0), padx=(0, 0))
@@ -80,11 +80,11 @@ class ChordDisplay(tk.Canvas):
             x, y, fill=COLORS["chord"], text=self.noteNames[self.key], font=FONTS["big"]
         )
 
-    def createCordNameText(self):
+    def createChordNameText(self):
         x = self.width / 2
         y = self.height - x
         return self.create_text(
-            x, y, fill=COLORS["chord"], text=self.chordName, font=FONTS["big"]
+            x, y, fill=COLORS["chord"], text=self.chordName, font=FONTS["big"], justify="center"
         )
 
     def createBassNote(self):
@@ -254,33 +254,38 @@ class ChordDisplay(tk.Canvas):
     def setChordName(self, chordTypes, rootType):
         allTypes = [n+24 for n in chordTypes]
         allTypes.append(rootType+12)
-        self.chordName = chord.Chord(allTypes).pitchedCommonName
-        self.chordName.replace("chord", "")
-        self.chordName.replace("seventh", "7th")
-        self.chordName.replace("major", "maj")
-        self.chordName.replace("minor", "min")
-        self.chordName.replace("diminished", "dim")
-        self.chordName.replace("augmented", "aug")
-        self.chordName.replace("half-diminished", "h-dim")
-        self.chordName.replace("dominant", "dom")
-        self.chordName.replace("suspended", "sus")
-        self.chordName.replace("ninth", "9th")
+
+        chordName = chord.Chord(allTypes).pitchedCommonName
+
+        chordName = chordName.replace("chord", "")
+        chordName = chordName.replace("seventh", "7th")
+        chordName = chordName.replace("major", "maj")
+        chordName = chordName.replace("minor", "min")
+        chordName = chordName.replace("diminished", "dim")
+        chordName = chordName.replace("augmented", "aug")
+        chordName = chordName.replace("half-diminished", "h-dim")
+        chordName = chordName.replace("dominant", "dom")
+        chordName = chordName.replace("suspended", "sus")
+        chordName = chordName.replace("ninth", "9th")
         maxCharsPerLine = 15
-        if len(self.chordName) > maxCharsPerLine:
+
+        if len(chordName) > maxCharsPerLine:
             lines = []
-            words = self.chordName.split(" ")
+            words = chordName.split(" ")
             while len(words) > 0:
                 if len(words[0]) > maxCharsPerLine:
                     lines.append(words.pop(0))
                 else:
                     line = ""
-                    while len(words) > 0 and (len(line) + len(words[0]) < maxCharsPerLine):
+                    while len(words) > 0 and (len(line) + len(words[0]) <= maxCharsPerLine):
                         line += words.pop(0) + " "
                     lines.append(line)
-            fontSize = (int) ((self.radius * 1.6) / (max([len(line) for line in lines])))
+            fontSize = (int) ((self.radius * 1.65) / (max([len(line) for line in lines])))
         else:
-            lines = [self.chordName]
-            fontSize = (int) ((self.radius * 1.6) / (len(self.chordName)))
+            lines = [chordName]
+            fontSize = (int) ((self.radius * 1.65) / (len(chordName)))
+
+        self.chordName = chordName
         text = "\n".join(lines)
         
         self.itemconfigure(self.chordNameText, text=text, font=("sans serif", fontSize))
