@@ -252,7 +252,7 @@ class ChordDisplay(tk.Canvas):
         self.key = key
         self.itemconfigure(self.keyText, text=self.noteNames[self.key])
 
-    async def setChordName(self, chordTypes, rootType):
+    def setChordName(self, chordTypes, rootType):
         allTypes = [n for n in chordTypes]
         if not allTypes.count(rootType) > 0:
             allTypes.append(rootType)
