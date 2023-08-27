@@ -65,11 +65,11 @@ class ChordDisplay(tk.Canvas):
         self.key = 0
         self.root = 0
         self.bassNote = 0
+        self.chordName = ""
         self.notes = self.createNotes()
         self.keyText = self.createKeyText()
         self.chordNameText = self.createCordNameText()
         self.bass = self.createBassNote()
-        self.chordName = ""
         # self.bassPlayed = self.createBassPlayedNote()
         self.pack(side="right", pady=(20, 0), padx=(0, 0))
 
