@@ -36,10 +36,10 @@ class ChordName():
     
     def generateName(self, allTypes, rootType):
         chord = m21Chord.Chord(allTypes)
-        # try:
-        #     chord.root(rootType)
-        # except:
-        #     pass
+        try:
+            chord.root(self.master.noteNames[rootType])
+        except:
+            pass
 
         chordName = chord.pitchedCommonName
         chordName = chordName.replace("-", " ")
