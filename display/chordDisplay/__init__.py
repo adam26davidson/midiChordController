@@ -252,10 +252,11 @@ class ChordDisplay(tk.Canvas):
         self.itemconfigure(self.keyText, text=self.noteNames[self.key])
 
     def setChordName(self, chordTypes, rootType):
-        allTypes = [n for n in chordTypes]
-        allTypes.append(rootType)
-        self.chordName = chord.Chord(allTypes).commonName
-        self.itemconfigure(self.chordNameText, text=self.chordName)
+        allTypes = [n+24 for n in chordTypes]
+        allTypes.append(rootType+12)
+        self.chordName = chord.Chord(allTypes).pitchedCommonName
+        fontSize = (int) ((self.radius * 1.5) / (self.chordName.length))
+        self.itemconfigure(self.chordNameText, text=self.chordName, font=("sans serif", fontSize))
 
     def setScale(self, scale):
         self.scale = scale
