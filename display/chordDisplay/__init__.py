@@ -1,4 +1,3 @@
-import asyncio
 from music21 import chord as m21Chord
 import tkinter as tk
 import math
