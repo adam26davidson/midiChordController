@@ -259,7 +259,8 @@ class ChordDisplay(tk.Canvas):
         chordName = chordName.replace("-", " ")
 
         # deal with the enharmonic equivalent to stuff
-        if (chordName.find("enharmonic equivalent to") != -1):
+        if (chordName.find("enharmonic equivalent to") != -1 or chordName.find("enharmonic to") != -1):
+            chordName = chordName.replace("enharmonic to ", "")
             chordName = chordName.replace("enharmonic equivalent to ", "")
             chordName = chordName.replace("above ", "")
             words = chordName.split(" ")
@@ -284,7 +285,7 @@ class ChordDisplay(tk.Canvas):
             lines = []
             words = chordName.split(" ")
             while len(words) > 0:
-                if len(words[0]) > maxCharsPerLine:
+                if len(words[0]) > maxCharsPerLine: # to prevent infinite loop
                     lines.append(words.pop(0))
                 else:
                     line = ""
