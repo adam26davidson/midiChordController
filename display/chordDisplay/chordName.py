@@ -19,7 +19,7 @@ class ChordName():
     def set(self, chordTypes, rootType):
         allTypes = [n for n in chordTypes]
         allTypes.sort()
-        nameKey = str(rootType) + " " + "-".join(allTypes)
+        nameKey = str(rootType) + " " + "-".join([str(t) for t in allTypes])
 
         if not allTypes.count(rootType) > 0:
             allTypes.append(rootType)
