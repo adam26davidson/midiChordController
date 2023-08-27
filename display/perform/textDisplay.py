@@ -15,7 +15,7 @@ class TextDisplay(tk.Frame):
 
     def __init__(self, master=None):
         super().__init__(master, width=self.width, height=self.height,
-                         highlightthickness=0, relief="flat", bg=self.bgColor)
+                         highlightthickness=0, relief="flat", bg=self.bgColor, border=2, borderwidth=2)
         self.master = master
 
         bigFont = FONTS["big"]
@@ -43,7 +43,7 @@ class TextDisplay(tk.Frame):
         self.controller = tk.Label(
             self.controllerFrame, text="Not Connected",
             bg=self.bgColor, fg=self.color, font=mediumFont)
-        self.controller.pack(side="left", padx=(10, 0))
+        #self.controller.pack(side="left", padx=(10, 0))
 
         # lock and hold
         self.lockFrame = tk.Frame(self, bg=self.bgColor)
@@ -109,7 +109,7 @@ class TextDisplay(tk.Frame):
         self.voicesValue.pack(side="left")
         #self.voicesFrame.pack(side="top", anchor="nw")
 
-        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(20, 20))
+        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
 
     def setSetting(self, name):
         print('setting setting text to ' + name)

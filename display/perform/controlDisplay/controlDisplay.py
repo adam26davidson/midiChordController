@@ -29,13 +29,13 @@ class ControlDisplay(tk.Canvas):
             self.createDpadButtons(meMap, abrevs)
             #self.createJoySticks(meMap, abrevs)
 
-        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(20, 20))
+        self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
         store.subscribe(self.__handleStoreUpdate)
 
     def __handleStoreUpdate(self):
         meMap = ReduxUtils.getActiveMeMap()
-        if meMap != None:
+        if meMap != None and not self.ControllerConnected:
             abrevs = CONTROL_ABREVIATIONS
             self.ControllerConnected = True
             self.createMainButtons(meMap, abrevs)
