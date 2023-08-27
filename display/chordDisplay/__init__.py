@@ -260,7 +260,7 @@ class ChordDisplay(tk.Canvas):
             lines = []
             words = self.chordName.split(" ")
             while len(words) > 0:
-                if words[0] > maxCharsPerLine:
+                if len(words[0]) > maxCharsPerLine:
                     lines.append(words.pop(0))
                 else:
                     line = ""
