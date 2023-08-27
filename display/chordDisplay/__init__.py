@@ -1,4 +1,5 @@
-from music21 import chord
+import asyncio
+from music21 import chord as m21Chord
 import tkinter as tk
 import math
 from constants import *
@@ -251,11 +252,14 @@ class ChordDisplay(tk.Canvas):
         self.key = key
         self.itemconfigure(self.keyText, text=self.noteNames[self.key])
 
-    def setChordName(self, chordTypes, rootType):
+    async def setChordName(self, chordTypes, rootType):
         allTypes = [n+24 for n in chordTypes]
         allTypes.append(rootType+12)
 
-        chordName = chord.Chord(allTypes).pitchedCommonName
+        chord = m21Chord.Chord(allTypes)
+        chord.root(rootType)
+
+        chordName = chord.pitchedCommonName
         chordName = chordName.replace("-", " ")
 
         # deal with the enharmonic equivalent to stuff
@@ -312,8 +316,7 @@ class ChordDisplay(tk.Canvas):
                 self.setNoteNotInScale(note)
 
     def setChord(self, chordTypes, rootType):
-        
-        self.setChordName(chordTypes, rootType)
+        asyncio.ensure_future(self.setChordName(chordTypes, rootType))
         self.root = self.convertNote(rootType)
         self.setScale(self.scale)
         chord = []
