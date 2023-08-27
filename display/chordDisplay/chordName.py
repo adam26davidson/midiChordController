@@ -7,7 +7,7 @@ class ChordName():
         self.master = master
         self.chordName = ""
         self.pastChordNames = {}
-        self.createText()
+        self.textObject = self.createText()
 
     def createText(self):
         x = self.master.width / 2
@@ -32,8 +32,7 @@ class ChordName():
             text, fontSize = self.generateName(allTypes, rootType)
             self.pastChordNames[nameKey] = (text, fontSize)
         
-        
-        self.itemconfigure(self.chordNameText, text=text, font=("sans serif", fontSize))
+        self.itemconfigure(self.textObject, text=text, font=("sans serif", fontSize))
     
     def generateName(self, allTypes, rootType):
         chord = m21Chord.Chord(allTypes)
@@ -79,10 +78,10 @@ class ChordName():
                     while len(words) > 0 and (len(line) + len(words[0]) <= maxCharsPerLine):
                         line += words.pop(0) + " "
                     lines.append(line)
-            fontSize = (int) ((self.radius * 1.65) / (max([len(line) for line in lines])))
+            fontSize = (int) ((self.master.radius * 1.65) / (max([len(line) for line in lines])))
         else:
             lines = [chordName]
-            fontSize = (int) ((self.radius * 1.65) / (len(chordName)))
+            fontSize = (int) ((self.master.radius * 1.65) / (len(chordName)))
 
         self.chordName = chordName
         text = "\n".join(lines)
