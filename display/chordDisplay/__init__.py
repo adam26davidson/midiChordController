@@ -317,7 +317,7 @@ class ChordDisplay(tk.Canvas):
                 self.setNoteNotInScale(note)
 
     def setChord(self, chordTypes, rootType):
-        asyncio.ensure_future(self.setChordName(chordTypes, rootType))
+        self.setChordName(chordTypes, rootType)
         self.root = self.convertNote(rootType)
         self.setScale(self.scale)
         chord = []
