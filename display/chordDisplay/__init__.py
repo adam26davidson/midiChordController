@@ -256,6 +256,7 @@ class ChordDisplay(tk.Canvas):
         allTypes.append(rootType+12)
 
         chordName = chord.Chord(allTypes).pitchedCommonName
+        chordName = chordName.replace("-", " ")
 
         # deal with the enharmonic equivalent to stuff
         if (chordName.find("enharmonic equivalent to") != -1):
