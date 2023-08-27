@@ -7,14 +7,13 @@ from ..displayConstants import COLORS, FONTS
 
 class ChordDisplay(tk.Canvas):
   height = 350
-  width = 250
   radius = 110
+  xMargin = 40
 
   smallNoteRadius = 16
   largeNoteRadius = 18
   outlineWidth = 4
 
-  bassRadius = 120
   bassNoteShadowRadius = 21
   bassNotePlayedRadius = 23
   bassDash = ()
@@ -29,6 +28,7 @@ class ChordDisplay(tk.Canvas):
   noteNames = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"]
 
   def __init__(self, master=None):
+    self.width = (self.radius + self.bassNotePlayedRadius + self.xMargin) * 2
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
     self.scale = [0, 2, 4, 5, 7, 9, 11]
     self.modulationState = {

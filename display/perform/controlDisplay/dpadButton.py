@@ -14,80 +14,36 @@ class DPadButton(ControlButton):
         self.drawButton()
 
     def drawButton(self):
-        cX = self.unitSize * 3
-        cY = self.unitSize * 9
-        u = self.unitSize
+        cX = 3
+        cY = 9
+        uToC = self.master.unitsToCoord
         if (self.direction == "LEFT"):
-            self.canvasObject = self.master.create_polygon(
-                cX - 3*u, cY + u,
-                cX - 2*u, cY + u,
-                cX - u, cY,
-                cX - 2*u, cY - u,
-                cX - 3*u, cY - u,
-                fill="#000000",
-                outline=INACTIVE_COLOR,
-                width=2
-            )
-            self.textObject = self.master.create_text(
-                0.75*u,
-                9*u,
-                text=self.label,
-                fill="#ffffff",
-                font=FONT
-            )
+            self.drawButtonFromParams(cX-3, cY+1, cX-2, cY+1, cX-1, cY, cX-2, cY-1, cX-3, cY-1, 0.75, 9)
         elif (self.direction == "RIGHT"):
-            self.canvasObject = self.master.create_polygon(
-                cX + 3*u, cY + u,
-                cX + 2*u, cY + u,
-                cX + u, cY,
-                cX + 2*u, cY - u,
-                cX + 3*u, cY - u,
-                fill="#000000",
-                outline=INACTIVE_COLOR,
-                width=2
-            )
-            self.textObject = self.master.create_text(
-                5.25*u,
-                9*u,
-                text=self.label,
-                fill="#ffffff",
-                font=FONT
-            )
+            self.drawButtonFromParams(cX+3, cY+1, cX+2, cY+1, cX+1, cY, cX+2, cY-1, cX+3, cY-1, 5.25, 9)
         elif (self.direction == "UP"):
-            self.canvasObject = self.master.create_polygon(
-                cX - u, cY - 3*u,
-                cX - u, cY - 2*u,
-                cX, cY - u,
-                cX + u, cY - 2*u,
-                cX + u, cY - 3*u,
-                fill="#000000",
-                outline=INACTIVE_COLOR,
-                width=2
-            )
-            self.textObject = self.master.create_text(
-                3*u,
-                6.75*u,
-                text=self.label,
-                fill="#ffffff",
-                font=FONT
-            )
+            self.drawButtonFromParams(cX-1, cY-3, cX-1, cY-2, cX, cY-1, cX+1, cY-2, cX+1, cY-3, 3, 6.75)
         elif (self.direction == "DOWN"):
-            self.canvasObject = self.master.create_polygon(
-                cX - u, cY + 3*u,
-                cX - u, cY + 2*u,
-                cX, cY + u,
-                cX + u, cY + 2*u,
-                cX + u, cY + 3*u,
-                fill="#000000",
-                outline=INACTIVE_COLOR,
-                width=2
-            )
-            self.textObject = self.master.create_text(
-                3*u,
-                11.25*u,
-                text=self.label,
-                fill="#ffffff",
-                font=FONT
-            )
+            self.drawButtonFromParams(cX-1, cY+3, cX-1, cY+2, cX, cY+1, cX+1, cY+2, cX+1, cY+3, 3, 11.25)
+    
+    def drawButtonFromParams(self, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, tx, ty):
+        uToC = self.master.unitsToCoord
+        self.canvasObject = self.master.create_polygon(
+            uToC(x1), uToC(y1),
+            uToC(x2), uToC(y2),
+            uToC(x3), uToC(y3),
+            uToC(x4), uToC(y4),
+            uToC(x5), uToC(y5),
+            fill="#000000",
+            outline=INACTIVE_COLOR,
+            width=2
+        )
+        self.textObject = self.master.create_text(
+            uToC(tx),
+            uToC(ty),
+            text=self.label,
+            fill="#ffffff",
+            font=FONT
+        )
 
     

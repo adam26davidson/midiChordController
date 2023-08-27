@@ -43,7 +43,7 @@ class TextDisplay(tk.Frame):
         self.controller = tk.Label(
             self.controllerFrame, text="Not Connected",
             bg=self.bgColor, fg=self.color, font=mediumFont)
-        #self.controller.pack(side="left", padx=(10, 0))
+        self.controller.pack(side="left", padx=(10, 0))
 
         # lock and hold
         self.lockFrame = tk.Frame(self, bg=self.bgColor)

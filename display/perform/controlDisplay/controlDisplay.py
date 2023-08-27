@@ -7,14 +7,15 @@ from redux import store, utils as ReduxUtils
 
 class ControlDisplay(tk.Canvas):
 
-    width = 300
+    width = 320
+    margin = 5
 
     def __init__(self, master=None):
+        self.unitSize = (self.width - (2*self.margin)) / 15
+        self.height = (self.unitSize * 14) + (2 * self.margin)
         super().__init__(master, width=self.width, height=(self.width / 15) * 14,
                          highlightthickness=0, relief="flat", bg="#000000")
         
-        self.unitSize = self.width / 15
-        self.height = self.unitSize * 14
         
         self.master = master
 
@@ -43,15 +44,17 @@ class ControlDisplay(tk.Canvas):
             self.createDpadButtons(meMap, abrevs)
             #self.createJoySticks(meMap, abrevs)
 
-    def createMainButtons(self, meMap, abrevs):
+    def unitsToCoord(self, units):
+        return self.margin + (units * self.unitSize)
 
-        centerX = self.unitSize * 12
-        centerY = self.unitSize * 9
-        u = self.unitSize
-        self.southButton = CircularButton(self, abrevs[meMap["SOUTH_BUTTON_DOWN"]], centerX, centerY + 2*u, self.unitSize)
-        self.eastButton = CircularButton(self, abrevs[meMap["EAST_BUTTON_DOWN"]], centerX + 2*u, centerY, self.unitSize)
-        self.northButton = CircularButton(self, abrevs[meMap["NORTH_BUTTON_DOWN"]], centerX, centerY - 2*u, self.unitSize)
-        self.westButton = CircularButton(self, abrevs[meMap["WEST_BUTTON_DOWN"]], centerX - 2*u, centerY, self.unitSize)
+    def createMainButtons(self, meMap, abrevs):
+        cX = 12
+        cY = 9
+        uToC = self.unitsToCoord
+        self.southButton = CircularButton(self, abrevs[meMap["SOUTH_BUTTON_DOWN"]], uToC(cX), uToC(cY + 2), self.unitSize)
+        self.eastButton = CircularButton(self, abrevs[meMap["EAST_BUTTON_DOWN"]], uToC(cX + 2), uToC(cY), self.unitSize)
+        self.northButton = CircularButton(self, abrevs[meMap["NORTH_BUTTON_DOWN"]], uToC(cX), uToC(cY - 2), self.unitSize)
+        self.westButton = CircularButton(self, abrevs[meMap["WEST_BUTTON_DOWN"]], uToC(cX - 2), uToC(cY), self.unitSize)
 
     def createStartButton(self, meMap, abrevs):
             
