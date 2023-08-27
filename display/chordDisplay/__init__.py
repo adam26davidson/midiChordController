@@ -253,11 +253,12 @@ class ChordDisplay(tk.Canvas):
         self.itemconfigure(self.keyText, text=self.noteNames[self.key])
 
     async def setChordName(self, chordTypes, rootType):
-        allTypes = [n+24 for n in chordTypes]
-        allTypes.append(rootType+12)
+        allTypes = [n for n in chordTypes]
+        if not allTypes.count(rootType) > 0:
+            allTypes.append(rootType)
 
         chord = m21Chord.Chord(allTypes)
-        chord.root(rootType+12)
+        chord.root(rootType)
 
         chordName = chord.pitchedCommonName
         chordName = chordName.replace("-", " ")
