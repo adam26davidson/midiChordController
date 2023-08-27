@@ -1,6 +1,6 @@
 
 from display.displayConstants import COLORS, FONTS
-from music21 import chord as m21Chord
+from music21 import chord as m21Chord, pitch as m21Pitch
 
 class ChordName():
     def __init__(self, master):
@@ -37,7 +37,7 @@ class ChordName():
     def generateName(self, allTypes, rootType):
         chord = m21Chord.Chord(allTypes)
         try:
-            chord.root(self.master.noteNames[rootType])
+            chord.root(m21Pitch.Pitch(self.master.noteNames[rootType]))
         except:
             pass
 
