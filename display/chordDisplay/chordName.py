@@ -32,7 +32,7 @@ class ChordName():
             text, fontSize = self.generateName(allTypes, rootType)
             self.pastChordNames[nameKey] = (text, fontSize)
         
-        self.itemconfigure(self.textObject, text=text, font=("sans serif", fontSize))
+        self.master.itemconfigure(self.textObject, text=text, font=("sans serif", fontSize))
     
     def generateName(self, allTypes, rootType):
         chord = m21Chord.Chord(allTypes)
