@@ -5,6 +5,7 @@ from constants import *
 import time
 import math
 from ..displayConstants import COLORS, FONTS
+from.chordName import ChordName
 
 
 class ChordDisplay(tk.Canvas):
@@ -65,10 +66,9 @@ class ChordDisplay(tk.Canvas):
         self.key = 0
         self.root = 0
         self.bassNote = 0
-        self.chordName = ""
         self.notes = self.createNotes()
         self.keyText = self.createKeyText()
-        self.chordNameText = self.createChordNameText()
+        self.chordName = ChordName(self)
         self.bass = self.createBassNote()
         # self.bassPlayed = self.createBassPlayedNote()
         self.pack(side="right", pady=(20, 0), padx=(0, 0))
@@ -78,13 +78,6 @@ class ChordDisplay(tk.Canvas):
         y = self.notes[0]["center"]["y"] + self.keyTextOffset
         return self.create_text(
             x, y, fill=COLORS["chord"], text=self.noteNames[self.key], font=FONTS["big"]
-        )
-
-    def createChordNameText(self):
-        x = self.width / 2
-        y = self.height - x
-        return self.create_text(
-            x, y, fill=COLORS["chord"], text=self.chordName, font=FONTS["big"], justify="center"
         )
 
     def createBassNote(self):
@@ -251,61 +244,6 @@ class ChordDisplay(tk.Canvas):
         self.key = key
         self.itemconfigure(self.keyText, text=self.noteNames[self.key])
 
-    def setChordName(self, chordTypes, rootType):
-        allTypes = [n for n in chordTypes]
-        if not allTypes.count(rootType) > 0:
-            allTypes.append(rootType)
-
-        chord = m21Chord.Chord(allTypes)
-        #chord.root(rootType)
-
-        chordName = chord.pitchedCommonName
-        chordName = chordName.replace("-", " ")
-
-        # deal with the enharmonic equivalent to stuff
-        if (chordName.find("enharmonic equivalent to") != -1 or chordName.find("enharmonic to") != -1):
-            chordName = chordName.replace("enharmonic to ", "")
-            chordName = chordName.replace("enharmonic equivalent to ", "")
-            chordName = chordName.replace("above ", "")
-            words = chordName.split(" ")
-            keyName = words[len(words) - 1]
-            words.remove(keyName)
-            words.insert(0, keyName + "")
-            chordName = " ".join(words)
-
-        chordName = chordName.replace("chord", "")
-        chordName = chordName.replace("seventh", "7")
-        chordName = chordName.replace("major", "maj")
-        chordName = chordName.replace("minor", "min")
-        chordName = chordName.replace("diminished", "dim")
-        chordName = chordName.replace("augmented", "aug")
-        chordName = chordName.replace("half-diminished", "h-dim")
-        chordName = chordName.replace("dominant", "dom")
-        chordName = chordName.replace("suspended", "sus")
-        chordName = chordName.replace("ninth", "9")
-        maxCharsPerLine = 15
-
-        if len(chordName) > maxCharsPerLine:
-            lines = []
-            words = chordName.split(" ")
-            while len(words) > 0:
-                if len(words[0]) > maxCharsPerLine: # to prevent infinite loop
-                    lines.append(words.pop(0))
-                else:
-                    line = ""
-                    while len(words) > 0 and (len(line) + len(words[0]) <= maxCharsPerLine):
-                        line += words.pop(0) + " "
-                    lines.append(line)
-            fontSize = (int) ((self.radius * 1.65) / (max([len(line) for line in lines])))
-        else:
-            lines = [chordName]
-            fontSize = (int) ((self.radius * 1.65) / (len(chordName)))
-
-        self.chordName = chordName
-        text = "\n".join(lines)
-        
-        self.itemconfigure(self.chordNameText, text=text, font=("sans serif", fontSize))
-
     def setScale(self, scale):
         self.scale = scale
         for note in range(0, 12):
@@ -316,13 +254,10 @@ class ChordDisplay(tk.Canvas):
                 self.setNoteNotInScale(note)
 
     def setChord(self, chordTypes, rootType):
-        self.setChordName(chordTypes, rootType)
         self.root = self.convertNote(rootType)
         self.setScale(self.scale)
-        chord = []
-        for i in chordTypes:
-            chord.append(self.convertNote(i))
-        self.chord = chord
+        self.chord = [self.convertNote(i) for i in chordTypes]
+        self.chordName.set(chordTypes, rootType)
 
     def setChordShadow(self):
         for note in self.chord:
