@@ -1,10 +1,9 @@
 
 from display.displayConstants import COLORS, FONTS
-from . import ChordDisplay
 from music21 import chord as m21Chord
 
 class ChordName():
-    def __init__(self, master: ChordDisplay):
+    def __init__(self, master):
         self.master = master
         self.chordName = ""
         self.pastChordNames = {}
