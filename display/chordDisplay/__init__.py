@@ -257,8 +257,18 @@ class ChordDisplay(tk.Canvas):
 
         chordName = chord.Chord(allTypes).pitchedCommonName
 
+        # deal with the enharmonic equivalent to stuff
+        if (chordName.find("enharmonic equivalent to") != -1):
+            chordName = chordName.replace("enharmonic equivalent to ", "")
+            chordName = chordName.replace("above ", "")
+            words = chordName.split(" ")
+            keyName = words[len(words) - 1]
+            words.remove(keyName)
+            words.insert(0, keyName + "")
+            chordName = " ".join(words)
+
         chordName = chordName.replace("chord", "")
-        chordName = chordName.replace("seventh", "7th")
+        chordName = chordName.replace("seventh", "7")
         chordName = chordName.replace("major", "maj")
         chordName = chordName.replace("minor", "min")
         chordName = chordName.replace("diminished", "dim")
@@ -266,7 +276,7 @@ class ChordDisplay(tk.Canvas):
         chordName = chordName.replace("half-diminished", "h-dim")
         chordName = chordName.replace("dominant", "dom")
         chordName = chordName.replace("suspended", "sus")
-        chordName = chordName.replace("ninth", "9th")
+        chordName = chordName.replace("ninth", "9")
         maxCharsPerLine = 15
 
         if len(chordName) > maxCharsPerLine:
