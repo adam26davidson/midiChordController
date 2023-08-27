@@ -257,7 +257,7 @@ class ChordDisplay(tk.Canvas):
         allTypes.append(rootType+12)
 
         chord = m21Chord.Chord(allTypes)
-        chord.root(rootType)
+        chord.root(rootType+12)
 
         chordName = chord.pitchedCommonName
         chordName = chordName.replace("-", " ")
