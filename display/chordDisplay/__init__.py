@@ -255,19 +255,22 @@ class ChordDisplay(tk.Canvas):
         allTypes = [n+24 for n in chordTypes]
         allTypes.append(rootType+12)
         self.chordName = chord.Chord(allTypes).pitchedCommonName
-        maxCharsPerLine = 12
+        maxCharsPerLine = 15
         if len(self.chordName) > maxCharsPerLine:
             lines = []
             words = self.chordName.split(" ")
             while len(words) > 0:
-                line = ""
-                while len(words) > 0 and len(line) + len(words[0]) < maxCharsPerLine:
-                    line += words.pop(0) + " "
-                lines.append(line)
-            fontSize = (int) ((self.radius * 1.75) / (max([len(line) for line in lines])))
+                if words[0] > maxCharsPerLine:
+                    lines.append(words.pop(0))
+                else:
+                    line = ""
+                    while len(words) > 0 and (len(line) + len(words[0]) < maxCharsPerLine):
+                        line += words.pop(0) + " "
+                    lines.append(line)
+            fontSize = (int) ((self.radius * 1.6) / (max([len(line) for line in lines])))
         else:
             lines = [self.chordName]
-            fontSize = (int) ((self.radius * 1.75) / (len(self.chordName)))
+            fontSize = (int) ((self.radius * 1.6) / (len(self.chordName)))
         text = "\n".join(lines)
         
         self.itemconfigure(self.chordNameText, text=text, font=("sans serif", fontSize))
