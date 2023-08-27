@@ -255,6 +255,16 @@ class ChordDisplay(tk.Canvas):
         allTypes = [n+24 for n in chordTypes]
         allTypes.append(rootType+12)
         self.chordName = chord.Chord(allTypes).pitchedCommonName
+        self.chordName.replace("chord", "")
+        self.chordName.replace("seventh", "7th")
+        self.chordName.replace("major", "maj")
+        self.chordName.replace("minor", "min")
+        self.chordName.replace("diminished", "dim")
+        self.chordName.replace("augmented", "aug")
+        self.chordName.replace("half-diminished", "h-dim")
+        self.chordName.replace("dominant", "dom")
+        self.chordName.replace("suspended", "sus")
+        self.chordName.replace("ninth", "9th")
         maxCharsPerLine = 15
         if len(self.chordName) > maxCharsPerLine:
             lines = []
