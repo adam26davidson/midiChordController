@@ -47,8 +47,8 @@ class OptionsButton(ControlButton):
             fill="", outline=INACTIVE_COLOR, width=2, style="arc")
 
         l1x = self.centerX - r
-        ly1 = (self.centerY - 1)
-        ly2 = (self.centerY + 1)
+        ly1 = (self.centerY - 1) + r 
+        ly2 = (self.centerY + 1) - r
         l2x = self.centerX + r
 
         self.line1 = self.master.create_line(uToC(l1x) + 1, uToC(ly1), uToC(l1x) + 1, uToC(ly2) + 1, fill=INACTIVE_COLOR, width=2)
