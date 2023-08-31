@@ -6,6 +6,7 @@ class OptionsButton(ControlButton):
 
     xOffset = 0.2
     yOffset = 0.2
+    lineExtension = 0.05
 
     def __init__(self, master, label, centerX, centerY, unitSize):
         super().__init__(master, label)
@@ -46,12 +47,12 @@ class OptionsButton(ControlButton):
             fill="", outline=INACTIVE_COLOR, width=2, style="arc")
 
         l1x = self.centerX - r
-        ly1 = (self.centerY - 1) + r
-        ly2 = (self.centerY + 1) - r
+        ly1 = (self.centerY - 1)
+        ly2 = (self.centerY + 1)
         l2x = self.centerX + r
 
-        self.line1 = self.master.create_line(uToC(l1x), uToC(ly1), uToC(l1x), uToC(ly2), fill=INACTIVE_COLOR, width=2)
-        self.line2 = self.master.create_line(uToC(l2x), uToC(ly1), uToC(l2x), uToC(ly2), fill=INACTIVE_COLOR, width=2)
+        self.line1 = self.master.create_line(uToC(l1x) + 1, uToC(ly1), uToC(l1x) + 1, uToC(ly2) + 1, fill=INACTIVE_COLOR, width=2)
+        self.line2 = self.master.create_line(uToC(l2x), uToC(ly1), uToC(l2x), uToC(ly2) + 1, fill=INACTIVE_COLOR, width=2)
 
         self.textObject = self.master.create_text(
             uToC(self.centerX),
