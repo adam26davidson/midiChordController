@@ -44,4 +44,6 @@ controlAbreviations = {
     "INCREMENT_SETTING": "+P",
     "DECREMENT_SETTING": "-P", #P for patch
 
+    "MENU": "☰",
+
 }

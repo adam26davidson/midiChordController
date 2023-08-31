@@ -2,6 +2,7 @@ import tkinter as tk
 from controllerManager.maps.me.controlAbreviations import controlAbreviations as CONTROL_ABREVIATIONS
 from ...displayConstants import COLORS
 from .circularButton import CircularButton
+from .optionsButton import OptionsButton
 from.dpadButton import DPadButton
 from redux import store, utils as ReduxUtils
 
@@ -21,12 +22,13 @@ class ControlDisplay(tk.Canvas):
 
         self.ControllerConnected = False
         meMap = ReduxUtils.getActiveMeMap()
+        uiMap = ReduxUtils.getActiveUiMap()
         abrevs = CONTROL_ABREVIATIONS
         
         if meMap != None:
             self.ControllerConnected = True
             self.createMainButtons(meMap, abrevs)
-            self.createStartButton(meMap, abrevs)
+            self.createStartButton(uiMap, abrevs)
             self.createDpadButtons(meMap, abrevs)
             #self.createJoySticks(meMap, abrevs)
 
@@ -56,11 +58,11 @@ class ControlDisplay(tk.Canvas):
         self.northButton = CircularButton(self, abrevs[meMap["NORTH_BUTTON_DOWN"]], uToC(cX), uToC(cY - 2), self.unitSize)
         self.westButton = CircularButton(self, abrevs[meMap["WEST_BUTTON_DOWN"]], uToC(cX - 2), uToC(cY), self.unitSize)
 
-    def createStartButton(self, meMap, abrevs):
+    def createStartButton(self, uiMap, abrevs):
             
-        centerX = self.unitSize * 7.5
-        centerY = self.unitSize * 11
-        #self.startButton = CircularButton(self, abrevs[meMap["START_BUTTON_DOWN"]], centerX, centerY, self.unitSize)
+        cX = self.unitSize * 7.5
+        cY = self.unitSize * 11
+        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], cX, cY, self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
         self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN", self.unitSize)
@@ -68,7 +70,11 @@ class ControlDisplay(tk.Canvas):
         self.dpadLeftButton = DPadButton(self, abrevs[meMap["DPAD_LEFT"]], "LEFT", self.unitSize)
         self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT", self.unitSize)
 
-        # self.controls = {
+    def createOptionsButtons(self, meMap, abrevs):
+        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], self.unitSize * 2, self.unitSize * 11, self.unitSize)
+        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], self.unitSize * 13, self.unitSize * 11, self.unitSize)
+
+        # self.controls = { 
 
         #     "DPAD_LEFT": abrevs[meMap["DPAD_LEFT"]],
         #     "DPAD_RIGHT": abrevs[meMap["DPAD_RIGHT"]],
