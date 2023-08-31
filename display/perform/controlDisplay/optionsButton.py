@@ -26,13 +26,23 @@ class OptionsButton(ControlButton):
         arc1y1 = self.centerY - 1
         arc1x2 = self.centerX + r
         arc1y2 = arc1y1 + (2*r)
-        self.arc1 = self.master.create_arc(uToC(arc1x1), uToC(arc1y1), uToC(arc1x2), uToC(arc1y2), start=0, extent=180, fill="", outline=INACTIVE_COLOR, width=2)
+        self.arc1 = self.master.create_arc(
+            uToC(arc1x1), uToC(arc1y1), 
+            uToC(arc1x2), uToC(arc1y2), 
+            start=0, extent=180, 
+            fill="", 
+            outline=INACTIVE_COLOR, 
+            width=2, 
+            style="arc")
         
         arc2x1 = self.centerX - r
         arc2y1 = (self.centerY + 1) - (2*r)
         arc2x2 = self.centerX + r
         arc2y2 = arc2y1 + (2*r)
-        self.arc2 = self.master.create_arc(uToC(arc2x1), uToC(arc2y1), uToC(arc2x2), uToC(arc2y2), start=180, extent=0, fill="", outline=INACTIVE_COLOR, width=2)
+        self.arc2 = self.master.create_arc(
+            uToC(arc2x1), uToC(arc2y1), 
+            uToC(arc2x2), uToC(arc2y2), 
+            start=180, extent=360, fill="", outline=INACTIVE_COLOR, width=2, style="arc")
 
         l1x = self.centerX - r
         ly1 = (self.centerY - 1) + r
