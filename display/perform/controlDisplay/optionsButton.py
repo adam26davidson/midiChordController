@@ -42,7 +42,8 @@ class OptionsButton(ControlButton):
         self.arc2 = self.master.create_arc(
             uToC(arc2x1), uToC(arc2y1), 
             uToC(arc2x2), uToC(arc2y2), 
-            start=180, extent=360, fill="", outline=INACTIVE_COLOR, width=2, style="arc")
+            start=180, extent=359, 
+            fill="", outline=INACTIVE_COLOR, width=2, style="arc")
 
         l1x = self.centerX - r
         ly1 = (self.centerY - 1) + r
