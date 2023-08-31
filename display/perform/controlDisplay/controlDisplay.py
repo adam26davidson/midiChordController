@@ -73,9 +73,8 @@ class ControlDisplay(tk.Canvas):
         self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT", self.unitSize)
 
     def createOptionsButtons(self, meMap, abrevs):
-        uToC = self.unitsToCoord
-        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], uToC(6), uToC(6), self.unitSize)
-        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], uToC(9), uToC(6), self.unitSize)
+        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], 6, 6, self.unitSize)
+        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 6, self.unitSize)
 
         # self.controls = { 
 
