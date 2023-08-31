@@ -38,12 +38,14 @@ class ControlDisplay(tk.Canvas):
 
     def __handleStoreUpdate(self):
         meMap = ReduxUtils.getActiveMeMap()
-        if meMap != None and not self.ControllerConnected:
+        uiMap = ReduxUtils.getActiveUiMap()
+        if meMap != None and uiMap != None and not self.ControllerConnected:
             abrevs = CONTROL_ABREVIATIONS
             self.ControllerConnected = True
             self.createMainButtons(meMap, abrevs)
-            self.createStartButton(meMap, abrevs)
+            self.createStartButton(uiMap, abrevs)
             self.createDpadButtons(meMap, abrevs)
+            self.createOptionsButtons(meMap, abrevs)
             #self.createJoySticks(meMap, abrevs)
 
     def unitsToCoord(self, units):
@@ -59,7 +61,6 @@ class ControlDisplay(tk.Canvas):
         self.westButton = CircularButton(self, abrevs[meMap["WEST_BUTTON_DOWN"]], uToC(cX - 2), uToC(cY), self.unitSize)
 
     def createStartButton(self, uiMap, abrevs):
-            
         cX = self.unitSize * 7.5
         cY = self.unitSize * 11
         self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], cX, cY, self.unitSize)
