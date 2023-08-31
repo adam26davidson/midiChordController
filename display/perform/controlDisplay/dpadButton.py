@@ -16,7 +16,6 @@ class DPadButton(ControlButton):
     def drawButton(self):
         cX = 3
         cY = 9
-        uToC = self.master.unitsToCoord
         if (self.direction == "LEFT"):
             self.drawButtonFromParams(cX-3, cY+1, cX-2, cY+1, cX-1, cY, cX-2, cY-1, cX-3, cY-1, 0.75, 9)
         elif (self.direction == "RIGHT"):

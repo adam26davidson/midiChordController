@@ -61,8 +61,9 @@ class ControlDisplay(tk.Canvas):
         self.westButton = CircularButton(self, abrevs[meMap["WEST_BUTTON_DOWN"]], uToC(cX - 2), uToC(cY), self.unitSize)
 
     def createStartButton(self, uiMap, abrevs):
-        cX = self.unitSize * 7.5
-        cY = self.unitSize * 11
+        uToC = self.unitsToCoord
+        cX = uToC(7.5)
+        cY = uToC(11)
         self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], cX, cY, self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
@@ -72,8 +73,9 @@ class ControlDisplay(tk.Canvas):
         self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT", self.unitSize)
 
     def createOptionsButtons(self, meMap, abrevs):
-        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], self.unitSize * 2, self.unitSize * 11, self.unitSize)
-        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], self.unitSize * 13, self.unitSize * 11, self.unitSize)
+        uToC = self.unitsToCoord
+        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], uToC(6), uToC(6), self.unitSize)
+        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], uToC(9), uToC(6), self.unitSize)
 
         # self.controls = { 
 
