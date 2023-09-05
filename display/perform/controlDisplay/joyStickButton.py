@@ -36,7 +36,6 @@ class JoyStickButton(ControlButton):
             uToC(self.centerY),
             text=self.rightLabel,
             fill="#ffffff",
-            bg="#000000",
             font=FONT
         )
 
@@ -45,7 +44,6 @@ class JoyStickButton(ControlButton):
             uToC(self.centerY),
             text=self.leftLabel,
             fill="#ffffff",
-            bg="#000000",
             font=FONT
         )
 
@@ -54,7 +52,6 @@ class JoyStickButton(ControlButton):
             uToC(self.centerY - self.radius),
             text=self.topLabel,
             fill="#ffffff",
-            bg="#000000",
             font=FONT
         )
 
@@ -63,7 +60,6 @@ class JoyStickButton(ControlButton):
             uToC(self.centerY + self.radius),
             text=self.bottomLabel,
             fill="#ffffff",
-            bg="#000000",
             font=FONT
         )
     
