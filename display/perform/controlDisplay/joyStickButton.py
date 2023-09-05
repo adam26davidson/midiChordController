@@ -5,7 +5,7 @@ from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 class JoyStickButton(ControlButton):
 
     radius = 1.4
-    textRadius = 0.6
+    textRadius = 0.65
 
     def __init__(self, master, lLabel, rLabel, tLabel, bLabel, centerX, centerY):
         super().__init__(master)
