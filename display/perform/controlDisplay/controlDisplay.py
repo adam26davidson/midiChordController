@@ -6,6 +6,7 @@ from .optionsButton import OptionsButton
 from .joyStickButton import JoyStickButton
 from .bumperButton import BumperButton
 from .triggerButton import TriggerButton
+from .touchPadButton import TouchPadButton
 from.dpadButton import DPadButton
 from redux import store, utils as ReduxUtils
 
@@ -23,7 +24,6 @@ class ControlDisplay(tk.Canvas):
                          highlightthickness=0, relief="flat", bg="#000000")
         
         self.master = master
-
         self.ControllerConnected = False
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
@@ -54,6 +54,9 @@ class ControlDisplay(tk.Canvas):
     def createBumperButtons(self, meMap, abrevs):
         self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.5)
         self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.5)
+
+    def createTouchPadButton(self, meMap, abrevs):
+        self.touchPadButton = TouchPadButton(self, abrevs[meMap["TOUCHPAD_X_UPDATE"]], abrevs[meMap["TOUCHPAD_Y_UPDATE"]], 7.5, 1.5)
 
     def createMainButtons(self, meMap, abrevs):
         cX = 12
