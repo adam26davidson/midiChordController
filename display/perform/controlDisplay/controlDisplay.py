@@ -5,6 +5,7 @@ from .circularButton import CircularButton
 from .optionsButton import OptionsButton
 from .joyStickButton import JoyStickButton
 from .bumperButton import BumperButton
+from .triggerButton import TriggerButton
 from.dpadButton import DPadButton
 from redux import store, utils as ReduxUtils
 
@@ -41,6 +42,7 @@ class ControlDisplay(tk.Canvas):
             self.createOptionsButtons(meMap, abrevs)
             self.createJoySticks(meMap, abrevs)
             self.createBumperButtons(meMap, abrevs)
+            self.createTriggerButtons(meMap, abrevs)
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
@@ -76,6 +78,10 @@ class ControlDisplay(tk.Canvas):
     def createBumperButtons(self, meMap, abrevs):
         self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.25)
         self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.25)
+
+    def createTriggerButtons(self, meMap, abrevs):
+        self.leftTriggerButton = TriggerButton(self, abrevs[meMap["LEFT_TRIGGER_DOWN"]], 2.5, 0.75)
+        self.rightTriggerButton = TriggerButton(self, abrevs[meMap["RIGHT_TRIGGER_DOWN"]], 12.5, 0.75)
 
         # self.controls = { 
 
