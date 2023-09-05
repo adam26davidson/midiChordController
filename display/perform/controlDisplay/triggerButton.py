@@ -5,7 +5,7 @@ from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 class TriggerButton(ControlButton):
 
     width = 4
-    height = 1.5
+    height = 1.75
     radius = 0.75
 
     def __init__(self, master, label, centerX, centerY):
@@ -48,8 +48,8 @@ class TriggerButton(ControlButton):
             width=2, 
             style="arc")
 
-        self.line1 = self.master.create_line(uToC(xm1), uToC(yt), uToC(xm2), uToC(yt), fill=INACTIVE_COLOR, width=2)
-        self.line2 = self.master.create_line(uToC(xl), uToC(ym), uToC(xl), uToC(yb), fill=INACTIVE_COLOR, width=2)
+        self.line1 = self.master.create_line(uToC(xm1) - 1, uToC(yt), uToC(xm2), uToC(yt), fill=INACTIVE_COLOR, width=2)
+        self.line2 = self.master.create_line(uToC(xl), uToC(ym) - 1, uToC(xl), uToC(yb), fill=INACTIVE_COLOR, width=2)
         self.line3 = self.master.create_line(uToC(xl), uToC(yb), uToC(xr), uToC(yb), fill=INACTIVE_COLOR, width=2)
         self.line4 = self.master.create_line(uToC(xr), uToC(ym), uToC(xr), uToC(yb), fill=INACTIVE_COLOR, width=2)
 

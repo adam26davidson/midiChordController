@@ -46,6 +46,14 @@ class ControlDisplay(tk.Canvas):
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
+    
+    def createTriggerButtons(self, meMap, abrevs):
+        self.leftTriggerButton = TriggerButton(self, abrevs[meMap["LEFT_TRIGGER_DOWN"]], 2.5, 0.875)
+        self.rightTriggerButton = TriggerButton(self, abrevs[meMap["RIGHT_TRIGGER_DOWN"]], 12.5, 0.875)  
+
+    def createBumperButtons(self, meMap, abrevs):
+        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.25)
+        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.25)
 
     def createMainButtons(self, meMap, abrevs):
         cX = 12
@@ -74,14 +82,6 @@ class ControlDisplay(tk.Canvas):
     def createJoySticks(self, meMap, abrevs):
         self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.25, 12.25)
         self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 12.25)
-
-    def createBumperButtons(self, meMap, abrevs):
-        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.25)
-        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.25)
-
-    def createTriggerButtons(self, meMap, abrevs):
-        self.leftTriggerButton = TriggerButton(self, abrevs[meMap["LEFT_TRIGGER_DOWN"]], 2.5, 0.75)
-        self.rightTriggerButton = TriggerButton(self, abrevs[meMap["RIGHT_TRIGGER_DOWN"]], 12.5, 0.75)
 
         # self.controls = { 
 
