@@ -11,27 +11,18 @@ class ControlDisplay(tk.Canvas):
 
     width = 320
     margin = 5
+    widthUnits = 15
+    heightUnits = 15
 
     def __init__(self, master=None):
-        self.unitSize = (self.width - (2*self.margin)) / 15
-        self.height = (self.unitSize * 14) + (2 * self.margin)
-        super().__init__(master, width=self.width, height=(self.width / 15) * 14,
+        self.unitSize = (self.width - (2 * self.margin)) / self.widthUnits
+        self.height = (self.unitSize * self.heightUnits) + (2 * self.margin)
+        super().__init__(master, width=self.width, height=(self.width / self.widthUnits) * self.heightUnits,
                          highlightthickness=0, relief="flat", bg="#000000")
-        
         
         self.master = master
 
         self.ControllerConnected = False
-        # meMap = ReduxUtils.getActiveMeMap()
-        # uiMap = ReduxUtils.getActiveUiMap()
-        # abrevs = CONTROL_ABREVIATIONS
-        
-        # if meMap != None:
-        #     self.ControllerConnected = True
-        #     self.createMainButtons(meMap, abrevs)
-        #     self.createStartButton(uiMap, abrevs)
-        #     self.createDpadButtons(meMap, abrevs)
-        #     self.createJoySticks(meMap, abrevs)
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
@@ -78,8 +69,8 @@ class ControlDisplay(tk.Canvas):
         self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 6, self.unitSize)
 
     def createJoySticks(self, meMap, abrevs):
-        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.5, 12.5)
-        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.5, 12.5)
+        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.5, 13)
+        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.5, 13)
 
         # self.controls = { 
 
