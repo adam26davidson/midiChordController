@@ -5,7 +5,6 @@ from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 class JoyStickButton(ControlButton):
 
     radius = 1.5
-    angleGap = 20
 
     def __init__(self, master, lLabel, rLabel, tLabel, bLabel, centerX, centerY):
         super().__init__(master)
@@ -17,7 +16,6 @@ class JoyStickButton(ControlButton):
         self.centerX = centerX
         self.centerY = centerY
         
-
         self.drawButton()
 
     def drawButton(self):
