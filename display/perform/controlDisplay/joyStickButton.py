@@ -53,7 +53,7 @@ class JoyStickButton(ControlButton):
             uToC(centerX),
             uToC(centerY),
             text=label,
-            fill="#ffffff",
+            fill=INACTIVE_COLOR,
             font=FONT
         )
 

@@ -61,7 +61,7 @@ class DPadButton(ControlButton):
             uToC(tx),
             uToC(ty),
             text=self.label,
-            fill="#ffffff",
+            fill=INACTIVE_COLOR,
             font=FONT
         )
 

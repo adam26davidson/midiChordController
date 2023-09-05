@@ -58,6 +58,6 @@ class OptionsButton(ControlButton):
             uToC(self.centerX),
             uToC(self.centerY),
             text=self.label,
-            fill="#ffffff",
+            fill=INACTIVE_COLOR,
             font=FONT
         )

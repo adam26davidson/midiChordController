@@ -2,7 +2,10 @@ from .controlButton import ControlButton
 from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
-class CircularButton(ControlButton):
+class BumperButton(ControlButton):
+
+    width = 4
+    height = 2
 
     def __init__(self, master, label, centerX, centerY, unitSize):
         super().__init__(master)
@@ -16,11 +19,12 @@ class CircularButton(ControlButton):
         self.drawButton()
 
     def drawButton(self):
-        self.canvasObject = self.master.create_oval(
-            self.centerX - self.radius,
-            self.centerY - self.radius,
-            self.centerX + self.radius,
-            self.centerY + self.radius,
+        uToC = self.master.unitsToCoord
+        self.canvasObject = self.master.create_rectangle(
+            uToC(self.centerX - (self.width / 2)),
+            uToC(self.centerY - (self.height / 2)),
+            uToC(self.centerX + (self.width / 2)),
+            uToC(self.centerY + (self.height / 2)),
             fill="#000000",
             outline=INACTIVE_COLOR,
             width=2
@@ -33,4 +37,3 @@ class CircularButton(ControlButton):
             fill=INACTIVE_COLOR,
             font=FONT
         )
-    

@@ -9,7 +9,7 @@ from redux import store, utils as ReduxUtils
 
 class ControlDisplay(tk.Canvas):
 
-    width = 340
+    width = 320
     margin = 5
     widthUnits = 15
     heightUnits = 15
