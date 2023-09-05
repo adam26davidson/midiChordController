@@ -3,6 +3,7 @@ from controllerManager.maps.me.controlAbreviations import controlAbreviations as
 from ...displayConstants import COLORS
 from .circularButton import CircularButton
 from .optionsButton import OptionsButton
+from .joyStickButton import JoyStickButton
 from.dpadButton import DPadButton
 from redux import store, utils as ReduxUtils
 
@@ -75,6 +76,10 @@ class ControlDisplay(tk.Canvas):
     def createOptionsButtons(self, meMap, abrevs):
         self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], 6, 6, self.unitSize)
         self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 6, self.unitSize)
+
+    def createJoySticks(self, meMap, abrevs):
+        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.5, 12.5, self.unitSize)
+        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.5, 12.5, self.unitSize)
 
         # self.controls = { 
 

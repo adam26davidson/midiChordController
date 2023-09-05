@@ -4,7 +4,7 @@ from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 class DPadButton(ControlButton):
 
     def __init__(self, master, label, direction, unitSize):
-        super().__init__(master, label)
+        super().__init__(master)
         self.master = master
         self.label = label
         self.direction = direction

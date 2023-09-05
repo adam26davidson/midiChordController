@@ -5,7 +5,7 @@ from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 class CircularButton(ControlButton):
 
     def __init__(self, master, label, centerX, centerY, unitSize):
-        super().__init__(master, label)
+        super().__init__(master)
         self.master = master
         self.label = label
         self.centerX = centerX

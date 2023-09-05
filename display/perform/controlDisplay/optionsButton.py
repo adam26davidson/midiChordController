@@ -9,7 +9,7 @@ class OptionsButton(ControlButton):
     lineExtension = 0.05
 
     def __init__(self, master, label, centerX, centerY, unitSize):
-        super().__init__(master, label)
+        super().__init__(master)
         self.master = master
         self.label = label
 

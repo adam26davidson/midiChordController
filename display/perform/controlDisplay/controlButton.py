@@ -1,5 +1,4 @@
 class ControlButton:
 
-    def __init__(self, master, label):
+    def __init__(self, master):
         self.master = master
-        self.label = label
