@@ -31,9 +31,9 @@ class TriggerButton(ControlButton):
         yb = self.centerY + (self.height / 2)
 
         self.arc1 = self.master.create_arc(
-            uToC(xl), uToC(yt), 
+            uToC(xl) - 1, uToC(yt) + 1, 
             uToC(xm1), uToC(ym + r), 
-            start=90, extent=90, 
+            start=180, extent=-90, 
             fill="", 
             outline=INACTIVE_COLOR, 
             width=2, 
