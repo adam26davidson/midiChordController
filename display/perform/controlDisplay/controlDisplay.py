@@ -74,8 +74,8 @@ class ControlDisplay(tk.Canvas):
         self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 12.25)
 
     def createBumperButtons(self, meMap, abrevs):
-        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2, 3)
-        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 13, 3)
+        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2, 3.25)
+        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 13, 3.25)
 
         # self.controls = { 
 
