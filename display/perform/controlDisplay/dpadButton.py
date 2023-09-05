@@ -5,13 +5,11 @@ class DPadButton(ControlButton):
 
     radius = 2.5
 
-    def __init__(self, master, label, direction, unitSize):
+    def __init__(self, master, label, direction):
         super().__init__(master)
         self.master = master
         self.label = label
         self.direction = direction
-        self.unitSize = unitSize
-        self.radius = unitSize
 
         self.drawButton()
 

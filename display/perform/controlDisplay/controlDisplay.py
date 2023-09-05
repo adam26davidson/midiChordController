@@ -59,10 +59,10 @@ class ControlDisplay(tk.Canvas):
         self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], cX, cY, self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
-        self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN", self.unitSize)
-        self.dpadUpButton = DPadButton(self, abrevs[meMap["DPAD_UP"]], "UP", self.unitSize)
-        self.dpadLeftButton = DPadButton(self, abrevs[meMap["DPAD_LEFT"]], "LEFT", self.unitSize)
-        self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT", self.unitSize)
+        self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN")
+        self.dpadUpButton = DPadButton(self, abrevs[meMap["DPAD_UP"]], "UP")
+        self.dpadLeftButton = DPadButton(self, abrevs[meMap["DPAD_LEFT"]], "LEFT")
+        self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT")
 
     def createOptionsButtons(self, meMap, abrevs):
         self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], 6, 6, self.unitSize)
