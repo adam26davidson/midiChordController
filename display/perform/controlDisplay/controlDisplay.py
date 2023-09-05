@@ -43,6 +43,7 @@ class ControlDisplay(tk.Canvas):
             self.createJoySticks(meMap, abrevs)
             self.createBumperButtons(meMap, abrevs)
             self.createTriggerButtons(meMap, abrevs)
+            self.createTouchPadButton(meMap, abrevs)
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
