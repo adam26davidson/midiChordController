@@ -22,16 +22,16 @@ class ControlDisplay(tk.Canvas):
         self.master = master
 
         self.ControllerConnected = False
-        meMap = ReduxUtils.getActiveMeMap()
-        uiMap = ReduxUtils.getActiveUiMap()
-        abrevs = CONTROL_ABREVIATIONS
+        # meMap = ReduxUtils.getActiveMeMap()
+        # uiMap = ReduxUtils.getActiveUiMap()
+        # abrevs = CONTROL_ABREVIATIONS
         
-        if meMap != None:
-            self.ControllerConnected = True
-            self.createMainButtons(meMap, abrevs)
-            self.createStartButton(uiMap, abrevs)
-            self.createDpadButtons(meMap, abrevs)
-            #self.createJoySticks(meMap, abrevs)
+        # if meMap != None:
+        #     self.ControllerConnected = True
+        #     self.createMainButtons(meMap, abrevs)
+        #     self.createStartButton(uiMap, abrevs)
+        #     self.createDpadButtons(meMap, abrevs)
+        #     self.createJoySticks(meMap, abrevs)
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
@@ -47,7 +47,7 @@ class ControlDisplay(tk.Canvas):
             self.createStartButton(uiMap, abrevs)
             self.createDpadButtons(meMap, abrevs)
             self.createOptionsButtons(meMap, abrevs)
-            #self.createJoySticks(meMap, abrevs)
+            self.createJoySticks(meMap, abrevs)
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
