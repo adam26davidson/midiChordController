@@ -9,7 +9,7 @@ from redux import store, utils as ReduxUtils
 
 class ControlDisplay(tk.Canvas):
 
-    width = 320
+    width = 340
     margin = 5
     widthUnits = 15
     heightUnits = 15
@@ -54,9 +54,7 @@ class ControlDisplay(tk.Canvas):
 
     def createStartButton(self, uiMap, abrevs):
         uToC = self.unitsToCoord
-        cX = uToC(7.5)
-        cY = uToC(11)
-        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], cX, cY, self.unitSize)
+        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], uToC(7.5), uToC(11), self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
         self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN")
@@ -69,8 +67,8 @@ class ControlDisplay(tk.Canvas):
         self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 6, self.unitSize)
 
     def createJoySticks(self, meMap, abrevs):
-        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.5, 13)
-        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 13)
+        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.25, 13.25)
+        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 13.25)
 
         # self.controls = { 
 
