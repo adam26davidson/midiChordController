@@ -47,7 +47,7 @@ class ControlDisplay(tk.Canvas):
 
     def createMainButtons(self, meMap, abrevs):
         cX = 12
-        cY = 9
+        cY = 8
         uToC = self.unitsToCoord
         self.southButton = CircularButton(self, abrevs[meMap["SOUTH_BUTTON_DOWN"]], uToC(cX), uToC(cY + 2), self.unitSize)
         self.eastButton = CircularButton(self, abrevs[meMap["EAST_BUTTON_DOWN"]], uToC(cX + 2), uToC(cY), self.unitSize)
@@ -56,21 +56,22 @@ class ControlDisplay(tk.Canvas):
 
     def createStartButton(self, uiMap, abrevs):
         uToC = self.unitsToCoord
-        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], uToC(7.5), uToC(11), self.unitSize)
+        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], uToC(7.5), uToC(10), self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
-        self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN")
-        self.dpadUpButton = DPadButton(self, abrevs[meMap["DPAD_UP"]], "UP")
-        self.dpadLeftButton = DPadButton(self, abrevs[meMap["DPAD_LEFT"]], "LEFT")
-        self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT")
+        cx = 3; cy = 8
+        self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN", cx, cy)
+        self.dpadUpButton = DPadButton(self, abrevs[meMap["DPAD_UP"]], "UP", cx, cy)
+        self.dpadLeftButton = DPadButton(self, abrevs[meMap["DPAD_LEFT"]], "LEFT", cx, cy)
+        self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT", cx, cy)
 
     def createOptionsButtons(self, meMap, abrevs):
-        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], 6, 6, self.unitSize)
-        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 6, self.unitSize)
+        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], 6, 5, self.unitSize)
+        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 5, self.unitSize)
 
     def createJoySticks(self, meMap, abrevs):
-        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.25, 13.25)
-        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 13.25)
+        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.25, 12.25)
+        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 12.25)
 
     def createBumperButtons(self, meMap, abrevs):
         self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2, 3)

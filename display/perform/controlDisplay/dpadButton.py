@@ -5,17 +5,19 @@ class DPadButton(ControlButton):
 
     radius = 2.5
 
-    def __init__(self, master, label, direction):
+    def __init__(self, master, label, direction, centerX, centerY):
         super().__init__(master)
         self.master = master
         self.label = label
+        self.centerX = centerX
+        self.centerY = centerY
         self.direction = direction
 
         self.drawButton()
 
     def drawButton(self):
-        cX = 3
-        cY = 9
+        cX = self.centerX
+        cY = self.centerY
 
         if (self.direction == "LEFT"):
             xl1 = cX - self.radius
@@ -29,21 +31,18 @@ class DPadButton(ControlButton):
             xr3 = xr2 - 1
             xrt = xr1 - 0.75
             self.drawButtonFromParams(xr1, cY+1, xr2, cY+1, xr3, cY, xr2, cY-1, xr1, cY-1, xrt, cY)
-            #self.drawButtonFromParams(cX+3, cY+1, cX+2, cY+1, cX+1, cY, cX+2, cY-1, cX+3, cY-1, 5.25, 9)
         elif (self.direction == "UP"):
             yt1 = cY - self.radius
             yt2 = yt1 + 1
             yt3 = yt2 + 1
             ytt = yt1 + 0.75
             self.drawButtonFromParams(cX-1, yt1, cX-1, yt2, cX, yt3, cX+1, yt2, cX+1, yt1, cX, ytt)
-            #self.drawButtonFromParams(cX-1, cY-3, cX-1, cY-2, cX, cY-1, cX+1, cY-2, cX+1, cY-3, 3, 6.75)
         elif (self.direction == "DOWN"):
             yb1 = cY + self.radius
             yb2 = yb1 - 1
             yb3 = yb2 - 1
             ybt = yb1 - 0.75
             self.drawButtonFromParams(cX-1, yb1, cX-1, yb2, cX, yb3, cX+1, yb2, cX+1, yb1, cX, ybt)
-            #self.drawButtonFromParams(cX-1, cY+3, cX-1, cY+2, cX, cY+1, cX+1, cY+2, cX+1, cY+3, 3, 11.25)
     
     def drawButtonFromParams(self, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, tx, ty):
         uToC = self.master.unitsToCoord
