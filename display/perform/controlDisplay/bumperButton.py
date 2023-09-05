@@ -5,7 +5,7 @@ from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 class BumperButton(ControlButton):
 
     width = 4
-    height = 1.5
+    height = 1.75
 
     def __init__(self, master, label, centerX, centerY):
         super().__init__(master)

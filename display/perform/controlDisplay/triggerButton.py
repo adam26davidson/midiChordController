@@ -6,7 +6,7 @@ class TriggerButton(ControlButton):
 
     width = 4
     height = 1.75
-    radius = 0.75
+    radius = 1
 
     def __init__(self, master, label, centerX, centerY):
         super().__init__(master)

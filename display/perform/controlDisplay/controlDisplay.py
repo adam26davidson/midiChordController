@@ -52,8 +52,8 @@ class ControlDisplay(tk.Canvas):
         self.rightTriggerButton = TriggerButton(self, abrevs[meMap["RIGHT_TRIGGER_DOWN"]], 12.5, 0.875)  
 
     def createBumperButtons(self, meMap, abrevs):
-        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.25)
-        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.25)
+        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.5)
+        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.5)
 
     def createMainButtons(self, meMap, abrevs):
         cX = 12
