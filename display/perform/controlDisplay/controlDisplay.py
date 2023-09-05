@@ -40,6 +40,7 @@ class ControlDisplay(tk.Canvas):
             self.createDpadButtons(meMap, abrevs)
             self.createOptionsButtons(meMap, abrevs)
             self.createJoySticks(meMap, abrevs)
+            self.createBumperButtons(meMap, abrevs)
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
@@ -73,6 +74,7 @@ class ControlDisplay(tk.Canvas):
 
     def createBumperButtons(self, meMap, abrevs):
         self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2, 3)
+        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 13, 3)
 
         # self.controls = { 
 
