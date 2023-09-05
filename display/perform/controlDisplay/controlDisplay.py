@@ -4,6 +4,7 @@ from ...displayConstants import COLORS
 from .circularButton import CircularButton
 from .optionsButton import OptionsButton
 from .joyStickButton import JoyStickButton
+from .bumperButton import BumperButton
 from.dpadButton import DPadButton
 from redux import store, utils as ReduxUtils
 
@@ -69,6 +70,9 @@ class ControlDisplay(tk.Canvas):
     def createJoySticks(self, meMap, abrevs):
         self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.25, 13.25)
         self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 13.25)
+
+    def createBumperButtons(self, meMap, abrevs):
+        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2, 3)
 
         # self.controls = { 
 

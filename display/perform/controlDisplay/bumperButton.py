@@ -7,14 +7,12 @@ class BumperButton(ControlButton):
     width = 4
     height = 2
 
-    def __init__(self, master, label, centerX, centerY, unitSize):
+    def __init__(self, master, label, centerX, centerY):
         super().__init__(master)
         self.master = master
         self.label = label
         self.centerX = centerX
         self.centerY = centerY
-        self.unitSize = unitSize
-        self.radius = unitSize
 
         self.drawButton()
 
