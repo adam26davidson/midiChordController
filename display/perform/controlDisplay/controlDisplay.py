@@ -10,10 +10,10 @@ from redux import store, utils as ReduxUtils
 
 class ControlDisplay(tk.Canvas):
 
-    width = 320
+    width = 340
     margin = 5
     widthUnits = 15
-    heightUnits = 15
+    heightUnits = 14
 
     def __init__(self, master=None):
         self.unitSize = (self.width - (2 * self.margin)) / self.widthUnits
@@ -56,7 +56,7 @@ class ControlDisplay(tk.Canvas):
 
     def createStartButton(self, uiMap, abrevs):
         uToC = self.unitsToCoord
-        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], uToC(7.5), uToC(10), self.unitSize)
+        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], uToC(7.5), uToC(9.75), self.unitSize)
 
     def createDpadButtons(self, meMap, abrevs):
         cx = 3; cy = 8
@@ -74,8 +74,8 @@ class ControlDisplay(tk.Canvas):
         self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 12.25)
 
     def createBumperButtons(self, meMap, abrevs):
-        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2, 3.25)
-        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 13, 3.25)
+        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.25)
+        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.25)
 
         # self.controls = { 
 
