@@ -42,11 +42,11 @@ class JoyStickButton(ControlButton):
 
         yl = cy + r
         if self.side == "LEFT":
-            self.arrowBackgroundObject, self.arrowObject = self.drawTextAndBackground("↓", cx - (r + 0.5), yl)
-            self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(self.clickLabel, cx - (r + 1.1), yl) 
+            self.arrowObject = self.drawTextForClick("↓", cx - (r + 0.5), yl)
+            self.clickTextObject = self.drawTextForClick(self.clickLabel, cx - (r + 1.1), yl) 
         else:
-            self.arrowBackgroundObject, self.arrowObject = self.drawTextAndBackground("↓", cx + (r + 0.5), yl)
-            self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(self.clickLabel, cx + (r + 1.1), yl)
+            self.arrowObject = self.drawTextForClick("↓", cx + (r + 0.5), yl)
+            self.clickTextObject = self.drawTextForClick(self.clickLabel, cx + (r + 1.1), yl)
 
 
     def drawTextAndBackground(self, label, centerX, centerY):
@@ -70,4 +70,16 @@ class JoyStickButton(ControlButton):
         )
 
         return backgroundObject, textObject
+
+    def drawTextForClick(self, label, centerX, centerY):
+        uToC = self.master.unitsToCoord
+        return self.master.create_text(
+            uToC(centerX),
+            uToC(centerY),
+            text=label,
+            fill=INACTIVE_COLOR,
+            font=FONT
+        )
+
+        
     
