@@ -42,10 +42,10 @@ class JoyStickButton(ControlButton):
 
         yl = cy + r
         if self.side == "LEFT":
-            self.arrowBackgroundObject, self.arrowObject = self.drawTextAndBackground("↓", cx + (r + 0.5), yl)
+            self.arrowBackgroundObject, self.arrowObject = self.drawTextAndBackground("↓", cx - (r + 0.5), yl)
             self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(self.clickLabel, cx - (r + 1.1), yl) 
         else:
-            self.arrowBackgroundObject, self.arrowObject = self.drawTextAndBackground("↑", cx - (r + 0.5), yl)
+            self.arrowBackgroundObject, self.arrowObject = self.drawTextAndBackground("↓", cx + (r + 0.5), yl)
             self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(self.clickLabel, cx + (r + 1.1), yl)
 
 
