@@ -84,8 +84,24 @@ class ControlDisplay(tk.Canvas):
         self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 5, self.unitSize)
 
     def createJoySticks(self, meMap, abrevs):
-        self.leftStick = JoyStickButton(self, abrevs[meMap["LEFT_STICK_LEFT"]], abrevs[meMap["LEFT_STICK_RIGHT"]], abrevs[meMap["LEFT_STICK_UP"]], abrevs[meMap["LEFT_STICK_DOWN"]], 5.25, 12.25)
-        self.rightStick = JoyStickButton(self, abrevs[meMap["RIGHT_STICK_LEFT"]], abrevs[meMap["RIGHT_STICK_RIGHT"]], abrevs[meMap["RIGHT_STICK_UP"]], abrevs[meMap["RIGHT_STICK_DOWN"]], 9.75, 12.25)
+
+        self.leftStick = JoyStickButton(
+            self, 
+            abrevs[meMap["LEFT_STICK_LEFT"]], 
+            abrevs[meMap["LEFT_STICK_RIGHT"]], 
+            abrevs[meMap["LEFT_STICK_UP"]], 
+            abrevs[meMap["LEFT_STICK_DOWN"]], 
+            abrevs[meMap["LEFT_STICK_BUTTON_DOWN"]],
+            5.25, 12.25, "LEFT")
+        
+        self.rightStick = JoyStickButton(
+            self, 
+            abrevs[meMap["RIGHT_STICK_LEFT"]], 
+            abrevs[meMap["RIGHT_STICK_RIGHT"]], 
+            abrevs[meMap["RIGHT_STICK_UP"]], 
+            abrevs[meMap["RIGHT_STICK_DOWN"]], 
+            abrevs[meMap["RIGHT_STICK_BUTTON_DOWN"]],
+            9.75, 12.25, "RIGHT")
 
         # self.controls = { 
 

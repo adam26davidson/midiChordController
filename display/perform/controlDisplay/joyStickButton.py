@@ -7,20 +7,23 @@ class JoyStickButton(ControlButton):
     radius = 1.4
     textRadius = 0.7
 
-    def __init__(self, master, lLabel, rLabel, tLabel, bLabel, centerX, centerY):
+    def __init__(self, master, lLabel, rLabel, tLabel, bLabel, cLabel, centerX, centerY, side):
         super().__init__(master)
         self.master = master
         self.leftLabel = lLabel
         self.rightLabel = rLabel
         self.topLabel = tLabel
         self.bottomLabel = bLabel
+        self.clickLabel = cLabel
         self.centerX = centerX
         self.centerY = centerY
+        self.side = side
         
         self.drawButton()
 
     def drawButton(self):
         uToC = self.master.unitsToCoord
+        r = self.radius; cx = self.centerX; cy = self.centerY
         
         self.canvasObject = self.master.create_oval(
             uToC(self.centerX - self.radius),
@@ -32,10 +35,18 @@ class JoyStickButton(ControlButton):
             width=2
         )
 
-        self.rightTextBackgroundObject , self.rightTextObject = self.drawTextAndBackground(self.rightLabel, self.centerX + self.radius, self.centerY)
-        self.leftTextBackgroundObject , self.leftTextObject = self.drawTextAndBackground(self.leftLabel, self.centerX - self.radius, self.centerY)  
-        self.topTextBackgroundObject , self.topTextObject = self.drawTextAndBackground(self.topLabel, self.centerX, self.centerY - self.radius)
-        self.bottomTextBackgroundObject , self.bottomTextObject = self.drawTextAndBackground(self.bottomLabel, self.centerX, self.centerY + self.radius)
+        self.rightTextBackgroundObject , self.rightTextObject = self.drawTextAndBackground(self.rightLabel, cx + r, cy)
+        self.leftTextBackgroundObject , self.leftTextObject = self.drawTextAndBackground(self.leftLabel, cx - r, cy)  
+        self.topTextBackgroundObject , self.topTextObject = self.drawTextAndBackground(self.topLabel, cx, cy - r)
+        self.bottomTextBackgroundObject , self.bottomTextObject = self.drawTextAndBackground(self.bottomLabel, cx, cy + r)
+
+        if self.side == "LEFT":
+            l = f"{self.clickLabel} ↓"
+            self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(self.clickLabel, cx - (r + 1), cy + (r / 2)) 
+        else:
+            l = f"↓ {self.clickLabel}"
+            self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(self.clickLabel, cx + (r + 1), cy + (r / 2))
+
 
     def drawTextAndBackground(self, label, centerX, centerY):
         uToC = self.master.unitsToCoord
