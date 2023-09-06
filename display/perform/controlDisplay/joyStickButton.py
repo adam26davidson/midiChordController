@@ -40,7 +40,7 @@ class JoyStickButton(ControlButton):
         self.topTextBackgroundObject , self.topTextObject = self.drawTextAndBackground(self.topLabel, cx, cy - r)
         self.bottomTextBackgroundObject , self.bottomTextObject = self.drawTextAndBackground(self.bottomLabel, cx, cy + r)
 
-        yl = cy + ((3*r) / 4)
+        yl = cy + r
         if self.side == "LEFT":
             l = f"{self.clickLabel} ↓"
             self.clickTextBackgroundObject , self.clickTextObject = self.drawTextAndBackground(l, cx - (r + 1.25), yl) 
