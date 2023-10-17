@@ -257,7 +257,7 @@ class ChordDisplay(tk.Canvas):
         self.root = self.convertNote(rootType)
         self.setScale(self.scale)
         self.chord = [self.convertNote(i) for i in chordTypes]
-        self.chordName.set(chordTypes, rootType)
+        #self.chordName.set(chordTypes, rootType)
 
     def setChordShadow(self):
         for note in self.chord:
