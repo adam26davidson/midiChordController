@@ -1,5 +1,315 @@
+from controllerManager.models.controllerConfig import ControllerConfig
+from controllerManager.models.rawControlConfig import RawControlConfig
+from controllerManager.models.rawControlEvent import RawControlEvent as Event
+from controllerManager.models.rawControlType import RawControlType as Type
+from controllerManager.models.rawControl import RawControl
+from controllerManager.models.polarOrientation import PolarOrientation
+
+controllerConfig = ControllerConfig(
+    name="DualShock4",
+    vendor=1356,
+    product=2508,
+    meMap="touchpadBass",
+    uiMap="default",
+    compatibleMeMaps=['gyroInversions', 'default', 'touchpadBass'],
+    controls={
+        "main": [
+            # MAIN BUTTONS
+            RawControl(
+                key="SOUTH_BUTTON",
+                label="South Button",
+                evDevKey=304,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="WEST_BUTTON",
+                label="West Button",
+                evDevKey=308,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="NORTH_BUTTON",
+                label="North Button",
+                evDevKey=307,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="EAST_BUTTON",
+                label="East Button",
+                evDevKey=305,
+                type=Type.BUTTON,
+            ),
+
+            # BUMPERS
+            RawControl(
+                key="RIGHT_BUMPER",
+                label="Right Bumper",
+                evDevKey=311,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="LEFT_BUMPER",
+                label="Left Bumper",
+                evDevKey=310,
+                type=Type.BUTTON,
+            ),
+
+            # TRIGGERS
+            RawControl(
+                key="RIGHT_TRIGGER",
+                label="Right Trigger",
+                evDevKey=313,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="RIGHT_TRIGGER_ANALOG",
+                label="Right Trigger Analog",
+                evDevKey=5,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=255,
+                    bottomValue=0,
+                    exposeOnOffEvents = False,
+                    exposePolarEvents = False,
+                    averageCount=1,
+                    threshold=0.2,
+                )
+            ),
+            RawControl(
+                key="LEFT_TRIGGER",
+                label="Left Trigger",
+                evDevKey=312,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="LEFT_TRIGGER_ANALOG",
+                label="Left Trigger Analog",
+                evDevKey=2,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=255,
+                    bottomValue=0,
+                    exposeOnOffEvents = False,
+                    exposePolarEvents = False,
+                    averageCount=1,
+                    threshold=0.2,
+                )
+            ),
+
+            # OPTIONS
+            RawControl(
+                key="RIGHT_OPTION",
+                label="Right Option",
+                evDevKey=315,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="LEFT_OPTION",
+                label="Left Option",
+                evDevKey=314,
+                type=Type.BUTTON,
+            ),
+
+            # DPAD
+            RawControl(
+                key="DPAD_X",
+                label="DPad X",
+                evDevKey=16,
+                type=Type.PAD,
+                config=RawControlConfig(
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    polarEventMap={1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT},
+                    polarOrientation=PolarOrientation.HORIZONTAL
+                )
+            ),
+            RawControl(
+                key="DPAD_Y",
+                label="DPad Y",
+                evDevKey=17,
+                type=Type.PAD,
+                config=RawControlConfig(
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    polarEventMap={1: Event.DOWN, 0: Event.OFF, -1: Event.UP},
+                    polarOrientation=PolarOrientation.VERTICAL
+                )
+            ),
+
+            # START BUTTON
+            RawControl(
+                key="START_BUTTON",
+                label="Start Button",
+                evDevKey=316,
+                type=Type.BUTTON,
+            ),
+
+            # ANALOG STICKS
+            RawControl(
+                key="LEFT_STICK_BUTTON",
+                label="Left Stick Button",
+                evDevKey=317,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="LEFT_STICK_X",
+                label="Left Stick X",
+                evDevKey=0,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=0,
+                    bottomValue=255,
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    averageCount=1,
+                    centeredThreshold=0.6,
+                    ignoreValues=[0],
+                    polarEventMap={-1: Event.RIGHT, 0: Event.OFF, 1: Event.LEFT},
+                    polarOrientation=PolarOrientation.HORIZONTAL
+                )
+            ),
+            RawControl(
+                key="LEFT_STICK_Y",
+                label="Left Stick Y",
+                evDevKey=1,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=0,
+                    bottomValue=255,
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    averageCount=1,
+                    centeredThreshold=0.6,
+                    ignoreValues=[0],
+                    polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
+                    polarOrientation=PolarOrientation.VERTICAL
+                )
+            ),
+            RawControl(
+                key="RIGHT_STICK_BUTTON",
+                label="Right Stick Button",
+                evDevKey=318,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="RIGHT_STICK_X",
+                label="Right Stick X",
+                evDevKey=3,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=0,
+                    bottomValue=255,
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    averageCount=1,
+                    centeredThreshold=0.6,
+                    ignoreValues=[0],
+                    polarEventMap={-1: Event.RIGHT, 0: Event.OFF, 1: Event.LEFT},
+                    polarOrientation=PolarOrientation.HORIZONTAL
+                )
+            ),
+            RawControl(
+                key="RIGHT_STICK_Y",
+                label="Right Stick Y",
+                evDevKey=4,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=0,
+                    bottomValue=255,
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    averageCount=1,
+                    centeredThreshold=0.6,
+                    ignoreValues=[0],
+                    polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
+                    polarOrientation=PolarOrientation.VERTICAL
+                )
+            )
+        ],
+        "motion": [
+            # GYROSCOPE
+            RawControl(
+                key="GYRO_PITCH",
+                label="Gyro Pitch",
+                evDevKey=2,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=-8050,
+                    bottomValue=8050,
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    averageCount=1,
+                    centeredThreshold=0.6,  
+                    ignoreValues=[0],
+                    polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
+                    polarOrientation=PolarOrientation.VERTICAL
+                )
+            ),
+            RawControl(
+                key="GYRO_ROLL",
+                label="Gyro Roll",
+                evDevKey=0,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=-8050,
+                    bottomValue=8050,
+                    exposeOnOffEvents = True,
+                    exposePolarEvents = True,
+                    averageCount=1,
+                    centeredThreshold=0.6,
+                    ignoreValues=[0],
+                    polarEventMap={1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT},
+                    polarOrientation=PolarOrientation.HORIZONTAL
+                )
+            )
+        ],
+        "touch": [
+            # TOUCH PAD
+            RawControl(
+                key="TOUCHPAD_BUTTON",
+                label="Touchpad Button",
+                evDevKey=272,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="TOUCHPAD_TOUCH",
+                label="Touchpad Touch",
+                evDevKey=325,
+                type=Type.BUTTON,
+            ),
+            RawControl(
+                key="TOUCHPAD_X",
+                label="Touchpad X",
+                evDevKey=0,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=1900,
+                    bottomValue=0,
+                    exposeOnOffEvents = False,
+                    exposePolarEvents = False,
+                    averageCount=1,
+                    ignoreValues=[0]
+                )
+            ),
+            RawControl(
+                key="TOUCHPAD_Y",
+                label="Touchpad Y",
+                evDevKey=1,
+                type=Type.ANALOG,
+                config=RawControlConfig(
+                    topValue=0,
+                    bottomValue=900,
+                    exposeOnOffEvents = False,
+                    exposePolarEvents = False,
+                    averageCount=1
+                )
+            )
+        ]
+    }
+)
+
 info = {
-    "name": "DualShock4",
+    "key": "DualShock4",
     "vendor": 1356,
     "product": 2508,
     "meMap": "touchpadBass",
@@ -9,71 +319,71 @@ info = {
         "main": {
             # MAIN BUTTONS
             304: {
-                "name": "SOUTH_BUTTON",
-                "type": "BUTTON",
-                "events": {1: "SOUTH_BUTTON_DOWN", 0: "SOUTH_BUTTON_UP"}
+                "key": "SOUTH_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             308: {
-                "name": "WEST_BUTTON",
-                "type": "BUTTON",
-                "events": {1: "WEST_BUTTON_DOWN", 0: "WEST_BUTTON_UP"}
+                "key": "WEST_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             307: {
-                "name": "NORTH_BUTTON",
-                "type": "BUTTON",
-                "events": {1: "NORTH_BUTTON_DOWN", 0: "NORTH_BUTTON_UP"}
+                "key": "NORTH_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             305: {
-                "name": "EAST_BUTTON",
-                "type": "BUTTON",
-                "events": {1: "EAST_BUTTON_DOWN", 0: "EAST_BUTTON_UP"}
+                "key": "EAST_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
 
             # BUMPERS
             311: {
-                "name": "RIGHT_BUMPER",
-                "type": "BUTTON",
-                "events": {1: "RIGHT_BUMPER_DOWN", 0: "RIGHT_BUMPER_UP"}
+                "key": "RIGHT_BUMPER",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             310: {
-                "name": "LEFT_BUMPER",
-                "type": "BUTTON",
-                "events": {1: "LEFT_BUMPER_DOWN", 0: "LEFT_BUMPER_UP"}
+                "key": "LEFT_BUMPER",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
 
             # TRIGGERS
             313: {
-                "name": "RIGHT_TRIGGER",
-                "type": "BUTTON",
-                "events": {1: "RIGHT_TRIGGER_DOWN", 0: "RIGHT_TRIGGER_UP"}
+                "key": "RIGHT_TRIGGER",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             5: {
-                "name": "RIGHT_TRIGGER_ANALOG",
-                "type": "ANALOG",
+                "key": "RIGHT_TRIGGER_ANALOG",
+                "type": Type.ANALOG,
                 "range": {"top": 255, "bottom": 0},
                 "events": {
-                    "value": "RIGHT_TRIGGER_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        1: "RIGHT_TRIGGER_DOWN",
-                        0: "RIGHT_TRIGGER_UP"
+                        1: Event.DOWN,
+                        0: Event.OFF
                     }
                 },
                 "config": {"averageCount": 1, "threshold": 0.2}
             },
             312: {
-                "name": "LEFT_TRIGGER",
-                "type": "BUTTON",
-                "events": {1: "LEFT_TRIGGER_DOWN", 0: "LEFT_TRIGGER_UP"}
+                "key": "LEFT_TRIGGER",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             2: {
-                "name": "LEFT_TRIGGER_ANALOG",
-                "type": "ANALOG",
+                "key": "LEFT_TRIGGER_ANALOG",
+                "type": Type.ANALOG,
                 "range": {"top": 255, "bottom": 0},
                 "events": {
-                    "value": "LEFT_TRIGGER_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        1: "LEFT_TRIGGER_DOWN",
-                        0: "LEFT_TRIGGER_UP"
+                        1: Event.DOWN,
+                        0: Event.OFF
                     }
                 },
                 "config": {"averageCount": 1, "threshold": 0.2}
@@ -81,55 +391,52 @@ info = {
 
             # OPTIONS
             315: {
-                "name": "RIGHT_OPTION",
-                "type": "BUTTON",
-                "events": {1: "RIGHT_OPTION_DOWN", 0: "RIGHT_OPTION_UP"}
+                "key": "RIGHT_OPTION",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             314: {
-                "name": "LEFT_OPTION",
-                "type": "BUTTON",
-                "events": {1: "LEFT_OPTION_DOWN", 0: "LEFT_OPTION_UP"}
+                "key": "LEFT_OPTION",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
 
             # DPAD
             16: {
-                "name": "DPAD_X",
-                "type": "PAD",
-                "events": {1: "DPAD_RIGHT", 0: "DPAD_X_OFF", -1: "DPAD_LEFT"}
+                "key": "DPAD_X",
+                "type": Type.PAD,
+                "events": {1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT}
             },
             17: {
-                "name": "DPAD_Y",
-                "type": "PAD",
-                "events": {1: "DPAD_DOWN", 0: "DPAD_Y_OFF", -1: "DPAD_UP"}
+                "key": "DPAD_Y",
+                "type": Type.PAD,
+                "events": {1: Event.DOWN, 0: Event.OFF, -1: Event.UP}
             },
 
             # START BUTTON
             316: {
-                "name": "START_BUTTON",
-                "type": "BUTTON",
-                "events": {1: "START_BUTTON_DOWN", 0: "START_BUTTON_UP"}
+                "key": "START_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
 
 
             # ANALOG STICKS
             317: {
-                "name": "LEFT_STICK_BUTTON",
-                "type": "BUTTON",
-                "events": {
-                  1: "LEFT_STICK_BUTTON_DOWN",
-                  0: "LEFT_STICK_BUTTON_UP"
-                }
+                "key": "LEFT_STICK_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             0: {
-                "name": "LEFT_STICK_X",
-                "type": "ANALOG",
+                "key": "LEFT_STICK_X",
+                "type": Type.ANALOG,
                 "range": {"top": 0, "bottom": 255},
                 "events": {
-                    "value": "LEFT_STICK_X_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        -1: "LEFT_STICK_RIGHT",
-                        0: "LEFT_STICK_X_OFF",
-                        1: "LEFT_STICK_LEFT"
+                        -1: Event.RIGHT,
+                        0: Event.OFF,
+                        1: Event.LEFT
                     }
                 },
                 "config": {
@@ -139,15 +446,15 @@ info = {
                 }
             },
             1: {
-                "name": "LEFT_STICK_Y",
-                "type": "ANALOG",
+                "key": "LEFT_STICK_Y",
+                "type": Type.ANALOG,
                 "range": {"top": 0, "bottom": 255},
                 "events": {
-                    "value": "LEFT_STICK_Y_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        1: "LEFT_STICK_UP",
-                        0: "LEFT_STICK_Y_OFF",
-                        -1: "LEFT_STICK_DOWN"
+                        1: Event.UP,
+                        0: Event.OFF,
+                        -1: Event.DOWN
                     }
                 },
                 "config": {
@@ -157,23 +464,20 @@ info = {
                 }
             },
             318: {
-                "name": "RIGHT_STICK_BUTTON",
-                "type": "BUTTON",
-                "events": {
-                  1: "RIGHT_STICK_BUTTON_DOWN",
-                  0: "RIGHT_STICK_BUTTON_UP"
-                }
+                "key": "RIGHT_STICK_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             3: {
-                "name": "RIGHT_STICK_X",
-                "type": "ANALOG",
+                "key": "RIGHT_STICK_X",
+                "type": Type.ANALOG,
                 "range": {"top": 0, "bottom": 255},
                 "events": {
-                    "value": "RIGHT_STICK_X_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        -1: "RIGHT_STICK_RIGHT",
-                        0: "RIGHT_STICK_X_OFF",
-                        1: "RIGHT_STICK_LEFT"
+                        -1: Event.RIGHT,
+                        0: Event.OFF,
+                        1: Event.LEFT
                     }
                 },
                 "config": {
@@ -183,15 +487,15 @@ info = {
                 }
             },
             4: {
-                "name": "RIGHT_STICK_Y",
-                "type": "ANALOG",
+                "key": "RIGHT_STICK_Y",
+                "type": Type.ANALOG,
                 "range": {"top": 0, "bottom": 255},
                 "events": {
-                    "value": "RIGHT_STICK_Y_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        1: "RIGHT_STICK_UP",
-                        0: "RIGHT_STICK_Y_OFF",
-                        -1: "RIGHT_STICK_DOWN"
+                        1: Event.UP,
+                        0: Event.OFF,
+                        -1: Event.DOWN
                     }
                 },
                 "config": {
@@ -205,15 +509,15 @@ info = {
         "motion": {
             # GYROSCOPE
             2: {
-                "name": "GYRO_PITCH",
-                "type": "ANALOG",
+                "key": "GYRO_PITCH",
+                "type": Type.ANALOG,
                 "range": {"top": -8050, "bottom": 8050},
                 "events": {
-                    "value": "GYRO_PITCH_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        1: "GYRO_PITCH_UP",
-                        0: "GYRO_PITCH_OFF",
-                        -1: "GYRO_PITCH_DOWN"
+                        1: Event.UP,
+                        0: Event.OFF,
+                        -1: Event.DOWN
                     }
                 },
                 "config": {
@@ -223,15 +527,15 @@ info = {
                 }
             },
             0: {
-                "name": "GYRO_ROLL",
-                "type": "ANALOG",
+                "key": "GYRO_ROLL",
+                "type": Type.ANALOG,
                 "range": {"top": -8050, "bottom": 8050},
                 "events": {
-                    "value": "GYRO_ROLL_UPDATE",
+                    "value": Event.UPDATE,
                     "threshold": {
-                        1: "GYRO_ROLL_RIGHT",
-                        0: "GYRO_ROLL_OFF",
-                        -1: "GYRO_ROLL_LEFT"
+                        1: Event.RIGHT,
+                        0: Event.OFF,
+                        -1: Event.LEFT
                     }
                 },
                 "config": {
@@ -244,22 +548,22 @@ info = {
         "touch": {
             # TOUCH PAD
             272: {
-                "name": "TOUCHPAD_BUTTON",
-                "type": "BUTTON",
-                "events": {1: "TOUCHPAD_BUTTON_DOWN", 0: "TOUCHPAD_BUTTON_UP"}
+                "key": "TOUCHPAD_BUTTON",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
             325: {
-                "name": "TOUCHPAD_TOUCH",
-                "type": "BUTTON",
-                "events": {1: "TOUCHPAD_TOUCH_DOWN", 0: "TOUCHPAD_TOUCH_UP"}
+                "key": "TOUCHPAD_TOUCH",
+                "type": Type.BUTTON,
+                "events": {1: Event.ON, 0: Event.OFF}
             },
 
             0: {
-                "name": "TOUCHPAD_X",
-                "type": "ANALOG",
+                "key": "TOUCHPAD_X",
+                "type": Type.ANALOG,
                 "range": {"top": 1900, "bottom": 0},
                 "events": {
-                    "value": "TOUCHPAD_X_UPDATE"
+                    "value": Event.UPDATE
                 },
                 "config": {
                     "averageCount": 1,
@@ -267,11 +571,11 @@ info = {
                 }
             },
             1: {
-                "name": "TOUCHPAD_Y",
-                "type": "ANALOG",
+                "key": "TOUCHPAD_Y",
+                "type": Type.ANALOG,
                 "range": {"top": 0, "bottom": 900},
                 "events": {
-                    "value": "TOUCHPAD_Y_UPDATE"
+                    "value": Event.UPDATE
                 },
                 "config": {"averageCount": 1}
             }

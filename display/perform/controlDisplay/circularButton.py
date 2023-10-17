@@ -1,13 +1,14 @@
+from models.appParameter import AppParameter
 from .controlButton import ControlButton
 from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class CircularButton(ControlButton):
 
-    def __init__(self, master, label, centerX, centerY, unitSize):
+    def __init__(self, master, param: AppParameter, centerX, centerY, unitSize):
         super().__init__(master)
         self.master = master
-        self.label = label
+        self.label = param.labelAbreviation
         self.centerX = centerX
         self.centerY = centerY
         self.unitSize = unitSize

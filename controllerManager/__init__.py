@@ -1,3 +1,5 @@
+from controllerManager.controller import Controller
+from controllerManager.models.mappableControl import MappableControl
 from redux.reducers import controllerManager
 from .controllers import controllerClasses
 from redux import store
@@ -5,6 +7,8 @@ from redux.actions import controllerManager as actions
 import asyncio
 
 class ControllerManager():
+  
+  connectedControllers: list[Controller]
 
   def __init__(self):
     self.controllerClasses = controllerClasses
@@ -55,3 +59,8 @@ class ControllerManager():
 
   def handleStoreUpdate(self):
     pass
+  
+  def getControls(self) -> dict[str, dict[str, MappableControl]]:
+    controls = {}
+    for controller in self.connectedControllers:
+      controls[controller.id] = controller.getControls()

@@ -1,3 +1,6 @@
+from models.appParameter import AppParameter
+from models.command import Command
+from models.commandType import CommandType
 from redux import store, utils as ReduxUtils
 from ..chordDisplay import ChordDisplay
 from .controlDisplay.controlDisplay import ControlDisplay
@@ -143,15 +146,39 @@ class PerformFrame(tk.Frame):
                 self.state['controllerName'] = primary['name']
                 self.__setController(primary['name'])
 
-    def handleControllerEvent(self, event):
-        meMap = ReduxUtils.getActiveMeMap()
-        if event['name'] in meMap.keys():
-            if self.state['inversionMode'] == 'continuous' and \
-                    meMap[event['name']] == 'UPDATE_INVERSION':
-                self.__storeInversionThumb(event['value'])
-            elif self.state['bassMode'] == 'continuous' and \
-                    meMap[event['name']] == 'UPDATE_BASS_POSITION':
-                self.__storeBassPositionThumb(event['value'])
+    # def handleControllerEvent(self, event):
+    #     meMap = ReduxUtils.getActiveMeMap()
+    #     if event['name'] in meMap.keys():
+    #         if self.state['inversionMode'] == 'continuous' and \
+    #                 meMap[event['name']] == 'UPDATE_INVERSION':
+    #             self.__storeInversionThumb(event['value'])
+    #         elif self.state['bassMode'] == 'continuous' and \
+    #                 meMap[event['name']] == 'UPDATE_BASS_POSITION':
+    #             self.__storeBassPositionThumb(event['value'])
+    
+    def getParameters(self):
+        return [
+            AppParameter(
+                validCommandTypes=[CommandType.ANALOG],
+                commandMappings={
+                    Command.UPDATE: self.__storeInversionThumb
+                },
+                key="UI_INVERSION_THUMB",
+                label="UI Inversion Thumb",
+                labelAbreviation=None,
+                remappable=False
+            ),
+            AppParameter(
+                validCommandTypes=[CommandType.ANALOG],
+                commandMappings={
+                    Command.UPDATE: self.__storeBassPositionThumb
+                },
+                key="UI_BASS_THUMB",
+                label="UI Bass Thumb",
+                labelAbreviation=None,
+                remappable=False
+            )
+        ]
 
     def updateFrame(self):
         if not self.state['inversionLock']:

@@ -1,12 +1,12 @@
 import evdev
-from .info import info
+from .info import info, controllerConfig as config
 from redux import store
 from ...controller import Controller
 
 class DualShock4(Controller):
 
   def __init__(self, sendEvent):
-    super().__init__(sendEvent, info)
+    super().__init__(sendEvent, info, config)
     self.id = None
 
   def open(self):
@@ -17,8 +17,8 @@ class DualShock4(Controller):
     devices = {}
     id = None
     for device in availableDevices:
-      vendorMatch = device.info.vendor == info['vendor']
-      productMatch = device.info.product == info['product']
+      vendorMatch = device.info.vendor == config.vendor
+      productMatch = device.info.product == config.product
       newId = device.uniq not in connectedIds
       if (vendorMatch and productMatch and newId):
         if not foundDevice:
@@ -35,5 +35,5 @@ class DualShock4(Controller):
 
   @staticmethod
   def checkForNewConnections():
-    return Controller.checkForNewConnections(info)
+    return Controller.checkForNewConnections(config)
 

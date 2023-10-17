@@ -1,4 +1,7 @@
 from constants import FULLSCREEN, ANIMATION_STEP
+from models.appParameter import AppParameter
+from models.command import Command
+from models.commandType import CommandType
 from redux import store
 from redux.actions import display as actions
 from .perform.performFrame import PerformFrame
@@ -73,6 +76,22 @@ class Display():
 
         if self.state.activeFrame == 'PERFORM':  
             self.frames["PERFORM"].handleControllerEvent(event)
+    
+    def getParameters(self):
+        parameters = self.frames["PERFORM"].getParameters()
+        parameters.append(
+            AppParameter(
+                validCommandTypes=[CommandType.TOGGLE],
+                commandMappings={
+                    Command.TOGGLE: self.toggleMenu
+                },
+                key="MENU",
+                label="Menu",
+                labelAbreviation="☰",
+                remappable=False
+            )
+        )
+        
 
     def __handleStoreUpdate(self):
         state = store.get_state()

@@ -1,174 +1,279 @@
 from abc import ABC, abstractmethod, abstractproperty
 import asyncio
+from controllerManager.models.controlEvent import ControlEvent
+
+from controllerManager.models.mappableControlEvent import MappableControlEvent
+from controllerManager.models.polarOrientation import PolarOrientation
+from .models.mappableControl import MappableControl
+from .models.mappableControlType import MappableControlType
+from .models.rawControl import RawControl
+from .models.controllerConfig import ControllerConfig
+from .models.rawControlType import RawControlType
+from .models.rawControlEvent import RawControlEvent
 from .maps import meMaps, uiMaps
 from redux import store
 from redux.actions import controllerManager as actions
 import evdev
 
 class Controller(ABC):
+  
+    config: ControllerConfig
 
-  def __init__(self, sendEvent, info):
-    self.id = None
-    self.data = None
-    self.isConnected = False
-    self.devices = None
-    self.sendEvent = sendEvent
-    self.info = info
-    self.meMap = meMaps[self.info['meMap']]
-    self.uiMap = uiMaps[self.info['uiMap']]
+    def __init__(self, sendEvent, info, config: ControllerConfig):
+        self.id = None
+        self.data = None
+        self.isConnected = False
+        self.devices = None
+        self.sendEvent = sendEvent
+        self.config = config
+        self.info = info
+        self.meMap = meMaps[self.config.meMap]
+        self.uiMap = uiMaps[self.config.uiMap]
 
-    state = {} 
-    for device in info['controls'].keys():
-      state = {**state, **self.createState(self.info['controls'][device])}
+        self.state = {} 
+        self.rawControlKeyMap: dict[str, dict[int, RawControl]] = {}
+        for device in config.controls.keys():
 
-    self.state = state
-
-  @staticmethod
-  def checkForNewConnections(info):
-    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    connectedControllers = store.get_state()['controllerManager']['controllers']
-    connectedIds = [c['id'] for c in connectedControllers]
-    for device in devices:
-      vendorMatch = device.info.vendor == info['vendor']
-      productMatch = device.info.product == info['product']
-      newId = device.uniq not in connectedIds
-      if (vendorMatch and productMatch and newId):
-        return True
-    return False
-
-  def checkIfStillConnected(self):
-    devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    connectedIds = [d.uniq for d in devices]
-    return self.id in connectedIds
-
-  def open(self, id, devices):
-    self.id = id
-    self.devices = devices
-    connectedControllers = store.get_state()['controllerManager']['controllers']
-    roles = [c['role'] for c in connectedControllers]
-    role = 'primary'
-    if 'primary' in roles: role = 'secondary'
-    for key in devices.keys():
-      asyncio.ensure_future(self.deviceReadLoop(key))
-    self.data = {
-      'id': id,
-      'name': self.info['name'],
-      'role': role,
-      'meMap': self.meMap,
-      'uiMap': self.uiMap,
-      'compatibleMeMaps': self.info['compatibleMeMaps']
-    }
-    self.isConnected = True
-    store.dispatch(actions.add(self.data))
-    #REMOVE LATER
-    print("bassMode:")
-    print(store.get_state()['controllerManager']['controllers'][0]['meMap']['bassMode'])
-
-  def close(self):
-    self.isConnected = False
-    store.dispatch(actions.remove(self.data))
-    print(f"Closing connection for {self.info['product']}:{self.info['vendor']}:{self.id}")
-
-  async def deviceReadLoop(self, device):
-    try:
-      eventReadLoopGenerator = self.devices[device].async_read_loop()
-      async for event in eventReadLoopGenerator:
-        if self.isConnected:
-          self.processEvent(event, device)
-    except Exception as e:
-      self.isConnected = False
-      print("cannot read event from async_read_loop")
-
-  def createState(self, controls):
-    state = {}
-    for control in controls.values():
-      if control['type'] in ['BUTTON', "PAD"]:
-        state[control['name']] = 0
-      elif control['type'] == 'ANALOG':
-        state[control['name']] = {"valueHistory": [], "thresholdValue": 0}
-    return state
-
-  def processEvent(self, event, device):
-    if event.code in self.info['controls'][device].keys():
-      control = self.info['controls'][device][event.code]
-      controlState = self.state[control['name']]
-      if control['type'] in ['BUTTON', 'PAD']:
-        self.processButtonEvent(event, control)
-      elif control['type'] == 'ANALOG':
-        self.processAnalogEvent(event, control, controlState)
+            self.state = {
+                **self.state, 
+                **self.createState(self.config.controls[device])}
+            
+            self.rawControlKeyMap[device] = self.createRawControlKeyMap(self.config.controls[device])
 
 
-  def processButtonEvent(self, event, control):
-    eventName = control['events'][event.value]
-    self.__sendEvent({'name': eventName, 'id': self.id})
-    self.state[control['name']] = event.value
+    @staticmethod
+    def checkForNewConnections(config: ControllerConfig):
+        devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+        connectedControllers = store.get_state()['controllerManager']['controllers']
+        connectedIds = [c['id'] for c in connectedControllers]
+        for device in devices:
+            vendorMatch = device.info.vendor == config.vendor
+            productMatch = device.info.product == config.product
+            newId = device.uniq not in connectedIds
+            if (vendorMatch and productMatch and newId):
+                return True
+        return False
 
-  def __sendEvent(self, event):
-    if (event['name'] in self.meMap['map'].keys() \
-        or event['name'] in self.uiMap['map'].keys()):
-      self.sendEvent(event)
+    def checkIfStillConnected(self):
+        devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+        connectedIds = [d.uniq for d in devices]
+        return self.id in connectedIds
 
-  def processAnalogEvent(self, event, control, controlState):
-    range = control['range']
-    config = control['config']
+    def open(self, id, devices):
+        self.id = id
+        self.devices = devices
+        connectedControllers = store.get_state()['controllerManager']['controllers']
+        roles = [c['role'] for c in connectedControllers]
+        role = 'primary'
+        if 'primary' in roles: role = 'secondary'
+        for key in devices.keys():
+            asyncio.ensure_future(self.deviceReadLoop(key))
+        self.data = {
+            'id': id,
+            'name': self.config.name,
+            'role': role,
+            'meMap': self.meMap,
+            'uiMap': self.uiMap,
+            'compatibleMeMaps': self.config.compatibleMeMaps
+        }
+        self.isConnected = True
+        store.dispatch(actions.add(self.data))
 
-    ignoreValue = False
-    if 'ignoreValues' in config.keys():
-      if event.value in config['ignoreValues']:
-        ignoreValue = True
+    def close(self):
+        self.isConnected = False
+        store.dispatch(actions.remove(self.data))
+        print(f"Closing connection for {self.config.product}:{self.config.vendor}:{self.id}")
 
-    #ensure that value is not erroneously big or small
-    if abs(event.value) > 1.25 * max(range["top"], range["bottom"]):
-      ignoreValue = True
+    async def deviceReadLoop(self, device):
+        try:
+            eventReadLoopGenerator = self.devices[device].async_read_loop()
+            async for event in eventReadLoopGenerator:
+                if self.isConnected:
+                    self.processEvent(event, device)
+        except Exception as e:
+            self.isConnected = False
+            print("cannot read event from async_read_loop")
+
+    def createState(self, controls: list[RawControl]):
+        state = {}
+        for control in controls:
+            if control.type in [RawControlType.BUTTON, RawControlType.PAD]:
+                state[control.key] = 0
+            elif control.type == RawControlType.ANALOG:
+                state[control.key] = {"valueHistory": [], "thresholdValue": 0}
+        return state
+  
+    def createRawControlKeyMap(self, controls: list[RawControl]) -> dict[int, RawControl]:
+        map = {}
+        for control in controls:
+            map[control.evDevKey] = control
+        return map
+    
+    def getControls(self) -> dict[str, MappableControl]:
+        mappableControls: dict[str, MappableControl] = {}
+        for device in self.config.controls.keys():
+            mappableControls = {
+                **mappableControls, 
+                **self.createMappableControls(self.config.controls[device])}
+        return mappableControls
+  
+    def createMappableControls(self, controls: list[RawControl]) -> dict[str, MappableControl]:
+        mappableControls = {}
+        for control in controls:
+            #BUTTON ON_OFF controls
+            if control.type == RawControlType.BUTTON:
+                key = control.getMappableControlKeys()[0]
+                mappableControls[key] = MappableControl(
+                    label=control.label,
+                    key=key,
+                    rawControlKey=control.key,
+                    controllerId=self.id,
+                    type=MappableControlType.ON_OFF,
+                )
+            elif control.type in [RawControlType.PAD, RawControlType.ANALOG]:
+                #ANALOG and PAD ON_OFF controls
+                if control.config.exposeOnOffEvents:
+                    for event in [RawControlEvent.DOWN, RawControlEvent.UP, RawControlEvent.LEFT, RawControlEvent.RIGHT]:
+                        if (event in control.config.polarEventMap.values()):
+                            key = control.getMappableControlKeys(MappableControlType.ON_OFF, event)[0]
+                            mappableControls[key] = MappableControl(
+                                label=control.label + " " + event.name.lower().capitalize(),
+                                key=key,
+                                rawControlKey=control.key,
+                                controllerId=self.id,
+                                type=MappableControlType.ON_OFF,
+                            )
+                #ANALOG and PAD POLAR controls
+                if control.config.exposePolarEvents:
+                    key = control.getMappableControlKeys(MappableControlType.POLAR)[0]
+                    mappableControls[key] = MappableControl(
+                        label=control.label + (" Incremental" if control.type == RawControlType.ANALOG else ""),
+                        key=key,
+                        rawControlKey=control.key,
+                        controllerId=self.id,
+                        type=MappableControlType.POLAR,
+                    )
+            #ANALOG update controls
+            if control.type == RawControlType.ANALOG:
+                key = control.getMappableControlKeys(MappableControlType.ANALOG)[0]
+                mappableControls[key] = MappableControl(
+                    label=control.label,
+                    key=key,
+                    rawControlKey=control.key,
+                    type=MappableControlType.ANALOG,
+                )
+        return mappableControls
+    
+
+    def processEvent(self, event, device):
+        if event.code in self.rawControlKeyMap[device].keys():
+            control = self.rawControlKeyMap[device][event.code]
+            if control.type == RawControlType.BUTTON:
+                self.processButtonEvent(event, control)
+            elif control.type == RawControlType.PAD:
+                self.processPadEvent(event, control)
+            elif control.type == RawControlType.ANALOG:
+                controlState = self.state[control.key]
+                self.processAnalogEvent(event, control, controlState)
+
+    def processPadEvent(self, event, control: RawControl):
+
+        rawEvent = control.config.polarEventMap[event.value]
+
+        if control.config.exposeOnOffEvents:
+            self.__sendEvents(control, MappableControlType.ON_OFF, rawEvent)
+
+        if control.config.exposePolarEvents:
+            self.__sendEvents(control, MappableControlType.POLAR, rawEvent)
+
+    def processButtonEvent(self, event, control: RawControl):
+        rawEvent = RawControlEvent.ON if event.value == 1 else RawControlEvent.OFF
+        self.__sendEvents(control, rawEvent, MappableControlType.ON_OFF)
+        self.state[control.key] = event.value
+
+    def processAnalogEvent(self, event, control: RawControl, controlState):
+        top = control.config.topValue; bottom = control.config.bottomValue
+
+        ignoreValue = False
+        if control.config.ignoreValues != None:
+            if event.value in control.config.ignoreValues:
+                ignoreValue = True
+
+        #ensure that value is not erroneously big or small
+        if abs(event.value) > 1.25 * max(top, bottom):
+            ignoreValue = True
       
-    if not ignoreValue:
+        if not ignoreValue:
 
-      # update value history
-      valueHistory = controlState["valueHistory"]
-      valueHistory.append(event.value)
-      if (len(valueHistory) > config["averageCount"]):
-        valueHistory.pop(0)
+            # update value history
+            valueHistory = controlState["valueHistory"]
+            valueHistory.append(event.value)
+            if (len(valueHistory) > control.config.averageCount):
+                valueHistory.pop(0)
 
-      # get the average of the past raw values (prevents fluttering)
-      sum = 0
-      for val in valueHistory:
-        sum += val
-      averageValue = sum / len(valueHistory)
+            # get the average of the past raw values (prevents fluttering)
+            sum = 0
+            for val in valueHistory:
+                sum += val
+            averageValue = sum / len(valueHistory)
 
-      #normalize value to between -0.999 and 0.999
-      slope = 2.0 / (range["top"]- range["bottom"])
-      intercept = 1 - (slope * range["top"])
-      normalizedValue =  (slope * averageValue) + intercept
-      normalizedValue = max(min(normalizedValue, 0.999), -0.999)
-        
-      self.__sendEvent({
-        'name': control['events']['value'],
-        'id': self.id,
-        'value': normalizedValue
-      })
+            #normalize value to between -0.999 and 0.999
+            slope = 2.0 / (top - bottom)
+            intercept = 1 - (slope * top)
+            normalizedValue =  (slope * averageValue) + intercept
+            normalizedValue = max(min(normalizedValue, 0.999), -0.999)
+            
+            self.__sendEvents(control, RawControlEvent.UPDATE, normalizedValue)
 
-      self.processThreshold(normalizedValue, control, controlState)
+            self.processThreshold(normalizedValue, control, controlState)
 
-  def processThreshold(self, normalizedValue, control, controlState):
-    if 'threshold' in control['events'].keys():
-      thresholdValue = 0
-      if "centeredThreshold" in control['config'].keys():
-        if normalizedValue > control['config']["centeredThreshold"]:
-          thresholdValue = 1
-        elif normalizedValue < -1*control['config']["centeredThreshold"]:
-          thresholdValue = -1
-      elif "centeredThreshold" in control['config'].keys():
-        threshold = -1 + (control['config']["centeredThreshold"] * 2)
-        if normalizedValue > threshold:
-          thresholdValue = 1
-        else:
-          thresholdValue = 0
+    def processThreshold(self, normalizedValue, control: RawControl, controlState):
+        if control.config.centeredThreshold != None:
 
-      thresholdValueChanged = thresholdValue != controlState["thresholdValue"]
+            thresholdValue = 0    
+            if control.config.threshold != None:
+                threshold = -1 + (control.config.threshold * 2)
+                if normalizedValue > threshold:
+                    thresholdValue = 1
+            else:
+                if normalizedValue > control.config.centeredThreshold:
+                    thresholdValue = 1
+                elif normalizedValue < -1 * control.config.centeredThreshold:
+                    thresholdValue = -1
 
-      # update threshold state
-      controlState["thresholdValue"] = thresholdValue
+            thresholdValueChanged = thresholdValue != controlState["thresholdValue"]
 
-      if thresholdValueChanged:
-        eventName = control['events']['threshold'][thresholdValue]
-        self.__sendEvent({'name': eventName, 'id': self.id})
+            # update threshold state
+            controlState["thresholdValue"] = thresholdValue
+
+            if thresholdValueChanged:
+
+                rawEvent = control.config.polarEventMap[thresholdValue]
+
+                if control.config.exposeOnOffEvents:
+                    self.__sendEvents(control, MappableControlType.ON_OFF, rawEvent)
+
+                if control.config.exposePolarEvents:
+                    self.__sendEvents(control, MappableControlType.POLAR, rawEvent)
+    
+    def __sendEvents(
+        self, 
+        control: RawControl, 
+        rawEvent: RawControlEvent, 
+        mappableControlType: MappableControlType, 
+        value: float = None):
+
+        if (control.key in self.meMap['map'].keys() \
+            or control.key in self.uiMap['map'].keys()):
+
+            mappableEvent = control.getMappableControlEvent(mappableControlType, rawEvent)
+            keys = control.getMappableControlKeys(mappableControlType, rawEvent)
+
+            for key in keys:
+
+                self.sendEvent(ControlEvent(
+                    controlKey=key,
+                    event=mappableEvent,
+                    controllerId=self.id,
+                    value=value
+                ))

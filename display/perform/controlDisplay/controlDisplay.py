@@ -31,108 +31,76 @@ class ControlDisplay(tk.Canvas):
         store.subscribe(self.__handleStoreUpdate)
 
     def __handleStoreUpdate(self):
-        meMap = ReduxUtils.getActiveMeMap()
-        uiMap = ReduxUtils.getActiveUiMap()
-        if meMap != None and uiMap != None and not self.ControllerConnected:
-            abrevs = CONTROL_ABREVIATIONS
+        state = store.get_state()['controllerCoupler']
+        params = state['appParameters']
+        map = state['activeControlMap']
+        if map != None and params != None and not self.ControllerConnected:
             self.ControllerConnected = True
-            self.createMainButtons(meMap, abrevs)
-            self.createStartButton(uiMap, abrevs)
-            self.createDpadButtons(meMap, abrevs)
-            self.createOptionsButtons(meMap, abrevs)
-            self.createJoySticks(meMap, abrevs)
-            self.createBumperButtons(meMap, abrevs)
-            self.createTriggerButtons(meMap, abrevs)
-            self.createTouchPadButton(meMap, abrevs)
+            self.createMainButtons(map, params)
+            self.createStartButton(map, params)
+            self.createDpadButtons(map, params)
+            self.createOptionsButtons(map, params)
+            self.createJoySticks(map, params)
+            self.createBumperButtons(map, params)
+            self.createTriggerButtons(map, params)
+            self.createTouchPadButton(map, params)
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
     
-    def createTriggerButtons(self, meMap, abrevs):
-        self.leftTriggerButton = TriggerButton(self, abrevs[meMap["LEFT_TRIGGER_DOWN"]], 2.5, 0.875)
-        self.rightTriggerButton = TriggerButton(self, abrevs[meMap["RIGHT_TRIGGER_DOWN"]], 12.5, 0.875)  
-
-    def createBumperButtons(self, meMap, abrevs):
-        self.leftBumperButton = BumperButton(self, abrevs[meMap["LEFT_BUMPER_DOWN"]], 2.5, 3.5)
-        self.rightBumperButton = BumperButton(self, abrevs[meMap["RIGHT_BUMPER_DOWN"]], 12.5, 3.5)
-
-    def createTouchPadButton(self, meMap, abrevs):
-        self.touchPadButton = TouchPadButton(self, abrevs[meMap["TOUCHPAD_X_UPDATE"]], abrevs[meMap["TOUCHPAD_Y_UPDATE"]], 7.5, 1.5)
-
-    def createMainButtons(self, meMap, abrevs):
+    def createMainButtons(self, map, params):
         cX = 12
         cY = 8
         uToC = self.unitsToCoord
-        self.southButton = CircularButton(self, abrevs[meMap["SOUTH_BUTTON_DOWN"]], uToC(cX), uToC(cY + 2), self.unitSize)
-        self.eastButton = CircularButton(self, abrevs[meMap["EAST_BUTTON_DOWN"]], uToC(cX + 2), uToC(cY), self.unitSize)
-        self.northButton = CircularButton(self, abrevs[meMap["NORTH_BUTTON_DOWN"]], uToC(cX), uToC(cY - 2), self.unitSize)
-        self.westButton = CircularButton(self, abrevs[meMap["WEST_BUTTON_DOWN"]], uToC(cX - 2), uToC(cY), self.unitSize)
+        self.southButton = CircularButton(self, params[map["SOUTH_BUTTON"]], uToC(cX), uToC(cY + 2), self.unitSize)
+        self.eastButton = CircularButton(self, params[map["EAST_BUTTON"]], uToC(cX + 2), uToC(cY), self.unitSize)
+        self.northButton = CircularButton(self, params[map["NORTH_BUTTON"]], uToC(cX), uToC(cY - 2), self.unitSize)
+        self.westButton = CircularButton(self, params[map["WEST_BUTTON"]], uToC(cX - 2), uToC(cY), self.unitSize)
 
-    def createStartButton(self, uiMap, abrevs):
+    def createTriggerButtons(self, map, params):
+        self.leftTriggerButton = TriggerButton(self, params[map["LEFT_TRIGGER"]], 2.5, 0.875)
+        self.rightTriggerButton = TriggerButton(self, params[map["RIGHT_TRIGGER"]], 12.5, 0.875)  
+
+    def createBumperButtons(self, map, params):
+        self.leftBumperButton = BumperButton(self, params[map["LEFT_BUMPER"]], 2.5, 3.5)
+        self.rightBumperButton = BumperButton(self, params[map["RIGHT_BUMPER"]], 12.5, 3.5)
+
+    def createTouchPadButton(self, map, params):
+        self.touchPadButton = TouchPadButton(self, params[map["TOUCHPAD_X"]], params[map["TOUCHPAD_Y"]], 7.5, 1.5)
+
+    def createStartButton(self, map, params):
         uToC = self.unitsToCoord
-        self.startButton = CircularButton(self, abrevs[uiMap["START_BUTTON_DOWN"]], uToC(7.5), uToC(9.75), self.unitSize)
+        self.startButton = CircularButton(self, params[map["START_BUTTON"]], uToC(7.5), uToC(9.75), self.unitSize)
 
-    def createDpadButtons(self, meMap, abrevs):
+    def createDpadButtons(self, map, params):
         cx = 3; cy = 8
-        self.dpadDownButton = DPadButton(self, abrevs[meMap["DPAD_DOWN"]], "DOWN", cx, cy)
-        self.dpadUpButton = DPadButton(self, abrevs[meMap["DPAD_UP"]], "UP", cx, cy)
-        self.dpadLeftButton = DPadButton(self, abrevs[meMap["DPAD_LEFT"]], "LEFT", cx, cy)
-        self.dpadRightButton = DPadButton(self, abrevs[meMap["DPAD_RIGHT"]], "RIGHT", cx, cy)
+        self.dpadDownButton = DPadButton(self, params[map["DPAD_DOWN"]], "DOWN", cx, cy)
+        self.dpadUpButton = DPadButton(self, params[map["DPAD_UP"]], "UP", cx, cy)
+        self.dpadLeftButton = DPadButton(self, params[map["DPAD_LEFT"]], "LEFT", cx, cy)
+        self.dpadRightButton = DPadButton(self, params[map["DPAD_RIGHT"]], "RIGHT", cx, cy)
 
-    def createOptionsButtons(self, meMap, abrevs):
-        self.leftOptionButton = OptionsButton(self, abrevs[meMap["LEFT_OPTION_DOWN"]], 6, 5, self.unitSize)
-        self.rightOptionButton = OptionsButton(self, abrevs[meMap["RIGHT_OPTION_DOWN"]], 9, 5, self.unitSize)
+    def createOptionsButtons(self, map, params):
+        self.leftOptionButton = OptionsButton(self, params[map["LEFT_OPTION"]], 6, 5, self.unitSize)
+        self.rightOptionButton = OptionsButton(self, params[map["RIGHT_OPTION"]], 9, 5, self.unitSize)
 
-    def createJoySticks(self, meMap, abrevs):
+    def createJoySticks(self, map, params):
 
         self.leftStick = JoyStickButton(
             self, 
-            abrevs[meMap["LEFT_STICK_LEFT"]], 
-            abrevs[meMap["LEFT_STICK_RIGHT"]], 
-            abrevs[meMap["LEFT_STICK_UP"]], 
-            abrevs[meMap["LEFT_STICK_DOWN"]], 
-            abrevs[meMap["LEFT_STICK_BUTTON_DOWN"]],
+            params[map["LEFT_STICK_LEFT"]], 
+            params[map["LEFT_STICK_RIGHT"]], 
+            params[map["LEFT_STICK_UP"]], 
+            params[map["LEFT_STICK_DOWN"]], 
+            params[map["LEFT_STICK_BUTTON_DOWN"]],
             5.25, 12.25, "LEFT")
         
         self.rightStick = JoyStickButton(
             self, 
-            abrevs[meMap["RIGHT_STICK_LEFT"]], 
-            abrevs[meMap["RIGHT_STICK_RIGHT"]], 
-            abrevs[meMap["RIGHT_STICK_UP"]], 
-            abrevs[meMap["RIGHT_STICK_DOWN"]], 
-            abrevs[meMap["RIGHT_STICK_BUTTON_DOWN"]],
+            params[map["RIGHT_STICK_LEFT"]], 
+            params[map["RIGHT_STICK_RIGHT"]], 
+            params[map["RIGHT_STICK_UP"]], 
+            params[map["RIGHT_STICK_DOWN"]], 
+            params[map["RIGHT_STICK_BUTTON_DOWN"]],
             9.75, 12.25, "RIGHT")
-
-        # self.controls = { 
-
-        #     "DPAD_LEFT": abrevs[meMap["DPAD_LEFT"]],
-        #     "DPAD_RIGHT": abrevs[meMap["DPAD_RIGHT"]],
-        #     "DPAD_UP": abrevs[meMap["DPAD_UP"]],
-        #     "DPAD_DOWN": abrevs[meMap["DPAD_DOWN"]],
-
-        #     "LEFT_STICK_UP": abrevs[meMap["LEFT_STICK_UP"]],
-        #     "LEFT_STICK_DOWN": abrevs[meMap["LEFT_STICK_DOWN"]],
-        #     "LEFT_STICK_RIGHT": abrevs[meMap["LEFT_STICK_RIGHT"]],
-        #     "LEFT_STICK_LEFT": abrevs[meMap["LEFT_STICK_LEFT"]],
-
-        #     "RIGHT_STICK_UP": abrevs[meMap["RIGHT_STICK_UP"]],
-        #     "RIGHT_STICK_DOWN": abrevs[meMap["RIGHT_STICK_DOWN"]],
-        #     "RIGHT_STICK_RIGHT": abrevs[meMap["RIGHT_STICK_RIGHT"]],
-        #     "RIGHT_STICK_LEFT": abrevs[meMap["RIGHT_STICK_LEFT"]],
-
-        #     "RIGHT_BUMPER": abrevs[meMap["RIGHT_BUMPER_DOWN"]],
-        #     "LEFT_BUMPER": abrevs[meMap["LEFT_BUMPER_DOWN"]],
-        #     "RIGHT_TRIGGER": abrevs[meMap["RIGHT_TRIGGER_DOWN"]],
-        #     "LEFT_TRIGGER": abrevs[meMap["LEFT_TRIGGER_DOWN"]],
-
-        #     "LEFT_OPTION": abrevs[meMap["LEFT_OPTION_DOWN"]],
-        #     "RIGHT_OPTION": abrevs[meMap["RIGHT_OPTION_DOWN"]],
-
-        #     "RIGHT_STICK_BUTTON": abrevs[meMap["RIGHT_STICK_BUTTON_DOWN"]],
-        #     "LEFT_STICK_BUTTON": abrevs[meMap["LEFT_STICK_BUTTON_DOWN"]],
-
-        #     "TOUCHPAD_X": abrevs[meMap["TOUCHPAD_X_UPDATE"]],
-        #     "TOUCHPAD_Y": abrevs[meMap["TOUCHPAD_Y_UPDATE"]],
-        # }
 
         
