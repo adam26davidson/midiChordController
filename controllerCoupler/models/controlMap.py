@@ -1,9 +1,12 @@
+from typing import Dict
+
+
 class ControlMap():
     name: str
     displayName: str
     inversionMode: str
     bassMode: str
-    map: dict[str, str]
+    map: Dict[str, str]
 
     def __init__(self, name: str, displayName: str, inversionMode: str, bassMode: str, map: dict[str, str]):
         self.name = name
