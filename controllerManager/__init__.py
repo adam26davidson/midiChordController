@@ -1,3 +1,4 @@
+from typing import List, Dict
 from controllerManager.controller import Controller
 from controllerManager.models.mappableControl import MappableControl
 from redux.reducers import controllerManager
@@ -8,7 +9,7 @@ import asyncio
 
 class ControllerManager():
   
-  connectedControllers: list[Controller]
+  connectedControllers: List[Controller]
 
   def __init__(self):
     self.controllerClasses = controllerClasses
@@ -39,7 +40,7 @@ class ControllerManager():
           self.connectedControllers.append(connectedController)
           store.dispatch(actions.stopWaitingForConnection())
           break
-        await asyncio.sleep(0.25)
+        await asyncio.sleep(sleepTime)
 
   async def checkConnection(self):
     while True:
@@ -60,7 +61,7 @@ class ControllerManager():
   def handleStoreUpdate(self):
     pass
   
-  def getControls(self) -> dict[str, dict[str, MappableControl]]:
+  def getControls(self) -> Dict[str, Dict[str, MappableControl]]:
     controls = {}
     for controller in self.connectedControllers:
       controls[controller.id] = controller.getControls()
