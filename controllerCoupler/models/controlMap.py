@@ -8,7 +8,7 @@ class ControlMap():
     bassMode: str
     map: Dict[str, str]
 
-    def __init__(self, name: str, displayName: str, inversionMode: str, bassMode: str, map: dict[str, str]):
+    def __init__(self, name: str, displayName: str, inversionMode: str, bassMode: str, map: Dict[str, str]):
         self.name = name
         self.displayName = displayName
         self.inversionMode = inversionMode
