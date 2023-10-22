@@ -9,3 +9,9 @@ def updateAppParameters(data):
     'type': 'controllerCoupler/appParametersUpdated',
     'data': data
   }
+
+def updateControls(data):
+    return {
+        'type': 'controllerCoupler/controlsUpdated',
+        'data': data
+    }

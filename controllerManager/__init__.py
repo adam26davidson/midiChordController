@@ -5,6 +5,7 @@ from redux.reducers import controllerManager
 from .controllers import controllerClasses
 from redux import store
 from redux.actions import controllerManager as actions
+from redux.actions import controllerCoupler as ccActions
 import asyncio
 
 class ControllerManager():
@@ -35,10 +36,15 @@ class ControllerManager():
       for controller in self.controllerClasses:
         foundController = controller.checkForNewConnections()
         if foundController:
-          connectedController = controller(self.sendEvent)
+          connectedController: Controller = controller(self.sendEvent)
           connectedController.open()
           self.connectedControllers.append(connectedController)
           store.dispatch(actions.stopWaitingForConnection())
+
+          controls = store.get_state()['controllerCoupler']['controls']
+          store.dispatch(ccActions.updateControls({**controls, **connectedController.getControls()}))
+           
+          store
           break
         await asyncio.sleep(sleepTime)
 
@@ -60,8 +66,3 @@ class ControllerManager():
 
   def handleStoreUpdate(self):
     pass
-  
-  def getControls(self) -> Dict[str, Dict[str, MappableControl]]:
-    controls = {}
-    for controller in self.connectedControllers:
-      controls[controller.id] = controller.getControls()

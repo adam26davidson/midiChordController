@@ -26,6 +26,6 @@ def addAppParameters(parameters: List[AppParameter]):
     existingParams = state['appParameters']
     newParams = {param.key: param for param in parameters}
     if existingParams:
-        ccActions.updateAppParameters({**existingParams, **newParams})
+        store.dispatch(ccActions.updateAppParameters({**existingParams, **newParams}))
     else:
-        ccActions.updateAppParameters(newParams)
+        store.dispatch(ccActions.updateAppParameters(newParams))
