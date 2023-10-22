@@ -22,10 +22,7 @@ class App():
         self.musicEngine = MusicEngine()
 
         self.controllerCoupler.setControlsGetter(self.controllerManager.getControls)
-
-        # self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
-        # if (self.useDisplay):
-        #     self.controllerManager.subscribe(self.display.controllerEventHandler)
+        self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
         
 
     def start(self):
