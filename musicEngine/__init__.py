@@ -4,10 +4,9 @@ from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
 from redux import utils as reduxUtils
-from ..models.appParameter import AppParameter
-from ..models.commandType import CommandType
-from ..models.commandMapping import CommandMapping
-from ..models.command import Command
+from models.appParameter import AppParameter
+from models.commandType import CommandType
+from models.command import Command
 from pyrsistent import thaw
 
 
