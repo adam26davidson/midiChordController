@@ -1,4 +1,4 @@
-def updatControlMap(data):
+def updateControlMap(data):
   return {
     'type': 'controllerCoupler/controlMapUpdated',
     'data': data
