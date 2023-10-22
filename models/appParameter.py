@@ -1,7 +1,7 @@
 from enum import Enum
 from models.commandType import CommandType
 from models.command import Command
-from typing import Callable, Dict
+from typing import Callable, Dict, List
 
 class AppParemeterType(Enum):
     MUSIC_ENGINE = 1
@@ -9,7 +9,7 @@ class AppParemeterType(Enum):
 
 class AppParameter():
 
-    validCommandTypes: list[CommandType]
+    validCommandTypes: List[CommandType]
     commandMappings: Dict[Command, Callable]
     remappable: bool
     key: str
@@ -19,7 +19,7 @@ class AppParameter():
 
     def __init__(
             self, 
-            validCommandTypes: list[CommandType], 
+            validCommandTypes: List[CommandType], 
             commandMappings: Dict[Command, Callable], 
             key: str, 
             label: str = None, 
