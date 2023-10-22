@@ -9,7 +9,7 @@ class ControllerConfig():
     meMap: str
     uiMap: str
     compatibleMeMaps: List[str]
-    controls: Dict[str, list[RawControl]]
+    controls: Dict[str, List[RawControl]]
 
     def __init__(
             self, 
@@ -18,8 +18,8 @@ class ControllerConfig():
             product: int, 
             meMap: str, 
             uiMap: str, 
-            compatibleMeMaps: list[str], 
-            controls: dict[str, list[RawControl]]):
+            compatibleMeMaps: List[str], 
+            controls: Dict[str, List[RawControl]]):
         self.name = name
         self.vendor = vendor
         self.product = product
