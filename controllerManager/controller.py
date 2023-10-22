@@ -104,7 +104,7 @@ class Controller(ABC):
                 state[control.key] = {"valueHistory": [], "thresholdValue": 0}
         return state
   
-    def createRawControlKeyMap(self, controls: list[RawControl]) -> Dict[int, RawControl]:
+    def createRawControlKeyMap(self, controls: List[RawControl]) -> Dict[int, RawControl]:
         map = {}
         for control in controls:
             map[control.evDevKey] = control
