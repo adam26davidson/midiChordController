@@ -43,7 +43,7 @@ def reducer(state, action):
             'bassShadow': 0,
             'chordNotes': [],
             'chordType': {'chord': [], 'root': 0},
-            'chordShadow': []
+            'chordShadow': [],
         })
 
     if action['type'] == 'me/settingsListChanged':

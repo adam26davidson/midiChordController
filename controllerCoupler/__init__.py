@@ -54,6 +54,11 @@ class ControllerCoupler():
         if self.connectedControllerId is None or primary['id'] != self.connectedControllerId:
             self.controls = self.getControls()
 
+        cCouplerState = thaw(store.get_state()['controllerCoupler'])
+        if len(cCouplerState['appParameters'].keys()) != len(self.parameters.keys()):
+            self.parameters = cCouplerState['appParameters']
+            
+
     def __mapControlEventToParameterEvent(
             mappableControlEvent: MappableControlEvent, 
             parameter: AppParameter

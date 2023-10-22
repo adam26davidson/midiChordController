@@ -1,4 +1,8 @@
+from typing import List
+
+from models.appParameter import AppParameter
 from . import store
+from .actions import controllerCoupler as ccActions
 
 def getActiveMeMap():
     return getActiveMap('meMap')
@@ -16,3 +20,9 @@ def getActiveMap(mapType):
             break
 
     return map
+
+def addAppParameters(parameters: List[AppParameter]):
+    state = store.get_state()['controllerCoupler']
+    existingParams = state['appParameters']
+    newParams = {param.key: param for param in parameters}
+    ccActions.updateAppParameters({**existingParams, **newParams})

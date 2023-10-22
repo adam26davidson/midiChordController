@@ -3,6 +3,7 @@ from .chordEngine.controlState import ChordButton
 from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
+from redux import utils as reduxUtils
 from ..models.appParameter import AppParameter
 from ..models.commandType import CommandType
 from ..models.commandMapping import CommandMapping
@@ -23,6 +24,8 @@ class MusicEngine():
         self.rhythmEngine.subscribe(self.midi.handleMessage)
 
         store.subscribe(self.__handleStoreUpdate)
+
+        reduxUtils.addAppParameters(self.getParameters())
 
     def start(self):
         self.midi.start()

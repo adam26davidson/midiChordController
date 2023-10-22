@@ -1,3 +1,4 @@
+from models.appParameter import AppParameter
 from .controlButton import ControlButton
 from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
@@ -8,10 +9,10 @@ class TriggerButton(ControlButton):
     height = 1.75
     radius = 1
 
-    def __init__(self, master, label, centerX, centerY):
+    def __init__(self, master, param: AppParameter, centerX, centerY):
         super().__init__(master)
         self.master = master
-        self.label = label
+        self.label = "∅" if not param else param.labelAbreviation
         self.centerX = centerX
         self.centerY = centerY
 
@@ -60,3 +61,21 @@ class TriggerButton(ControlButton):
             fill=INACTIVE_COLOR,
             font=FONT
         )
+
+    def on(self):
+        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.line1, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.line2, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.line3, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.line4, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.textObject, fill='#000000')
+
+    def off(self):
+        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.line1, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.line2, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.line3, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.line4, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)

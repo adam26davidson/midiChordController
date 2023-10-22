@@ -21,13 +21,11 @@ class App():
         self.controllerCoupler = ControllerCoupler()
         self.musicEngine = MusicEngine()
 
-        self.controllerCoupler.addAppParameters(self.display.getParameters())
-        self.controllerCoupler.addAppParameters(self.musicEngine.getParameters())
         self.controllerCoupler.setControlsGetter(self.controllerManager.getControls)
 
-        self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
-        if (self.useDisplay):
-            self.controllerManager.subscribe(self.display.controllerEventHandler)
+        # self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
+        # if (self.useDisplay):
+        #     self.controllerManager.subscribe(self.display.controllerEventHandler)
         
 
     def start(self):

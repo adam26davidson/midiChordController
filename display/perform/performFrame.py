@@ -60,7 +60,9 @@ class PerformFrame(tk.Frame):
         self.textDisplay = TextDisplay(master=self)
         self.controlDisplay = ControlDisplay(master=self)
 
-        self.grid(row=0, column=0, sticky='nsew',)
+        self.grid(row=0, column=0, sticky='nsew')
+
+        ReduxUtils.addAppParameters(self.getParameters())
 
         store.subscribe(self.__handleStoreUpdate)
 
@@ -157,28 +159,21 @@ class PerformFrame(tk.Frame):
     #             self.__storeBassPositionThumb(event['value'])
     
     def getParameters(self):
-        return [
+        parameters = [
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={
-                    Command.UPDATE: self.__storeInversionThumb
-                },
+                commandMappings={Command.UPDATE: self.__storeInversionThumb},
                 key="UI_INVERSION_THUMB",
-                label="UI Inversion Thumb",
-                labelAbreviation=None,
                 remappable=False
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={
-                    Command.UPDATE: self.__storeBassPositionThumb
-                },
+                commandMappings={Command.UPDATE: self.__storeBassPositionThumb},
                 key="UI_BASS_THUMB",
-                label="UI Bass Thumb",
-                labelAbreviation=None,
                 remappable=False
             )
         ]
+        return parameters
 
     def updateFrame(self):
         if not self.state['inversionLock']:

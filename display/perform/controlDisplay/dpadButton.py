@@ -1,3 +1,4 @@
+from models.appParameter import AppParameter
 from .controlButton import ControlButton
 from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
@@ -5,10 +6,20 @@ class DPadButton(ControlButton):
 
     radius = 2.5
 
-    def __init__(self, master, label, direction, centerX, centerY):
+    def __init__(self, master, param: AppParameter, type: str, direction, centerX, centerY):
         super().__init__(master)
         self.master = master
-        self.label = label
+        if not param:
+            self.label = "∅"
+        else:
+            if type == "POLAR":
+                if direction == "LEFT" or direction == "DOWN":
+                    self.label = f"-{param.labelAbreviation}"
+                else:
+                    self.label = f"+{param.labelAbreviation}"
+            else:
+                self.label = param.labelAbreviation
+
         self.centerX = centerX
         self.centerY = centerY
         self.direction = direction
@@ -64,4 +75,11 @@ class DPadButton(ControlButton):
             font=FONT
         )
 
+    def on(self):
+        self.master.itemconfig(self.canvasObject, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.textObject, fill='#000000')
+
+    def off(self):
+        self.master.itemconfig(self.canvasObject, outline=INACTIVE_COLOR, fill="#000000")
+        self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)
     

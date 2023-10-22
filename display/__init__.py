@@ -4,6 +4,7 @@ from models.command import Command
 from models.commandType import CommandType
 from redux import store
 from redux.actions import display as actions
+from redux import utils as reduxUtils
 from .perform.performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
 from .settingsPages.midiSettings import MidiSettingsFrame
@@ -50,6 +51,8 @@ class Display():
         self.frames["MENU"] = SettingsMenuFrame(self.root)
         self.frames["PERFORM"] = PerformFrame(self.root)
 
+        reduxUtils.addAppParameters(self.getParameters())
+
         store.subscribe(self.__handleStoreUpdate)
 
     def start(self):
@@ -78,19 +81,16 @@ class Display():
             self.frames["PERFORM"].handleControllerEvent(event)
     
     def getParameters(self):
-        parameters = self.frames["PERFORM"].getParameters()
-        parameters.append(
+        return [
             AppParameter(
                 validCommandTypes=[CommandType.TOGGLE],
-                commandMappings={
-                    Command.TOGGLE: self.toggleMenu
-                },
+                commandMappings={Command.TOGGLE: self.toggleMenu},
                 key="MENU",
                 label="Menu",
                 labelAbreviation="☰",
                 remappable=False
             )
-        )
+        ]
         
 
     def __handleStoreUpdate(self):

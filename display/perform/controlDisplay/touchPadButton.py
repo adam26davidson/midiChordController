@@ -1,3 +1,4 @@
+from models.appParameter import AppParameter
 from .controlButton import ControlButton
 from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
@@ -7,11 +8,11 @@ class TouchPadButton(ControlButton):
     width = 4
     height = 3
 
-    def __init__(self, master, xLabel, yLabel, centerX, centerY):
+    def __init__(self, master, xParam: AppParameter, yParam: AppParameter, centerX, centerY):
         super().__init__(master)
         self.master = master
-        self.xLabel = xLabel
-        self.yLabel = yLabel
+        self.xLabel = "∅" if not xParam else xParam.labelAbreviation
+        self.yLabel = "∅" if not yParam else yParam.labelAbreviation
         self.centerX = centerX
         self.centerY = centerY
 
@@ -38,3 +39,10 @@ class TouchPadButton(ControlButton):
             fill=INACTIVE_COLOR,
             font=FONT
         )
+
+    def update_x(self):
+        pass
+
+    def update_y(self):
+        pass
+    

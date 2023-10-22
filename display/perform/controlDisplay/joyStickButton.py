@@ -1,3 +1,5 @@
+from typing import List
+from models.appParameter import AppParameter
 from .controlButton import ControlButton
 from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
@@ -7,14 +9,43 @@ class JoyStickButton(ControlButton):
     radius = 1.4
     textRadius = 0.7
 
-    def __init__(self, master, lLabel, rLabel, tLabel, bLabel, cLabel, centerX, centerY, side):
+    def __init__(self, master, 
+                 xParams: List[AppParameter], 
+                 yParams: List[AppParameter],
+                 xType: str,
+                 yType: str,
+                 cParam: AppParameter, 
+                 centerX, centerY, side):
         super().__init__(master)
         self.master = master
-        self.leftLabel = lLabel
-        self.rightLabel = rLabel
-        self.topLabel = tLabel
-        self.bottomLabel = bLabel
-        self.clickLabel = cLabel
+        self.xParams = xParams
+        self.yParams = yParams
+        self.xType = xType
+        self.yType = yType
+        
+        if (xParams.count == 0):
+            self.leftLabel = "∅"
+            self.rightLabel = "∅"
+        else:
+            if xType == "ANALOG" or xType == "POLAR":
+                self.leftLabel = f"-{xParams[0].labelAbreviation}"
+                self.rightLabel = f"+{xParams[0].labelAbreviation}"
+            else:
+                self.leftLabel = xParams[0].labelAbreviation
+                self.rightLabel = xParams[1].labelAbreviation
+
+        if (yParams.count == 0):
+            self.topLabel = "∅"
+            self.bottomLabel = "∅"
+        else:
+            if yType == "ANALOG" or yType == "POLAR":
+                self.topLabel = f"+{yParams[0].labelAbreviation}"
+                self.bottomLabel = f"-{yParams[0].labelAbreviation}"
+            else:
+                self.topLabel = yParams[0].labelAbreviation
+                self.bottomLabel = yParams[1].labelAbreviation
+
+        self.clickLabel = cParam.labelAbreviation
         self.centerX = centerX
         self.centerY = centerY
         self.side = side
@@ -80,6 +111,51 @@ class JoyStickButton(ControlButton):
             fill=INACTIVE_COLOR,
             font=FONT
         )
+    
+    def button_on(self):
+        self.master.itemconfig(self.arrowObject, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.clickTextObject, fill=ACTIVE_COLOR)
 
+    def button_off(self):
+        self.master.itemconfig(self.arrowObject, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.clickTextObject, fill=INACTIVE_COLOR)
+
+    def left_on(self):
+        self.master.itemconfig(self.leftTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.leftTextObject, fill="#000000")
+    
+    def left_off(self):
+        self.master.itemconfig(self.leftTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.leftTextObject, fill=INACTIVE_COLOR)
+
+    def right_on(self):
+        self.master.itemconfig(self.rightTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.rightTextObject, fill="#000000")
+
+    def right_off(self):
+        self.master.itemconfig(self.rightTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.rightTextObject, fill=INACTIVE_COLOR)
+
+    def up_on(self):
+        self.master.itemconfig(self.topTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.topTextObject, fill="#000000")
+
+    def up_off(self):
+        self.master.itemconfig(self.topTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.topTextObject, fill=INACTIVE_COLOR)
+
+    def down_on(self):
+        self.master.itemconfig(self.bottomTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.bottomTextObject, fill="#000000")
+
+    def down_off(self):
+        self.master.itemconfig(self.bottomTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.bottomTextObject, fill=INACTIVE_COLOR)
+
+    def updateX(self):
+        pass
+
+    def updateY(self):
+        pass
         
     
