@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod, abstractproperty
 import asyncio
+from typing import List, Dict
 from controllerManager.models.controlEvent import ControlEvent
 
 from controllerManager.models.mappableControlEvent import MappableControlEvent
@@ -31,7 +32,7 @@ class Controller(ABC):
         self.uiMap = uiMaps[self.config.uiMap]
 
         self.state = {} 
-        self.rawControlKeyMap: dict[str, dict[int, RawControl]] = {}
+        self.rawControlKeyMap: Dict[str, Dict[int, RawControl]] = {}
         for device in config.controls.keys():
 
             self.state = {
@@ -94,7 +95,7 @@ class Controller(ABC):
             self.isConnected = False
             print("cannot read event from async_read_loop")
 
-    def createState(self, controls: list[RawControl]):
+    def createState(self, controls: List[RawControl]):
         state = {}
         for control in controls:
             if control.type in [RawControlType.BUTTON, RawControlType.PAD]:
@@ -103,21 +104,21 @@ class Controller(ABC):
                 state[control.key] = {"valueHistory": [], "thresholdValue": 0}
         return state
   
-    def createRawControlKeyMap(self, controls: list[RawControl]) -> dict[int, RawControl]:
+    def createRawControlKeyMap(self, controls: list[RawControl]) -> Dict[int, RawControl]:
         map = {}
         for control in controls:
             map[control.evDevKey] = control
         return map
     
-    def getControls(self) -> dict[str, MappableControl]:
-        mappableControls: dict[str, MappableControl] = {}
+    def getControls(self) -> Dict[str, MappableControl]:
+        mappableControls: Dict[str, MappableControl] = {}
         for device in self.config.controls.keys():
             mappableControls = {
                 **mappableControls, 
                 **self.createMappableControls(self.config.controls[device])}
         return mappableControls
   
-    def createMappableControls(self, controls: list[RawControl]) -> dict[str, MappableControl]:
+    def createMappableControls(self, controls: List[RawControl]) -> Dict[str, MappableControl]:
         mappableControls = {}
         for control in controls:
             #BUTTON ON_OFF controls
