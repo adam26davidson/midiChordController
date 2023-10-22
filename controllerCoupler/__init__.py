@@ -25,7 +25,7 @@ class ControllerCoupler():
         self.map = defaultControlMap
         actions.updateControlMap(self.map)
 
-    def addAppParameters(self, parameters: list[AppParameter]):
+    def addAppParameters(self, parameters: List[AppParameter]):
         for parameter in parameters:
             self.parameters[parameter.key] = parameter
         
