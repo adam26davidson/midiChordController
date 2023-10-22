@@ -1,3 +1,4 @@
+from typing import List, Dict
 from .rawControl import RawControl
 
 
@@ -7,8 +8,8 @@ class ControllerConfig():
     product: int
     meMap: str
     uiMap: str
-    compatibleMeMaps: list[str]
-    controls: dict[str, list[RawControl]]
+    compatibleMeMaps: List[str]
+    controls: Dict[str, list[RawControl]]
 
     def __init__(
             self, 

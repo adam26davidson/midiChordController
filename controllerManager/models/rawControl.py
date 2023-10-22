@@ -1,3 +1,4 @@
+from typing import List
 from controllerManager.models.mappableControlType import MappableControlType
 from .rawControlType import RawControlType
 from .rawControlEvent import RawControlEvent
@@ -29,7 +30,7 @@ class RawControl():
     def getMappableControlKeys(self, 
                                mappableControlType: MappableControlType = None, 
                                event: RawControlEvent = None
-                               ) -> list[str]:
+                               ) -> List[str]:
         
         if self.type == RawControlType.BUTTON:
             return [self.key]

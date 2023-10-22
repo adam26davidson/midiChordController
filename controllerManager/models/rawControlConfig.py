@@ -1,3 +1,4 @@
+from typing import List, Dict
 from controllerManager.models.mappableControlType import MappableControlType
 from controllerManager.models.polarOrientation import PolarOrientation
 from .rawControlEvent import RawControlEvent
@@ -11,12 +12,12 @@ class RawControlConfig():
     exposePolarEvents: bool
 
     averageCount: int
-    ignoreValues: list[int]
+    ignoreValues: List[int]
 
     centeredThreshold: float
     threshold: float
 
-    polarEventMap: dict[int, RawControlEvent]
+    polarEventMap: Dict[int, RawControlEvent]
     polerOrientation: PolarOrientation
 
     def __init__(self, 
@@ -27,8 +28,8 @@ class RawControlConfig():
                  averageCount: int = None, 
                  centeredThreshold: float = None, 
                  threshold: float = None,
-                 ignoreValues: list[int] = None, 
-                 polarEventMap: dict[int, RawControlEvent] = None,
+                 ignoreValues: List[int] = None, 
+                 polarEventMap: Dict[int, RawControlEvent] = None,
                  polarOrientation: PolarOrientation = None):
         self.topValue = topValue
         self.bottomValue = bottomValue
