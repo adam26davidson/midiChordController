@@ -25,4 +25,7 @@ def addAppParameters(parameters: List[AppParameter]):
     state = store.get_state()['controllerCoupler']
     existingParams = state['appParameters']
     newParams = {param.key: param for param in parameters}
-    ccActions.updateAppParameters({**existingParams, **newParams})
+    if existingParams:
+        ccActions.updateAppParameters({**existingParams, **newParams})
+    else:
+        ccActions.updateAppParameters(newParams)
