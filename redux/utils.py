@@ -30,3 +30,5 @@ def addAppParameters(parameters: List[AppParameter]):
         store.dispatch(ccActions.updateAppParameters({**existingParams, **newParams}))
     else:
         store.dispatch(ccActions.updateAppParameters(newParams))
+    newState = store.get_state()['controllerCoupler']
+    print(f"new parameterCount: {len(newState['appParameters'])}")
