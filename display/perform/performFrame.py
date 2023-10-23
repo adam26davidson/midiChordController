@@ -105,9 +105,8 @@ class PerformFrame(tk.Frame):
         if meState['modulation']['side'] != self.state['modulationSide']:
             self.__setModulation(
                 meState['modulation']['scale'], meState['modulation']['side'])
-        if meState['setting'] != self.state['settingIndex']:
-            self.state['settingName'] = \
-                meState['settingsList'][meState['setting']]
+        if meState['setting'] != self.state['settingIndex'] and len(meState['settingsList']) > 0:
+            self.state['settingName'] = meState['settingsList'][meState['setting']]
             self.state['settingIndex'] = meState['setting']
             self.__setSetting(self.state['settingName'])
             print('setting name: ' + self.state['settingName'])
