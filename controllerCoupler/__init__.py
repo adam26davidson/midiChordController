@@ -41,7 +41,7 @@ class ControllerCoupler():
 
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
-        if len(state['appParameters'].keys()) != len(self.parameters.keys()):
+        if len(state['appParameters']) != len(self.parameters):
             self.parameters = state['appParameters']
             print(f"updating parameters. count: {len(self.parameters)}")
         if len(state['controls'].keys()) != len(self.controls.keys()):
