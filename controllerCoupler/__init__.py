@@ -23,6 +23,8 @@ class ControllerCoupler():
 
     def __init__(self):
         self.map = defaultControlMap
+        self.parameters = {}
+        self.controls = {}
         actions.updateControlMap(self.map)
 
     def eventHandler(self, event: ControlEvent):
@@ -40,6 +42,7 @@ class ControllerCoupler():
         cCouplerState = thaw(store.get_state()['controllerCoupler'])
         if len(cCouplerState['appParameters'].keys()) != len(self.parameters.keys()):
             self.parameters = cCouplerState['appParameters']
+            print(f"updating parameters. count: {len(self.parameters)}")
         if len(cCouplerState['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
             self.controls = cCouplerState['controls']
