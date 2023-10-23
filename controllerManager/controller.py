@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod, abstractproperty
 import asyncio
+import traceback
 from typing import List, Dict
 from controllerManager.models.controlEvent import ControlEvent
 
@@ -96,7 +97,9 @@ class Controller(ABC):
         except Exception as e:
             self.isConnected = False
             print("cannot read event from async_read_loop")
+            traceback.print_exc()
             print(e)
+            
 
     def createState(self, controls: List[RawControl]):
         state = {}
