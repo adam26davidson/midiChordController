@@ -32,6 +32,7 @@ class ControlDisplay(tk.Canvas):
         
         self.master = master
         self.ControllerConnected = False
+        self.parameters = []
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
