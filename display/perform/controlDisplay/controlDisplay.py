@@ -68,7 +68,7 @@ class ControlDisplay(tk.Canvas):
         self.eastButton = CircularButton(self, getParam("EAST_BUTTON"), uToC(cX + 2), uToC(cY), self.unitSize)
         self.northButton = CircularButton(self, getParam("NORTH_BUTTON"), uToC(cX), uToC(cY - 2), self.unitSize)
         self.westButton = CircularButton(self, getParam("WEST_BUTTON"), uToC(cX - 2), uToC(cY), self.unitSize)
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.southButton.on, Command.OFF: self.southButton.off},
@@ -102,7 +102,7 @@ class ControlDisplay(tk.Canvas):
     def createTriggerButtons(self, getParam):
         self.leftTriggerButton = TriggerButton(self, getParam("LEFT_TRIGGER"), 2.5, 0.875)
         self.rightTriggerButton = TriggerButton(self, getParam("RIGHT_TRIGGER"), 12.5, 0.875)  
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftTriggerButton.on, Command.OFF: self.leftTriggerButton.off},
@@ -122,7 +122,7 @@ class ControlDisplay(tk.Canvas):
     def createBumperButtons(self, getParam):
         self.leftBumperButton = BumperButton(self, getParam("LEFT_BUMPER"), 2.5, 3.5)
         self.rightBumperButton = BumperButton(self, getParam("RIGHT_BUMPER"), 12.5, 3.5)
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftBumperButton.on, Command.OFF: self.leftBumperButton.off},
@@ -144,7 +144,7 @@ class ControlDisplay(tk.Canvas):
     def createTouchPadButton(self, getParam):
         
         self.touchPadButton = TouchPadButton(self, getParam("TOUCHPAD_X"), getParam("TOUCHPAD_Y"), 7.5, 1.5)
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.touchPadButton.update_x},
@@ -169,7 +169,7 @@ class ControlDisplay(tk.Canvas):
         uToC = self.unitsToCoord
 
         self.startButton = CircularButton(self, param, uToC(7.5), uToC(9.75), self.unitSize)
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.startButton.on, Command.OFF: self.startButton.off},
@@ -214,7 +214,7 @@ class ControlDisplay(tk.Canvas):
         self.dpadUpButton = DPadButton(self, upParam, yType, "UP", cx, cy)
         self.dpadLeftButton = DPadButton(self, leftParam, xType, "LEFT", cx, cy)
         self.dpadRightButton = DPadButton(self, rightParam, xType, "RIGHT", cx, cy)
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.dpadDownButton.on, Command.OFF: self.dpadDownButton.off},
@@ -248,7 +248,7 @@ class ControlDisplay(tk.Canvas):
     def createOptionsButtons(self, getParam):
         self.leftOptionButton = OptionsButton(self, getParam("LEFT_OPTION"), 6, 5, self.unitSize)
         self.rightOptionButton = OptionsButton(self, getParam("RIGHT_OPTION"), 9, 5, self.unitSize)
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftOptionButton.on, Command.OFF: self.leftOptionButton.off},
@@ -301,7 +301,7 @@ class ControlDisplay(tk.Canvas):
             rightXParams, rightYParams, rightXType, rightYType,
             getParam("RIGHT_STICK_BUTTON"),
             9.75, 12.25, "RIGHT")
-        self.parameters.append([
+        self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftStick.button_on, Command.OFF: self.leftStick.button_off},
