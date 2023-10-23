@@ -86,12 +86,13 @@ class Controller(ABC):
         store.dispatch(actions.remove(self.data))
         print(f"Closing connection for {self.config.product}:{self.config.vendor}:{self.id}")
 
-    async def deviceReadLoop(self, device):
+    async def deviceReadLoop(self, deviceKey):
         try:
-            eventReadLoopGenerator = self.devices[device].async_read_loop()
+            print(f"attempting to enter event loop fors {deviceKey}")
+            eventReadLoopGenerator = self.devices[deviceKey].async_read_loop()
             async for event in eventReadLoopGenerator:
                 if self.isConnected:
-                    self.processEvent(event, device)
+                    self.processEvent(event, deviceKey)
         except Exception as e:
             self.isConnected = False
             print("cannot read event from async_read_loop")

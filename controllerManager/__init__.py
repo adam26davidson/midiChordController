@@ -49,7 +49,7 @@ class ControllerManager():
                     break
                 else:
                     print("no new controller found")
-            await asyncio.sleep(sleepTime)
+                await asyncio.sleep(sleepTime)
 
     async def checkConnection(self):
         while True:
