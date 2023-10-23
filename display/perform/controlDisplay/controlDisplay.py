@@ -44,7 +44,7 @@ class ControlDisplay(tk.Canvas):
         if map != None and params != None and not self.ControllerConnected:
             self.ControllerConnected = True
             def getParam(key):
-                return self.getFirstMEParameter(params, map, key)
+                return ControlDisplay.getFirstMEParameter(params, map, key)
             self.createMainButtons(getParam)
             self.createStartButton(map, params, getParam)
             self.createDpadButtons(map, params, getParam)
