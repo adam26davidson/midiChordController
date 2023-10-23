@@ -45,7 +45,7 @@ class JoyStickButton(ControlButton):
                 self.topLabel = yParams[0].labelAbreviation
                 self.bottomLabel = yParams[1].labelAbreviation
 
-        self.clickLabel = cParam.labelAbreviation
+        self.clickLabel = "∅" if not cParam else cParam.labelAbreviation
         self.centerX = centerX
         self.centerY = centerY
         self.side = side
