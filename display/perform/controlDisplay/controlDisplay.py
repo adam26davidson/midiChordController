@@ -47,13 +47,13 @@ class ControlDisplay(tk.Canvas):
             def getParam(key):
                 return ControlDisplay.getFirstMEParameter(params, map, key)
             self.createMainButtons(getParam)
-            self.createStartButton(map, params, getParam)
-            self.createDpadButtons(map, params, getParam)
-            self.createOptionsButtons(map, params, getParam)
-            self.createJoySticks(map, params, getParam)
-            self.createBumperButtons(map, params, getParam)
-            self.createTriggerButtons(map, params, getParam)
-            self.createTouchPadButton(map, params, getParam)
+            self.createStartButton(map, params)
+            self.createDpadButtons(getParam)
+            self.createOptionsButtons(getParam)
+            self.createJoySticks(getParam)
+            self.createBumperButtons(getParam)
+            self.createTriggerButtons(getParam)
+            self.createTouchPadButton(getParam)
 
             ReduxUtils.addAppParameters(self.parameters)
 
