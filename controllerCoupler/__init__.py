@@ -25,15 +25,6 @@ class ControllerCoupler():
         self.map = defaultControlMap
         actions.updateControlMap(self.map)
 
-    def addAppParameters(self, parameters: List[AppParameter]):
-        for parameter in parameters:
-            self.parameters[parameter.key] = parameter
-        
-        store.dispatch(actions.updateAppParameters(self.parameters))
-    
-    def setControlsGetter(self, getControls: Callable[[], Dict[str, Dict[str, MappableControl]]]):
-        self.getControls = getControls
-
     def eventHandler(self, event: ControlEvent):
         parameters: List[AppParameter] = self.map.map[event.controllerId][event.controlKey]
         for parameter in parameters:
@@ -45,18 +36,12 @@ class ControllerCoupler():
                     parameter.commandMappings[command]()
 
     def handleStoreUpdate(self):
-        cState = thaw(store.get_state()['controllerManager'])
-        primary = None
-        for controller in cState['controllers']:
-            if controller['role'] == 'primary':
-                primary = controller
-                break
-        if self.connectedControllerId is None or primary['id'] != self.connectedControllerId:
-            self.controls = self.getControls()
-
         cCouplerState = thaw(store.get_state()['controllerCoupler'])
         if len(cCouplerState['appParameters'].keys()) != len(self.parameters.keys()):
             self.parameters = cCouplerState['appParameters']
+        if len(cCouplerState['controls'].keys()) != len(self.controls.keys()):
+            print("updating controls")
+            self.controls = cCouplerState['controls']
             
 
     def __mapControlEventToParameterEvent(

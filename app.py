@@ -21,7 +21,6 @@ class App():
         self.controllerCoupler = ControllerCoupler()
         self.musicEngine = MusicEngine()
 
-        self.controllerCoupler.setControlsGetter(self.controllerManager.getControls)
         self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
         
 
