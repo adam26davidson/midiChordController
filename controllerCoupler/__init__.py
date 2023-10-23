@@ -26,7 +26,7 @@ class ControllerCoupler():
         actions.updateControlMap(self.map)
 
     def eventHandler(self, event: ControlEvent):
-        parameters: List[AppParameter] = self.map.map[event.controllerId][event.controlKey]
+        parameters: List[AppParameter] = self.map.map[event.controlKey]
         for parameter in parameters:
             command = self.__mapControlEventToParameterEvent(event.event, parameter)
             if command in parameter.commandMappings.keys():
@@ -42,7 +42,6 @@ class ControllerCoupler():
         if len(cCouplerState['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
             self.controls = cCouplerState['controls']
-            
 
     def __mapControlEventToParameterEvent(
             mappableControlEvent: MappableControlEvent, 
