@@ -161,6 +161,7 @@ class Controller(ABC):
                     label=control.label,
                     key=key,
                     rawControlKey=control.key,
+                    controllerId=self.id,
                     type=MappableControlType.ANALOG,
                 )
         return mappableControls
