@@ -189,6 +189,7 @@ class ControlDisplay(tk.Canvas):
         down = getParam("DPAD_Y_DOWN")
 
         xType, yType = None, None
+        leftParam, rightParam, upParam, downParam = None, None, None, None
 
         if (xPolar):
             xType = "POLAR"
