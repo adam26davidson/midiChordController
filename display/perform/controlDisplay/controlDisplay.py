@@ -147,13 +147,13 @@ class ControlDisplay(tk.Canvas):
         self.parameters.append([
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.touchPadButton.updateX},
+                commandMappings={Command.UPDATE: self.touchPadButton.update_x},
                 key="UI_TOUCHPAD_X",
                 remappable=False
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.touchPadButton.updateY},
+                commandMappings={Command.UPDATE: self.touchPadButton.update_y},
                 key="UI_TOUCHPAD_Y",
                 remappable=False
             )
@@ -339,13 +339,13 @@ class ControlDisplay(tk.Canvas):
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.leftStick.updateX},
+                commandMappings={Command.UPDATE: self.leftStick.update_x},
                 key="UI_LEFT_STICK_X",
                 remappable=False
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.leftStick.updateY},
+                commandMappings={Command.UPDATE: self.leftStick.update_y},
                 key="UI_LEFT_STICK_Y",
                 remappable=False,
                 type=AppParemeterType.UI
@@ -387,14 +387,14 @@ class ControlDisplay(tk.Canvas):
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.rightStick.updateX},
+                commandMappings={Command.UPDATE: self.rightStick.update_x},
                 key="UI_RIGHT_STICK_X",
                 remappable=False,
                 type=AppParemeterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.rightStick.updateY},
+                commandMappings={Command.UPDATE: self.rightStick.update_y},
                 key="UI_RIGHT_STICK_Y",
                 remappable=False,
                 type=AppParemeterType.UI
