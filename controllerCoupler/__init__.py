@@ -40,13 +40,13 @@ class ControllerCoupler():
                             parameter.commandMappings[command]()
 
     def handleStoreUpdate(self):
-        cCouplerState = thaw(store.get_state()['controllerCoupler'])
-        if len(cCouplerState['appParameters'].keys()) != len(self.parameters.keys()):
-            self.parameters = cCouplerState['appParameters']
+        state = store.get_state()['controllerCoupler']
+        if len(state['appParameters'].keys()) != len(self.parameters.keys()):
+            self.parameters = state['appParameters']
             print(f"updating parameters. count: {len(self.parameters)}")
-        if len(cCouplerState['controls'].keys()) != len(self.controls.keys()):
+        if len(state['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
-            self.controls = cCouplerState['controls']
+            self.controls = state['controls']
 
     def __mapControlEventToParameterEvent(
             self,
