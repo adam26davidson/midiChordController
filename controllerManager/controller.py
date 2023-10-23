@@ -52,6 +52,7 @@ class Controller(ABC):
             productMatch = device.info.product == config.product
             newId = device.uniq not in connectedIds
             if (vendorMatch and productMatch and newId):
+                print("found new Controller Device: " + device.name)
                 return True
         return False
 

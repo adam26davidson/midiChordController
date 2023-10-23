@@ -43,8 +43,6 @@ class ControllerManager():
 
           controls = store.get_state()['controllerCoupler']['controls']
           store.dispatch(ccActions.updateControls({**controls, **connectedController.getControls()}))
-           
-          store
           break
         await asyncio.sleep(sleepTime)
 
