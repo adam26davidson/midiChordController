@@ -189,10 +189,10 @@ class Controller(ABC):
         rawEvent = control.config.polarEventMap[event.value]
 
         if control.config.exposeOnOffEvents:
-            self.__sendEvents(control, MappableControlType.ON_OFF, rawEvent)
+            self.__sendEvents(control, rawEvent, MappableControlType.ON_OFF)
 
         if control.config.exposePolarEvents:
-            self.__sendEvents(control, MappableControlType.POLAR, rawEvent)
+            self.__sendEvents(control, rawEvent, MappableControlType.POLAR)
 
     def processButtonEvent(self, event, control: RawControl):
         rawEvent = RawControlEvent.ON if event.value == 1 else RawControlEvent.OFF
@@ -231,7 +231,7 @@ class Controller(ABC):
             normalizedValue =  (slope * averageValue) + intercept
             normalizedValue = max(min(normalizedValue, 0.999), -0.999)
             
-            self.__sendEvents(control, RawControlEvent.UPDATE, normalizedValue)
+            self.__sendEvents(control, RawControlEvent.UPDATE, MappableControlType.ANALOG, normalizedValue)
 
             self.processThreshold(normalizedValue, control, controlState)
 
@@ -259,10 +259,10 @@ class Controller(ABC):
                 rawEvent = control.config.polarEventMap[thresholdValue]
 
                 if control.config.exposeOnOffEvents:
-                    self.__sendEvents(control, MappableControlType.ON_OFF, rawEvent)
+                    self.__sendEvents(control, rawEvent, MappableControlType.ON_OFF)
 
                 if control.config.exposePolarEvents:
-                    self.__sendEvents(control, MappableControlType.POLAR, rawEvent)
+                    self.__sendEvents(control, rawEvent, MappableControlType.POLAR)
     
     def __sendEvents(
         self, 
