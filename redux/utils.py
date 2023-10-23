@@ -22,6 +22,7 @@ def getActiveMap(mapType):
     return map
 
 def addAppParameters(parameters: List[AppParameter]):
+    print(f"adding {len(parameters)} parameters")
     state = store.get_state()['controllerCoupler']
     existingParams = state['appParameters']
     newParams = {param.key: param for param in parameters}
