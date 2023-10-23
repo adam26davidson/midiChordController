@@ -19,7 +19,6 @@ class ControllerCoupler():
     map: ControlMap
 
     connectedControllerId: str
-    getControls: Callable[[], Dict[str, Dict[str, MappableControl]]]
 
     def __init__(self):
         self.map = defaultControlMap
@@ -29,14 +28,15 @@ class ControllerCoupler():
 
     def eventHandler(self, event: ControlEvent):
         if event.controlKey in self.map.map.keys():
-            parameters: List[AppParameter] = self.parameters[self.map.map[event.controlKey]]
-            for parameter in parameters:
-                command = self.__mapControlEventToParameterEvent(event.event, parameter)
-                if command in parameter.commandMappings.keys():
-                    if event.event == MappableControlEvent.UPDATE:
-                        parameter.commandMappings[command](event.value)
-                    else:
-                        parameter.commandMappings[command]()
+            if self.map.map[event.controlKey] in self.parameters.keys():
+                parameters: List[AppParameter] = self.parameters[self.map.map[event.controlKey]]
+                for parameter in parameters:
+                    command = self.__mapControlEventToParameterEvent(event.event, parameter)
+                    if command in parameter.commandMappings.keys():
+                        if event.event == MappableControlEvent.UPDATE:
+                            parameter.commandMappings[command](event.value)
+                        else:
+                            parameter.commandMappings[command]()
 
     def handleStoreUpdate(self):
         cCouplerState = thaw(store.get_state()['controllerCoupler'])
