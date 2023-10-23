@@ -95,6 +95,7 @@ class Controller(ABC):
         except Exception as e:
             self.isConnected = False
             print("cannot read event from async_read_loop")
+            print(e)
 
     def createState(self, controls: List[RawControl]):
         state = {}
