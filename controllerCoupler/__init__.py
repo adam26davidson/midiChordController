@@ -28,15 +28,15 @@ class ControllerCoupler():
 
     def eventHandler(self, event: ControlEvent):
         if event.controlKey in self.map.map.keys():
-            if self.map.map[event.controlKey] in self.parameters.keys():
-                parameters: List[AppParameter] = self.parameters[self.map.map[event.controlKey]]
-                for parameter in parameters:
-                    command = self.__mapControlEventToParameterEvent(event.event, parameter)
-                    if command in parameter.commandMappings.keys():
-                        if event.event == MappableControlEvent.UPDATE:
-                            parameter.commandMappings[command](event.value)
-                        else:
-                            parameter.commandMappings[command]()
+            parameterKeys = self.map.map[event.controlKey]
+            for parameterKey in parameterKeys:
+                parameter = self.parameters[parameterKey]
+                command = self.__mapControlEventToParameterEvent(event.event, parameter)
+                if command in parameter.commandMappings.keys():
+                    if event.event == MappableControlEvent.UPDATE:
+                        parameter.commandMappings[command](event.value)
+                    else:
+                        parameter.commandMappings[command]()
 
     def handleStoreUpdate(self):
         cCouplerState = thaw(store.get_state()['controllerCoupler'])
