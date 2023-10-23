@@ -26,6 +26,8 @@ class ControllerCoupler():
         self.controls = {}
         actions.updateControlMap(self.map)
 
+        store.subscribe(self.handleStoreUpdate)
+
     def eventHandler(self, event: ControlEvent):
         if event.controlKey in self.map.map.keys():
             parameterKeys = self.map.map[event.controlKey]
