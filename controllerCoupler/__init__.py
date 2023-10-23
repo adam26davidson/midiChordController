@@ -44,6 +44,7 @@ class ControllerCoupler():
             self.controls = cCouplerState['controls']
 
     def __mapControlEventToParameterEvent(
+            self,
             mappableControlEvent: MappableControlEvent, 
             parameter: AppParameter
             ) -> Command:
