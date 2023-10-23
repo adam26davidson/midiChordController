@@ -27,7 +27,7 @@ class ControllerCoupler():
 
     def eventHandler(self, event: ControlEvent):
         if event.controlKey in self.map.map.keys():
-            parameters: List[AppParameter] = self.map.map[event.controlKey]
+            parameters: List[AppParameter] = self.parameters[self.map.map[event.controlKey]]
             for parameter in parameters:
                 command = self.__mapControlEventToParameterEvent(event.event, parameter)
                 if command in parameter.commandMappings.keys():
