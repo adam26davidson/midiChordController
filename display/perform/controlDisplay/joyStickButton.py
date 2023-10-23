@@ -22,8 +22,8 @@ class JoyStickButton(ControlButton):
         self.yParams = yParams
         self.xType = xType
         self.yType = yType
-        
-        if (xParams.count == 0):
+
+        if (len(xParams) == 0):
             self.leftLabel = "∅"
             self.rightLabel = "∅"
         else:
@@ -34,7 +34,7 @@ class JoyStickButton(ControlButton):
                 self.leftLabel = xParams[0].labelAbreviation
                 self.rightLabel = xParams[1].labelAbreviation
 
-        if (yParams.count == 0):
+        if (len(yParams) == 0):
             self.topLabel = "∅"
             self.bottomLabel = "∅"
         else:
