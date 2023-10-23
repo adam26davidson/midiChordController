@@ -55,6 +55,9 @@ class RawControl():
         
         elif mappableControlType == MappableControlType.ANALOG:
             return [self.key]
+        else:
+            print(f"no mappable control keys found for raw control: {self.key} : {self.type} : {mappableControlType} : {event}")
+            return []
             
 
     def getMappableControlEvent(self, 

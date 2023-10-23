@@ -271,17 +271,15 @@ class Controller(ABC):
         mappableControlType: MappableControlType, 
         value: float = None):
 
-        if (control.key in self.meMap['map'].keys() \
-            or control.key in self.uiMap['map'].keys()):
+        mappableEvent = control.getMappableControlEvent(mappableControlType, rawEvent)
+        print(f"sendEvents for {control.label}: {mappableEvent.name}")
+        keys = control.getMappableControlKeys(mappableControlType, rawEvent)
 
-            mappableEvent = control.getMappableControlEvent(mappableControlType, rawEvent)
-            keys = control.getMappableControlKeys(mappableControlType, rawEvent)
+        for key in keys:
 
-            for key in keys:
-
-                self.sendEvent(ControlEvent(
-                    controlKey=key,
-                    event=mappableEvent,
-                    controllerId=self.id,
-                    value=value
-                ))
+            self.sendEvent(ControlEvent(
+                controlKey=key,
+                event=mappableEvent,
+                controllerId=self.id,
+                value=value
+            ))
