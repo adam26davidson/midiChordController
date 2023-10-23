@@ -282,6 +282,8 @@ class ControlDisplay(tk.Canvas):
                 return [polarParam], "POLAR"
             elif nParam and pParam:
                 return [nParam, pParam], "ON_OFF"
+            else:
+                return [], None
 
         leftXParams, leftXType = getAxisParams("LEFT_STICK", "X")
         leftYParams, leftYType = getAxisParams("LEFT_STICK", "Y")
