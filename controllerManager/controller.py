@@ -272,7 +272,7 @@ class Controller(ABC):
         value: float = None):
 
         mappableEvent = control.getMappableControlEvent(mappableControlType, rawEvent)
-        print(f"sendEvents for {control.label}: {mappableEvent.name}")
+        print(f"sendEvents for {control.label}: {mappableEvent}")
         keys = control.getMappableControlKeys(mappableControlType, rawEvent)
 
         for key in keys:

@@ -81,4 +81,7 @@ class RawControl():
             
         elif mappableControlType == MappableControlType.ANALOG:
             return MappableControlEvent.UPDATE
+        else:
+            print(f"no mappable control event found for raw control: {self.key} : {self.type} : {mappableControlType} : {event}")
+            return None
 
