@@ -24,7 +24,7 @@ class ControllerCoupler():
         self.map = defaultControlMap
         self.parameters = {}
         self.controls = {}
-        actions.updateControlMap(self.map)
+        store.dispatch(actions.updateControlMap(self.map))
 
         store.subscribe(self.handleStoreUpdate)
 
