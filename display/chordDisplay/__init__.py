@@ -9,7 +9,7 @@ from.chordName import ChordName
 
 
 class ChordDisplay(tk.Canvas):
-    height = 330
+    height = 340
     radius = 110
     xMargin = 30
 

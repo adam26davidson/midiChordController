@@ -34,7 +34,7 @@ class TextDisplay(tk.Frame):
         self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
         self.octaveLabel.pack(side="left")
         self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side="left", padx=(rowSpacing, 0))
+        self.octaveFrame.pack(side="left", padx=(0, 0))
 
         # voices
         self.voicesFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
@@ -63,7 +63,7 @@ class TextDisplay(tk.Frame):
         self.holdIcon = tk.Label(self.rowFrame, image=self.holdInactiveIcon, bg=self.bgColor, padx=5)
         self.holdIcon.pack(side="left", padx=(rowSpacing, 0))
 
-        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
+        self.pack(side="top", padx=(20, 20), pady=(20, 0))
 
 
     def setInversionLock(self, active):
