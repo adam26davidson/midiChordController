@@ -148,7 +148,7 @@ class JoyStickButton(ControlButton):
         self.master.itemconfig(self.leftTextObject, fill="#000000")
     
     def left_off(self):
-        self.master.itemconfig(self.leftTextBackgroundObject, fill="#000000", outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.leftTextBackgroundObject, fill="#000000", outline="#000000")
         self.master.itemconfig(self.leftTextObject, fill=INACTIVE_COLOR)
 
     def right_on(self):
@@ -156,7 +156,7 @@ class JoyStickButton(ControlButton):
         self.master.itemconfig(self.rightTextObject, fill="#000000")
 
     def right_off(self):
-        self.master.itemconfig(self.rightTextBackgroundObject, fill="#000000", outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.rightTextBackgroundObject, fill="#000000", outline="#000000")
         self.master.itemconfig(self.rightTextObject, fill=INACTIVE_COLOR)
 
     def up_on(self):
@@ -164,7 +164,7 @@ class JoyStickButton(ControlButton):
         self.master.itemconfig(self.topTextObject, fill="#000000")
 
     def up_off(self):
-        self.master.itemconfig(self.topTextBackgroundObject, fill="#000000", outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.topTextBackgroundObject, fill="#000000", outline="#000000")
         self.master.itemconfig(self.topTextObject, fill=INACTIVE_COLOR)
 
     def down_on(self):
@@ -172,7 +172,7 @@ class JoyStickButton(ControlButton):
         self.master.itemconfig(self.bottomTextObject, fill="#000000")
 
     def down_off(self):
-        self.master.itemconfig(self.bottomTextBackgroundObject, fill="#000000", outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.bottomTextBackgroundObject, fill="#000000", outline="#000000")
         self.master.itemconfig(self.bottomTextObject, fill=INACTIVE_COLOR)
 
     def update_x(self, value):
