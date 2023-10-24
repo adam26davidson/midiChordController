@@ -11,7 +11,7 @@ from.chordName import ChordName
 class ChordDisplay(tk.Canvas):
     height = 350
     radius = 110
-    xMargin = 30
+    xMargin = 20
 
     smallNoteRadius = 16
     largeNoteRadius = 18
@@ -100,7 +100,7 @@ class ChordDisplay(tk.Canvas):
     def createNotes(self):
         notes = []
         centerX = self.width / 2
-        centerY = (self.height/2) - self.keyTextOffset
+        centerY = (self.height - self.keyTextOffset) / 2
         for i in range(0, 12):
             color = ""
             if self.scale.count(i) != 0:
