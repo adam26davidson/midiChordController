@@ -9,11 +9,12 @@ class DPadButton(ControlButton):
     def __init__(self, master, param: AppParameter, type: str, direction, centerX, centerY):
         super().__init__(master)
         self.master = master
-        self.setParam(param, type, False)
 
         self.centerX = centerX
         self.centerY = centerY
         self.direction = direction
+
+        self.setParam(param, type, False)
 
         self.drawButton()
 
