@@ -55,7 +55,7 @@ class ControllerCoupler():
 
     def processNewParameters(self, parameters: Dict[str, AppParameter]):
 
-        parameterstoAdd = {}
+        parameterstoAdd = []
 
         for key, parameter in parameters.items():
 
@@ -67,14 +67,15 @@ class ControllerCoupler():
 
                 if incrementalCommand in parameter.commandMappings.keys() and newKey not in parameters.keys():
                     
-                    parameterstoAdd[newKey] = AppParameter(
-                        validCommandTypes=[CommandType.ON_OFF],
-                        commandMappings={Command.ON: parameter.commandMappings[incrementalCommand]},
-                        key=newKey,
-                        label=f"{labelPrefix} {parameter.label}",
-                        labelAbreviation=f"{parameter.labelAbreviation}{sign}",
-                        remappable=False
-                    )
+                    parameterstoAdd.append(
+                        AppParameter(
+                            validCommandTypes=[CommandType.ON_OFF],
+                            commandMappings={Command.ON: parameter.commandMappings[incrementalCommand]},
+                            key=newKey,
+                            label=f"{labelPrefix} {parameter.label}",
+                            labelAbreviation=f"{parameter.labelAbreviation}{sign}",
+                            remappable=False
+                    ))
 
         return parameterstoAdd
 
