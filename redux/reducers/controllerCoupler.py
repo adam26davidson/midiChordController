@@ -3,7 +3,7 @@ from pyrsistent import freeze, thaw, m, pmap, v, pvector
 def reducer(state, action):
     if state is None:
         return freeze({
-            'activeControlMap': {},
+            'activeControlMap': None,
             'appParameters': {},
             'controls': {}
         })
