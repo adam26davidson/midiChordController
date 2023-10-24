@@ -34,7 +34,7 @@ class ControlDisplay(tk.Canvas):
         self.master = master
         self.parameters = []
         self.appParameterLength = 0
-        buttonsCreated = False
+        self.buttonsCreated = False
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
