@@ -44,11 +44,36 @@ class ControllerCoupler():
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
         if len(state['appParameters']) != len(self.parameters):
-            self.parameters = state['appParameters']
+            self.parameters = self.processNewParameters(state['appParameters'])
             print(f"updating parameters. count: {len(self.parameters)}")
         if len(state['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
             self.controls = state['controls']
+
+    def processNewParameters(self, parameters: Dict[str, AppParameter]):
+
+        newParameters = {parameter.key: parameter for parameter in parameters.values()}
+
+        for key, parameter in parameters.items():
+
+            for incrementalCommand in [Command.INCREMENT, Command.DECREMENT]:
+
+                sign = "+" if incrementalCommand == Command.INCREMENT else "-"
+                newKey = f"INCREMENT_{key}" if incrementalCommand == Command.INCREMENT else f"DECREMENT_{key}"
+                labelPrefix = "Increment" if incrementalCommand == Command.INCREMENT else "Decrement"
+
+                if incrementalCommand in parameter.commandMappings.keys() and newKey not in parameters.keys():
+                    
+                    newParameters[newKey] = AppParameter(
+                        validCommandTypes=[CommandType.ON_OFF],
+                        commandMappings={Command.ON: parameter.commandMappings[incrementalCommand]},
+                        key=newKey,
+                        label=f"{labelPrefix} {parameter.label}",
+                        labelAbreviation=f"{parameter.labelAbreviation}{sign}",
+                        remappable=False
+                    )
+
+        return newParameters
 
     def __mapControlEventToParameterEvent(
             self,

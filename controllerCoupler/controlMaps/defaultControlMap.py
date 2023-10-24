@@ -57,7 +57,7 @@ defaultControlMap = ControlMap(
         "RIGHT_OPTION": ["HOLD", "UI_RIGHT_OPTION"],
 
         #TOUCHPAD
-        "TOUCHPAD_X": ["BASS_POSITION", "UI_TOUCHPAD_X"],
+        "TOUCHPAD_X": ["BASS_POSITION", "UI_TOUCHPAD_X", "UI_BASS_THUMB"],
         "TOUCHPAD_Y": ["UI_TOUCHPAD_Y"],
 
         #UI
@@ -65,6 +65,6 @@ defaultControlMap = ControlMap(
 
         #GYROSCOPE
         "GYRO_PITCH": ["INVERSION", "UI_INVERSION_THUMB"],
-        "GYRO_ROLL": ["BASS", "UI_BASS_THUMB"],
+        "GYRO_ROLL": ["BASS"],
   }
 )

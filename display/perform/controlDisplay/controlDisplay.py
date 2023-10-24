@@ -32,8 +32,8 @@ class ControlDisplay(tk.Canvas):
                          highlightthickness=0, relief="flat", bg="#000000")
         
         self.master = master
-        self.ControllerConnected = False
         self.parameters = []
+        self.appParameterLength = 0
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
@@ -44,8 +44,8 @@ class ControlDisplay(tk.Canvas):
         params = state['appParameters']
         controlMap: ControlMap = state['activeControlMap']
         musicEngineParametersLoaded = state['musicEngineAppParametersLoaded']
-        if controlMap != None and musicEngineParametersLoaded and not self.ControllerConnected:
-            self.ControllerConnected = True
+        if controlMap != None and musicEngineParametersLoaded and len(params) != self.appParameterLength:
+            self.appParameterLength = len(params)
             def getParam(key):
                 return ControlDisplay.getFirstMEParameter(params, controlMap.map, key)
             self.createMainButtons(getParam)
