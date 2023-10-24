@@ -4,6 +4,7 @@ from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
 from redux import utils as reduxUtils
+from redux.actions import controllerCoupler as ccActions
 from models.appParameter import AppParameter
 from models.commandType import CommandType
 from models.command import Command
@@ -25,6 +26,7 @@ class MusicEngine():
         store.subscribe(self.__handleStoreUpdate)
 
         reduxUtils.addAppParameters(self.getParameters())
+        store.dispatch(ccActions.musicEngineAppParametersLoaded())
 
     def start(self):
         self.midi.start()

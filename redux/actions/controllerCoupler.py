@@ -15,3 +15,8 @@ def updateControls(data):
         'type': 'controllerCoupler/controlsUpdated',
         'data': data
     }
+
+def musicEngineAppParametersLoaded():
+    return {
+        'type': 'controllerCoupler/musicEngineAppParametersLoaded'
+    }

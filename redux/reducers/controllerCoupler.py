@@ -5,7 +5,8 @@ def reducer(state, action):
         return freeze({
             'activeControlMap': None,
             'appParameters': {},
-            'controls': {}
+            'controls': {},
+            'musicEngineAppParametersLoaded': False,
         })
 
     if action['type'] == 'controllerCoupler/controlMapUpdated':
@@ -16,5 +17,8 @@ def reducer(state, action):
     
     elif action['type'] == 'controllerCoupler/controlsUpdated':
         return state.set('controls', action['data'])
+
+    elif action['type'] == 'controllerCoupler/musicEngineAppParametersLoaded':
+        return state.set('musicEngineAppParametersLoaded', True)
     
     else: return state

@@ -43,7 +43,8 @@ class ControlDisplay(tk.Canvas):
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']
         controlMap: ControlMap = state['activeControlMap']
-        if controlMap != None and params != None and not self.ControllerConnected:
+        musicEngineParametersLoaded = state['musicEngineAppParametersLoaded']
+        if controlMap != None and musicEngineParametersLoaded and not self.ControllerConnected:
             self.ControllerConnected = True
             def getParam(key):
                 return ControlDisplay.getFirstMEParameter(params, controlMap.map, key)
