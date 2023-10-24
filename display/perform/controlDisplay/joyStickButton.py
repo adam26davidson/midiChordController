@@ -152,10 +152,10 @@ class JoyStickButton(ControlButton):
         self.master.itemconfig(self.bottomTextBackgroundObject, outline=INACTIVE_COLOR)
         self.master.itemconfig(self.bottomTextObject, fill=INACTIVE_COLOR)
 
-    def update_x(self):
+    def update_x(self, value):
         pass
 
-    def update_y(self):
+    def update_y(self, value):
         pass
         
     

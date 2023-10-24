@@ -40,9 +40,9 @@ class TouchPadButton(ControlButton):
             font=FONT
         )
 
-    def update_x(self):
+    def update_x(self, value):
         pass
 
-    def update_y(self):
+    def update_y(self, value):
         pass
     
