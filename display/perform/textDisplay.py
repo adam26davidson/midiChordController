@@ -25,21 +25,6 @@ class TextDisplay(tk.Frame):
 
         rowSpacing = 40
 
-        # setting dsiplay
-        self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
-        self.settingFrame.pack(side="top", anchor="nw")
-        tk.Label(self.settingFrame, text="Setting: ", fg=self.inactiveColor, bg=self.bgColor, font=smallFont).pack(side="left")
-        self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
-        self.setting.pack(side="top", pady=(0, 0))
-
-        self.rowFrame = tk.Frame(self, bg=self.bgColor)
-        self.rowFrame.pack(side="top", anchor="nw")
-
-        # controller dsiplay
-        # self.controllerImage = Image.open(PARENT_PATH+"/display/images/game-controller.png")
-        # self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
-        # tk.Label(self.rowFrame, image=self.controllerIcon, bg=self.bgColor).pack(side="left")
-
         # octave
         self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
         self.octaveLabel = tk.Label(self.octaveFrame, text="o: ", bg=self.bgColor, fg=self.inactiveColor, font=smallBoldFont)
@@ -77,10 +62,6 @@ class TextDisplay(tk.Frame):
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
 
-
-    def setSetting(self, name):
-        print('setting setting text to ' + name)
-        self.setting.configure(text=name)
 
     def setController(self, name):
         self.controller.configure(text=name)

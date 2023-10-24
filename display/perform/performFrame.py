@@ -1,4 +1,4 @@
-from models.appParameter import AppParameter
+from models.appParameter import AppParameter, AppParemeterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store, utils as ReduxUtils
@@ -8,6 +8,7 @@ from .keyboard import Keyboard
 from .inversion import Inversion
 from .spread import Spread
 from .textDisplay import TextDisplay
+from .settingDisplay import SettingDisplay
 from pyrsistent import thaw
 import tkinter as tk
 
@@ -60,6 +61,7 @@ class PerformFrame(tk.Frame):
         self.chordTextFrame.pack(side="right")
         self.chordDisplay = ChordDisplay(master=self.chordTextFrame)
         self.textDisplay = TextDisplay(master=self.chordTextFrame)
+        self.settingDisplay = SettingDisplay(master=self)
         self.controlDisplay = ControlDisplay(master=self)
 
         self.grid(row=0, column=0, sticky='nsew')
@@ -148,16 +150,6 @@ class PerformFrame(tk.Frame):
             if primary['name'] != self.state['controllerName']:
                 self.state['controllerName'] = primary['name']
                 self.__setController(primary['name'])
-
-    # def handleControllerEvent(self, event):
-    #     meMap = ReduxUtils.getActiveMeMap()
-    #     if event['name'] in meMap.keys():
-    #         if self.state['inversionMode'] == 'continuous' and \
-    #                 meMap[event['name']] == 'UPDATE_INVERSION':
-    #             self.__storeInversionThumb(event['value'])
-    #         elif self.state['bassMode'] == 'continuous' and \
-    #                 meMap[event['name']] == 'UPDATE_BASS_POSITION':
-    #             self.__storeBassPositionThumb(event['value'])
     
     def getParameters(self):
         parameters = [
@@ -165,13 +157,15 @@ class PerformFrame(tk.Frame):
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.__storeInversionThumb},
                 key="UI_INVERSION_THUMB",
-                remappable=False
+                remappable=False,
+                type=AppParemeterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.__storeBassPositionThumb},
                 key="UI_BASS_THUMB",
-                remappable=False
+                remappable=False,
+                type=AppParemeterType.UI
             )
         ]
         return parameters
@@ -188,11 +182,11 @@ class PerformFrame(tk.Frame):
 
     def __setSettingLoading(self):
         self.state['settingLoading'] = True
-        self.textDisplay.setSetting('Loading...')
+        self.settingDisplay.setSetting('Loading...')
 
     def __setSetting(self, text):
         if not self.state['settingLoading']:
-            self.textDisplay.setSetting(text)
+            self.settingDisplay.setSetting(text)
 
     def __setKey(self, key):
         self.state['key'] = key
