@@ -46,7 +46,7 @@ class ControllerCoupler():
         state = store.get_state()['controllerCoupler']
         if len(state['appParameters']) != len(self.parameters):
             newParams = self.processNewParameters(state['appParameters'])
-            if len(newParams.keys()) > 0:
+            if len(newParams) > 0:
                 reduxUtils.addAppParameters(newParams)
             print(f"updating parameters. count: {len(self.parameters)}")
         if len(state['controls'].keys()) != len(self.controls.keys()):
@@ -65,7 +65,10 @@ class ControllerCoupler():
                 newKey = f"INCREMENT_{key}" if incrementalCommand == Command.INCREMENT else f"DECREMENT_{key}"
                 labelPrefix = "Increment" if incrementalCommand == Command.INCREMENT else "Decrement"
 
-                if incrementalCommand in parameter.commandMappings.keys() and newKey not in parameters.keys():
+                keyNotInExistingParameters = newKey not in self.parameters.keys()
+                keyNotInNewParameters = newKey not in parameters.keys()
+
+                if incrementalCommand in parameter.commandMappings.keys() and keyNotInExistingParameters and keyNotInNewParameters:
                     
                     parameterstoAdd.append(
                         AppParameter(
