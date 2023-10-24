@@ -58,13 +58,13 @@ class TriggerButton(ControlButton):
         self.line3 = self.master.create_line(uToC(xl), uToC(yb), uToC(xr), uToC(yb), fill=INACTIVE_COLOR, width=2)
         self.line4 = self.master.create_line(uToC(xr), uToC(ym), uToC(xr), uToC(yb), fill=INACTIVE_COLOR, width=2)
         self.background1 = self.master.create_rectangle(
-            uToC(xm1)+1, uToC(yt)+1, uToC(xm2)-1, uToC(yb)-1,
+            uToC(xm1)+2, uToC(yt)+2, uToC(xm2)-1, uToC(yb)-2,
             fill="#000000",
             outline="#000000",
             width=2
         )
         self.background2 = self.master.create_rectangle(
-            uToC(xl)+1, uToC(ym), uToC(xr)-1, uToC(yb)-1,
+            uToC(xl)+2, uToC(ym), uToC(xr)-2, uToC(yb)-2,
             fill="#000000",
             outline="#000000",
             width=2

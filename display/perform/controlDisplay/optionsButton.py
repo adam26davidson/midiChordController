@@ -59,6 +59,16 @@ class OptionsButton(ControlButton):
         self.line1 = self.master.create_line(uToC(l1x) + 1, uToC(ly1), uToC(l1x) + 1, uToC(ly2) + 1, fill=INACTIVE_COLOR, width=2)
         self.line2 = self.master.create_line(uToC(l2x), uToC(ly1), uToC(l2x), uToC(ly2) + 1, fill=INACTIVE_COLOR, width=2)
 
+        self.background = self.master.create_rectangle(
+            uToC(l1x)+2,
+            uToC(ly1),
+            uToC(l2x)-2,
+            uToC(ly2),
+            fill="#000000",
+            outline="#000000",
+            width=2
+        )
+
         self.textObject = self.master.create_text(
             uToC(self.centerX),
             uToC(self.centerY),
@@ -68,15 +78,17 @@ class OptionsButton(ControlButton):
         )
 
     def on(self):
-        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
-        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR, style="pieslice")
+        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR, style="pieslice")
+        self.master.itemconfig(self.background, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.line1, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.line2, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.textObject, fill='#000000')
 
     def off(self):
-        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR)
-        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR, style="arc")
+        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR, style="arc")
+        self.master.itemconfig(self.background, fill="#000000", outline="#000000")
         self.master.itemconfig(self.line1, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.line2, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)
