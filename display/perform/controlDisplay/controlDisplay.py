@@ -46,10 +46,10 @@ class ControlDisplay(tk.Canvas):
         controlMap: ControlMap = state['activeControlMap']
         musicEngineParametersLoaded = state['musicEngineAppParametersLoaded']
         if controlMap != None and musicEngineParametersLoaded and len(params) != self.appParameterLength:
-            if (not buttonsCreated): 
+            if (not self.buttonsCreated): 
                 self.appParameterLength = len(params)
                 self.__createButtons(params, controlMap.map)
-                buttonsCreated = True
+                self.buttonsCreated = True
                 ReduxUtils.addAppParameters(self.parameters)
             else:
                 self.__updateButtonParams(params, controlMap.map)
