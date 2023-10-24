@@ -45,6 +45,7 @@ class ControllerCoupler():
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
         if len(state['appParameters']) != len(self.parameters):
+            self.parameters = state['appParameters']
             newParams = self.processNewParameters(state['appParameters'])
             if len(newParams) > 0:
                 reduxUtils.addAppParameters(newParams)
