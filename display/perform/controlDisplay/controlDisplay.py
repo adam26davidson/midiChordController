@@ -406,7 +406,7 @@ class ControlDisplay(tk.Canvas):
         if (key in map):
             for parameterKey in map[key]:
                 print(f"checking controlKey:{key}, paramter key:{parameterKey}")
-                if (parameterKey in params.keys() and params[parameterKey].type == AppParemeterType.MUSIC_ENGINE):
+                if (parameterKey in params and params[parameterKey].type == AppParemeterType.MUSIC_ENGINE):
                     print(f"returning paramter for {parameterKey}")
                     return params[parameterKey]
         

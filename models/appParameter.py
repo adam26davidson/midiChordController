@@ -33,4 +33,4 @@ class AppParameter():
         self.label = label
         self.labelAbreviation = labelAbreviation
         self.remappable = remappable
-        type = type
+        self.type = type
