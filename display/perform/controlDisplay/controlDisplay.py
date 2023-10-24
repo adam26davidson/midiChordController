@@ -41,7 +41,7 @@ class ControlDisplay(tk.Canvas):
     def __handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']
-        map = state['activeControlMap']
+        map = state['activeControlMap'].map
         if map != None and params != None and not self.ControllerConnected:
             self.ControllerConnected = True
             def getParam(key):
@@ -404,6 +404,7 @@ class ControlDisplay(tk.Canvas):
     def getFirstMEParameter(params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):
             for parameterKey in map[key]:
+                print(f"checking {parameterKey}")
                 if (parameterKey in params and params[parameterKey].type == AppParemeterType.MUSIC_ENGINE):
                     return params[parameterKey]
                 
