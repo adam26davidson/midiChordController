@@ -56,8 +56,10 @@ class PerformFrame(tk.Frame):
         self.spread = Spread(master=self)
         self.inversion = Inversion(master=self)
         self.bassPosition = Inversion(master=self)
-        self.chordDisplay = ChordDisplay(master=self)
-        self.textDisplay = TextDisplay(master=self)
+        self.chordTextFrame = tk.Frame(self, bg="#000000")
+        self.chordTextFrame.pack(side="right")
+        self.chordDisplay = ChordDisplay(master=self.chordTextFrame)
+        self.textDisplay = TextDisplay(master=self.chordTextFrame)
         self.controlDisplay = ControlDisplay(master=self)
 
         self.grid(row=0, column=0, sticky='nsew')

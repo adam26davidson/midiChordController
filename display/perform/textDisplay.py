@@ -23,22 +23,22 @@ class TextDisplay(tk.Frame):
         smallFont = FONTS["small"]
         smallBoldFont = FONTS["smallBold"]
 
-        rowSpacing = 30
+        rowSpacing = 40
 
         # setting dsiplay
         self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
         self.settingFrame.pack(side="top", anchor="nw")
         tk.Label(self.settingFrame, text="Setting: ", fg=self.inactiveColor, bg=self.bgColor, font=smallFont).pack(side="left")
         self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
-        self.setting.pack(side="left", pady=(0, 0))
+        self.setting.pack(side="top", pady=(0, 0))
 
         self.rowFrame = tk.Frame(self, bg=self.bgColor)
         self.rowFrame.pack(side="top", anchor="nw")
 
         # controller dsiplay
-        self.controllerImage = Image.open(PARENT_PATH+"/display/images/game-controller.png")
-        self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
-        tk.Label(self.rowFrame, image=self.controllerIcon, bg=self.bgColor).pack(side="left")
+        # self.controllerImage = Image.open(PARENT_PATH+"/display/images/game-controller.png")
+        # self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
+        # tk.Label(self.rowFrame, image=self.controllerIcon, bg=self.bgColor).pack(side="left")
 
         # octave
         self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
