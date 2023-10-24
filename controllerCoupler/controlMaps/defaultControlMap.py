@@ -61,7 +61,7 @@ defaultControlMap = ControlMap(
         "TOUCHPAD_Y": ["UI_TOUCHPAD_Y"],
 
         #UI
-        "MENU": ["MENU"],
+        "START_BUTTON": ["MENU"],
 
         #GYROSCOPE
         "GYRO_PITCH": ["INVERSION", "UI_INVERSION_THUMB"],
