@@ -70,7 +70,6 @@ class ControlDisplay(tk.Canvas):
         self.createTouchPadButton(getParam)
 
     def __updateButtonParams(self, params, map):
-        print("updating button params")
 
         def getParam(key):
             return ControlDisplay.getFirstMEParameter(params, map, key)
@@ -80,7 +79,8 @@ class ControlDisplay(tk.Canvas):
         self.northButton.setParam(getParam("NORTH_BUTTON"))
         self.westButton.setParam(getParam("WEST_BUTTON"))
 
-        self.startButton.setParam(getParam("START_BUTTON"))
+
+        self.startButton.setParam(self.getStartButtonParam(map, params))
 
         leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
 
@@ -215,11 +215,7 @@ class ControlDisplay(tk.Canvas):
         ])
 
     def createStartButton(self, map, params: Dict[str, AppParameter]):
-        param = None
-        if ("START_BUTTON" in map):
-            for parameterKey in map["START_BUTTON"]:
-                if (parameterKey in params):
-                    param =  params[parameterKey]
+        param = self.getStartButtonParam(map, params)
                 
         uToC = self.unitsToCoord
 
@@ -412,6 +408,14 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
+    def getStartButtonParam(self, map, params: Dict[str, AppParameter]):
+        param = None
+        if ("START_BUTTON" in map):
+            for parameterKey in map["START_BUTTON"]:
+                if (parameterKey in params):
+                    param =  params[parameterKey]
+        return param
+
     def getDPadParams(self, getParam):
         xPolar = getParam("DPAD_X")
         yPolar = getParam("DPAD_Y")
@@ -464,10 +468,7 @@ class ControlDisplay(tk.Canvas):
     def getFirstMEParameter(params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):
             for parameterKey in map[key]:
-                print(f"checking controlKey:{key}, paramter key:{parameterKey}")
                 if (parameterKey in params and params[parameterKey].type == AppParemeterType.MUSIC_ENGINE):
-                    print(f"returning paramter for {parameterKey}")
                     return params[parameterKey]
         
-        print(f"returning None for {key}")
         return None

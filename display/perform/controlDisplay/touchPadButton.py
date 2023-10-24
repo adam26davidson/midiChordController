@@ -19,11 +19,11 @@ class TouchPadButton(ControlButton):
         self.drawButton()
 
     def setXParam(self, param: AppParameter):
-        self.xLabel = param.labelAbreviation
+        self.xLabel = "∅" if not param else param.labelAbreviation
         self.master.itemconfig(self.xTextObject, text=f"x: {self.xLabel}\ny: {self.yLabel}")
 
     def setYParam(self, param: AppParameter):
-        self.yLabel = param.labelAbreviation
+        self.yLabel = "∅" if not param else param.labelAbreviation
         self.master.itemconfig(self.xTextObject, text=f"x: {self.xLabel}\ny: {self.yLabel}")
 
     def drawButton(self):
