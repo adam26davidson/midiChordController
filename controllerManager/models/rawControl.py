@@ -5,6 +5,8 @@ from .rawControlEvent import RawControlEvent
 from .rawControlConfig import RawControlConfig
 from .mappableControlEvent import MappableControlEvent
 
+RAW_ON_EVENTS = [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEvent.LEFT, RawControlEvent.RIGHT, RawControlEvent.ON]
+RAW_DIRECTIONAL_EVENTS = [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEvent.LEFT, RawControlEvent.RIGHT]
 
 class RawControl():
     key: str
@@ -37,7 +39,7 @@ class RawControl():
         
         if mappableControlType == MappableControlType.ON_OFF:
 
-            if event in [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEvent.LEFT, RawControlEvent.RIGHT]:
+            if event in RAW_DIRECTIONAL_EVENTS:
                 return [self.key + "_" + event.name]
             
             elif event == RawControlEvent.OFF:
@@ -68,7 +70,7 @@ class RawControl():
         if event == RawControlEvent.OFF:
             return MappableControlEvent.OFF
         
-        if mappableControlType == MappableControlType.ON_OFF and event in [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEvent.LEFT, RawControlEvent.RIGHT]:
+        if mappableControlType == MappableControlType.ON_OFF and event in RAW_ON_EVENTS:
             return MappableControlEvent.ON
         
         elif mappableControlType == MappableControlType.POLAR:
