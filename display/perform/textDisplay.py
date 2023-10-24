@@ -23,10 +23,10 @@ class TextDisplay(tk.Frame):
         smallFont = FONTS["small"]
         smallBoldFont = FONTS["smallBold"]
 
-        rowSpacing = 40
+        rowSpacing = 50
 
         self.rowFrame = tk.Frame(self, bg=self.bgColor)
-        self.rowFrame.pack(side="top", anchor="nw")
+        self.rowFrame.pack(side="top")
 
         # octave
         self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
