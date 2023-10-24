@@ -100,7 +100,7 @@ class ChordDisplay(tk.Canvas):
     def createNotes(self):
         notes = []
         centerX = self.width / 2
-        centerY = (self.height - self.keyTextOffset) / 2
+        centerY = (self.height/2) - self.keyTextOffset
         for i in range(0, 12):
             color = ""
             if self.scale.count(i) != 0:
