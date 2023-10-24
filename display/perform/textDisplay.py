@@ -63,7 +63,7 @@ class TextDisplay(tk.Frame):
         self.holdIcon = tk.Label(self.rowFrame, image=self.holdInactiveIcon, bg=self.bgColor, padx=5)
         self.holdIcon.pack(side="left", padx=(rowSpacing, 0))
 
-        self.pack(side="top", padx=(20, 20), pady=(20, 0))
+        self.pack(side="top", padx=(20, 20), pady=(15, 0))
 
 
     def setInversionLock(self, active):

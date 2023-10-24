@@ -28,7 +28,7 @@ class SettingDisplay(tk.Frame):
         self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
         self.setting.pack(side="top", pady=(0, 0))
 
-        self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
+        self.pack(side="top", anchor="nw", padx=(20, 20), pady=20)
 
 
     def setSetting(self, name):
