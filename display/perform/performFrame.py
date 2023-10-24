@@ -58,7 +58,7 @@ class PerformFrame(tk.Frame):
         self.inversion = Inversion(master=self)
         self.bassPosition = Inversion(master=self)
         self.chordTextFrame = tk.Frame(self, bg="#000000")
-        self.chordTextFrame.pack(side="right", padx=(0, 40))
+        self.chordTextFrame.pack(side="right", padx=(0, 30))
         self.chordDisplay = ChordDisplay(master=self.chordTextFrame)
         self.textDisplay = TextDisplay(master=self.chordTextFrame)
         self.settingDisplay = SettingDisplay(master=self)
