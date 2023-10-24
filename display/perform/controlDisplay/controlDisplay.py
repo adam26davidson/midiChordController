@@ -405,8 +405,10 @@ class ControlDisplay(tk.Canvas):
     def getFirstMEParameter(params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):
             for parameterKey in map[key]:
-                print(f"checking {parameterKey}")
+                print(f"checking controlKey:{key}, paramter key:{parameterKey}")
                 if (parameterKey in params and params[parameterKey].type == AppParemeterType.MUSIC_ENGINE):
+                    print(f"returning paramter for {parameterKey}")
                     return params[parameterKey]
-                
+        
+        print(f"returning None for {key}")
         return None
