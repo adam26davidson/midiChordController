@@ -9,7 +9,7 @@ def reducer(state, action):
         })
 
     if action['type'] == 'controllerCoupler/controlMapUpdated':
-        return state.set('activeControlMap', action['data']['map'])
+        return state.set('activeControlMap', action['data'])
   
     elif action['type'] == 'controllerCoupler/appParametersUpdated':
         return state.set('appParameters', action['data'])
