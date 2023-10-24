@@ -39,7 +39,7 @@ class TextDisplay(tk.Frame):
 
         # lock and hold
         self.lockFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
-        self.lockFrame.pack(side="top", anchor="nw", pady=10)
+        self.lockFrame.pack(side="left")
 
         self.lockedImage = Image.open(PARENT_PATH + "/display/images/padlock.png")
         self.lockedIcon = ImageTk.PhotoImage(self.lockedImage)
@@ -62,18 +62,18 @@ class TextDisplay(tk.Frame):
         # octave
         self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
         self.octaveLabel = tk.Label(self.octaveFrame, text="o: ", bg=self.bgColor, fg=self.color, font=mediumFont)
-        self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=bigFont)
+        self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=mediumFont)
         self.octaveLabel.pack(side="left")
         self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side="left", anchor="nw")
+        self.octaveFrame.pack(side="left")
 
         # voices
         self.voicesFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
         self.voicesLabel = tk.Label(self.voicesFrame, text="v: ", bg=self.bgColor, fg=self.color, font=mediumFont)
-        self.voicesValue = tk.Label(self.voicesFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=bigFont)
+        self.voicesValue = tk.Label(self.voicesFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=mediumFont)
         self.voicesLabel.pack(side="left")
         self.voicesValue.pack(side="left")
-        self.voicesFrame.pack(side="left", anchor="nw")
+        self.voicesFrame.pack(side="left")
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
 
@@ -86,18 +86,14 @@ class TextDisplay(tk.Frame):
 
     def setInversionLock(self, active):
         if active:
-            self.inversionLockText.configure(fg=self.activeColor)
             self.inversionLockIcon.configure(image=self.lockedIcon)
         else:
-            self.inversionLockText.configure(fg=self.inactiveColor)
             self.inversionLockIcon.configure(image=self.unlockedIcon)
 
     def setHold(self, active):
         if active:
-            self.holdText.configure(fg=self.activeColor)
             self.holdIcon.configure(image=self.holdActiveIcon)
         else:
-            self.holdText.configure(fg=self.inactiveColor)
             self.holdIcon.configure(image=self.holdInactiveIcon)
 
     def setOctave(self, octave):
