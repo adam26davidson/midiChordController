@@ -10,5 +10,6 @@ FONTS = {
   "biggest": ("sans serif", 24),
   "big": ("sans serif", 18),
   "medium": ("sans serif", 14),
-  "small": ("sans serif", 12)
+  "small": ("sans serif", 12),
+  "smallBold": ("sans serif", 12, "bold")
 }
