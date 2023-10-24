@@ -23,6 +23,8 @@ class TextDisplay(tk.Frame):
         smallFont = FONTS["small"]
         smallBoldFont = FONTS["smallBold"]
 
+        rowSpacing = 30
+
         # setting dsiplay
         self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
         self.settingFrame.pack(side="top", anchor="nw")
@@ -44,7 +46,7 @@ class TextDisplay(tk.Frame):
         self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
         self.octaveLabel.pack(side="left")
         self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side="left", padx=(20, 0))
+        self.octaveFrame.pack(side="left", padx=(rowSpacing, 0))
 
         # voices
         self.voicesFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
@@ -52,7 +54,7 @@ class TextDisplay(tk.Frame):
         self.voicesValue = tk.Label(self.voicesFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
         self.voicesLabel.pack(side="left")
         self.voicesValue.pack(side="left")
-        self.voicesFrame.pack(side="left", padx=(20, 0))
+        self.voicesFrame.pack(side="left", padx=(rowSpacing, 0))
 
         # lock and hold
         self.lockedImage = Image.open(PARENT_PATH + "/display/images/padlock.png")
@@ -68,13 +70,13 @@ class TextDisplay(tk.Frame):
         self.holdInactiveIcon = ImageTk.PhotoImage(self.holdInactiveImage)
 
         self.inversionLockIcon = tk.Label(self.rowFrame, image=self.unlockedIcon, bg=self.bgColor, padx=5)
-        self.inversionLockIcon.pack(side="left", padx=(20, 0))
+        self.inversionLockIcon.pack(side="left", padx=(rowSpacing, 0))
 
         self.holdIcon = tk.Label(self.rowFrame, image=self.holdInactiveIcon, bg=self.bgColor, padx=5)
-        self.holdIcon.pack(side="left", padx=(20, 0))
+        self.holdIcon.pack(side="left", padx=(rowSpacing, 0))
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
-        
+
 
     def setSetting(self, name):
         print('setting setting text to ' + name)
