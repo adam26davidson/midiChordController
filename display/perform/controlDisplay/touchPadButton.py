@@ -18,6 +18,14 @@ class TouchPadButton(ControlButton):
 
         self.drawButton()
 
+    def setXParam(self, param: AppParameter):
+        self.xLabel = param.labelAbreviation
+        self.master.itemconfig(self.xTextObject, text=f"x: {self.xLabel}\ny: {self.yLabel}")
+
+    def setYParam(self, param: AppParameter):
+        self.yLabel = param.labelAbreviation
+        self.master.itemconfig(self.xTextObject, text=f"x: {self.xLabel}\ny: {self.yLabel}")
+
     def drawButton(self):
         uToC = self.master.unitsToCoord
         xl = self.centerX - (self.width / 2)

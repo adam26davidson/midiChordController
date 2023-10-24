@@ -18,32 +18,9 @@ class JoyStickButton(ControlButton):
                  centerX, centerY, side):
         super().__init__(master)
         self.master = master
-        self.xParams = xParams
-        self.yParams = yParams
-        self.xType = xType
-        self.yType = yType
-
-        if (len(xParams) == 0):
-            self.leftLabel = "∅"
-            self.rightLabel = "∅"
-        else:
-            if xType == "ANALOG" or xType == "POLAR":
-                self.leftLabel = f"-{xParams[0].labelAbreviation}"
-                self.rightLabel = f"+{xParams[0].labelAbreviation}"
-            else:
-                self.leftLabel = xParams[0].labelAbreviation
-                self.rightLabel = xParams[1].labelAbreviation
-
-        if (len(yParams) == 0):
-            self.topLabel = "∅"
-            self.bottomLabel = "∅"
-        else:
-            if yType == "ANALOG" or yType == "POLAR":
-                self.topLabel = f"+{yParams[0].labelAbreviation}"
-                self.bottomLabel = f"-{yParams[0].labelAbreviation}"
-            else:
-                self.topLabel = yParams[0].labelAbreviation
-                self.bottomLabel = yParams[1].labelAbreviation
+        
+        self.setXParams(xParams, xType, False)
+        self.setYParams(yParams, yType, False)
 
         self.clickLabel = "∅" if not cParam else cParam.labelAbreviation
         self.centerX = centerX
@@ -51,6 +28,52 @@ class JoyStickButton(ControlButton):
         self.side = side
         
         self.drawButton()
+
+    def setXParams(self, params: List[AppParameter], type: str, update: bool = True):
+        self.setAxisParams(params, type, "X", update)
+
+    def setYParams(self, params: List[AppParameter], type: str, update: bool = True):
+        self.setAxisParams(params, type, "Y", update)
+
+    def setAxisParams(self, params: List[AppParameter], type: str, axis: str, update: bool = True):
+        if axis == "X":
+            self.xParams = params
+            self.xType = type
+        else:
+            self.yParams = params
+            self.yType = type
+        
+        if (len(params) == 0):
+            if axis == "X":
+                self.leftLabel = "∅"
+                self.rightLabel = "∅"
+            else:
+                self.topLabel = "∅"
+                self.bottomLabel = "∅"
+        else:
+            if type == "ANALOG" or type == "POLAR":
+                if axis == "X":
+                    self.leftLabel = f"-{params[0].labelAbreviation}"
+                    self.rightLabel = f"+{params[0].labelAbreviation}"
+                else:
+                    self.topLabel = f"+{params[0].labelAbreviation}"
+                    self.bottomLabel = f"-{params[0].labelAbreviation}"
+            else:
+                if axis == "X":
+                    self.leftLabel = params[0].labelAbreviation
+                    self.rightLabel = params[1].labelAbreviation
+                else:
+                    self.topLabel = params[0].labelAbreviation
+                    self.bottomLabel = params[1].labelAbreviation
+
+        if update:
+            if axis == "X":
+                self.master.itemconfig(self.leftTextObject, text=self.leftLabel)
+                self.master.itemconfig(self.rightTextObject, text=self.rightLabel)
+            else:
+                self.master.itemconfig(self.topTextObject, text=self.topLabel)
+                self.master.itemconfig(self.bottomTextObject, text=self.bottomLabel)
+
 
     def drawButton(self):
         uToC = self.master.unitsToCoord

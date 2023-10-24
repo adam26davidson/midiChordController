@@ -17,6 +17,10 @@ class BumperButton(ControlButton):
 
         self.drawButton()
 
+    def setParam(self, param: AppParameter):
+        self.label = param.labelAbreviation
+        self.master.itemconfig(self.textObject, text=self.label)
+
     def drawButton(self):
         uToC = self.master.unitsToCoord
         self.canvasObject = self.master.create_rectangle(

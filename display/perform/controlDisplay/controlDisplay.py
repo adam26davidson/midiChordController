@@ -34,6 +34,7 @@ class ControlDisplay(tk.Canvas):
         self.master = master
         self.parameters = []
         self.appParameterLength = 0
+        buttonsCreated = False
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
@@ -45,19 +46,69 @@ class ControlDisplay(tk.Canvas):
         controlMap: ControlMap = state['activeControlMap']
         musicEngineParametersLoaded = state['musicEngineAppParametersLoaded']
         if controlMap != None and musicEngineParametersLoaded and len(params) != self.appParameterLength:
-            self.appParameterLength = len(params)
-            def getParam(key):
-                return ControlDisplay.getFirstMEParameter(params, controlMap.map, key)
-            self.createMainButtons(getParam)
-            self.createStartButton(controlMap.map, params)
-            self.createDpadButtons(getParam)
-            self.createOptionsButtons(getParam)
-            self.createJoySticks(getParam)
-            self.createBumperButtons(getParam)
-            self.createTriggerButtons(getParam)
-            self.createTouchPadButton(getParam)
+            if (not buttonsCreated): 
+                self.appParameterLength = len(params)
+                self.__createButtons(params, controlMap.map)
+                buttonsCreated = True
+                ReduxUtils.addAppParameters(self.parameters)
+            else:
+                self.__updateButtonParams(params, controlMap.map)
 
-            ReduxUtils.addAppParameters(self.parameters)
+    def __createButtons(self, params, map):
+         
+        def getParam(key):
+            return ControlDisplay.getFirstMEParameter(params, map, key)
+         
+        self.createMainButtons(getParam)
+        self.createStartButton(map, params)
+        self.createDpadButtons(getParam)
+        self.createOptionsButtons(getParam)
+        self.createJoySticks(getParam)
+        self.createBumperButtons(getParam)
+        self.createTriggerButtons(getParam)
+        self.createTouchPadButton(getParam)
+
+    def __updateButtonParams(self, params, map):
+
+        def getParam(key):
+            return ControlDisplay.getFirstMEParameter(params, map, key)
+
+        self.southButton.setParam(getParam("SOUTH_BUTTON"))
+        self.eastButton.setParam(getParam("EAST_BUTTON"))
+        self.northButton.setParam(getParam("NORTH_BUTTON"))
+        self.westButton.setParam(getParam("WEST_BUTTON"))
+
+        self.startButton.setParam(getParam("START_BUTTON"))
+
+        leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
+
+        self.dpadDownButton.setParam(downParam, yType)
+        self.dpadUpButton.setParam(upParam, yType)
+        self.dpadLeftButton.setParam(leftParam, xType)
+        self.dpadRightButton.setParam(rightParam, xType)
+
+        self.leftOptionButton.setParam(getParam("LEFT_OPTION"))
+        self.rightOptionButton.setParam(getParam("RIGHT_OPTION"))
+
+        self.leftTriggerButton.setParam(getParam("LEFT_TRIGGER"))
+        self.rightTriggerButton.setParam(getParam("RIGHT_TRIGGER"))
+
+        self.leftBumperButton.setParam(getParam("LEFT_BUMPER"))
+        self.rightBumperButton.setParam(getParam("RIGHT_BUMPER"))
+
+        self.touchPadButton.setXParam(getParam("TOUCHPAD_X"))
+        self.touchPadButton.setYParam(getParam("TOUCHPAD_Y"))
+
+        leftXParams, leftXType = self.getJoystickAxisParams("LEFT_STICK", "X", getParam)
+        leftYParams, leftYType = self.getJoystickAxisParams("LEFT_STICK", "Y", getParam)
+        rightXParams, rightXType = self.getJoystickAxisParams("RIGHT_STICK", "X", getParam)
+        rightYParams, rightYType = self.getJoystickAxisParams("RIGHT_STICK", "Y", getParam)
+
+        self.leftStick.setXParams(leftXParams, leftXType)
+        self.leftStick.setYParams(leftYParams, leftYType)
+        self.rightStick.setXParams(rightXParams, rightXType)
+        self.rightStick.setYParams(rightYParams, rightYType)
+
 
     def unitsToCoord(self, units):
         return self.margin + (units * self.unitSize)
@@ -183,33 +234,7 @@ class ControlDisplay(tk.Canvas):
 
     def createDpadButtons(self, getParam):
 
-        xPolar = getParam("DPAD_X")
-        yPolar = getParam("DPAD_Y")
-        left = getParam("DPAD_X_LEFT")
-        right = getParam("DPAD_X_RIGHT")
-        up = getParam("DPAD_Y_UP")
-        down = getParam("DPAD_Y_DOWN")
-
-        xType, yType = None, None
-        leftParam, rightParam, upParam, downParam = None, None, None, None
-
-        if (xPolar):
-            xType = "POLAR"
-            leftParam = xPolar
-            rightParam = xPolar
-        elif (left and right):
-            xType = "ON_OFF"
-            leftParam = left
-            rightParam = right
-
-        if (yPolar):
-            yType = "POLAR"
-            upParam = yPolar
-            downParam = yPolar
-        elif (up and down):
-            yType = "ON_OFF"
-            upParam = up
-            downParam = down
+        leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
 
         cx = 3; cy = 8
         self.dpadDownButton = DPadButton(self, downParam, yType, "DOWN", cx, cy)
@@ -269,28 +294,10 @@ class ControlDisplay(tk.Canvas):
 
     def createJoySticks(self, getParam):
 
-        def getAxisParams(prefix: str, axis: str):
-            positiveSuffix = "RIGHT" if axis == "X" else "UP"
-            negativeSuffix = "LEFT" if axis == "X" else "DOWN"
-
-            pParam = getParam(f"{prefix}_{axis}_{positiveSuffix}")
-            nParam = getParam(f"{prefix}_{axis}_{negativeSuffix}")
-            polarParam = getParam(f"{prefix}_{axis}_POLAR")
-            analogParam = getParam(f"{prefix}_{axis}")
-
-            if analogParam:
-                return [analogParam], "ANALOG"
-            elif polarParam:
-                return [polarParam], "POLAR"
-            elif nParam and pParam:
-                return [nParam, pParam], "ON_OFF"
-            else:
-                return [], None
-
-        leftXParams, leftXType = getAxisParams("LEFT_STICK", "X")
-        leftYParams, leftYType = getAxisParams("LEFT_STICK", "Y")
-        rightXParams, rightXType = getAxisParams("RIGHT_STICK", "X")
-        rightYParams, rightYType = getAxisParams("RIGHT_STICK", "Y")
+        leftXParams, leftXType = self.getJoystickAxisParams("LEFT_STICK", "X", getParam)
+        leftYParams, leftYType = self.getJoystickAxisParams("LEFT_STICK", "Y", getParam)
+        rightXParams, rightXType = self.getJoystickAxisParams("RIGHT_STICK", "X", getParam)
+        rightYParams, rightYType = self.getJoystickAxisParams("RIGHT_STICK", "Y", getParam)
 
         self.leftStick = JoyStickButton(
             self, 
@@ -402,6 +409,55 @@ class ControlDisplay(tk.Canvas):
                 type=AppParemeterType.UI
             )
         ])
+
+    def getDPadParams(self, getParam):
+        xPolar = getParam("DPAD_X")
+        yPolar = getParam("DPAD_Y")
+        left = getParam("DPAD_X_LEFT")
+        right = getParam("DPAD_X_RIGHT")
+        up = getParam("DPAD_Y_UP")
+        down = getParam("DPAD_Y_DOWN")
+
+        xType, yType = None, None
+        leftParam, rightParam, upParam, downParam = None, None, None, None
+
+        if (xPolar):
+            xType = "POLAR"
+            leftParam = xPolar
+            rightParam = xPolar
+        elif (left and right):
+            xType = "ON_OFF"
+            leftParam = left
+            rightParam = right
+
+        if (yPolar):
+            yType = "POLAR"
+            upParam = yPolar
+            downParam = yPolar
+        elif (up and down):
+            yType = "ON_OFF"
+            upParam = up
+            downParam = down
+
+        return leftParam, rightParam, upParam, downParam, xType, yType
+
+    def getJoystickAxisParams(self, prefix: str, axis: str, getParam):
+        positiveSuffix = "RIGHT" if axis == "X" else "UP"
+        negativeSuffix = "LEFT" if axis == "X" else "DOWN"
+
+        pParam = getParam(f"{prefix}_{axis}_{positiveSuffix}")
+        nParam = getParam(f"{prefix}_{axis}_{negativeSuffix}")
+        polarParam = getParam(f"{prefix}_{axis}_POLAR")
+        analogParam = getParam(f"{prefix}_{axis}")
+
+        if analogParam:
+            return [analogParam], "ANALOG"
+        elif polarParam:
+            return [polarParam], "POLAR"
+        elif nParam and pParam:
+            return [nParam, pParam], "ON_OFF"
+        else:
+            return [], None
 
     def getFirstMEParameter(params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):

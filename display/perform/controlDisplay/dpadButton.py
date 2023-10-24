@@ -9,22 +9,30 @@ class DPadButton(ControlButton):
     def __init__(self, master, param: AppParameter, type: str, direction, centerX, centerY):
         super().__init__(master)
         self.master = master
-        if not param:
-            self.label = "∅"
-        else:
-            if type == "POLAR":
-                if direction == "LEFT" or direction == "DOWN":
-                    self.label = f"-{param.labelAbreviation}"
-                else:
-                    self.label = f"+{param.labelAbreviation}"
-            else:
-                self.label = param.labelAbreviation
+        self.setParam(param, type, False)
 
         self.centerX = centerX
         self.centerY = centerY
         self.direction = direction
 
         self.drawButton()
+
+    def setParam(self, param: AppParameter, type: str, update: bool = True):
+        self.param = param
+        self.type = type
+        if not param:
+            self.label = "∅"
+        else:
+            if type == "POLAR":
+                if self.direction == "LEFT" or self.direction == "DOWN":
+                    self.label = f"-{param.labelAbreviation}"
+                else:
+                    self.label = f"+{param.labelAbreviation}"
+            else:
+                self.label = param.labelAbreviation
+
+        if update:
+            self.master.itemconfig(self.textObject, text=self.label)
 
     def drawButton(self):
         cX = self.centerX
