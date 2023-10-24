@@ -1,5 +1,6 @@
 import tkinter as tk
 from typing import Dict, List
+from controllerCoupler.models.controlMap import ControlMap
 from controllerManager.maps.me.controlAbreviations import controlAbreviations as CONTROL_ABREVIATIONS
 from models.appParameter import AppParameter, AppParemeterType
 from models.command import Command
@@ -41,13 +42,13 @@ class ControlDisplay(tk.Canvas):
     def __handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']
-        map = state['activeControlMap'].map
-        if map != None and params != None and not self.ControllerConnected:
+        controlMap: ControlMap = state['activeControlMap']
+        if controlMap != None and params != None and not self.ControllerConnected:
             self.ControllerConnected = True
             def getParam(key):
-                return ControlDisplay.getFirstMEParameter(params, map, key)
+                return ControlDisplay.getFirstMEParameter(params, controlMap.map, key)
             self.createMainButtons(getParam)
-            self.createStartButton(map, params)
+            self.createStartButton(controlMap.map, params)
             self.createDpadButtons(getParam)
             self.createOptionsButtons(getParam)
             self.createJoySticks(getParam)
