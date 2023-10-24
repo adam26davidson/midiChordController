@@ -52,6 +52,7 @@ class ControlDisplay(tk.Canvas):
                 self.buttonsCreated = True
                 ReduxUtils.addAppParameters(self.parameters)
             else:
+                self.appParameterLength = len(params)
                 self.__updateButtonParams(params, controlMap.map)
 
     def __createButtons(self, params, map):
@@ -69,6 +70,7 @@ class ControlDisplay(tk.Canvas):
         self.createTouchPadButton(getParam)
 
     def __updateButtonParams(self, params, map):
+        print("updating button params")
 
         def getParam(key):
             return ControlDisplay.getFirstMEParameter(params, map, key)
