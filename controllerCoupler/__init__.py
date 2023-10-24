@@ -8,6 +8,7 @@ from models.command import Command
 from models.commandType import CommandType
 from redux import store
 from redux.actions import controllerCoupler as actions
+from redux import utils as reduxUtils
 from pyrsistent import thaw
 from typing import Callable, Dict, List
 
@@ -44,7 +45,9 @@ class ControllerCoupler():
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
         if len(state['appParameters']) != len(self.parameters):
-            self.parameters = self.processNewParameters(state['appParameters'])
+            newParams = self.processNewParameters(state['appParameters'])
+            if len(newParams.keys()) > 0:
+                reduxUtils.addAppParameters(newParams)
             print(f"updating parameters. count: {len(self.parameters)}")
         if len(state['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
@@ -52,7 +55,7 @@ class ControllerCoupler():
 
     def processNewParameters(self, parameters: Dict[str, AppParameter]):
 
-        newParameters = {parameter.key: parameter for parameter in parameters.values()}
+        parameterstoAdd = {}
 
         for key, parameter in parameters.items():
 
@@ -64,7 +67,7 @@ class ControllerCoupler():
 
                 if incrementalCommand in parameter.commandMappings.keys() and newKey not in parameters.keys():
                     
-                    newParameters[newKey] = AppParameter(
+                    parameterstoAdd[newKey] = AppParameter(
                         validCommandTypes=[CommandType.ON_OFF],
                         commandMappings={Command.ON: parameter.commandMappings[incrementalCommand]},
                         key=newKey,
@@ -73,7 +76,7 @@ class ControllerCoupler():
                         remappable=False
                     )
 
-        return newParameters
+        return parameterstoAdd
 
     def __mapControlEventToParameterEvent(
             self,
