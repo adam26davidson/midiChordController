@@ -29,7 +29,7 @@ class ControlDisplay(tk.Canvas):
         self.unitSize = (self.width - (2 * self.margin)) / self.widthUnits
         self.height = (self.unitSize * self.heightUnits) + (2 * self.margin)
         super().__init__(master, width=self.width, height=(self.width / self.widthUnits) * self.heightUnits,
-                         highlightthickness=0, relief="flat", bg="#090909")
+                         highlightthickness=0, relief="flat", bg="#111111")
         
         self.master = master
         self.parameters = []
