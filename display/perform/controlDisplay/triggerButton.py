@@ -57,6 +57,18 @@ class TriggerButton(ControlButton):
         self.line2 = self.master.create_line(uToC(xl), uToC(ym) - 1, uToC(xl), uToC(yb), fill=INACTIVE_COLOR, width=2)
         self.line3 = self.master.create_line(uToC(xl), uToC(yb), uToC(xr), uToC(yb), fill=INACTIVE_COLOR, width=2)
         self.line4 = self.master.create_line(uToC(xr), uToC(ym), uToC(xr), uToC(yb), fill=INACTIVE_COLOR, width=2)
+        self.background1 = self.master.create_rectangle(
+            uToC(xm1), uToC(yt), uToC(xm2), uToC(yb),
+            fill="#000000",
+            outline="#000000",
+            width=2
+        )
+        self.background2 = self.master.create_rectangle(
+            uToC(xl), uToC(ym), uToC(xr), uToC(yb),
+            fill="#000000",
+            outline="#000000",
+            width=2
+        )
 
         self.textObject = self.master.create_text(
             uToC(self.centerX),
@@ -67,8 +79,10 @@ class TriggerButton(ControlButton):
         )
 
     def on(self):
-        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR)
-        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.background1, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.background2, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.line1, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.line2, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.line3, fill=ACTIVE_COLOR)
@@ -76,8 +90,10 @@ class TriggerButton(ControlButton):
         self.master.itemconfig(self.textObject, fill='#000000')
 
     def off(self):
-        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR)
-        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR, fill='#000000')
+        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR, fill='#000000')
+        self.master.itemconfig(self.background1, fill="#000000")
+        self.master.itemconfig(self.background2, fill="#000000")
         self.master.itemconfig(self.line1, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.line2, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.line3, fill=INACTIVE_COLOR)
