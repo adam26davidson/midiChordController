@@ -117,7 +117,7 @@ class ControlDisplay(tk.Canvas):
 
     def createMainButtons(self, getParam):
         cX = 12
-        cY = 8
+        cY = 7.85
         uToC = self.unitsToCoord
         self.southButton = CircularButton(self, getParam("SOUTH_BUTTON"), uToC(cX), uToC(cY + 2), self.unitSize)
         self.eastButton = CircularButton(self, getParam("EAST_BUTTON"), uToC(cX + 2), uToC(cY), self.unitSize)
@@ -155,8 +155,8 @@ class ControlDisplay(tk.Canvas):
         ])
 
     def createTriggerButtons(self, getParam):
-        self.leftTriggerButton = TriggerButton(self, getParam("LEFT_TRIGGER"), 2.5, 0.875)
-        self.rightTriggerButton = TriggerButton(self, getParam("RIGHT_TRIGGER"), 12.5, 0.875)  
+        self.leftTriggerButton = TriggerButton(self, getParam("LEFT_TRIGGER"), 2.5, 0.8)
+        self.rightTriggerButton = TriggerButton(self, getParam("RIGHT_TRIGGER"), 12.5, 0.8)  
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
@@ -175,8 +175,8 @@ class ControlDisplay(tk.Canvas):
         ])
 
     def createBumperButtons(self, getParam):
-        self.leftBumperButton = BumperButton(self, getParam("LEFT_BUMPER"), 2.5, 3.5)
-        self.rightBumperButton = BumperButton(self, getParam("RIGHT_BUMPER"), 12.5, 3.5)
+        self.leftBumperButton = BumperButton(self, getParam("LEFT_BUMPER"), 2.5, 3.35)
+        self.rightBumperButton = BumperButton(self, getParam("RIGHT_BUMPER"), 12.5, 3.35)
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
@@ -219,7 +219,7 @@ class ControlDisplay(tk.Canvas):
                 
         uToC = self.unitsToCoord
 
-        self.startButton = CircularButton(self, param, uToC(7.5), uToC(9.75), self.unitSize)
+        self.startButton = CircularButton(self, param, uToC(7.5), uToC(9.6), self.unitSize)
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
@@ -234,7 +234,7 @@ class ControlDisplay(tk.Canvas):
 
         leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
 
-        cx = 3; cy = 8
+        cx = 3; cy = 7.85
         self.dpadDownButton = DPadButton(self, downParam, yType, "DOWN", cx, cy)
         self.dpadUpButton = DPadButton(self, upParam, yType, "UP", cx, cy)
         self.dpadLeftButton = DPadButton(self, leftParam, xType, "LEFT", cx, cy)
@@ -271,8 +271,8 @@ class ControlDisplay(tk.Canvas):
         ])
 
     def createOptionsButtons(self, getParam):
-        self.leftOptionButton = OptionsButton(self, getParam("LEFT_OPTION"), 6, 5, self.unitSize)
-        self.rightOptionButton = OptionsButton(self, getParam("RIGHT_OPTION"), 9, 5, self.unitSize)
+        self.leftOptionButton = OptionsButton(self, getParam("LEFT_OPTION"), 6, 6.85, self.unitSize)
+        self.rightOptionButton = OptionsButton(self, getParam("RIGHT_OPTION"), 9, 6.85, self.unitSize)
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
@@ -301,13 +301,13 @@ class ControlDisplay(tk.Canvas):
             self, 
             leftXParams, leftYParams, leftXType, leftYType,
             getParam("LEFT_STICK_BUTTON"),
-            5.25, 12.25, "LEFT")
+            5.25, 12.1, "LEFT")
         
         self.rightStick = JoyStickButton(
             self, 
             rightXParams, rightYParams, rightXType, rightYType,
             getParam("RIGHT_STICK_BUTTON"),
-            9.75, 12.25, "RIGHT")
+            9.75, 12.1, "RIGHT")
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],

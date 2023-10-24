@@ -65,8 +65,7 @@ class OptionsButton(ControlButton):
             uToC(l2x)-2,
             uToC(ly2),
             fill="#000000",
-            outline="#000000",
-            width=2
+            outline="#000000"
         )
 
         self.textObject = self.master.create_text(
