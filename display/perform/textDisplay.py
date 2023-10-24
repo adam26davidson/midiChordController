@@ -21,6 +21,7 @@ class TextDisplay(tk.Frame):
         bigFont = FONTS["big"]
         mediumFont = FONTS["medium"]
         smallFont = FONTS["small"]
+        smallBoldFont = FONTS["smallBold"]
 
         # setting dsiplay
         self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
@@ -37,9 +38,25 @@ class TextDisplay(tk.Frame):
         self.controllerIcon = ImageTk.PhotoImage(self.controllerImage)
         tk.Label(self.rowFrame, image=self.controllerIcon, bg=self.bgColor).pack(side="left")
 
+        # octave
+        self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
+        self.octaveLabel = tk.Label(self.octaveFrame, text="o: ", bg=self.bgColor, fg=self.inactiveColor, font=smallBoldFont)
+        self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
+        self.octaveLabel.pack(side="left")
+        self.octaveValue.pack(side="left")
+        self.octaveFrame.pack(side="left", padx=(10, 0))
+
+        # voices
+        self.voicesFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
+        self.voicesLabel = tk.Label(self.voicesFrame, text="v: ", bg=self.bgColor, fg=self.inactiveColor, font=smallBoldFont)
+        self.voicesValue = tk.Label(self.voicesFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
+        self.voicesLabel.pack(side="left")
+        self.voicesValue.pack(side="left")
+        self.voicesFrame.pack(side="left", padx=(10, 0))
+
         # lock and hold
         self.lockFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
-        self.lockFrame.pack(side="left")
+        self.lockFrame.pack(side="left", padx=(10, 0))
 
         self.lockedImage = Image.open(PARENT_PATH + "/display/images/padlock.png")
         self.lockedIcon = ImageTk.PhotoImage(self.lockedImage)
@@ -57,23 +74,7 @@ class TextDisplay(tk.Frame):
         self.inversionLockIcon.pack(side="left")
 
         self.holdIcon = tk.Label(self.lockFrame, image=self.holdInactiveIcon, bg=self.bgColor, padx=5)
-        self.holdIcon.pack(side="left")
-
-        # octave
-        self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
-        self.octaveLabel = tk.Label(self.octaveFrame, text="o: ", bg=self.bgColor, fg=self.color, font=mediumFont)
-        self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=mediumFont)
-        self.octaveLabel.pack(side="left")
-        self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side="left")
-
-        # voices
-        self.voicesFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
-        self.voicesLabel = tk.Label(self.voicesFrame, text="v: ", bg=self.bgColor, fg=self.color, font=mediumFont)
-        self.voicesValue = tk.Label(self.voicesFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=mediumFont)
-        self.voicesLabel.pack(side="left")
-        self.voicesValue.pack(side="left")
-        self.voicesFrame.pack(side="left")
+        self.holdIcon.pack(side="left", padx=(10, 0))
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
 
