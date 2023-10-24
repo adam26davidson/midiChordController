@@ -22,7 +22,7 @@ class OptionsButton(ControlButton):
         self.drawButton()
 
     def setParam(self, param: AppParameter):
-        self.label = param.labelAbreviation
+        self.label = "∅" if not param else param.labelAbreviation
         self.master.itemconfig(self.textObject, text=self.label)
 
     def drawButton(self):
