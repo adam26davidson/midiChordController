@@ -25,6 +25,9 @@ class TextDisplay(tk.Frame):
 
         rowSpacing = 40
 
+        self.rowFrame = tk.Frame(self, bg=self.bgColor)
+        self.rowFrame.pack(side="top", anchor="nw")
+
         # octave
         self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
         self.octaveLabel = tk.Label(self.octaveFrame, text="o: ", bg=self.bgColor, fg=self.inactiveColor, font=smallBoldFont)
@@ -62,9 +65,6 @@ class TextDisplay(tk.Frame):
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=(0, 0))
 
-
-    def setController(self, name):
-        self.controller.configure(text=name)
 
     def setInversionLock(self, active):
         if active:
