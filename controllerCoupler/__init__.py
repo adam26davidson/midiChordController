@@ -77,7 +77,7 @@ class ControllerCoupler():
                             commandMappings={Command.ON: parameter.commandMappings[incrementalCommand]},
                             key=newKey,
                             label=f"{labelPrefix} {parameter.label}",
-                            labelAbreviation=f"{parameter.labelAbreviation}{sign}",
+                            labelAbreviation=f"{sign}{parameter.labelAbreviation}",
                             remappable=False
                     ))
 
