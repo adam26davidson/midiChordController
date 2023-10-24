@@ -68,15 +68,15 @@ class OptionsButton(ControlButton):
         )
 
     def on(self):
-        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR)
-        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.line1, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.line2, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.textObject, fill='#000000')
 
     def off(self):
-        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR)
-        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.line1, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.line2, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)

@@ -36,7 +36,7 @@ class BumperButton(ControlButton):
         self.textObject = self.master.create_text(
             uToC(self.centerX),
             uToC(self.centerY),
-            text=self.label,
+            text=self.label, 
             fill=INACTIVE_COLOR,
             font=FONT
         )

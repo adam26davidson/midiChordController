@@ -144,35 +144,35 @@ class JoyStickButton(ControlButton):
         self.master.itemconfig(self.clickTextObject, fill=INACTIVE_COLOR)
 
     def left_on(self):
-        self.master.itemconfig(self.leftTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.leftTextBackgroundObject, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.leftTextObject, fill="#000000")
     
     def left_off(self):
-        self.master.itemconfig(self.leftTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.leftTextBackgroundObject, fill=INACTIVE_COLOR, outline=INACTIVE_COLOR)
         self.master.itemconfig(self.leftTextObject, fill=INACTIVE_COLOR)
 
     def right_on(self):
-        self.master.itemconfig(self.rightTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.rightTextBackgroundObject, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.rightTextObject, fill="#000000")
 
     def right_off(self):
-        self.master.itemconfig(self.rightTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.rightTextBackgroundObject, fill=INACTIVE_COLOR, outline=INACTIVE_COLOR)
         self.master.itemconfig(self.rightTextObject, fill=INACTIVE_COLOR)
 
     def up_on(self):
-        self.master.itemconfig(self.topTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.topTextBackgroundObject, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.topTextObject, fill="#000000")
 
     def up_off(self):
-        self.master.itemconfig(self.topTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.topTextBackgroundObject, fill=INACTIVE_COLOR, outline=INACTIVE_COLOR)
         self.master.itemconfig(self.topTextObject, fill=INACTIVE_COLOR)
 
     def down_on(self):
-        self.master.itemconfig(self.bottomTextBackgroundObject, outline=ACTIVE_COLOR)
+        self.master.itemconfig(self.bottomTextBackgroundObject, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.bottomTextObject, fill="#000000")
 
     def down_off(self):
-        self.master.itemconfig(self.bottomTextBackgroundObject, outline=INACTIVE_COLOR)
+        self.master.itemconfig(self.bottomTextBackgroundObject, fill=INACTIVE_COLOR, outline=INACTIVE_COLOR)
         self.master.itemconfig(self.bottomTextObject, fill=INACTIVE_COLOR)
 
     def update_x(self, value):
