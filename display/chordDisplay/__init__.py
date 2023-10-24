@@ -51,7 +51,7 @@ class ChordDisplay(tk.Canvas):
             height=self.height,
             highlightthickness=0,
             relief="flat",
-            bg="#000000",
+            bg="#222222",
         )
         self.scale = [0, 2, 4, 5, 7, 9, 11]
         self.modulationState = {
