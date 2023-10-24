@@ -271,8 +271,8 @@ class ControlDisplay(tk.Canvas):
         ])
 
     def createOptionsButtons(self, getParam):
-        self.leftOptionButton = OptionsButton(self, getParam("LEFT_OPTION"), 6, 6.85, self.unitSize)
-        self.rightOptionButton = OptionsButton(self, getParam("RIGHT_OPTION"), 9, 6.85, self.unitSize)
+        self.leftOptionButton = OptionsButton(self, getParam("LEFT_OPTION"), 6, 4.85, self.unitSize)
+        self.rightOptionButton = OptionsButton(self, getParam("RIGHT_OPTION"), 9, 4.85, self.unitSize)
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
