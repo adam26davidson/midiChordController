@@ -76,10 +76,10 @@ class Midi():
     def handleMidiIn(self, message, data):
         print("message:", message[0])
         status_byte = message[0][0]
-        event_type = (status_byte & 0xF0) >> 4  # get the higher nibble
-        channel = status_byte & 0x0F           # get the lower nibble
+        midiCommand = status_byte & 0xF0 # get the higher nibble
+        channel = status_byte & 0x0F     # get the lower nibble
 
-        if event_type == NOTE_ON:
+        if midiCommand == NOTE_ON:
             print("note: ", message[1], " velocity: ", message[2], " channel: ", channel)
 
     def handleMessage(self, message):
