@@ -87,7 +87,7 @@ class Midi():
             print("note ON: ", note, " channel: ", channel)
             self.addMidiInputNoteOn(note, channel, data)
 
-        elif midiCommand == NOTE_OFF:
+        elif midiCommand == NOTE_OFF or (midiCommand == NOTE_ON and midiMessage[2] == 0):
             note = midiMessage[1]
             print("note OFF: ", note, " channel: ", channel)
             self.removeMidiInputNoteOn(note, channel, data)
