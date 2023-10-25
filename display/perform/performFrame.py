@@ -149,7 +149,7 @@ class PerformFrame(tk.Frame):
         if primary:
             if primary['name'] != self.state['controllerName']:
                 self.state['controllerName'] = primary['name']
-                self.__setController(primary['name'])
+                #self.__setController(primary['name'])
     
     def getParameters(self):
         parameters = [
