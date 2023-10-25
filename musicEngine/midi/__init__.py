@@ -20,6 +20,8 @@ class Midi():
             'midiOutputControllerNames': [],
             'midiInputConnected': False,
             'midiInputControllerNames': [],
+            'midiInputNotesOn': {},
+            'mergedMidiInputNotesOn': [],
 
             'velocity': 100, # constant velocity or center of random distribution
             'velocityMode': 'random', # 'constant' or 'random'
@@ -46,6 +48,7 @@ class Midi():
                 self.state['occupiedChannels'][channel] = True
             else:
                 self.state['occupiedChannels'][channel] = False
+
     
         for note in range(0, 128):
             self.state['distChordChannels'][note] = 0
@@ -62,7 +65,7 @@ class Midi():
             midiIn = MidiIn()
             midiIn.open_port(i)
             self.midiInInstances.append(midiIn)
-            midiIn.set_callback(self.handleMidiIn, i)
+            midiIn.set_callback(self.handleMidiIn, self.availableInputPorts[i])
             self.state['midiInputControllerNames'].append(self.availableInputPorts[i])
 
         for i in range(1, len(self.availableOutputPorts)):
@@ -75,17 +78,53 @@ class Midi():
 
     def handleMidiIn(self, message, data):
         midiMessage = message[0]
-        print("message:", midiMessage)
         status_byte = midiMessage[0]
         midiCommand = status_byte & 0xF0 # get the higher nibble
         channel = status_byte & 0x0F     # get the lower nibble
 
         if midiCommand == NOTE_ON:
-            print("note: ", midiMessage[1], " velocity: ", midiMessage[2], " channel: ", channel)
+            note = midiMessage[1]
+            print("note ON: ", note, " channel: ", channel)
+            self.addMidiInputNoteOn(note, channel, data)
+
+        elif midiCommand == NOTE_OFF:
+            note = midiMessage[1]
+            print("note OFF: ", note, " channel: ", channel)
+            self.removeMidiInputNoteOn(note, channel, data)
+
+    def addMidiInputNoteOn(self, note, channel, controller):
+        if note not in self.state['midiInputNotesOn'].keys():
+            self.state['midiInputNotesOn'][note] = []
+        noteFound = False
+        for noteObj in self.state['midiInputNotesOn'][note]:
+            if noteObj['channel'] == channel and noteObj['controller'] == controller:
+                noteFound = True
+                break
+        if not noteFound:
+            self.state['midiInputNotesOn'][note].append({
+                'channel': channel,
+                'controller': controller
+            })
+        if note not in self.state['mergedMidiInputNotesOn']:
+            self.state['mergedMidiInputNotesOn'].append(note)
+            print("mergedMidiInputNotesOn: ", self.state['mergedMidiInputNotesOn'])
+
+    def removeMidiInputNoteOn(self, note, channel, controller):
+        noteIsNotPlayedAnywhere = False
+        if note in self.state['midiInputNotesOn'].keys():
+            for noteObj in self.state['midiInputNotesOn'][note]:
+                if noteObj['channel'] == channel and noteObj['controller'] == controller:
+                    self.state['midiInputNotesOn'][note].remove(noteObj)
+                    if len(self.state['midiInputNotesOn'][note]) == 0:
+                        noteIsNotPlayedAnywhere = True
+                    break
+        if note in self.state['mergedMidiInputNotesOn'] and noteIsNotPlayedAnywhere:
+            self.state['mergedMidiInputNotesOn'].remove(note)
+            print("mergedMidiInputNotesOn: ", self.state['mergedMidiInputNotesOn'])
 
     def handleMessage(self, message):
         # if not self.state['midiOutputConnected']:
-        #   return None
+        # return None
 
         note, player, type = message['note'], message['player'], message['type']
         if type == 'on':
