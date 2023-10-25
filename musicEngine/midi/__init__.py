@@ -74,13 +74,14 @@ class Midi():
         asyncio.ensure_future(self.__loop())
 
     def handleMidiIn(self, message, data):
-        print("message:", message[0])
-        status_byte = message[0][0]
+        midiMessage = message[0]
+        print("message:", midiMessage)
+        status_byte = midiMessage[0]
         midiCommand = status_byte & 0xF0 # get the higher nibble
         channel = status_byte & 0x0F     # get the lower nibble
 
         if midiCommand == NOTE_ON:
-            print("note: ", message[1], " velocity: ", message[2], " channel: ", channel)
+            print("note: ", midiMessage[1], " velocity: ", midiMessage[2], " channel: ", channel)
 
     def handleMessage(self, message):
         # if not self.state['midiOutputConnected']:
