@@ -74,7 +74,8 @@ class Midi():
         asyncio.ensure_future(self.__loop())
 
     def handleMidiIn(self, message, data):
-        status_byte = message[0]
+        print("message:", message[0])
+        status_byte = message[0][0]
         event_type = (status_byte & 0xF0) >> 4  # get the higher nibble
         channel = status_byte & 0x0F           # get the lower nibble
 
