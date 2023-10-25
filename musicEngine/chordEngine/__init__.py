@@ -7,7 +7,9 @@ from constants import SETTINGS, MAX_INVERSION_RANGE, MAX_OCTAVE_SHIFT, \
     MAX_BASS_RANGE, SPREAD_STEPS_PER_OCTAVE, MAX_SPREAD_OCTAVES, \
     MAX_VOICE_COUNT, INVERSION_SNAP
 from redux import store
+from pyrsistent import thaw
 from redux.actions import musicEngine as actions
+from redux.settingsStorage import settingsStorageUtility
 import math
 
 
@@ -30,6 +32,7 @@ class ChordEngine:
             # 0 is C, 1 is C# etc.
             'key': 0,
             'inversionRange': 4,
+            'transposeIncrement': 1,
 
             # can be "incremental" or "continuous"
             'inversionMode': 'incremental',
@@ -83,6 +86,29 @@ class ChordEngine:
 
         self.setSetting(self.state['settingIndex'])
 
+        store.subscribe(self.__handleStoreUpdate)
+
+    def __handleStoreUpdate(self):
+        state = store.get_state()
+        meState = thaw(state['musicEngine'])
+        if (meState['transposeIncrement'] != self.state['transposeIncrement']):
+            self.setTransposeIncrement(meState['transposeIncrement'])
+        if (meState['inversionRange'] != self.state['inversionRange']):
+            self.setInversionRange(meState['inversionRange'])
+        if (meState['bassRange'] != self.state['bassRange']):
+            self.setBassRange(meState['bassRange'])
+        if (meState['key'] != self.state['key']):
+            self.setKey(meState['key'])
+        if (meState['spread'] != self.state['spread']):
+            self.setSpread(meState['spread'])
+        if (meState['chordOctave'] != self.state['chordOctave']):
+            self.setChordOctave(meState['chordOctave'])
+        if (meState['voiceCount'] != self.state['voiceCount']):
+            self.setVoiceCount(meState['voiceCount'])
+
+    def setTransposeIncrement(self, increment):
+        self.state['transposeIncrement'] = increment
+
     def incrementSetting(self):
         self.setSetting((self.state['settingIndex'] + 1) % len(SETTINGS))
 
@@ -95,7 +121,7 @@ class ChordEngine:
     def setSetting(self, setting):
         self.state['loadingSetting'] = True
         store.dispatch(actions.changeSettingLoading(True))
-        self.stopChord()
+        self.stopChord(force=True)
         self.stopBass(buttonUp=False)
         self.state['settingIndex'] = setting
         self.setting = SETTINGS[setting]
@@ -141,16 +167,16 @@ class ChordEngine:
         if button is not None:
             self.state['activeChord'] = button
         self.__setChordType()
-        self.stopChord()
+        self.stopChord(force=True)
         notes = self.__getChord(button)
         self.__sendNotesOn(notes, player='chord')
         self.__updateBass()
-        store.dispatch(actions.playChord(notes))
+        #store.dispatch(actions.playChord(notes))
         self.state['playingChordNotes'] = notes
         self.state['chordIsPlaying'] = True
 
     def playBass(self):
-        print("PLAYBASS()")
+        #print("PLAYBASS()")
         self.stopBass(buttonUp=False)
         bassNote = self.__getBass()
         self.__sendNotesOn([bassNote], player='bass')
@@ -159,9 +185,11 @@ class ChordEngine:
         self.state['bassIsPlaying'] = True
 
     def chordButtonOff(self, button):
+        lastButton = self.controlState.buttonQueue[-1]
         if self.controlState.buttonQueue.count(button) > 0:
             self.controlState.buttonQueue.remove(button)
-        self.updateChordFromControlState()
+        if button == lastButton:
+            self.updateChordFromControlState()
     
     def chordButtonOn(self, button):
         if self.controlState.buttonQueue.count(button) > 0:
@@ -176,8 +204,8 @@ class ChordEngine:
             button = self.controlState.buttonQueue[-1]
             self.playChord(button)
 
-    def stopChord(self):
-        if (not self.state['hold'] and self.state['chordIsPlaying']):
+    def stopChord(self, force=False):
+        if ((not self.state['hold'] and self.state['chordIsPlaying']) or force):
             playingNotes = self.state['playingChordNotes']
             self.__sendNotesOff(playingNotes, player='chord')
             store.dispatch(actions.stopChord())
@@ -254,10 +282,8 @@ class ChordEngine:
         oldInversion = self.state['inversion']
         self.state['inversion'] = max(min(oldInversion, range), -1*range)
         self.__updateChord()
-        iAction = actions.changeInversion(self.state['inversion'])
-        store.dispatch(iAction)
-        irAction = actions.changeInversionRange(self.state['inversionRange'])
-        store.dispatch(irAction)
+        store.dispatch(actions.changeInversion(self.state['inversion']))
+        store.dispatch(actions.changeInversionRange(self.state['inversionRange']))
 
     def incrementBassPosition(self):
         newPosition = self.state['bassPosition'] + 1
@@ -283,16 +309,17 @@ class ChordEngine:
         oldBP = self.state['bassPosition']
         self.state['bassPosition'] = max(min(oldBP, range), -1*range)
         self.__updateBass()
-        store.dispatch(actions.changeInversion(self.state['bassPosition']))
-        store.dispatch(actions.changeInversionRange(self.state['bassRange']))
+        store.dispatch(actions.changeBassPosition(self.state['bassPosition']))
+        store.dispatch(actions.changeBassRange(self.state['bassRange']))
 
     def setSpread(self, spread):
         maxSpread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
         spread = max(min(spread, maxSpread), 0)
         self.state['spread'] = spread
-        self.__updateChord()
         store.dispatch(actions.changeSpread(self.state['spread']))
-
+        settingsStorageUtility.saveSettings()
+        self.__updateChord()
+        
     def incrementSpread(self):
         self.setSpread(self.state['spread'] + 1)
 
@@ -304,21 +331,23 @@ class ChordEngine:
         if self.state['key'] != key:
             self.state['key'] = key
             store.dispatch(actions.changeKey(key))
+            settingsStorageUtility.saveSettings()
             self.__setChordType()
             self.__updateChord()
             self.__updateBass()
 
     def incrementKey(self):
-        self.setKey(self.state['key'] + 1)
+        self.setKey(self.state['key'] + self.state['transposeIncrement'])
 
     def decrementKey(self):
-        self.setKey(self.state['key'] + 11)
+        self.setKey(self.state['key'] + 12 - self.state['transposeIncrement'])
 
     def setVoiceCount(self, count):
         count = max(min(count, MAX_VOICE_COUNT), 1)
         self.state['voiceCount'] = count
-        self.__updateChord()
         store.dispatch(actions.changeVoiceCount(self.state['voiceCount']))
+        settingsStorageUtility.saveSettings()
+        self.__updateChord()
 
     def incrementVoiceCount(self):
         self.setVoiceCount(self.state['voiceCount'] + 1)
@@ -341,8 +370,9 @@ class ChordEngine:
     def setChordOctave(self, octave):
         clamped = max(min(octave, MAX_OCTAVE_SHIFT), -1*MAX_OCTAVE_SHIFT)
         self.state['chordOctave'] = clamped
-        self.__updateChord()
         store.dispatch(actions.changeChordOctave(self.state['chordOctave']))
+        settingsStorageUtility.saveSettings()
+        self.__updateChord()
 
     def incrementChordOctave(self):
         self.setChordOctave(self.state['chordOctave'] + 1)
@@ -455,7 +485,7 @@ class ChordEngine:
                 modKey = "leftModulation"
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
-            secondary = self.secondaries[secState][button][modKey]
+            secondary = self.secondaries[secState][button.value][modKey]
             chordRoot = chord.getRoot(self.state)
             rootType = secondary.getRoot(self.state, chordRoot)
             chordType = secondary.getNoteTypes(self.state, chordRoot)
@@ -488,7 +518,7 @@ class ChordEngine:
                 modKey = "leftModulation"
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
-            secondary = self.secondaries[secState][button][modKey]
+            secondary = self.secondaries[secState][button.value][modKey]
             root = chord.getRoot(self.state)
             chordNotes = secondary.getChord(self.state, root)
 
@@ -522,7 +552,7 @@ class ChordEngine:
             elif (self.state['modulation'] == "left"):
                 modKey = "rightModulation"
 
-        secondary = self.secondaries[secLabel][chordLabel][modKey]
+        secondary = self.secondaries[secLabel][chordLabel.value][modKey]
         return secondary.getBass(self.state, chord.getRoot(self.state))
 
     def __updateChord(self):

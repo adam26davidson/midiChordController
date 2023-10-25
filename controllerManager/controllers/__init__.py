@@ -3,5 +3,5 @@ from .Wired360Controller import Wired360Controller
 
 controllerClasses = [
   DualShock4, 
-  Wired360Controller
+  #Wired360Controller
 ]

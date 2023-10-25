@@ -153,10 +153,28 @@ def changeDistributeChannels(distributeChannels):
     'data': {'distributeChannels': distributeChannels}
   }
 
-def changeNoteVelocity(velocity):
+def changeVelocity(velocity):
   return {
-    'type': 'me/noteVelocityChanged',
-    'data': {'noteVelocity': velocity}
+    'type': 'me/velocityChanged',
+    'data': {'velocity': velocity}
+  }
+
+def changeVelocityMode(mode):
+  return {
+    'type': 'me/velocityModeChanged',
+    'data': {'velocityMode': mode}
+  }
+
+def changeVelocityDeviation(deviation):
+  return {
+    'type': 'me/velocityDeviationChanged',
+    'data': {'velocityDeviation': deviation}
+  }
+
+def changeAftertouchMode(aftertouchMode):
+  return {
+    'type': 'me/aftertouchModeChanged',
+    'data': {'aftertouchMode': aftertouchMode}
   }
 
 def changeHold(hold):
@@ -169,4 +187,28 @@ def changeInversionLock(lock):
   return {
     'type': 'me/inversionLockChanged',
     'data': {'inversionLock': lock}
+  }
+
+def changeStrumMode(mode):
+  return {
+    'type': 'me/strumModeChanged',
+    'data': {'strumMode': mode}
+  }
+
+def changeStrumInterval(interval):
+  return {
+    'type': 'me/strumIntervalChanged',
+    'data': {'strumInterval': interval}
+  }
+
+def changeStrumOrder(order):
+  return {
+    'type': 'me/strumOrderChanged',
+    'data': {'strumOrder': order}
+  }
+
+def changeTransposeIncrement(increment):
+  return {
+    'type': 'me/transposeIncrementChanged',
+    'data': {'transposeIncrement': increment}
   }

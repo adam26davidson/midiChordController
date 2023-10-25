@@ -1,4 +1,10 @@
 {
   "python.linting.flake8Enabled": true,
-  "python.linting.enabled": true
+  "python.linting.enabled": true,
+  "editor.detectIndentation": false,
+"editor.tabSize": 4,
+"[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+},
+"python.formatting.provider": "none",
 }

@@ -1,10 +1,10 @@
 import tkinter as tk
 from constants import INVERSION_SNAP
-from .displayConstants import COLORS
+from ..displayConstants import COLORS
 
 
 class Inversion(tk.Canvas):
-    width = 40
+    width = 20
     height = 370
 
     thumbRadius = 3
@@ -25,7 +25,7 @@ class Inversion(tk.Canvas):
             fill=self.thumbColor, width=3)
         self.max = 3
         self.activeRegion = 0
-        self.pack(side="right", padx=(20, 20), pady=(20, 0))
+        self.pack(side="right", padx=(0, 40), pady=(20, 0))
 
     def setMax(self, max, activeRegion):
         self.max = max

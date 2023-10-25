@@ -3,3 +3,4 @@ python-rtmidi==1.4.9
 pydux==0.2.2
 pyrsistent==0.18.0
 numpy==1.21.4
+music21==8.3.0

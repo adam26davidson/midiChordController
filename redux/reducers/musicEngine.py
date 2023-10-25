@@ -7,11 +7,23 @@ def reducer(state, action):
         return freeze({
             'availableMidiPorts': [],
             'connectedMidiPort': '',
+            'bassChannel': 0,
+            'chordChannel': 0,
+            'distributeChannels': False,
+            'velocity': 100,
+            'velocityMode': 'random',
+            'velocityDeviation': 10,
+            'aftertouchMode': 'poly',
+
+            'strumMode': 'regular', # 'random', 'regular', 'off'
+            'strumInterval': 0.02, # time beween notes or spread of distribution
+            'strumOrder' : 'random', # 'up', 'down', or 'random'
 
             'settingsList': [],
             'setting': 0,
             'settingLoading': False,
             'key': 0,
+            'transposeIncrement': 1,
             'scale': [],
             'spread': SPREAD_STEPS_PER_OCTAVE,
             'inversion': 0,
@@ -31,7 +43,7 @@ def reducer(state, action):
             'bassShadow': 0,
             'chordNotes': [],
             'chordType': {'chord': [], 'root': 0},
-            'chordShadow': []
+            'chordShadow': [],
         })
 
     if action['type'] == 'me/settingsListChanged':
@@ -110,20 +122,37 @@ def reducer(state, action):
         return state.set('bassChannel', action['data']['bassChannel'])
 
     elif action['type'] == 'me/distributeChannelsChanged':
-        return state.set(
-            'distributeChannels',
-            action['data']['distributeChannels'])
+        return state.set('distributeChannels', action['data']['distributeChannels'])
 
-    elif action['type'] == 'me/noteVelocityChanged':
-        return state.set(
-            'distributeChannels',
-            action['data']['distributeChannels'])
+    elif action['type'] == 'me/velocityChanged':
+        return state.set('velocity', action['data']['velocity'])
+
+    elif action['type'] == 'me/velocityModeChanged':
+        return state.set('velocityMode', action['data']['velocityMode'])
+
+    elif action['type'] == 'me/velocityDeviationChanged':
+        return state.set('velocityDeviation', action['data']['velocityDeviation'])
+    
+    elif action['type'] == 'me/aftertouchModeChanged':
+        return state.set('aftertouchMode', action['data']['aftertouchMode'])
 
     elif action['type'] == 'me/holdChanged':
         return state.set('hold', action['data']['hold'])
 
     elif action['type'] == 'me/inversionLockChanged':
         return state.set('inversionLock', action['data']['inversionLock'])
+    
+    elif action['type'] == 'me/strumModeChanged':
+        return state.set('strumMode', action['data']['strumMode'])
+    
+    elif action['type'] == 'me/strumIntervalChanged':
+        return state.set('strumInterval', action['data']['strumInterval'])
+    
+    elif action['type'] == 'me/strumOrderChanged':
+        return state.set('strumOrder', action['data']['strumOrder'])
+    
+    elif action['type'] == 'me/transposeIncrementChanged':
+        return state.set('transposeIncrement', action['data']['transposeIncrement'])
 
     else:
         return state
