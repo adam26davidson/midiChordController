@@ -82,7 +82,7 @@ class Midi():
         midiCommand = status_byte & 0xF0 # get the higher nibble
         channel = status_byte & 0x0F     # get the lower nibble
 
-        if midiCommand == NOTE_ON:
+        if midiCommand == NOTE_ON and midiMessage[2] > 0:
             note = midiMessage[1]
             print("note ON: ", note, " channel: ", channel)
             self.addMidiInputNoteOn(note, channel, data)
