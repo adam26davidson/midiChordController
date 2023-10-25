@@ -14,9 +14,12 @@ class Midi():
         self.utilityMidiOut = MidiOut()
         self.utilityMidiIn = MidiIn()
         self.midiOutInstances = []
+        self.midiInInstances = []
         self.state = {
             'midiOutputConnected': False,
             'midiOutputControllerNames': [],
+            'midiInputConnected': False,
+            'midiInputControllerNames': [],
 
             'velocity': 100, # constant velocity or center of random distribution
             'velocityMode': 'random', # 'constant' or 'random'
@@ -36,9 +39,6 @@ class Midi():
             'lastSentAfterTouch': 0,
             'CCValues': {},
             'lastSentCCValues': {},
-
-            'midiInputConnected': False,
-
         }
 
         for channel in range(0, 16):
@@ -59,9 +59,11 @@ class Midi():
         print(f"input ports: {self.availableInputPorts}")
 
         for i in range(1, len(self.availableInputPorts)):
-            self.utilityMidiIn.open_port(i)
-
-        self.utilityMidiIn.set_callback(self.handleMidiIn)
+            midiIn = MidiIn()
+            midiIn.open_port(i)
+            self.midiInInstances.append(midiIn)
+            midiIn.set_callback(self.handleMidiIn, i)
+            self.state['midiInputControllerNames'].append(self.availableInputPorts[i])
 
         for i in range(1, len(self.availableOutputPorts)):
             midiOut = MidiOut()
