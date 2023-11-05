@@ -12,10 +12,6 @@ from musicEngine.chordEngine.modules.inversion.inversionState import InversionSt
 from musicEngine.chordEngine.modules.key.keyState import KeyState
 from musicEngine.chordEngine.modules.scale.scaleState import ScaleState
 
-class ChordEngineControlMode(Enum):
-    INTERNAL = 'internal'
-    EXTERNAL = 'external'
-
 class ExternalChordScaleMode(Enum):
     LAST_SEVEN = 1
     STATISTICAL_LAST_SEVEN = 2

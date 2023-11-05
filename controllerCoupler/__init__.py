@@ -1,3 +1,4 @@
+from enum import Enum
 from controllerCoupler.models.controlMap import ControlMap
 from controllerManager.models.controlEvent import ControlEvent
 from controllerManager.models.mappableControl import MappableControl
@@ -6,13 +7,15 @@ from controllerManager.models.mappableControlEvent import MappableControlEvent
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from musicEngine.chordEngine.chordEngineState import ChordEngineControlMode
 from redux import store
 from redux.actions import controllerCoupler as actions
 from redux import utils as reduxUtils
 from pyrsistent import thaw
 from typing import Callable, Dict, List
 
+class ChordEngineControlMode(Enum):
+    INTERNAL = 'internal'
+    EXTERNAL = 'external'
 
 class ControllerCoupler():
 
@@ -45,8 +48,6 @@ class ControllerCoupler():
                                 parameter.commandMappings[command](event.value)
                             else:
                                 parameter.commandMappings[command]()
-
-    
 
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']

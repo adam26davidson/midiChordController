@@ -2,7 +2,7 @@
 
 import time
 from typing import Dict, List
-from ....chordEngineState import state
+from musicEngine.chordEngine.chordEngineState import state
 
 
 class HistoryUpdateResponse():
