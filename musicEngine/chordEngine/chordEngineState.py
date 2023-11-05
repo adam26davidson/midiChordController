@@ -2,7 +2,6 @@ from enum import Enum
 from typing import List
 
 from constants import SPREAD_STEPS_PER_OCTAVE
-from musicEngine.chordEngine.externalChordEngine.externalChordEngineState import ExternalChordEngineState
 from musicEngine.chordEngine.externalChordEngine.modules.noteHistory.noteHistoryState import NoteHistoryState
 from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulationsState import ModulationsState
 from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondariesState import SecondariesState
