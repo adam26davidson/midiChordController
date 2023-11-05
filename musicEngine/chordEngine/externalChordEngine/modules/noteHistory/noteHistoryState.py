@@ -1,6 +1,13 @@
 from typing import Dict, List
 
-from musicEngine.chordEngine.externalChordEngine.modules.noteHistory import NoteHistory, NoteHistoryEvent
+
+class NoteHistoryEvent():
+    OnTime: int
+    OffTime: int
+
+    def __init__(self, OnTime: int, OffTime: int):
+        self.OnTime = OnTime
+        self.OffTime = OffTime
 
 
 class NoteHistoryState():

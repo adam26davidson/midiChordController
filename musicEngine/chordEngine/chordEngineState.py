@@ -1,6 +1,5 @@
 from enum import Enum
 from typing import List
-
 from constants import SPREAD_STEPS_PER_OCTAVE
 from musicEngine.chordEngine.externalChordEngine.modules.noteHistory.noteHistoryState import NoteHistoryState
 from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulationsState import ModulationsState
@@ -11,6 +10,7 @@ from musicEngine.chordEngine.modules.chords.chordsState import ChordsState
 from musicEngine.chordEngine.modules.inversion.inversionState import InversionState
 from musicEngine.chordEngine.modules.key.keyState import KeyState
 from musicEngine.chordEngine.modules.scale.scaleState import ScaleState
+
 
 class ExternalChordScaleMode(Enum):
     LAST_SEVEN = 1

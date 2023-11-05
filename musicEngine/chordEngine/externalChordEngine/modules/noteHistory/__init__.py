@@ -1,8 +1,8 @@
 
 
 import time
-from typing import Dict, List
 from musicEngine.chordEngine.chordEngineState import state
+from musicEngine.chordEngine.externalChordEngine.modules.noteHistory.noteHistoryState import NoteHistoryEvent
 
 
 class HistoryUpdateResponse():
@@ -10,27 +10,6 @@ class HistoryUpdateResponse():
     classesPlayedChanged: bool = False
     classRecencyRankingChanged: bool = False
     lowestChanged: bool = False
-
-
-class NoteHistoryEvent():
-    OnTime: int
-    OffTime: int
-
-    def __init__(self):
-        self.OnTime = time.time_ns()
-        self.OffTime = None
-    
-    def setOff(self):
-        self.OffTime = time.time_ns()
-
-    def durationSeconds(self) -> float:
-        return (self.OffTime - self.OnTime) / 1000000000
-    
-    def endAgeSeconds(self) -> float:
-        return (time.time_ns() - self.OffTime) / 1000000000
-    
-    def isOn(self) -> bool:
-        return self.OffTime == None
     
 
 class NoteHistory():
@@ -74,7 +53,7 @@ class NoteHistory():
 
         # update note history
         if len(state.noteInHistory.all[noteClass]) == 0 or not self.__latestNoteIsOn(noteClass):
-            state.noteInHistory.all[noteClass].append(NoteHistoryEvent())
+            state.noteInHistory.all[noteClass].append(NoteHistoryEvent(OnTime = time.time_ns(), OffTime = None))
         self.__removeExpired()
 
         return response
@@ -91,7 +70,7 @@ class NoteHistory():
         
         # update lastContiguousClasses
         if len(state.noteInHistory.all[noteClass]) > 0 and self.__latestNoteIsOn(noteClass):
-            state.noteInHistory.all[noteClass][-1].setOff()
+            state.noteInHistory.all[noteClass][-1].OffTime = time.time_ns()
         self.__removeExpired()
 
         return response
@@ -99,12 +78,13 @@ class NoteHistory():
     def __removeExpired(self):
         for noteClassHistory in state.noteInHistory.all.values():
             for noteEvent in noteClassHistory:
-                if noteEvent.endAgeSeconds() > state.noteInHistory.memoryLength:
+                endAgeSeconds = (time.time_ns() - noteEvent.OffTime) / 1000000000
+                if endAgeSeconds > state.noteInHistory.memoryLength:
                     noteClassHistory.remove(noteEvent)
 
     def __latestNoteIsOn(self, note: int) -> bool:
         if len(state.noteInHistory.all[note]) > 0:
-            return state.noteInHistory.all[note][-1].isOn()
+            return state.noteInHistory.all[note][-1].OffTime == None
         return False
     
         
