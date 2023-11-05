@@ -3,9 +3,10 @@ from controllerManager.models.controlEvent import ControlEvent
 from controllerManager.models.mappableControl import MappableControl
 from controllerCoupler.controlMaps.defaultControlMap import defaultControlMap
 from controllerManager.models.mappableControlEvent import MappableControlEvent
-from models.appParameter import AppParameter
+from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
+from musicEngine.chordEngine.chordEngineState import ChordEngineControlMode
 from redux import store
 from redux.actions import controllerCoupler as actions
 from redux import utils as reduxUtils
@@ -18,6 +19,7 @@ class ControllerCoupler():
     parameters: Dict[str, AppParameter]
     controls: Dict[str, Dict[str, MappableControl]]
     map: ControlMap
+    chordEngineControlMode: ChordEngineControlMode
 
     connectedControllerId: str
 
@@ -25,6 +27,7 @@ class ControllerCoupler():
         self.map = defaultControlMap
         self.parameters = {}
         self.controls = {}
+        self.chordEngineControlMode = ChordEngineControlMode.INTERNAL
         store.dispatch(actions.updateControlMap(self.map))
 
         store.subscribe(self.handleStoreUpdate)
@@ -35,12 +38,15 @@ class ControllerCoupler():
             for parameterKey in parameterKeys:
                 if parameterKey in self.parameters.keys():
                     parameter = self.parameters[parameterKey]
-                    command = self.__mapControlEventToParameterEvent(event.event, parameter)
-                    if command in parameter.commandMappings.keys():
-                        if event.event == MappableControlEvent.UPDATE:
-                            parameter.commandMappings[command](event.value)
-                        else:
-                            parameter.commandMappings[command]()
+                    if self.__useParameter(parameter):
+                        command = self.__mapControlEventToParameterEvent(event.event, parameter)
+                        if command in parameter.commandMappings.keys():
+                            if event.event == MappableControlEvent.UPDATE:
+                                parameter.commandMappings[command](event.value)
+                            else:
+                                parameter.commandMappings[command]()
+
+    
 
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
@@ -53,6 +59,13 @@ class ControllerCoupler():
         if len(state['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
             self.controls = state['controls']
+
+        meState = thaw(store.get_state()['musicEngine'])
+        if (meState['chordEngineControl'] != self.chordEngineControlMode.value):
+            if (meState['chordEngineControl'] == ChordEngineControlMode.INTERNAL.value):
+                self.chordEngineControlMode = ChordEngineControlMode.INTERNAL
+            else:
+                self.chordEngineControlMode = ChordEngineControlMode.EXTERNAL
 
     def processNewParameters(self, parameters: Dict[str, AppParameter]):
 
@@ -82,6 +95,13 @@ class ControllerCoupler():
                     ))
 
         return parameterstoAdd
+    
+    def __useParameter(self, parameter: AppParameter):
+        internalMode = self.chordEngineControlMode == ChordEngineControlMode.INTERNAL
+        if parameter.Type == AppParameterType.INTERNAL_CHORD_ENGINE and not internalMode:
+            return False
+        if parameter.Type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode:
+            return False
 
     def __mapControlEventToParameterEvent(
             self,

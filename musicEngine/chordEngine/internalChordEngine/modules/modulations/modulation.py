@@ -1,6 +1,9 @@
+from typing import List
+
+
 class Modulation():
 
-    def __init__(self, scale, setting):
+    def __init__(self, scale: List[int], setting):
         self.scale = scale
         if setting["type"] == "modal":
             self.map = self.findModalMap(setting["map"])
@@ -31,13 +34,13 @@ class Modulation():
             offsets.append(self.map[i] - self.scale[i])
         return offsets
 
-    def apply(self, notes, scale):
+    def apply(self, notes, scale: List[int]):
         modNotes = []
         for note in notes:
             modNotes.append(self.applyOne(note, scale))
         return modNotes
 
-    def applyOne(self, note, scale):
+    def applyOne(self, note, scale: List[int]):
         index = scale.index(note % 12)
         return note + self.offsets[index]
 
@@ -46,3 +49,4 @@ class Modulation():
         for i in range(0, len(self.scale)):
             newScale.append((self.scale[i] + self.offsets[i]) % 12)
         return newScale
+        

@@ -2,7 +2,7 @@ import tkinter as tk
 from typing import Dict, List
 from controllerCoupler.models.controlMap import ControlMap
 from controllerManager.maps.me.controlAbreviations import controlAbreviations as CONTROL_ABREVIATIONS
-from models.appParameter import AppParameter, AppParemeterType
+from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from ...displayConstants import COLORS
@@ -129,28 +129,28 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.southButton.on, Command.OFF: self.southButton.off},
                 key="UI_SOUTH_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.eastButton.on, Command.OFF: self.eastButton.off},
                 key="UI_EAST_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.northButton.on, Command.OFF: self.northButton.off},
                 key="UI_NORTH_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.westButton.on, Command.OFF: self.westButton.off},
                 key="UI_WEST_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -163,14 +163,14 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.leftTriggerButton.on, Command.OFF: self.leftTriggerButton.off},
                 key="UI_LEFT_TRIGGER",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightTriggerButton.on, Command.OFF: self.rightTriggerButton.off},
                 key="UI_RIGHT_TRIGGER",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -183,7 +183,7 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.leftBumperButton.on, Command.OFF: self.leftBumperButton.off},
                 key="UI_LEFT_BUMPER",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
@@ -192,7 +192,7 @@ class ControlDisplay(tk.Canvas):
                 label="UI Right Bumper",
                 labelAbreviation=None,
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -226,7 +226,7 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.startButton.on, Command.OFF: self.startButton.off},
                 key="UI_START_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -245,28 +245,28 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.dpadDownButton.on, Command.OFF: self.dpadDownButton.off},
                 key="UI_DPAD_DOWN",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.dpadUpButton.on, Command.OFF: self.dpadUpButton.off},
                 key="UI_DPAD_UP",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.dpadLeftButton.on, Command.OFF: self.dpadLeftButton.off},
                 key="UI_DPAD_LEFT",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.dpadRightButton.on, Command.OFF: self.dpadRightButton.off},
                 key="UI_DPAD_RIGHT",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -279,14 +279,14 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.leftOptionButton.on, Command.OFF: self.leftOptionButton.off},
                 key="UI_LEFT_OPTION",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightOptionButton.on, Command.OFF: self.rightOptionButton.off},
                 key="UI_RIGHT_OPTION",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -314,35 +314,35 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.ON: self.leftStick.button_on, Command.OFF: self.leftStick.button_off},
                 key="UI_LEFT_STICK_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftStick.left_on, Command.OFF: self.leftStick.left_off},
                 key="UI_LEFT_STICK_LEFT",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftStick.right_on, Command.OFF: self.leftStick.right_off},
                 key="UI_LEFT_STICK_RIGHT",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftStick.up_on, Command.OFF: self.leftStick.up_off},
                 key="UI_LEFT_STICK_UP",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.leftStick.down_on, Command.OFF: self.leftStick.down_off},
                 key="UI_LEFT_STICK_DOWN",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
@@ -355,56 +355,56 @@ class ControlDisplay(tk.Canvas):
                 commandMappings={Command.UPDATE: self.leftStick.update_y},
                 key="UI_LEFT_STICK_Y",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightStick.button_on, Command.OFF: self.rightStick.button_off},
                 key="UI_RIGHT_STICK_BUTTON",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightStick.left_on, Command.OFF: self.rightStick.left_off},
                 key="UI_RIGHT_STICK_LEFT",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightStick.right_on, Command.OFF: self.rightStick.right_off},
                 key="UI_RIGHT_STICK_RIGHT",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightStick.up_on, Command.OFF: self.rightStick.up_off},
                 key="UI_RIGHT_STICK_UP",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
                 commandMappings={Command.ON: self.rightStick.down_on, Command.OFF: self.rightStick.down_off},
                 key="UI_RIGHT_STICK_DOWN",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.rightStick.update_x},
                 key="UI_RIGHT_STICK_X",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.rightStick.update_y},
                 key="UI_RIGHT_STICK_Y",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ])
 
@@ -468,7 +468,7 @@ class ControlDisplay(tk.Canvas):
     def getFirstMEParameter(params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):
             for parameterKey in map[key]:
-                if (parameterKey in params and params[parameterKey].type == AppParemeterType.MUSIC_ENGINE):
+                if (parameterKey in params and params[parameterKey].type == AppParameterType.MUSIC_ENGINE):
                     return params[parameterKey]
         
         return None

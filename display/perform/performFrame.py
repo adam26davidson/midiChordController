@@ -1,4 +1,4 @@
-from models.appParameter import AppParameter, AppParemeterType
+from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store, utils as ReduxUtils
@@ -158,14 +158,14 @@ class PerformFrame(tk.Frame):
                 commandMappings={Command.UPDATE: self.__storeInversionThumb},
                 key="UI_INVERSION_THUMB",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.__storeBassPositionThumb},
                 key="UI_BASS_THUMB",
                 remappable=False,
-                type=AppParemeterType.UI
+                type=AppParameterType.UI
             )
         ]
         return parameters

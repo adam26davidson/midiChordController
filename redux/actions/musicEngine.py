@@ -212,3 +212,9 @@ def changeTransposeIncrement(increment):
     'type': 'me/transposeIncrementChanged',
     'data': {'transposeIncrement': increment}
   }
+
+def changeChordEngineControl(control):
+    return {
+        'type': 'me/chorEngineControlChanged',
+        'data': {'chorEngineControl': control}
+    }

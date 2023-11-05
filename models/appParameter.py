@@ -3,8 +3,11 @@ from models.commandType import CommandType
 from models.command import Command
 from typing import Callable, Dict, List
 
-class AppParemeterType(Enum):
+class AppParameterType(Enum):
     MUSIC_ENGINE = 1
+    CHORD_ENGINE = 2
+    INTERNAL_CHORD_ENGINE = 3
+    EXTERNAL_CHORD_ENGINE = 4
     UI = 2
 
 class AppParameter():
@@ -15,7 +18,7 @@ class AppParameter():
     key: str
     label: str
     labelAbreviation: str
-    type: AppParemeterType
+    type: AppParameterType
 
     def __init__(
             self, 
@@ -25,7 +28,7 @@ class AppParameter():
             label: str = None, 
             labelAbreviation: str = None,
             remappable: bool = True,
-            type: AppParemeterType = AppParemeterType.MUSIC_ENGINE):
+            type: AppParameterType = AppParameterType.MUSIC_ENGINE):
         
         self.commandMappings = commandMappings
         self.validCommandTypes = validCommandTypes

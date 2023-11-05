@@ -5,6 +5,8 @@ from constants import SPREAD_STEPS_PER_OCTAVE
 def reducer(state, action):
     if state is None:
         return freeze({
+            'chorEngineControl': 'internal',
+
             'availableMidiPorts': [],
             'connectedMidiPort': '',
             'bassChannel': 0,
@@ -153,6 +155,9 @@ def reducer(state, action):
     
     elif action['type'] == 'me/transposeIncrementChanged':
         return state.set('transposeIncrement', action['data']['transposeIncrement'])
+    
+    elif action['type'] == 'me/chorEngineControlChanged':
+        return state.set('chorEngineMode', action['data']['chorEngineMode'])
 
     else:
         return state

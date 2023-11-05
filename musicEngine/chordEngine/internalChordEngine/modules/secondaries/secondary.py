@@ -1,4 +1,4 @@
-from .chord import Chord, DEFAULT_SCALE
+from ....modules.chords import Chord, DEFAULT_SCALE
 
 
 class Secondary(Chord):
@@ -13,21 +13,21 @@ class Secondary(Chord):
         self.bassNotes, self.allBassNotes = self.findAllNotes(self.bass)
         self.bassRoots, self.allBassRoots = self.findAllNotes([self.bass[0]])
 
-    def getChord(self, state, targetRoot):
+    def getChord(self, targetRoot):
         allNotes = self.__getAllNotes(targetRoot)
-        chord = self.getChordFromNotes(state, allNotes)
+        chord = self.getChordFromNotes(allNotes)
         return chord
 
-    def getBass(self, state, targetRoot):
+    def getBass(self, targetRoot):
         allNotes = self.__getAllBassNotes(targetRoot)
         allRoots = self.__getAllBassRoots(targetRoot)
-        bass = self.getBassFromNotes(state, allNotes, allRoots)
+        bass = self.getBassFromNotes(allNotes, allRoots)
         return bass
 
-    def getRoot(self, state, targetRoot):
+    def getRoot(self, targetRoot):
         return (targetRoot + self.interval) % 12
 
-    def getNoteTypes(self, state, targetRoot):
+    def getNoteTypes(self, targetRoot):
         return self.__getNotes(targetRoot)
 
     def getNoteForKey(self, note, key):

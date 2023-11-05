@@ -1,3 +1,4 @@
+from musicEngine.midi.midiInputMessage import MidiInputMessageType, MidiInputMessage
 from rtmidi import MidiOut, MidiIn
 from redux import store
 from redux.actions import musicEngine as actions
@@ -15,6 +16,7 @@ class Midi():
         self.utilityMidiIn = MidiIn()
         self.midiOutInstances = []
         self.midiInInstances = []
+        self.subscriberCallBacks = []
         self.state = {
             'midiOutputConnected': False,
             'midiOutputControllerNames': [],
@@ -76,6 +78,9 @@ class Midi():
 
         asyncio.ensure_future(self.__loop())
 
+    def subscribe(self, callback):
+        self.subscriberCallBacks.append(callback)
+
     def handleMidiIn(self, message, data):
         midiMessage = message[0]
         status_byte = midiMessage[0]
@@ -107,6 +112,11 @@ class Midi():
             })
         if note not in self.state['mergedMidiInputNotesOn']:
             self.state['mergedMidiInputNotesOn'].append(note)
+            self.sendMessage(
+                MidiInputMessage(
+                    MidiInputMessageType.NOTE_ON, 
+                    note
+                    ))
             print("mergedMidiInputNotesOn: ", self.state['mergedMidiInputNotesOn'])
 
     def removeMidiInputNoteOn(self, note, channel, controller):
@@ -120,7 +130,16 @@ class Midi():
                     break
         if note in self.state['mergedMidiInputNotesOn'] and noteIsNotPlayedAnywhere:
             self.state['mergedMidiInputNotesOn'].remove(note)
+            self.sendMessage(
+                MidiInputMessage(
+                    MidiInputMessageType.NOTE_OFF, 
+                    note
+                    ))
             print("mergedMidiInputNotesOn: ", self.state['mergedMidiInputNotesOn'])
+
+    def sendMessage(self, message):
+        for callback in self.subscriberCallBacks:
+            callback(message)
 
     def handleMessage(self, message):
         # if not self.state['midiOutputConnected']:

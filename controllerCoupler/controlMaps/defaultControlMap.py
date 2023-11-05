@@ -65,6 +65,6 @@ defaultControlMap = ControlMap(
 
         #GYROSCOPE
         "GYRO_PITCH": ["INVERSION", "UI_INVERSION_THUMB"],
-        "GYRO_ROLL": ["BASS"],
+        "GYRO_ROLL": ["AFTERTOUCH"],
   }
 )
