@@ -22,4 +22,4 @@ VOICING_PATTERN_PATH = \
 VOICING_PATTERNS = json.load(open(
     PARENT_PATH + VOICING_PATTERN_PATH))['voicingPatterns']
 SETTINGS = json.load(open(
-    PARENT_PATH + "/musicEngine/chordEngine/settings.json"))
+    PARENT_PATH + "/musicEngine/chordEngine/internalChordEngine/modules/settings/settings.json"))
