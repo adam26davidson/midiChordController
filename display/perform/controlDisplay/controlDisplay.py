@@ -35,12 +35,19 @@ class ControlDisplay(tk.Canvas):
         self.parameters = []
         self.appParameterLength = 0
         self.buttonsCreated = False
+        self.chordEngineControlMode = 'internal'
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
         store.subscribe(self.__handleStoreUpdate)
 
     def __handleStoreUpdate(self):
+        meState = store.get_state()['musicEngine']
+        if (meState['controlMode'] != self.chordEngineControlMode):
+            self.chordEngineControlMode = meState['controlMode']
+            if self.buttonsCreated:
+                self.__updateButtonParams()
+
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']
         controlMap: ControlMap = state['activeControlMap']
@@ -58,7 +65,7 @@ class ControlDisplay(tk.Canvas):
     def __createButtons(self, params, map):
          
         def getParam(key):
-            return ControlDisplay.getFirstMEParameter(params, map, key)
+            return self.getFirstMEParameter(params, map, key)
          
         self.createMainButtons(getParam)
         self.createStartButton(map, params)
@@ -72,7 +79,7 @@ class ControlDisplay(tk.Canvas):
     def __updateButtonParams(self, params, map):
 
         def getParam(key):
-            return ControlDisplay.getFirstMEParameter(params, map, key)
+            return self.getFirstMEParameter(params, map, key)
 
         self.southButton.setParam(getParam("SOUTH_BUTTON"))
         self.eastButton.setParam(getParam("EAST_BUTTON"))
@@ -204,13 +211,15 @@ class ControlDisplay(tk.Canvas):
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.touchPadButton.update_x},
                 key="UI_TOUCHPAD_X",
-                remappable=False
+                remappable=False,
+                type=AppParameterType.UI
             ),
             AppParameter(
                 validCommandTypes=[CommandType.ANALOG],
                 commandMappings={Command.UPDATE: self.touchPadButton.update_y},
                 key="UI_TOUCHPAD_Y",
-                remappable=False
+                remappable=False,
+                type=AppParameterType.UI
             )
         ])
 
@@ -465,10 +474,14 @@ class ControlDisplay(tk.Canvas):
         else:
             return [], None
 
-    def getFirstMEParameter(params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
+    def getFirstMEParameter(self, params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):
             for parameterKey in map[key]:
-                if (parameterKey in params and params[parameterKey].type == AppParameterType.MUSIC_ENGINE):
-                    return params[parameterKey]
-        
+                parameterType = params[parameterKey].type
+                if (parameterKey in params and params[parameterKey].type != AppParameterType.UI):
+                    if self.chordEngineControlMode == 'internal' and parameterType == AppParameterType.INTERNAL_CHORD_ENGINE:
+                        return params[parameterKey]
+                    elif self.chordEngineControlMode == 'external' and parameterType == AppParameterType.EXTERNAL_CHORD_ENGINE:
+                        return params[parameterKey]
+            
         return None
