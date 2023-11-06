@@ -157,7 +157,7 @@ def reducer(state, action):
         return state.set('transposeIncrement', action['data']['transposeIncrement'])
     
     elif action['type'] == 'me/chorEngineControlChanged':
-        return state.set('chorEngineMode', action['data']['chorEngineMode'])
+        return state.set('chorEngineControl', action['data']['chorEngineControl'])
 
     else:
         return state
