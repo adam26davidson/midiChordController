@@ -215,6 +215,6 @@ def changeTransposeIncrement(increment):
 
 def changeChordEngineControl(control):
     return {
-        'type': 'me/chorEngineControlChanged',
-        'data': {'chorEngineControl': control}
+        'type': 'me/chordEngineControlChanged',
+        'data': {'chordEngineControl': control}
     }
