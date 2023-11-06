@@ -23,7 +23,9 @@ class Modulations():
 
         reduxUtils.addAppParameters(self.__getParameters())
 
-    def get(self) -> Modulation:
+    def get(self, side: ModulationSide = None) -> Modulation:
+        if side:
+            return self.dict[side]
         if state.modulation.side == ModulationSide.NONE:
             return None
         return self.dict[state.modulation.side]
@@ -46,7 +48,7 @@ class Modulations():
         if state.modulation.side != side:
             scale = state.scale.keyAgnostic
             if side != ModulationSide.NONE:
-                scale = self.get(side).applyToScale()
+                scale = self.get().applyToScale()
 
             store.dispatch(actions.changeModulation({
                 'scale': scale,
