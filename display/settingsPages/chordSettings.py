@@ -68,7 +68,7 @@ class ChordSettingsFrame(SettingsPage):
         if meState['bassRange'] != self.bassRange.getValue():
             self.after(0, self.bassRange.setValue(meState['bassRange']))
         if meState['chordEngineControl'] != self.controlMode.getValue():
-            self.after(0, self.controlMode.setValue(meState['controlMode']))
+            self.after(0, self.controlMode.setValue(meState['chordEngineControl']))
 
     def setTransposeIncrement(self, increment):
         store.dispatch(meActions.changeTransposeIncrement(increment))
