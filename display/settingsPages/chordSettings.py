@@ -38,7 +38,7 @@ class ChordSettingsFrame(SettingsPage):
             value=4,
             callback=self.setBassRange)
         
-        self.controlMode = ButtonGroup(self.channelFrame, 
+        self.controlMode = ButtonGroup(self.rowTwo, 
             name='control mode',
             optionsList=[{'name': 'INT', 'value': 'internal'}, {'name': 'EXT', 'value': 'external'}],
             selected='NO',
