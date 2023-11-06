@@ -66,10 +66,10 @@ class ExternalChordEngine(ChordEngine):
             rootClass = lowestClass
             print(f"rootClass: {rootClass}")
 
-            keyAgnosticRoot = self.rotateBack(key, [rootClass])[0]
+            keyAgnosticRoot = self.rotateForward(key, [rootClass])[0]
             print(f"keyAgnosticRoot: {keyAgnosticRoot}")
 
-            keyAgnosticChord = self.rotateBack(key, noteClasses)
+            keyAgnosticChord = self.rotateForward(key, noteClasses)
             print(f"keyAgnosticChord: {keyAgnosticChord}")
 
             rootIndex = scale.index(keyAgnosticRoot)
