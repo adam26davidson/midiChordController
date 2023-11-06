@@ -64,7 +64,7 @@ defaultControlMap = ControlMap(
         "START_BUTTON": ["MENU"],
 
         #GYROSCOPE
-        "GYRO_PITCH": ["INTERNAL_INVERSION", "UI_INVERSION_THUMB"],
+        "GYRO_PITCH": ["INTERNAL_INVERSION", "EXTERNAL_INVERSION", "UI_INVERSION_THUMB"],
         "GYRO_ROLL": ["AFTERTOUCH"],
   }
 )
