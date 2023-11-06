@@ -5,7 +5,7 @@ from models.command import Command
 from models.commandType import CommandType
 from redux import store
 from redux.actions import musicEngine as actions
-from redux.settingsStorage import SettingsStorageUtility
+from redux.settingsStorage import settingsStorageUtility
 from ..chordEngineState import state
 from pyrsistent import thaw
 from redux import utils as reduxUtils
@@ -29,7 +29,7 @@ class VoiceCount():
         count = max(min(count, MAX_VOICE_COUNT), 1)
         state.voiceCount = count
         store.dispatch(actions.changeVoiceCount(state.voiceCount))
-        SettingsStorageUtility.saveSettings()
+        settingsStorageUtility.saveSettings()
         self.updateChordEngine()
 
     def increment(self):
