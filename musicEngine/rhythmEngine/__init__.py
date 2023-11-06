@@ -29,16 +29,16 @@ class RhythmEngine():
     if message.player == ChordPlayer.CHORD:
       if message.type == ChordMessageType.OFF:
         if self.state['strumMode'] == 'off':
-          self.__handleChordOffSync(message['notes'])
+          self.__handleChordOffSync(message.notes)
         else:
-          asyncio.ensure_future(self.__handleChordOff(message['notes']))
+          asyncio.ensure_future(self.__handleChordOff(message.notes))
       elif message.type == ChordMessageType.ON:
-        self.__handleChordOn(message['notes'])
+        self.__handleChordOn(message.notes)
     elif message.player == ChordPlayer.BASS:
       if message.type == ChordMessageType.OFF:
-        self.__handleBassOff(message['notes'])
+        self.__handleBassOff(message.notes)
       elif message.type == ChordMessageType.ON:
-        self.__handleBassOn(message['notes'])
+        self.__handleBassOn(message.notes)
 
   # takes a dict with the following keys:
   #   'note' (midi note value), 
