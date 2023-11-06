@@ -5,12 +5,10 @@ from models.command import Command
 from models.commandType import CommandType
 from redux import store
 from redux.actions import musicEngine as actions
-from redux.settingsStorage import SettingsStorageUtility
+from redux.settingsStorage import settingsStorageUtility
 from ..chordEngineState import state
 from pyrsistent import thaw
 from redux import utils as reduxUtils
-from redux.settingsStorage import SettingsStorageUtility
-
 
 class ChordOctave():
 
@@ -37,7 +35,7 @@ class ChordOctave():
         clamped = max(min(octave, MAX_OCTAVE_SHIFT), -1*MAX_OCTAVE_SHIFT)
         state.chordOctave = clamped
         store.dispatch(actions.changeChordOctave(state.chordOctave))
-        SettingsStorageUtility.saveSettings()
+        settingsStorageUtility.saveSettings()
         self.updateChordEngine()
 
     def increment(self):
