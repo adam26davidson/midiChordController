@@ -1,5 +1,5 @@
 from musicEngine.chordEngine.externalChordEngine import ExternalChordEngine
-from .chordEngine.internalChordEngine import InternalChordEngine
+from musicEngine.chordEngine.internalChordEngine import InternalChordEngine
 from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
@@ -8,8 +8,6 @@ from redux.actions import controllerCoupler as ccActions
 from models.appParameter import AppParameter
 from models.commandType import CommandType
 from models.command import Command
-from pyrsistent import thaw
-from chordEngine.chordEngineState import state
 
 
 class MusicEngine():
