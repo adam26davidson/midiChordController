@@ -4,7 +4,7 @@ from models.command import Command
 from models.commandType import CommandType
 from redux import store
 from redux.actions import musicEngine as actions
-from redux.settingsStorage import SettingsStorageUtility
+from redux.settingsStorage import settingsStorageUtility
 from redux import utils as reduxUtils
 from ...chordEngineState import state
 from pyrsistent import thaw
@@ -44,7 +44,7 @@ class Key():
         if state.key.value != key:
             state.key.value = key
             store.dispatch(actions.changeKey(key))
-            SettingsStorageUtility.saveSettings()
+            settingsStorageUtility.saveSettings()
             self.updateChordEngine()
 
     def getParameters(self):
