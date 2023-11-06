@@ -17,8 +17,8 @@ class Modulations():
     def __init__(self, setting: dict, updateChordEngine: Callable):
         self.updateChordEngine = updateChordEngine
         self.dict = {
-            ModulationSide.LEFT: Modulation(state.scale, setting["left"]),
-            ModulationSide.RIGHT: Modulation(state.scale, setting["right"])
+            ModulationSide.LEFT: Modulation(state.scale.keyAgnostic, setting["left"]),
+            ModulationSide.RIGHT: Modulation(state.scale.keyAgnostic, setting["right"])
         }
 
         reduxUtils.addAppParameters(self.__getParameters())
