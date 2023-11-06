@@ -66,7 +66,7 @@ class InternalChordEngine(ChordEngine):
             'chord': state.chord.NoteClasses,
             'root': state.chord.rootClass
         }))
-        shadowChord = self.__getChordNotes(state.chord.activeButton)
+        shadowChord = self.getChordNotes(state.chord.activeButton)
         store.dispatch(actions.changeChordShadow(shadowChord))
         store.dispatch(actions.changeBassShadow(self.getBassNote()))
 
