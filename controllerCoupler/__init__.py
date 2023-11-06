@@ -41,9 +41,7 @@ class ControllerCoupler():
             for parameterKey in parameterKeys:
                 if parameterKey in self.parameters.keys():
                     parameter = self.parameters[parameterKey]
-                    print(f"event -  {parameter.label}")
                     if self.__useParameter(parameter):
-                        print(f"event -  {parameter.label} - used")
                         command = self.__mapControlEventToParameterEvent(event.event, parameter)
                         if command in parameter.commandMappings.keys():
                             if event.event == MappableControlEvent.UPDATE:
