@@ -57,18 +57,31 @@ class ExternalChordEngine(ChordEngine):
         if state.chordMode == ExternalChordMode.MOST_RECENT_NOTE_SET:
             noteClasses = state.noteInHistory.lastContiguousClasses
             key, scale = self.getScaleAndKey(noteClasses)
+            print(f"key: {key}, scale: {scale}")
 
             self.scale.update(scale)
             self.key.set(key)
 
             lowestClass = state.noteInHistory.lowestInContiguousClasses % 12
             rootClass = lowestClass
+            print(f"rootClass: {rootClass}")
+
             keyAgnosticRoot = self.rotateBack(key, [rootClass])[0]
+            print(f"keyAgnosticRoot: {keyAgnosticRoot}")
+
             keyAgnosticChord = self.rotateBack(key, noteClasses)
+            print(f"keyAgnosticChord: {keyAgnosticChord}")
+
             rootIndex = scale.index(keyAgnosticRoot)
+            print(f"rootIndex: {rootIndex}")
+
             chordIndecies = [scale.index(noteClass) for noteClass in keyAgnosticChord]
+            print(f"chordIndecies: {chordIndecies}")
+
             chordIndeciesFromRoot = [(chordIndex + (len(scale) - rootIndex)) % len(scale) for chordIndex in chordIndecies]
             chordIndeciesFromRoot.sort()
+            print(f"chordIndeciesFromRoot: {chordIndeciesFromRoot}")
+
             self.chords[ChordButton.SOUTH] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
             self.chords[ChordButton.WEST] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
             self.chords[ChordButton.NORTH] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
