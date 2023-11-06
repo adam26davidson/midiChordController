@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List
 
 
-class ChordEngineMessageType(Enum):
+class ChordMessageType(Enum):
     ON = 1
     OFF = 2
 
@@ -12,11 +12,11 @@ class ChordPlayer(Enum):
     CHORD = 2
 
 class ChordEngineMessage():
-    type: ChordEngineMessageType
+    type: ChordMessageType
     notes: List[int]
     player: ChordPlayer
 
-    def __init__(self, type: ChordEngineMessageType, notes: List[int], player: ChordPlayer):
+    def __init__(self, type: ChordMessageType, notes: List[int], player: ChordPlayer):
         self.type = type
         self.notes = notes
         self.player = player

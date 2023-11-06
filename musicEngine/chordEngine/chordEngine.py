@@ -3,7 +3,7 @@ from typing import Callable, List
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordPlayer, ChordEngineMessageType
+from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordPlayer, ChordMessageType
 from musicEngine.chordEngine.modules.spread import Spread
 from musicEngine.chordEngine.modules.chordOctave import ChordOctave
 from musicEngine.chordEngine.state.chordsState import ChordButton
@@ -72,7 +72,7 @@ class ChordEngine(ABC):
 
     def sendNotesOn(self, notes: List[int], player: ChordPlayer):
         message = ChordEngineMessage(
-            type=ChordEngineMessageType.ON,
+            type=ChordMessageType.ON,
             notes=notes,
             player=player
         )
@@ -80,7 +80,7 @@ class ChordEngine(ABC):
 
     def sendNotesOff(self, notes: List[int], player: ChordPlayer):
         message = ChordEngineMessage(
-            type=ChordEngineMessageType.OFF,
+            type=ChordMessageType.OFF,
             notes=notes,
             player=player
         )

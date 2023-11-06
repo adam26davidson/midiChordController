@@ -1,3 +1,4 @@
+from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordMessageType, ChordPlayer
 from numpy import random
 import asyncio
 import time
@@ -24,19 +25,19 @@ class RhythmEngine():
   #   'notes' (array of midi note values), 
   #   'type' (on or off), and 
   #   'player' (chord or bass)
-  def handleMessage(self, message):
-    if message['player'] == 'chord':
-      if message['type'] == 'off':
+  def handleMessage(self, message: ChordEngineMessage):
+    if message.player == ChordPlayer.CHORD:
+      if message.type == ChordMessageType.OFF:
         if self.state['strumMode'] == 'off':
           self.__handleChordOffSync(message['notes'])
         else:
           asyncio.ensure_future(self.__handleChordOff(message['notes']))
-      elif message['type'] == 'on':
+      elif message.type == ChordMessageType.ON:
         self.__handleChordOn(message['notes'])
-    elif message['player'] == 'bass':
-      if message['type'] == 'off':
+    elif message.player == ChordPlayer.BASS:
+      if message.type == ChordMessageType.OFF:
         self.__handleBassOff(message['notes'])
-      elif message['type'] == 'on':
+      elif message.type == ChordMessageType.ON:
         self.__handleBassOn(message['notes'])
 
   # takes a dict with the following keys:
