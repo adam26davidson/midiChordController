@@ -1,4 +1,4 @@
-from typing import Callable, Dict
+from typing import Callable, Dict, List
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
@@ -28,14 +28,14 @@ class Modulations():
             return None
         return self.dict[state.modulation.side]
     
-    def apply(self, notes: list[int], scale: list[int]) -> list[int]:
+    def apply(self, notes: List[int], scale: List[int]) -> List[int]:
         modulation = self.get()
         if modulation:
             return modulation.apply(notes, scale)
         else:
             return notes
     
-    def applyOne(self, note: int, scale: list[int]) -> int:
+    def applyOne(self, note: int, scale: List[int]) -> int:
         modulation = self.get()
         if modulation:
             return modulation.applyOne(note, scale)
