@@ -1,7 +1,7 @@
 from typing import Dict
-from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulationsState import ModulationSide
-from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondariesState import SecondarySide
-from musicEngine.chordEngine.modules.chords.chordsState import ChordButton
+from musicEngine.chordEngine.state.modulationsState import ModulationSide
+from musicEngine.chordEngine.state.secondariesState import SecondarySide
+from musicEngine.chordEngine.state.chordsState import ChordButton
 from ....modules.chords.dualChord import DualChord
 
 modKeyMap = {

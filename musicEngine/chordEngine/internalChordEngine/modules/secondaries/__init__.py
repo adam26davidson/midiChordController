@@ -2,11 +2,11 @@ from typing import Callable, Dict
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulationsState import ModulationSide
+from musicEngine.chordEngine.state.modulationsState import ModulationSide
 from musicEngine.chordEngine.internalChordEngine.modules.secondaries.parseSecondaries import parseSecondaries
-from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondariesState import SecondarySide
+from musicEngine.chordEngine.state.secondariesState import SecondarySide
 from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondary import Secondary
-from musicEngine.chordEngine.modules.chords.chordsState import ChordButton
+from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.chordEngine.modules.chords.dualChord import DualChord
 from ....chordEngineState import state
 from redux import utils as reduxUtils

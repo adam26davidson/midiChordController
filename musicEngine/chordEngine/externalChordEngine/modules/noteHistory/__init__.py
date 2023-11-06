@@ -2,7 +2,7 @@
 
 import time
 from musicEngine.chordEngine.chordEngineState import state
-from musicEngine.chordEngine.externalChordEngine.modules.noteHistory.noteHistoryState import NoteHistoryEvent
+from musicEngine.chordEngine.state.noteHistoryState import NoteHistoryEvent
 
 
 class HistoryUpdateResponse():

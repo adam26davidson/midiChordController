@@ -3,13 +3,13 @@ from models.command import Command
 from models.commandType import CommandType
 from musicEngine.chordEngine.chordEngine import ChordEngine
 from musicEngine.chordEngine.internalChordEngine.modules.alternate import Alternate
-from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulationsState import ModulationSide
+from musicEngine.chordEngine.state.modulationsState import ModulationSide
 from musicEngine.chordEngine.internalChordEngine.modules.modulations import Modulations
 from musicEngine.chordEngine.internalChordEngine.modules.secondaries import Secondaries
-from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondariesState import SecondarySide
+from musicEngine.chordEngine.state.secondariesState import SecondarySide
 from ..modules.chords.dualChord import DualChord
 from .modules.modulations.modulation import Modulation
-from ..modules.chords.chordsState import ChordButton
+from ..state.chordsState import ChordButton
 
 from ..chordEngineState import state
 from utils import findAllOctavesInRange

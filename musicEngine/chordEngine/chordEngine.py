@@ -6,7 +6,7 @@ from models.command import Command
 from models.commandType import CommandType
 from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordPlayer, ChordEngineMessageType
 from musicEngine.chordEngine.modules.chordOctave import ChordOctave
-from musicEngine.chordEngine.modules.chords.chordsState import ChordButton
+from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.chordEngine.modules.hold import Hold
 from musicEngine.chordEngine.modules.inversion.bassPosition import BassPosition
 from musicEngine.chordEngine.modules.inversion.chordInversion import ChordInversion

@@ -1,15 +1,15 @@
 from enum import Enum
 from typing import List
 from constants import SPREAD_STEPS_PER_OCTAVE
-from musicEngine.chordEngine.externalChordEngine.modules.noteHistory.noteHistoryState import NoteHistoryState
-from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulationsState import ModulationsState
-from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondariesState import SecondariesState
-from musicEngine.chordEngine.internalChordEngine.modules.settings.internalControlSettingsState import InternalControlSettingsState
-from musicEngine.chordEngine.modules.bass.bassState import BassState
-from musicEngine.chordEngine.modules.chords.chordsState import ChordsState
-from musicEngine.chordEngine.modules.inversion.inversionState import InversionState
-from musicEngine.chordEngine.modules.key.keyState import KeyState
-from musicEngine.chordEngine.modules.scale.scaleState import ScaleState
+from musicEngine.chordEngine.state.noteHistoryState import NoteHistoryState
+from musicEngine.chordEngine.state.modulationsState import ModulationsState
+from musicEngine.chordEngine.state.secondariesState import SecondariesState
+from musicEngine.chordEngine.state.internalControlSettingsState import InternalControlSettingsState
+from musicEngine.chordEngine.state.bassState import BassState
+from musicEngine.chordEngine.state.chordsState import ChordsState
+from musicEngine.chordEngine.state.inversionState import InversionState
+from musicEngine.chordEngine.state.keyState import KeyState
+from musicEngine.chordEngine.state.scaleState import ScaleState
 
 
 class ExternalChordScaleMode(Enum):

@@ -3,7 +3,7 @@ from typing import List, Tuple
 from musicEngine.chordEngine.chordEngine import ChordEngine
 from musicEngine.chordEngine.externalChordEngine.modules.noteHistory import NoteHistory
 from musicEngine.chordEngine.modules.chords import Chord
-from musicEngine.chordEngine.modules.chords.chordsState import ChordButton
+from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.midi.midiInputMessage import MidiInputMessage, MidiInputMessageType
 from ..chordEngineState import ExternalChordMode, ExternalChordScaleMode, state
 

@@ -5,7 +5,7 @@ from constants import INVERSION_SNAP, MAX_INVERSION_RANGE
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from musicEngine.chordEngine.modules.inversion.inversionState import InversionState
+from musicEngine.chordEngine.state.inversionState import InversionState
 from ...chordEngineState import state
 from redux import store
 from redux.actions import musicEngine as actions

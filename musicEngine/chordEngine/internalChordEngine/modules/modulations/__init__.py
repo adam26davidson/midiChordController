@@ -3,7 +3,7 @@ from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulation import Modulation
-from .modulationsState import ModulationSide
+from ....state.modulationsState import ModulationSide
 from ....chordEngineState import state
 from redux import store
 from redux.actions import musicEngine as actions
