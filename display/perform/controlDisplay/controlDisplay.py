@@ -15,6 +15,7 @@ from .touchPadButton import TouchPadButton
 from.dpadButton import DPadButton
 from redux import store, utils as ReduxUtils
 from redux.actions import controllerCoupler as actions
+from pyrsistent import thaw
 
 class ControlDisplay(tk.Canvas):
 
@@ -42,7 +43,7 @@ class ControlDisplay(tk.Canvas):
         store.subscribe(self.__handleStoreUpdate)
 
     def __handleStoreUpdate(self):
-        meState = store.get_state()['musicEngine']
+        meState = thaw(store.get_state()['musicEngine'])
         if (meState['chordEngineControl'] != self.chordEngineControlMode):
             self.chordEngineControlMode = meState['chordEngineControl']
             if self.buttonsCreated:
