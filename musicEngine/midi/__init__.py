@@ -204,10 +204,13 @@ class Midi():
         self.midiOutInstances = []
         self.state['midiOutputControllerNames'] = []
         for i in range(1, len(self.availableOutputPorts)):
+            portName = self.availableOutputPorts[i]
+            if portName.count('Midi Through') > 0 or portName.count('RtMidi') > 0:
+                continue
             midiOut = MidiOut()
             midiOut.open_port(i)
             self.midiOutInstances.append(midiOut)
-            self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
+            self.state['midiOutputControllerNames'].append(portName)
 
     def __setBassChannel(self, channel):
         if (channel < 0 or channel > 15):
