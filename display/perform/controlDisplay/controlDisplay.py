@@ -43,8 +43,8 @@ class ControlDisplay(tk.Canvas):
 
     def __handleStoreUpdate(self):
         meState = store.get_state()['musicEngine']
-        if (meState['controlMode'] != self.chordEngineControlMode):
-            self.chordEngineControlMode = meState['controlMode']
+        if (meState['chordEngineControl'] != self.chordEngineControlMode):
+            self.chordEngineControlMode = meState['chordEngineControl']
             if self.buttonsCreated:
                 self.__updateButtonParams()
 
