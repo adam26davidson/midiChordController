@@ -70,12 +70,12 @@ class StrumSettingsFrame(SettingsPage):
         def strumIntervalCallback(value):
             if meState['strumInterval'] != value:
                 self.after(0, self.strumInterval.setValue(meState['strumInterval']))
-        self.after(0, self.strumInterval.getValue(), strumIntervalCallback)
+        self.after(0, self.strumInterval.getValue, strumIntervalCallback)
 
         def strumOrderCallback(value):
             if meState['strumOrder'] != value:
                 self.after(0, self.strumOrder.setValue(meState['strumOrder']))
-        self.after(0, self.strumOrder.getValue(), strumOrderCallback)
+        self.after(0, self.strumOrder.getValue, strumOrderCallback)
 
 
     def getValueWithCallBack(self, getValue, callback):
