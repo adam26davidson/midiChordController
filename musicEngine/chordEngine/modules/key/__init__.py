@@ -52,8 +52,8 @@ class Key():
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
                 commandMappings = {
-                    Command.INCREMENT: self.chordEngine.incrementKey, 
-                    Command.DECREMENT: self.chordEngine.decrementKey
+                    Command.INCREMENT: self.increment, 
+                    Command.DECREMENT: self.decrement
                 },
                 key = "KEY",
                 label = "Transpose",
