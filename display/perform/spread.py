@@ -23,7 +23,7 @@ class Spread(tk.Canvas):
     def handleStoreUpdate(self):
         spread = store.get_state()['musicEngine']['spread']
         if self.state['rawValue'] != spread:
-            self.__setValue(spread)
+            self.after(0, self.__setValue(spread))
 
     def __drawArrow(self):
         keyWidth = self.width / self.numKeys

@@ -47,7 +47,7 @@ class ControlDisplay(tk.Canvas):
         if (meState['chordEngineControl'] != self.chordEngineControlMode):
             self.chordEngineControlMode = meState['chordEngineControl']
             if self.buttonsCreated:
-                self.__updateButtonParams()
+                self.after(0, self.__updateButtonParams())
 
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']

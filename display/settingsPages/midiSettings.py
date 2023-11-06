@@ -96,19 +96,19 @@ class MidiSettingsFrame(SettingsPage):
         meState = thaw(state['musicEngine'])
 
         if meState['velocity'] != self.velocity.getValue():
-            self.velocity.setValue(meState['velocity'])
+            self.after(0, self.velocity.setValue(meState['velocity']))
         if meState['velocityMode'] != self.velocityMode.getValue():
-            self.velocityMode.setValue(meState['velocityMode'])
+            self.after(0, self.velocityMode.setValue(meState['velocityMode']))
         if meState['velocityDeviation'] != self.velocityDeviation.getValue():
-            self.velocityDeviation.setValue(meState['velocityDeviation'])
+            self.after(0, self.velocityDeviation.setValue(meState['velocityDeviation']))
         if meState['chordChannel'] != (self.chordChannel.getValue() - 1):
-            self.chordChannel.setValue(meState['chordChannel'] + 1)
+            self.after(0, self.chordChannel.setValue(meState['chordChannel'] + 1))
         if meState['bassChannel'] != (self.bassChannel.getValue() - 1):
-            self.bassChannel.setValue(meState['bassChannel'] + 1)
+            self.after(0, self.bassChannel.setValue(meState['bassChannel'] + 1))
         if meState['distributeChannels'] != self.distributeChannels.getValue():
-            self.distributeChannels.setValue(meState['distributeChannels'])
+            self.after(0, self.distributeChannels.setValue(meState['distributeChannels']))
         if meState['aftertouchMode'] != self.aftertouchMode.getValue():
-            self.aftertouchMode.setValue(meState['aftertouchMode'])
+            self.after(0, self.aftertouchMode.setValue(meState['aftertouchMode']))
         
 
     def setBassChannel(self, channel):

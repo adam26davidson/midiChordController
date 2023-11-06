@@ -99,7 +99,7 @@ class Display():
         if (displayState['activeFrame'] != self.state.activeFrame):
             if (displayState['activeFrame'] in self.frames.keys()):
                 self.state.activeFrame = displayState['activeFrame']
-                self.frames[displayState['activeFrame']].tkraise()
+                self.root.after(0, self.frames[displayState['activeFrame']].tkraise())
             else:
                 store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
     
