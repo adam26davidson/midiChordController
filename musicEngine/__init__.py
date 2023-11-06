@@ -26,6 +26,7 @@ class MusicEngine():
         self.rhythmEngine.subscribe(self.midi.handleMessage)
 
         reduxUtils.addAppParameters(self.getParameters())
+        
         store.dispatch(ccActions.musicEngineAppParametersLoaded())
 
     def start(self):
