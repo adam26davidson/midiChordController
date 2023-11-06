@@ -1,6 +1,5 @@
 from musicEngine.chordEngine.externalChordEngine import ExternalChordEngine
 from .chordEngine.internalChordEngine import InternalChordEngine
-from .chordEngine.controlState import ChordButton
 from .rhythmEngine import RhythmEngine
 from .midi import Midi
 from redux import store
