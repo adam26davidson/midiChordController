@@ -15,3 +15,8 @@ class ChordEngineMessage():
     type: ChordEngineMessageType
     notes: List[int]
     player: ChordPlayer
+
+    def __init__(self, type: ChordEngineMessageType, notes: List[int], player: ChordPlayer):
+        self.type = type
+        self.notes = notes
+        self.player = player
