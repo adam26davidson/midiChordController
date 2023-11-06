@@ -63,11 +63,11 @@ class StrumSettingsFrame(SettingsPage):
         meState = thaw(state['musicEngine'])
 
         if meState['strumMode'] != self.strumMode.getValue():
-            self.strumMode.setValue(meState['strumMode'])
+            self.after(0, self.strumMode.setValue(meState['strumMode']))
         if meState['strumInterval'] != self.strumInterval.getValue():
-            self.strumInterval.setValue(meState['strumInterval'])
+            self.after(0, self.strumInterval.setValue(meState['strumInterval']))
         if meState['strumOrder'] != self.strumOrder.getValue():
-            self.strumOrder.setValue(meState['strumOrder'])
+            self.after(0, self.strumOrder.setValue(meState['strumOrder']))
 
     def setStrumMode(self, mode):
         store.dispatch(meActions.changeStrumMode(mode))
