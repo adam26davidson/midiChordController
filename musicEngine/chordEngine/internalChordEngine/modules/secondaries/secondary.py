@@ -34,13 +34,13 @@ class Secondary(Chord):
         return (note + key) % 12
 
     def __getNotes(self, targetRoot):
-        return self.notes[self.getRoot(None, targetRoot)]
+        return self.notes[self.getRoot(targetRoot)]
 
     def __getAllNotes(self, targetRoot):
-        return self.allNotes[self.getRoot(None, targetRoot)]
+        return self.allNotes[self.getRoot(targetRoot)]
 
     def __getAllBassNotes(self, targetRoot):
-        return self.allBassNotes[self.getRoot(None, targetRoot)]
+        return self.allBassNotes[self.getRoot(targetRoot)]
 
     def __getAllBassRoots(self, targetRoot):
-        return self.allBassRoots[self.getRoot(None, targetRoot)]
+        return self.allBassRoots[self.getRoot(targetRoot)]
