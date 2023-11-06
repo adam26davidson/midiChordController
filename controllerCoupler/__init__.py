@@ -105,6 +105,7 @@ class ControllerCoupler():
             return False
         if parameter.type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode:
             return False
+        return True
 
     def __mapControlEventToParameterEvent(
             self,
