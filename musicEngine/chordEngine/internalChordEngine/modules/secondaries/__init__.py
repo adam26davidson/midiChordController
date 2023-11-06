@@ -1,4 +1,4 @@
-from typing import Callable, Dict
+from typing import Callable, Dict, List
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
@@ -28,7 +28,7 @@ class Secondaries():
             state.secondary.side = side
             self.updateChordEngine()
 
-    def getChord(self, chordRoot: int) -> list[int]:
+    def getChord(self, chordRoot: int) -> List[int]:
         secondary = self.get()
         return None if secondary == None else secondary.getChord(chordRoot)
 
@@ -40,7 +40,7 @@ class Secondaries():
         secondary = self.get()
         return None if secondary == None else secondary.getRoot(chordRoot)
         
-    def getNoteTypes(self, chordRoot: int) -> list[int]:
+    def getNoteTypes(self, chordRoot: int) -> List[int]:
         secondary = self.get()
         return None if secondary == None else secondary.getNoteTypes(chordRoot)
     
