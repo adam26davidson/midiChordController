@@ -12,7 +12,6 @@ from .modules.modulations.modulation import Modulation
 from ..state.chordsState import ChordButton
 
 from ..chordEngineState import state
-from utils import findAllOctavesInRange
 from constants import SETTINGS
 from redux import store
 from redux.actions import musicEngine as actions
