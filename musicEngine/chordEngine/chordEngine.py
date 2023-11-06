@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Callable, List
-from display.perform.spread import Spread
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordPlayer, ChordEngineMessageType
+from musicEngine.chordEngine.modules.spread import Spread
 from musicEngine.chordEngine.modules.chordOctave import ChordOctave
 from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.chordEngine.modules.hold import Hold
