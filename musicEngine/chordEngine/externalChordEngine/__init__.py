@@ -140,8 +140,12 @@ class ExternalChordEngine(ChordEngine):
         return primeForm
 
     def rotateBack(self, r: int, noteClasses: List[int]) -> List[int]:
-        return [(noteClass + (12 - r)) % 12 for noteClass in noteClasses]
+        newClasses = [(noteClass + (12 - r)) % 12 for noteClass in noteClasses]
+        newClasses.sort()
+        return newClasses
 
     def rotateForward(self, r: int, noteClasses: List[int]) -> List[int]:
-        return [(noteClass + r) % 12 for noteClass in noteClasses]
+        newClasses = [(noteClass + r) % 12 for noteClass in noteClasses]
+        newClasses.sort()
+        return newClasses
     
