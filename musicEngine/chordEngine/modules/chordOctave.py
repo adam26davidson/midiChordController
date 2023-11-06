@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List
 from constants import MAX_OCTAVE_SHIFT, MAX_SPREAD_OCTAVES, SPREAD_STEPS_PER_OCTAVE
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
@@ -30,7 +30,7 @@ class ChordOctave():
         if (meState['chordOctave'] != state.chordOctave):
             self.set(meState['chordOctave'])
 
-    def apply(self, notes: list[int]) -> list[int]:
+    def apply(self, notes: List[int]) -> List[int]:
         return [note + (state.chordOctave * 12) for note in notes]
 
     def set(self, octave):
