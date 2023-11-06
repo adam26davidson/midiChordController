@@ -31,7 +31,7 @@ class BassPosition(Inversion):
             self.setRange(meState['bassRange'])
 
     def getParameters(self):
-        keyPrefix = str(self.type.value).upper() + "_"
+        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"        
         return [
             AppParameter(
                 validCommandTypes = [CommandType.ANALOG, CommandType.INCREMENTAL],

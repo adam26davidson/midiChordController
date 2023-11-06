@@ -176,7 +176,7 @@ class ChordEngine(ABC):
             store.dispatch(actions.changeBassShadow(note))
 
     def getParameters(self):
-        keyPrefix = str(self.type.value).upper() + "_"
+        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return[
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
