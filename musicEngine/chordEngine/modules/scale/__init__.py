@@ -15,7 +15,7 @@ class Scale():
         store.dispatch(actions.changeScale(state.scale.keyAgnostic))
 
     def get(self):
-        return state.scale.noteClassMap[state.key]
+        return state.scale.noteClassMap[state.key.value]
 
     def __findScaleNotesForKey(self, key):
         scaleNotes = []
