@@ -1,6 +1,6 @@
 from constants import BASS_CENTER, VOICING_PATTERNS, SPREAD_STEPS_PER_OCTAVE, \
     CENTER_NOTE
-from utils import findAllOctavesInRange, findClosestNote
+from ...utils import findAllOctavesInRange, findClosestNote
 from ...chordEngineState import state
 
 DEFAULT_SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
