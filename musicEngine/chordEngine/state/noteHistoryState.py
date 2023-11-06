@@ -11,11 +11,11 @@ class NoteHistoryEvent():
 
 
 class NoteHistoryState():
-    classesPlayed: List[int]
-    lastContiguous: List[int]
-    lastContiguousClasses: List[int]
-    classRecencyRanking: List[int]
-    lowestInContiguousClasses: int
+    classesPlayed: List[int] = []
+    lastContiguous: List[int] = []
+    lastContiguousClasses: List[int] = []
+    classRecencyRanking: List[int] = []
+    lowestInContiguousClasses: int = 127
 
     all: Dict[int, List[NoteHistoryEvent]] = {}
 
