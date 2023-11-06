@@ -99,9 +99,9 @@ class ControllerCoupler():
     
     def __useParameter(self, parameter: AppParameter):
         internalMode = self.chordEngineControlMode == ChordEngineControlMode.INTERNAL
-        if parameter.Type == AppParameterType.INTERNAL_CHORD_ENGINE and not internalMode:
+        if parameter.type == AppParameterType.INTERNAL_CHORD_ENGINE and not internalMode:
             return False
-        if parameter.Type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode:
+        if parameter.type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode:
             return False
 
     def __mapControlEventToParameterEvent(
