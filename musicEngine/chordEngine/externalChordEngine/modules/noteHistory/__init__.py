@@ -78,6 +78,8 @@ class NoteHistory():
     def __removeExpired(self):
         for noteClassHistory in state.noteInHistory.all.values():
             for noteEvent in noteClassHistory:
+                if noteEvent.OffTime == None:
+                    continue
                 endAgeSeconds = (time.time_ns() - noteEvent.OffTime) / 1000000000
                 if endAgeSeconds > state.noteInHistory.memoryLength:
                     noteClassHistory.remove(noteEvent)
