@@ -48,7 +48,7 @@ class Modulations():
         if state.modulation.side != side:
             scale = state.scale.keyAgnostic
             if side != ModulationSide.NONE:
-                scale = self.get().applyToScale()
+                scale = self.get(side).applyToScale()
 
             store.dispatch(actions.changeModulation({
                 'scale': scale,
