@@ -1,5 +1,6 @@
 import time
 from typing import List, Tuple
+from models.appParameter import AppParameterType
 from musicEngine.chordEngine.chordEngine import ChordEngine
 from musicEngine.chordEngine.externalChordEngine.modules.noteHistory import NoteHistory
 from musicEngine.chordEngine.modules.chords import Chord
@@ -11,6 +12,7 @@ from ..chordEngineState import ExternalChordMode, ExternalChordScaleMode, state
 class ExternalChordEngine(ChordEngine):
 
     def __init__(self):
+        super().__init__(AppParameterType.EXTERNAL_CHORD_ENGINE)
 
         self.noteHistory = NoteHistory()
 
