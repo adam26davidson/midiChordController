@@ -37,12 +37,6 @@ class ChordSettingsFrame(SettingsPage):
             max=MAX_BASS_RANGE, 
             value=4,
             callback=self.setBassRange)
-        
-        self.controlMode = ButtonGroup(self.rowTwo, 
-            name='control mode',
-            optionsList=[{'name': 'INT', 'value': 'internal'}, {'name': 'EXT', 'value': 'external'}],
-            selected='NO',
-            callback=self.setControlMode)
 
         self.transposeIncrement.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.inversionRange.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
