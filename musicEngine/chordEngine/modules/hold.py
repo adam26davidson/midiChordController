@@ -30,13 +30,14 @@ class Hold():
         store.dispatch(actions.changeHold(state.hold))
 
     def __getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.TOGGLE],
                 commandMappings = {
                     Command.TOGGLE: self.toggle
                 },
-                key = "HOLD",
+                key = f"{keyPrefix}HOLD",
                 label = "Hold",
                 labelAbreviation="H",
                 type = self.type

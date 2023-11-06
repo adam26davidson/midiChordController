@@ -44,6 +44,7 @@ class Spread():
             self.set(meState['spread'])
 
     def __getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
@@ -51,7 +52,7 @@ class Spread():
                     Command.INCREMENT: self.increment, 
                     Command.DECREMENT: self.decrement
                 },
-                key = "SPREAD",
+                key = f"{keyPrefix}SPREAD",
                 label = "Spread",
                 labelAbreviation="S",
                 type = self.type

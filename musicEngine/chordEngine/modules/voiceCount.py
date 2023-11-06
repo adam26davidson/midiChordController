@@ -44,6 +44,7 @@ class VoiceCount():
             self.set(meState['voiceCount'])
 
     def __getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
@@ -51,7 +52,7 @@ class VoiceCount():
                     Command.INCREMENT: self.increment, 
                     Command.DECREMENT: self.decrement
                 },
-                key = "VOICE_COUNT",
+                key = f"{keyPrefix}VOICE_COUNT",
                 label = "Voice Count",
                 labelAbreviation="V",
                 type = self.type

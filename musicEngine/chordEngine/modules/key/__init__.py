@@ -48,6 +48,7 @@ class Key():
             self.updateChordEngine()
 
     def getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
@@ -55,7 +56,7 @@ class Key():
                     Command.INCREMENT: self.increment, 
                     Command.DECREMENT: self.decrement
                 },
-                key = "KEY",
+                key = f"{keyPrefix}KEY",
                 label = "Transpose",
                 labelAbreviation="T",
                 type = self.type

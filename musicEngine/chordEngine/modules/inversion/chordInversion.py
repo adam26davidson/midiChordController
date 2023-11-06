@@ -31,6 +31,7 @@ class ChordInversion(Inversion):
             self.setRange(meState['inversionRange'])
 
     def getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.ANALOG, CommandType.INCREMENTAL],
@@ -39,7 +40,7 @@ class ChordInversion(Inversion):
                     Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
-                key = "INVERSION",
+                key = f"{keyPrefix}INVERSION",
                 label = "Inversion",
                 labelAbreviation="I",
                 type = self.type
@@ -49,7 +50,7 @@ class ChordInversion(Inversion):
                 commandMappings = {
                     Command.TOGGLE: self.toggleLock
                 },
-                key = "INVERSION_LOCK",
+                key = f"{keyPrefix}INVERSION_LOCK",
                 label = "Inversion Lock",
                 labelAbreviation="IL",
                 type = self.type
@@ -60,7 +61,7 @@ class ChordInversion(Inversion):
                     Command.INCREMENT: self.incrementRange,
                     Command.DECREMENT: self.decrementRange
                 },
-                key = "INVERSION_RANGE",
+                key = f"{keyPrefix}INVERSION_RANGE",
                 label = "Inversion Range",
                 labelAbreviation="IR",
             )

@@ -31,6 +31,7 @@ class BassPosition(Inversion):
             self.setRange(meState['bassRange'])
 
     def getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.ANALOG, CommandType.INCREMENTAL],
@@ -39,7 +40,7 @@ class BassPosition(Inversion):
                     Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
-                key = "BASS_POSITION",
+                key = f"{keyPrefix}BASS_POSITION",
                 label = "Bass Position",
                 labelAbreviation="BP",
                 type = self.type
@@ -49,7 +50,7 @@ class BassPosition(Inversion):
                 commandMappings = {
                     Command.TOGGLE: self.toggleLock
                 },
-                key = "BASS_POSITION_LOCK",
+                key = f"{keyPrefix}BASS_POSITION_LOCK",
                 label = "Bass Position Lock",
                 labelAbreviation="BL",
                 type = self.type
@@ -60,7 +61,7 @@ class BassPosition(Inversion):
                     Command.INCREMENT: self.incrementRange,
                     Command.DECREMENT: self.decrementRange
                 },
-                key = "BASS_POSITION_RANGE",
+                key = f"{keyPrefix}BASS_POSITION_RANGE",
                 label = "Bass Range",
                 labelAbreviation="BR",
                 type = self.type

@@ -176,6 +176,7 @@ class ChordEngine(ABC):
             store.dispatch(actions.changeBassShadow(note))
 
     def getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return[
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
@@ -183,7 +184,7 @@ class ChordEngine(ABC):
                     Command.ON: lambda: self.chordButtonOn(ChordButton.SOUTH), 
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.SOUTH)
                 },
-                key = "SOUTH_CHORD",
+                key = f"{keyPrefix}SOUTH_CHORD",
                 label = "South Chord",
                 labelAbreviation="S",
                 type = self.type
@@ -194,7 +195,7 @@ class ChordEngine(ABC):
                     Command.ON: lambda: self.chordButtonOn(ChordButton.WEST), 
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.WEST)
                 },
-                key = "WEST_CHORD",
+                key = f"{keyPrefix}WEST_CHORD",
                 label = "West Chord",
                 labelAbreviation="W",
                 type = self.type
@@ -205,7 +206,7 @@ class ChordEngine(ABC):
                     Command.ON: lambda: self.chordButtonOn(ChordButton.NORTH), 
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.NORTH)
                 },
-                key = "NORTH_CHORD",
+                key = f"{keyPrefix}NORTH_CHORD",
                 label = "North Chord",
                 labelAbreviation="N",
                 type = self.type
@@ -216,7 +217,7 @@ class ChordEngine(ABC):
                     Command.ON: lambda: self.chordButtonOn(ChordButton.EAST), 
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.EAST)
                 },
-                key = "EAST_CHORD",
+                key = f"{keyPrefix}EAST_CHORD",
                 label = "East Chord",
                 labelAbreviation="E",
                 type = self.type
@@ -227,7 +228,7 @@ class ChordEngine(ABC):
                     Command.ON: self.playBass, 
                     Command.OFF: self.stopBass
                 },
-                key = "BASS",
+                key = f"{keyPrefix}BASS",
                 label = "Bass",
                 labelAbreviation="B",
                 type = self.type

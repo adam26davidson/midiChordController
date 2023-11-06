@@ -47,6 +47,7 @@ class ChordOctave():
         self.set(state.chordOctave - 1)
         
     def __getParameters(self):
+        keyPrefix = str(self.type.value).upper() + "_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
@@ -54,7 +55,7 @@ class ChordOctave():
                     Command.INCREMENT: self.increment, 
                     Command.DECREMENT: self.decrement
                 },
-                key = "OCTAVE",
+                key = f"{keyPrefix}OCTAVE",
                 label = "Octave",
                 labelAbreviation="O",
                 type = self.type
