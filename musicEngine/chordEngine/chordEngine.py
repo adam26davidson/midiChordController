@@ -151,7 +151,7 @@ class ChordEngine(ABC):
         self.updateBass()
 
     def setChordType(self):
-        chordNoteClasses, rootClass = self.getChordNoteClasses(state.chord.activeButton)
+        chordNoteClasses, rootClass = self.getChordNoteClasses()
         if chordNoteClasses != state.chord.NoteClasses or rootClass != state.chord.rootClass:
             state.chord.NoteClasses, state.chord.rootClass = chordNoteClasses, rootClass
             store.dispatch(actions.changeChordType({'chord': chordNoteClasses, 'root': rootClass}))
