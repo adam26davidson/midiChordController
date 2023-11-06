@@ -5,7 +5,7 @@ from constants import SPREAD_STEPS_PER_OCTAVE
 def reducer(state, action):
     if state is None:
         return freeze({
-            'chordEngineControl': 'internal',
+            'chordEngineControl': 'external',
 
             'availableMidiPorts': [],
             'connectedMidiPort': '',
