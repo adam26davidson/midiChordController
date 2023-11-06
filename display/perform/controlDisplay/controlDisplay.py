@@ -478,8 +478,8 @@ class ControlDisplay(tk.Canvas):
     def getFirstMEParameter(self, params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
         if (key in map):
             for parameterKey in map[key]:
-                parameterType = params[parameterKey].type
                 if (parameterKey in params and params[parameterKey].type != AppParameterType.UI):
+                    parameterType = params[parameterKey].type
                     if self.chordEngineControlMode == 'internal' and parameterType == AppParameterType.INTERNAL_CHORD_ENGINE:
                         return params[parameterKey]
                     elif self.chordEngineControlMode == 'external' and parameterType == AppParameterType.EXTERNAL_CHORD_ENGINE:
