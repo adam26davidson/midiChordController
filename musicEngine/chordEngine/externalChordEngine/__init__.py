@@ -45,7 +45,7 @@ class ExternalChordEngine(ChordEngine):
         chord = self.chords[state.chord.activeButton]
         return chord.getBass()
 
-    async def start(self):
+    def start(self):
         asyncio.ensure_future(self.__inputLoop())
 
     def handleMidiMessage(self, message: MidiInputMessage):
