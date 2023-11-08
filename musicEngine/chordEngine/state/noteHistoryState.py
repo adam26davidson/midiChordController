@@ -11,6 +11,7 @@ class NoteHistoryEvent():
 
 
 class NoteHistoryState():
+    notesPlayed: List[int] = []
     classesPlayed: List[int] = []
     lastContiguous: List[int] = []
     lastContiguousClasses: List[int] = []

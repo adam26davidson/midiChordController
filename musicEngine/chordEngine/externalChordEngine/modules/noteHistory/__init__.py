@@ -25,17 +25,16 @@ class NoteHistory():
 
         # update lastContiguousClasses
         if state.noteInHistory.classesPlayed == []:
-
             state.noteInHistory.lastContiguousClasses = [noteClass]
             state.noteInHistory.lastContiguous = [note]
             state.noteInHistory.lowestInContiguousClasses = note
-
-            response.lastContiguousClassesChanged = True
-            response.lowestChanged = True
         elif noteClass not in state.noteInHistory.lastContiguousClasses:
             state.noteInHistory.lastContiguousClasses.append(noteClass)
             response.lastContiguousClassesChanged = True
-            
+
+        if note not in state.noteInHistory.notesPlayed:
+            state.noteInHistory.notesPlayed.append(note)
+
         if note not in state.noteInHistory.lastContiguous:
             state.noteInHistory.lastContiguous.append(note)
             if note < state.noteInHistory.lowestInContiguousClasses:
@@ -59,24 +58,25 @@ class NoteHistory():
             state.noteInHistory.all[noteClass].append(NoteHistoryEvent(OnTime = time.time_ns(), OffTime = None))
         self.__removeExpired()
 
-        return response
 
     def noteOff(self, note: int) -> HistoryUpdateResponse:
 
         noteClass = note % 12
-        response = HistoryUpdateResponse()
+
+        # update notes played
+        if note in state.noteInHistory.notesPlayed:
+            state.noteInHistory.notesPlayed.remove(note)
 
         # update classesPlayed
-        if (noteClass) in state.noteInHistory.classesPlayed:
+        noteClasses = [n % 12 for n in state.noteInHistory.notesPlayed]
+        if noteClass not in noteClasses and noteClass in state.noteInHistory.classesPlayed:
             state.noteInHistory.classesPlayed.remove(noteClass)
-            response.classesPlayedChanged = True
         
-        # update lastContiguousClasses
+        # update note history
         if len(state.noteInHistory.all[noteClass]) > 0 and self.__latestNoteIsOn(noteClass):
             state.noteInHistory.all[noteClass][-1].OffTime = time.time_ns()
         self.__removeExpired()
 
-        return response
 
     def __removeExpired(self):
         for noteClassHistory in state.noteInHistory.all.values():
