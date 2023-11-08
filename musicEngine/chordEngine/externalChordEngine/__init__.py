@@ -50,6 +50,7 @@ class ExternalChordEngine(ChordEngine):
 
     def handleMidiMessage(self, message: MidiInputMessage):
         self.inputQueue.append(message)
+        print("input queue length: ", len(self.inputQueue))
 
     async def __inputLoop(self):
         while True:
