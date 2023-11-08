@@ -50,12 +50,10 @@ class ExternalChordEngine(ChordEngine):
 
     def handleMidiMessage(self, message: MidiInputMessage):
         self.inputQueue.append(message)
-        print("input queue length: ", len(self.inputQueue))
 
     async def __inputLoop(self):
         while True:
             if len(self.inputQueue) > 0:
-                print("processing queue")
                 self.processQueue(self.inputQueue)
                 self.inputQueue = []
             await asyncio.sleep(MIDI_INPUT_STEP)
@@ -63,7 +61,6 @@ class ExternalChordEngine(ChordEngine):
     def processQueue(self, queue: List[MidiInputMessage]):
         lastContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
         lastContiguousClasses.sort()
-        print("last classes: ", lastContiguousClasses)
         for message in queue:
             if message.type == MidiInputMessageType.NOTE_ON:
                 self.noteHistory.noteOn(message.note)
@@ -71,7 +68,6 @@ class ExternalChordEngine(ChordEngine):
                 self.noteHistory.noteOff(message.note)
         newContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
         newContiguousClasses.sort()
-        print("new classes: ", newContiguousClasses)
         if lastContiguousClasses != newContiguousClasses:
             print("new chord")
             self.determineChordAndScale()
