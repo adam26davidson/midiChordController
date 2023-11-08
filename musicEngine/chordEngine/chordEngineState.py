@@ -27,6 +27,7 @@ class ExternalRootMode(Enum):
     LOWEST = 1
 
 
+
 class ChordEngineState():
 
     scale: ScaleState = ScaleState()
@@ -52,6 +53,8 @@ class ChordEngineState():
     chordMode: ExternalChordMode = ExternalChordMode.MOST_RECENT_NOTE_SET
     rootMode: ExternalRootMode = ExternalRootMode.LOWEST
     preferredScaleClasses: List[List[int]] = [[0, 2, 4, 5, 7, 9, 11], [0, 2, 4, 6, 7, 9, 10]]
+    extensionRanking: List[int] = [0, 4, 3, 7, 11, 10, 2, 5, 9, 8, 1, 6]
+    avoidInterval: List[int] = [6]
 
 
 state = ChordEngineState()

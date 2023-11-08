@@ -81,7 +81,6 @@ class Midi():
             self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
 
         asyncio.ensure_future(self.__outputLoop())
-        asyncio.ensure_future(self.__inputLoop())
 
     def subscribe(self, callback):
         self.subscriberCallBacks.append(callback)
@@ -117,7 +116,7 @@ class Midi():
             })
         if note not in self.state['mergedMidiInputNotesOn']:
             self.state['mergedMidiInputNotesOn'].append(note)
-            self.midiInputMessageQueue.append(
+            self.sendMessage(
                 MidiInputMessage(
                     MidiInputMessageType.NOTE_ON, 
                     note
@@ -135,7 +134,7 @@ class Midi():
                     break
         if note in self.state['mergedMidiInputNotesOn'] and noteIsNotPlayedAnywhere:
             self.state['mergedMidiInputNotesOn'].remove(note)
-            self.midiInputMessageQueue.append(
+            self.sendMessage(
                 MidiInputMessage(
                     MidiInputMessageType.NOTE_OFF, 
                     note
@@ -182,13 +181,6 @@ class Midi():
             self.__setVelocityDeviation(meState['velocityDeviation'])
         if (meState['aftertouchMode'] != self.state['aftertouchMode']):
             self.__setAftertouchMode(meState['aftertouchMode'])
-    
-    async def __inputLoop(self):
-        while True:
-            while self.midiInputMessageQueue:
-                message = self.midiInputMessageQueue.pop(0)
-                self.sendMessage(message)
-            await asyncio.sleep(MIDI_INPUT_STEP)
 
     async def __outputLoop(self):
         while True:

@@ -1,5 +1,7 @@
+import asyncio
 import time
 from typing import List, Tuple
+from constants import MIDI_INPUT_STEP
 from models.appParameter import AppParameterType
 from musicEngine.chordEngine.chordEngine import ChordEngine
 from musicEngine.chordEngine.externalChordEngine.modules.noteHistory import NoteHistory
@@ -11,10 +13,14 @@ from ..chordEngineState import ExternalChordMode, ExternalChordScaleMode, state
 
 class ExternalChordEngine(ChordEngine):
 
+    inputQueue: List[MidiInputMessage]
+    noteHistory: NoteHistory
+
     def __init__(self):
         super().__init__(AppParameterType.EXTERNAL_CHORD_ENGINE)
 
         self.noteHistory = NoteHistory()
+        self.inputQueue = []
 
         self.chords = {
             ChordButton.SOUTH: Chord([0, 3, 7], [0], 0),
@@ -22,20 +28,6 @@ class ExternalChordEngine(ChordEngine):
             ChordButton.NORTH: Chord([0, 3, 7], [0], 0),
             ChordButton.EAST: Chord([0, 3, 7], [0], 0)
         }
-
-    def handleMidiMessage(self, message: MidiInputMessage):
-        if message.type == MidiInputMessageType.NOTE_ON:
-            self.handleNoteOn(message.note)
-        elif message.type == MidiInputMessageType.NOTE_OFF:
-            self.handleNoteOff(message.note)
-
-    def handleNoteOn(self, note: int):
-        updates = self.noteHistory.noteOn(note)
-        if (state.chordMode == ExternalChordMode.MOST_RECENT_NOTE_SET and updates.lastContiguousClassesChanged):
-            self.determineChordAndScale()
-        
-    def handleNoteOff(self, note: int):
-        self.noteHistory.noteOff(note)
 
     def getChordNoteClasses(self):
         chord = self.chords[state.chord.activeButton]
@@ -52,40 +44,75 @@ class ExternalChordEngine(ChordEngine):
     def getBassNote(self):
         chord = self.chords[state.chord.activeButton]
         return chord.getBass()
+
+    async def start(self):
+        asyncio.ensure_future(self.__inputLoop())
+
+    def handleMessage(self, message: MidiInputMessage):
+        self.inputQueue.append(message)
+
+    async def __inputLoop(self):
+        while True:
+            if len(self.inputQueue) > 0:
+                self.processQueue(self.inputQueue)
+                self.inputQueue = []
+            await asyncio.sleep(MIDI_INPUT_STEP)
+
+    def processQueue(self, queue: List[MidiInputMessage]):
+        lastContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
+        lastContiguousClasses.sort()
+        for message in queue:
+            if message.type == MidiInputMessageType.NOTE_ON:
+                updates = self.noteHistory.noteOn(message.note)
+            elif message.type == MidiInputMessageType.NOTE_OFF:
+                self.noteHistory.noteOff(message.note)
+        newContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
+        newContiguousClasses.sort()
+        if lastContiguousClasses != newContiguousClasses:
+            self.determineChordAndScale()
         
     def determineChordAndScale(self):
         if state.chordMode == ExternalChordMode.MOST_RECENT_NOTE_SET:
             noteClasses = state.noteInHistory.lastContiguousClasses
             key, scale = self.getScaleAndKey(noteClasses)
-            print(f"key: {key}, scale: {scale}")
 
             self.scale.update(scale)
             self.key.set(key)
 
             lowestClass = state.noteInHistory.lowestInContiguousClasses % 12
             rootClass = lowestClass
-            print(f"rootClass: {rootClass}")
-
             keyAgnosticRoot = self.rotateBack(key, [rootClass])[0]
-            print(f"keyAgnosticRoot: {keyAgnosticRoot}")
-
             keyAgnosticChord = self.rotateBack(key, noteClasses)
-            print(f"keyAgnosticChord: {keyAgnosticChord}")
-
             rootIndex = scale.index(keyAgnosticRoot)
-            print(f"rootIndex: {rootIndex}")
 
             chordIndecies = [scale.index(noteClass) for noteClass in keyAgnosticChord]
-            print(f"chordIndecies: {chordIndecies}")
-
             chordIndeciesFromRoot = [(chordIndex + (len(scale) - rootIndex)) % len(scale) for chordIndex in chordIndecies]
             chordIndeciesFromRoot.sort()
-            print(f"chordIndeciesFromRoot: {chordIndeciesFromRoot}")
+            
+            if len(chordIndeciesFromRoot) > 1:
+                NoRootchordIndeciesFromRoot = chordIndeciesFromRoot[1:]
+            else:
+                NoRootchordIndeciesFromRoot = chordIndeciesFromRoot
 
-            self.chords[ChordButton.SOUTH] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
-            self.chords[ChordButton.WEST] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
-            self.chords[ChordButton.NORTH] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
-            self.chords[ChordButton.EAST] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
+            if len(self.inputQueue) > 0:
+                return
+            southChord = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
+            if len(self.inputQueue) > 0:
+                return
+            westChord = Chord(NoRootchordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
+            if len(self.inputQueue) > 0:
+                return
+            northChord = Chord(scale, scale, 0, scale)
+            if len(self.inputQueue) > 0:
+                return
+            eastChord = Chord(scale, scale, 0, scale)
+            if len(self.inputQueue) > 0:
+                return
+
+            self.chords[ChordButton.SOUTH] = southChord
+            self.chords[ChordButton.WEST] = westChord
+            self.chords[ChordButton.NORTH] = northChord
+            self.chords[ChordButton.EAST] = eastChord
 
             self.updateChordType()
 
