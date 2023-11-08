@@ -136,7 +136,6 @@ class Midi():
                     MidiInputMessageType.NOTE_OFF, 
                     note
                     ))
-            print("mergedMidiInputNotesOn: ", self.state['mergedMidiInputNotesOn'])
 
     def sendMessage(self, message):
         for callback in self.subscriberCallBacks:

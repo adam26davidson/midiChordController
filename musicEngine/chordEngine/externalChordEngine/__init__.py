@@ -96,18 +96,23 @@ class ExternalChordEngine(ChordEngine):
                 NoRootchordIndeciesFromRoot = chordIndeciesFromRoot
 
             if len(self.inputQueue) > 0:
+                print("aborting chord update")
                 return
             southChord = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
             if len(self.inputQueue) > 0:
+                print("aborting chord update")
                 return
             westChord = Chord(NoRootchordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
             if len(self.inputQueue) > 0:
+                print("aborting chord update")
                 return
             northChord = Chord(scale, scale, 0, scale)
             if len(self.inputQueue) > 0:
+                print("aborting chord update")
                 return
             eastChord = Chord(scale, scale, 0, scale)
             if len(self.inputQueue) > 0:
+                print("aborting chord update")
                 return
 
             self.chords[ChordButton.SOUTH] = southChord
