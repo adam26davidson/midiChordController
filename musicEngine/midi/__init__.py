@@ -1,3 +1,4 @@
+from typing import List
 from musicEngine.midi.midiInputMessage import MidiInputMessageType, MidiInputMessage
 from rtmidi import MidiOut, MidiIn
 from redux import store
@@ -17,6 +18,9 @@ class Midi():
         self.midiOutInstances = []
         self.midiInInstances = []
         self.subscriberCallBacks = []
+
+        self.midiInputMessageQueue: List[MidiInputMessage] = []
+
         self.state = {
             'midiOutputConnected': False,
             'midiOutputControllerNames': [],
@@ -76,7 +80,8 @@ class Midi():
             self.midiOutInstances.append(midiOut)
             self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
 
-        asyncio.ensure_future(self.__loop())
+        asyncio.ensure_future(self.__outputLoop())
+        asyncio.ensure_future(self.__inputLoop())
 
     def subscribe(self, callback):
         self.subscriberCallBacks.append(callback)
@@ -112,7 +117,7 @@ class Midi():
             })
         if note not in self.state['mergedMidiInputNotesOn']:
             self.state['mergedMidiInputNotesOn'].append(note)
-            self.sendMessage(
+            self.midiInputMessageQueue.append(
                 MidiInputMessage(
                     MidiInputMessageType.NOTE_ON, 
                     note
@@ -130,7 +135,7 @@ class Midi():
                     break
         if note in self.state['mergedMidiInputNotesOn'] and noteIsNotPlayedAnywhere:
             self.state['mergedMidiInputNotesOn'].remove(note)
-            self.sendMessage(
+            self.midiInputMessageQueue.append(
                 MidiInputMessage(
                     MidiInputMessageType.NOTE_OFF, 
                     note
@@ -178,8 +183,14 @@ class Midi():
         if (meState['aftertouchMode'] != self.state['aftertouchMode']):
             self.__setAftertouchMode(meState['aftertouchMode'])
     
+    async def __inputLoop(self):
+        while True:
+            while self.midiInputMessageQueue:
+                message = self.midiInputMessageQueue.pop(0)
+                self.sendMessage(message)
+            await asyncio.sleep(MIDI_INPUT_STEP)
 
-    async def __loop(self):
+    async def __outputLoop(self):
         while True:
             ports = self.utilityMidiOut.get_ports()
 
@@ -189,7 +200,7 @@ class Midi():
             else:
                 self.availableOutputPorts = ports
                 self.__reconnect()
-            await asyncio.sleep(MIDI_STEP)
+            await asyncio.sleep(MIDI_OUTPUT_STEP)
 
     def __reconnect(self):
         print("RECONNECTING TO MIDI OUTPUTS")
