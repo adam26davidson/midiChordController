@@ -37,9 +37,9 @@ class SettingDisplay(tk.Frame):
 
     def __handleStoreUpdate(self):
         state = thaw(store.get_state()['musicEngine'])
-        if state['chorEngineControl'] != self.chorEngineControl:
-            self.chorEngineControl = state['chorEngineControl']
-            self.setchordEngineControl(state['chorEngineControl'])
+        if state['chordEngineControl'] != self.chorEngineControl:
+            self.chorEngineControl = state['chordEngineControl']
+            self.setchordEngineControl(state['chordEngineControl'])
 
     def setchordEngineControl(self, name):
         if name == 'internal':
