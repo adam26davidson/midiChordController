@@ -63,12 +63,13 @@ class ExternalChordEngine(ChordEngine):
         lastContiguousClasses.sort()
         for message in queue:
             if message.type == MidiInputMessageType.NOTE_ON:
-                updates = self.noteHistory.noteOn(message.note)
+                self.noteHistory.noteOn(message.note)
             elif message.type == MidiInputMessageType.NOTE_OFF:
                 self.noteHistory.noteOff(message.note)
         newContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
         newContiguousClasses.sort()
         if lastContiguousClasses != newContiguousClasses:
+            print("new chord")
             self.determineChordAndScale()
         
     def determineChordAndScale(self):
