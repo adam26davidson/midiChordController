@@ -48,7 +48,7 @@ class ExternalChordEngine(ChordEngine):
     async def start(self):
         asyncio.ensure_future(self.__inputLoop())
 
-    def handleMessage(self, message: MidiInputMessage):
+    def handleMidiMessage(self, message: MidiInputMessage):
         self.inputQueue.append(message)
 
     async def __inputLoop(self):

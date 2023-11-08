@@ -30,6 +30,7 @@ class MusicEngine():
         store.dispatch(ccActions.musicEngineAppParametersLoaded())
 
     def start(self):
+        self.externalChordEngine.start()
         self.midi.start()
 
     def getParameters(self):
