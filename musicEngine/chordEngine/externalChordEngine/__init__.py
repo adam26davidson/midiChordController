@@ -61,6 +61,7 @@ class ExternalChordEngine(ChordEngine):
     def processQueue(self, queue: List[MidiInputMessage]):
         lastContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
         lastContiguousClasses.sort()
+        print("last classes: ", lastContiguousClasses)
         for message in queue:
             if message.type == MidiInputMessageType.NOTE_ON:
                 self.noteHistory.noteOn(message.note)
@@ -68,6 +69,7 @@ class ExternalChordEngine(ChordEngine):
                 self.noteHistory.noteOff(message.note)
         newContiguousClasses = [c for c in state.noteInHistory.lastContiguousClasses]
         newContiguousClasses.sort()
+        print("new classes: ", newContiguousClasses)
         if lastContiguousClasses != newContiguousClasses:
             print("new chord")
             self.determineChordAndScale()
