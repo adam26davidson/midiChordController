@@ -1,7 +1,8 @@
 import tkinter as tk
 from constants import PARENT_PATH
 from ..displayConstants import FONTS, COLORS
-from PIL import ImageTk, Image
+from redux import store
+from pyrsistent import thaw
 
 
 class SettingDisplay(tk.Frame):
@@ -17,6 +18,8 @@ class SettingDisplay(tk.Frame):
         super().__init__(master, width=self.width, height=self.height,
                          highlightthickness=0, relief="flat", bg=self.bgColor, border=2, borderwidth=2)
         self.master = master
+        self.chorEngineControl = 'internal'
+        self.internalSettingName = 'Loading...'
 
         bigFont = FONTS["big"]
         smallFont = FONTS["small"]
@@ -30,8 +33,23 @@ class SettingDisplay(tk.Frame):
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=20)
 
+        store.subscribe(self.__handleStoreUpdate)
+
+    def __handleStoreUpdate(self):
+        state = thaw(store.get_state()['musicEngine'])
+        if state['chorEngineControl'] != self.chorEngineControl:
+            self.chorEngineControl = state['chorEngineControl']
+            self.setchordEngineControl(state['chorEngineControl'])
+
+    def setchordEngineControl(self, name):
+        if name == 'internal':
+            self.setSetting(self.internalSettingName)
+        else:
+            self.setSetting("External Control")
 
     def setSetting(self, name):
+        if self.chorEngineControl == 'internal':
+            self.internalSettingName = name
         print('setting setting text to ' + name)
         self.setting.configure(text=name)
 

@@ -25,15 +25,18 @@ class NoteHistory():
 
         # update lastContiguousClasses
         if state.noteInHistory.classesPlayed == []:
+
             state.noteInHistory.lastContiguousClasses = [noteClass]
             state.noteInHistory.lastContiguous = [note]
             state.noteInHistory.lowestInContiguousClasses = note
+
             response.lastContiguousClassesChanged = True
             response.lowestChanged = True
         elif noteClass not in state.noteInHistory.lastContiguousClasses:
             state.noteInHistory.lastContiguousClasses.append(noteClass)
             response.lastContiguousClassesChanged = True
-        elif note not in state.noteInHistory.lastContiguous:
+            
+        if note not in state.noteInHistory.lastContiguous:
             state.noteInHistory.lastContiguous.append(note)
             if note < state.noteInHistory.lowestInContiguousClasses:
                 state.noteInHistory.lowestInContiguousClasses = note

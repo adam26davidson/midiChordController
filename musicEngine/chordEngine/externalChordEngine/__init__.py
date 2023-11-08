@@ -87,6 +87,8 @@ class ExternalChordEngine(ChordEngine):
             self.chords[ChordButton.NORTH] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
             self.chords[ChordButton.EAST] = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
 
+            self.updateChordType()
+
     def getScaleAndKey(self, noteClasses: List[int]) -> Tuple[int, List[int]]:
         for scale in state.preferredScaleClasses:
             possibleRotations: List[int] = []
