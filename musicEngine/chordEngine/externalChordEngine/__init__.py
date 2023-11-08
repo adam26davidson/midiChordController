@@ -54,6 +54,7 @@ class ExternalChordEngine(ChordEngine):
     async def __inputLoop(self):
         while True:
             if len(self.inputQueue) > 0:
+                print("processing queue")
                 self.processQueue(self.inputQueue)
                 self.inputQueue = []
             await asyncio.sleep(MIDI_INPUT_STEP)
