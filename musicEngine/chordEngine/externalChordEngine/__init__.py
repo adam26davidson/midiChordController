@@ -123,6 +123,7 @@ class ExternalChordEngine(ChordEngine):
             self.updateChordType()
 
     def getScaleAndKey(self, noteClasses: List[int]) -> Tuple[int, List[int]]:
+        lastSeven = state.noteInHistory.classRecencyRanking[:7]
         for scale in state.preferredScaleClasses:
             possibleRotations: List[int] = []
             for r in range(12):
@@ -135,7 +136,6 @@ class ExternalChordEngine(ChordEngine):
                 return possibleRotations[0], scale
             elif len(possibleRotations) > 1:
                 if state.scaleMode == ExternalChordScaleMode.LAST_SEVEN:
-                    lastSeven = state.noteInHistory.classRecencyRanking[:7]
                     if not self.notesFitInScale(noteClasses, lastSeven):
                         return self.useNotesAsScale(noteClasses)
                     for r in possibleRotations:
