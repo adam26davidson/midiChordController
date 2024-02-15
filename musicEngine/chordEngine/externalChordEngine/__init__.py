@@ -99,6 +99,8 @@ class ExternalChordEngine(ChordEngine):
             print("key agnostic scale: ", scale)
             print("key: ", key)
 
+            print("chordIndeciesFromRoot: ", chordIndeciesFromRoot)
+
             if len(self.inputQueue) > 0:
                 print("aborting chord update")
                 return
