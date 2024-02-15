@@ -95,6 +95,10 @@ class ExternalChordEngine(ChordEngine):
             else:
                 NoRootchordIndeciesFromRoot = chordIndeciesFromRoot
 
+            scaleChordIndecies = range(1, len(scale) + 1)
+            print("key agnostic scale: ", scale)
+            print("key: ", key)
+
             if len(self.inputQueue) > 0:
                 print("aborting chord update")
                 return
@@ -106,11 +110,11 @@ class ExternalChordEngine(ChordEngine):
             if len(self.inputQueue) > 0:
                 print("aborting chord update")
                 return
-            northChord = Chord(scale, scale, 0, scale)
+            northChord = Chord(scaleChordIndecies, scaleChordIndecies, 0, scale)
             if len(self.inputQueue) > 0:
                 print("aborting chord update")
                 return
-            eastChord = Chord(scale, scale, 0, scale)
+            eastChord = Chord(scaleChordIndecies, scaleChordIndecies, 0, scale)
             if len(self.inputQueue) > 0:
                 print("aborting chord update")
                 return
