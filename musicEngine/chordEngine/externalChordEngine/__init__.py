@@ -100,6 +100,7 @@ class ExternalChordEngine(ChordEngine):
             print("key: ", key)
 
             print("chordIndeciesFromRoot: ", chordIndeciesFromRoot)
+            print("rootIndex: ", rootIndex)
 
             if len(self.inputQueue) > 0:
                 print("aborting chord update")

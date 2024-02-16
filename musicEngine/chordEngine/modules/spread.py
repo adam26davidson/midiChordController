@@ -49,7 +49,7 @@ class Spread():
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
                 commandMappings = {
-                    Command.INCREMENT: self.increment, 
+                    Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
                 key = f"{keyPrefix}SPREAD",

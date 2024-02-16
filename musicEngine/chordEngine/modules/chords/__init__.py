@@ -64,6 +64,7 @@ class Chord:
         return int(spreadOctaves*spreadsPerOct)
 
     def __getChordPattern(self, numNotes, voiceCount, spread):
+        print("voiceCount: ", voiceCount)
         pattern = [0]
         if (voiceCount > 1):
             voiceCountPatterns = VOICING_PATTERNS[str(
