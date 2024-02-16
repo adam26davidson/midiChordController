@@ -77,8 +77,9 @@ class Chord:
     def __getPatternParams(self):
         numNotes = len(self.chord)
         voiceCount = state.voiceCount
-        if voiceCount > numNotes:
-            voiceCount = numNotes
+
+        # if voiceCount > numNotes:
+        #     voiceCount = numNotes
         voiceCountDiff = voiceCount - numNotes
         spread = 0
         if voiceCount > numNotes:
