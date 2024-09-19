@@ -365,16 +365,16 @@
     "chords": {
       "south": {
         "root": 0,
-        "main": [0, 1, 2, 5, 6],
+        "main": [0, 1, 2, 4, 6],
         "mainBass": [0, 1, 4],
-        "alternate": [0, 1, 2, 3, 5, 6],
+        "alternate": [0, 1, 2, 3, 4, 6],
         "alternateBass": [0, 1, 4]
       },
       "west": {
         "root": 3,
-        "main": [0, 1, 2, 5, 6],
+        "main": [0, 1, 2, 4, 6],
         "mainBass": [0, 1, 4],
-        "alternate": [0, 1, 2, 3, 5, 6],
+        "alternate": [0, 1, 2, 3, 4, 6],
         "alternateBass": [0, 1, 4]
       },
       "north": {
