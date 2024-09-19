@@ -420,6 +420,76 @@
     }
   },
   {
+    "name": "no 7s",
+    "scale": [0, 2, 3, 5, 7, 8, 10],
+    "modulations": {
+      "left": {
+        "type": "custom",
+        "map": [-1, 1, 3, 5, 7, 8, 10]
+      },
+      "right": {
+        "type": "custom",
+        "map": [2, 4, 5, 7, 9, 10, 12]
+      }
+    },
+    "chords": {
+      "south": {
+        "root": 0,
+        "main": [0, 1, 2, 4],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 3, 4],
+        "alternateBass": [0, 1, 4]
+      },
+      "west": {
+        "root": 3,
+        "main": [0, 1, 2, 4],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 3, 4],
+        "alternateBass": [0, 1, 4]
+      },
+      "north": {
+        "root": 5,
+        "main": [0, 1, 2, 4],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 4, 5],
+        "alternateBass": [0, 1, 4]
+      },
+      "east": {
+        "root": 2,
+        "main": [0, 1, 2, 4],
+        "mainBass": [0, 1, 4],
+        "alternate": [1, 2, 4, 5],
+        "alternateBass": [0, 1, 4]
+      }
+    },
+    "secondaries": {
+      "left": {
+        "interval": 7,
+        "main": [0, 4, 7, 10],
+        "mainBass": [0, 7],
+        "alternate": [2, 4, 7, 10],
+        "alternateBass": [0, 7],
+        "south": {
+          "default": {
+            "alternate": [1, 4, 7, 10]
+          }
+        },
+        "west": {
+          "default": {
+            "alternate": [1, 4, 7, 10]
+          }
+        }
+      },
+      "right": {
+        "interval": 4,
+        "main": [3, 4, 8, 10],
+        "mainBass": [0, 8],
+        "alternate": [-4, -2, 2, 4],
+        "alternateBass": [-6, 2]
+      }
+    }
+  },
+  {
     "name": "Riki",
     "scale": [0, 2, 3, 5, 7, 9, 10],
     "modulations": {
