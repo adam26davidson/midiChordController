@@ -16,11 +16,19 @@ python3 main.py --no-display # Headless (no GUI)
 
 ## Running Tests
 
-No formal test runner is configured. Tests in `test/` are run directly:
+Unit tests use **pytest** and live in `tests/`:
 
 ```bash
-python3 test/music_engine_test.py
-python3 test/controller_manager_test.py
+uv run pytest tests/              # Run all unit tests
+uv run pytest tests/ -v           # Verbose output
+uv run pytest tests/unit/chord_engine/  # Run a specific module
+```
+
+The `tests/conftest.py` handles hardware mocking (evdev, rtmidi, tkinter), chord engine state reset, and settings I/O mocking automatically.
+
+Legacy integration tests in `test/` are run directly:
+
+```bash
 python3 test/replay_test.py          # Replays recorded evdev events through the pipeline
 ```
 
@@ -64,6 +72,7 @@ Both engines inherit from `music_engine/chord_engine/chord_engine.py`:
 ### Parameter System
 
 `AppParameter` (`models/app_parameter.py`) is the central abstraction for any controllable value. Each parameter defines:
+
 - Valid command types (`ANALOG`, `ON_OFF`, `TOGGLE`)
 - The function to call on each command
 - Whether it can be remapped via the settings UI
@@ -77,9 +86,9 @@ Controller buttons/axes map to AppParameters via `controller_coupler/`. Paramete
 - **Scale degree indexing**: Chords defined as arrays of scale degree indices
 - **Modulations**: Modal or custom scale transformations per button/mode combo
 - **Secondaries**: Chromatic chords layered above diatonic chords, defined per button
-- **Inversion**: Note order rearranged by joystick input
+- **Inversion**: chord voice octaves rearranged by joystick input
 - **Spread**: Octave distribution across voices
-- **Voice Count**: Number of simultaneous notes
+- **Voice Count**: Number of simultaneous notes (eg. a 4 note chord can be voiced with fewer or more notes)
 
 ### Settings / Presets
 
@@ -87,20 +96,18 @@ Controller buttons/axes map to AppParameters via `controller_coupler/`. Paramete
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `app.py` | Orchestrates startup and wires all subsystems together |
-| `main.py` | CLI entry point |
-| `constants.py` | Global constants (MIDI ranges, animation timing, display sizes) |
-| `redux/__init__.py` | Store initialization with all reducers |
-| `music_engine/chord_engine/chord_engine.py` | Abstract base class for both chord engines |
-| `controller_coupler/__init__.py` | Maps controller events to parameters and commands |
-| `display/__init__.py` | Tkinter GUI, settings UI, performance view |
+| File                                        | Purpose                                                         |
+| ------------------------------------------- | --------------------------------------------------------------- |
+| `app.py`                                    | Orchestrates startup and wires all subsystems together          |
+| `main.py`                                   | CLI entry point                                                 |
+| `constants.py`                              | Global constants (MIDI ranges, animation timing, display sizes) |
+| `redux/__init__.py`                         | Store initialization with all reducers                          |
+| `music_engine/chord_engine/chord_engine.py` | Abstract base class for both chord engines                      |
+| `controller_coupler/__init__.py`            | Maps controller events to parameters and commands               |
+| `display/__init__.py`                       | Tkinter GUI, settings UI, performance view                      |
 
-## Dependencies
+## Project Tools
 
-- `evdev` — Linux controller input (game controllers via `/dev/input/`)
-- `python-rtmidi` — MIDI I/O
-- `pydux` + `pyrsistent` — Redux-like state management with immutable data
-- `numpy` — Numerical operations for chord/voice math
-- `music21` — Music theory utilities
+- uv is used for dependency management / project configuration. when running python requiring a venv use uv run xyz.py
+- ruff used for formatting / linting
+- ty used for type checking
