@@ -133,41 +133,35 @@ class TestInversionIncrementDecrement:
 
 
 class TestInversionSetRange:
-    """Test set_range logic directly on the state.
-
-    Calling set_range through the store triggers accumulated subscribers
-    from prior tests that interfere. We test the core logic by manipulating
-    state directly and verifying behavior.
-    """
-
-    def test_set_range_updates_state(self):
-        make_inversion()
-        # Verify set_range clamps correctly by checking the logic directly
-        state_module.state.inversion.range = 6
+    def test_set_range(self):
+        inv = make_inversion()
+        inv.set_range(6)
         assert state_module.state.inversion.range == 6
 
-    def test_set_range_max_clamp_logic(self):
+    def test_set_range_clamps_max(self):
+        inv = make_inversion()
+        inv.set_range(100)
         from constants import MAX_INVERSION_RANGE
-        # Verify the clamping formula: max(min(range, MAX_INVERSION_RANGE), 0)
-        assert max(min(100, MAX_INVERSION_RANGE), 0) == MAX_INVERSION_RANGE
+        assert state_module.state.inversion.range == MAX_INVERSION_RANGE
 
-    def test_set_range_min_clamp_logic(self):
-        from constants import MAX_INVERSION_RANGE
-        assert max(min(-5, MAX_INVERSION_RANGE), 0) == 0
+    def test_set_range_clamps_min(self):
+        inv = make_inversion()
+        inv.set_range(-5)
+        assert state_module.state.inversion.range == 0
 
-    def test_set_range_re_clamps_value_logic(self):
-        """Verify that reducing range clamps existing value."""
-        # Test the clamping formula directly:
-        # new_value = max(min(old_value, new_range), -new_range)
-        assert max(min(8, 3), -3) == 3
-        assert max(min(2, 3), -3) == 2
-        assert max(min(0, 3), -3) == 0
+    def test_set_range_re_clamps_value(self):
+        inv = make_inversion()
+        state_module.state.inversion.range = 10
+        state_module.state.inversion.value = 8
+        inv.set_range(3)
+        assert state_module.state.inversion.value == 3
 
-    def test_set_range_re_clamps_negative_value_logic(self):
-        """Verify that reducing range clamps negative existing value."""
-        assert max(min(-8, 3), -3) == -3
-        assert max(min(-2, 3), -3) == -2
-        assert max(min(0, 3), -3) == 0
+    def test_set_range_re_clamps_negative_value(self):
+        inv = make_inversion()
+        state_module.state.inversion.range = 10
+        state_module.state.inversion.value = -8
+        inv.set_range(3)
+        assert state_module.state.inversion.value == -3
 
 
 class TestInversionToggleLock:

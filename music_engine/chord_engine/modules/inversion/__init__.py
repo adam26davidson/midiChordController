@@ -67,8 +67,8 @@ class Inversion(ABC):
         self.get_state().value = max(min(old_inversion, range), -1*range)
 
         self.update_chord_engine()
-        self.update_redux_value()
         self.update_redux_range()
+        self.update_redux_value()
 
     def increment(self):
         new_inversion = self.get_state().value + 1
