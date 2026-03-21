@@ -10,18 +10,18 @@ def remove(data):
     'data': data
   }
 
-def updateMap(data):
+def update_map(data):
   return {
     'type': 'controllerManager/controllerMapUpdated',
     'data': data
   }
 
-def startWaitingForConnection():
+def start_waiting_for_connection():
   return {
     'type': 'controllerManager/startedWaitingForConnection'
   }
 
-def stopWaitingForConnection():
+def stop_waiting_for_connection():
   return {
     'type': 'controllerManager/stoppedWaitingForConnection'
   }

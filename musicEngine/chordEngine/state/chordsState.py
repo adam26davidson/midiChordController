@@ -9,9 +9,9 @@ class ChordButton(Enum):
 
 class ChordsState:
 
-    rootClass: int = 0
-    NoteClasses: list[int] = []
-    playingNotes: list[int] = []
-    isPlaying: bool = False
-    activeButton: ChordButton = ChordButton.SOUTH
-    buttonQueue: list[int] = []
+    root_class: int = 0
+    note_classes: list[int] = []
+    playing_notes: list[int] = []
+    is_playing: bool = False
+    active_button: ChordButton = ChordButton.SOUTH
+    button_queue: list[int] = []

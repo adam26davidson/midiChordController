@@ -2,7 +2,7 @@ from pyrsistent import thaw
 
 from redux import store
 from redux.actions import musicEngine as meActions
-from redux.settingsStorage import settingsStorageUtility
+from redux.settingsStorage import settings_storage_utility
 
 from ..components.buttonGroup import ButtonGroup
 from ..components.numberPicker import NumberPicker
@@ -24,20 +24,20 @@ class MidiSettingsFrame(SettingsPage):
             min=1,
             max=16,
             value=1,
-            callback=self.setBassChannel)
+            callback=self.set_bass_channel)
 
         self.chordChannel = NumberPicker(self.channelFrame,
             name='chord ch',
             min=1,
             max=16,
             value=1,
-            callback=self.setChordChannel)
+            callback=self.set_chord_channel)
 
         self.distributeChannels = ButtonGroup(self.channelFrame,
             name='distribute channels',
             optionsList=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
             selected='NO',
-            callback=self.setDistributeChannels)
+            callback=self.set_distribute_channels)
 
         self.distributeChannels.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.chordChannel.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
@@ -53,13 +53,13 @@ class MidiSettingsFrame(SettingsPage):
             name='velocity mode',
             optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
             selected='RAND',
-            callback=self.setVelocityMode)
+            callback=self.set_velocity_mode)
 
         self.aftertouchMode = ButtonGroup(self.velocityLeftFrame,
             name='aftertouch mode',
             optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
             selected='CHAN',
-            callback=self.setAftertouchMode)
+            callback=self.set_aftertouch_mode)
 
         self.slidersFrame = SettingsContainer(self.velocityFrame)
 
@@ -75,7 +75,7 @@ class MidiSettingsFrame(SettingsPage):
             min=0,
             max=64,
             value=10,
-            callback=self.setVelocityDeviation)
+            callback=self.set_velocity_deviation)
 
 
         self.velocityMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
@@ -88,61 +88,61 @@ class MidiSettingsFrame(SettingsPage):
 
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
 
-    def __handleStoreUpdate(self):
+    def __handle_store_update(self):
         state = store.get_state()
-        meState = thaw(state['musicEngine'])
+        me_state = thaw(state['musicEngine'])
 
-        if meState['velocity'] != self.velocity.getValue():
-            self.after(0, self.velocity.setValue(meState['velocity']))
-        if meState['velocityMode'] != self.velocityMode.getValue():
-            self.after(0, self.velocityMode.setValue(meState['velocityMode']))
-        if meState['velocityDeviation'] != self.velocityDeviation.getValue():
-            self.after(0, self.velocityDeviation.setValue(meState['velocityDeviation']))
-        if meState['chordChannel'] != (self.chordChannel.getValue() - 1):
-            self.after(0, self.chordChannel.setValue(meState['chordChannel'] + 1))
-        if meState['bassChannel'] != (self.bassChannel.getValue() - 1):
-            self.after(0, self.bassChannel.setValue(meState['bassChannel'] + 1))
-        if meState['distributeChannels'] != self.distributeChannels.getValue():
-            self.after(0, self.distributeChannels.setValue(meState['distributeChannels']))
-        if meState['aftertouchMode'] != self.aftertouchMode.getValue():
-            self.after(0, self.aftertouchMode.setValue(meState['aftertouchMode']))
+        if me_state['velocity'] != self.velocity.get_value():
+            self.after(0, self.velocity.set_value(me_state['velocity']))
+        if me_state['velocityMode'] != self.velocityMode.get_value():
+            self.after(0, self.velocityMode.set_value(me_state['velocityMode']))
+        if me_state['velocityDeviation'] != self.velocityDeviation.get_value():
+            self.after(0, self.velocityDeviation.set_value(me_state['velocityDeviation']))
+        if me_state['chordChannel'] != (self.chordChannel.get_value() - 1):
+            self.after(0, self.chordChannel.set_value(me_state['chordChannel'] + 1))
+        if me_state['bassChannel'] != (self.bassChannel.get_value() - 1):
+            self.after(0, self.bassChannel.set_value(me_state['bassChannel'] + 1))
+        if me_state['distributeChannels'] != self.distributeChannels.get_value():
+            self.after(0, self.distributeChannels.set_value(me_state['distributeChannels']))
+        if me_state['aftertouchMode'] != self.aftertouchMode.get_value():
+            self.after(0, self.aftertouchMode.set_value(me_state['aftertouchMode']))
 
 
-    def setBassChannel(self, channel):
-        store.dispatch(meActions.changeBassChannel(channel - 1))
-        settingsStorageUtility.saveSettings()
+    def set_bass_channel(self, channel):
+        store.dispatch(meActions.change_bass_channel(channel - 1))
+        settings_storage_utility.save_settings()
 
-    def setChordChannel(self, channel):
-        store.dispatch(meActions.changeChordChannel(channel - 1))
-        settingsStorageUtility.saveSettings()
+    def set_chord_channel(self, channel):
+        store.dispatch(meActions.change_chord_channel(channel - 1))
+        settings_storage_utility.save_settings()
 
-    def setDistributeChannels(self, value):
-        store.dispatch(meActions.changeDistributeChannels(value))
+    def set_distribute_channels(self, value):
+        store.dispatch(meActions.change_distribute_channels(value))
         if (value):
-            self.chordChannel.setDisabled()
+            self.chordChannel.set_disabled()
         else:
-            self.chordChannel.setEnabled()
-        settingsStorageUtility.saveSettings()
+            self.chordChannel.set_enabled()
+        settings_storage_utility.save_settings()
 
-    def setVelocityMode(self, mode):
+    def set_velocity_mode(self, mode):
         if mode == 'constant':
-            self.velocityDeviation.setDisabled()
+            self.velocityDeviation.set_disabled()
         if mode == 'random':
-            self.velocityDeviation.setEnabled()
-        store.dispatch(meActions.changeVelocityMode(mode))
-        settingsStorageUtility.saveSettings()
+            self.velocityDeviation.set_enabled()
+        store.dispatch(meActions.change_velocity_mode(mode))
+        settings_storage_utility.save_settings()
 
-    def setVelocity(self, velocity):
-        store.dispatch(meActions.changeVelocity(velocity))
-        settingsStorageUtility.saveSettings()
+    def set_velocity(self, velocity):
+        store.dispatch(meActions.change_velocity(velocity))
+        settings_storage_utility.save_settings()
 
-    def setVelocityDeviation(self, deviation):
-        store.dispatch(meActions.changeVelocityDeviation(deviation))
-        settingsStorageUtility.saveSettings()
+    def set_velocity_deviation(self, deviation):
+        store.dispatch(meActions.change_velocity_deviation(deviation))
+        settings_storage_utility.save_settings()
 
-    def setAftertouchMode(self, mode):
-        store.dispatch(meActions.changeAftertouchMode(mode))
-        settingsStorageUtility.saveSettings()
+    def set_aftertouch_mode(self, mode):
+        store.dispatch(meActions.change_aftertouch_mode(mode))
+        settings_storage_utility.save_settings()

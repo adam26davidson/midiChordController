@@ -10,4 +10,4 @@ class SecondarySide(Enum):
 class SecondariesState:
 
     side: SecondarySide = SecondarySide.NONE
-    buttonQueue: list[SecondarySide] = []
+    button_queue: list[SecondarySide] = []

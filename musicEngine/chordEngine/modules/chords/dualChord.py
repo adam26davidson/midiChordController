@@ -5,39 +5,39 @@ from . import DEFAULT_SCALE, Chord
 
 class DualChord:
 
-    def __init__(self, setting, scale=DEFAULT_SCALE, isSecondary=False):
-        ChordClass = Secondary if isSecondary else Chord
-        rootOrInterval = setting['interval'] if isSecondary \
+    def __init__(self, setting, scale=DEFAULT_SCALE, is_secondary=False):
+        chord_class = Secondary if is_secondary else Chord
+        root_or_interval = setting['interval'] if is_secondary \
             else setting['root']
-        self.main = ChordClass(
+        self.main = chord_class(
             setting['main'],
             setting['mainBass'],
-            rootOrInterval, scale
+            root_or_interval, scale
         )
-        self.alternate = ChordClass(
+        self.alternate = chord_class(
             setting['alternate'],
             setting['alternateBass'],
-            rootOrInterval, scale
+            root_or_interval, scale
         )
 
-    def getChord(self, targetNote=None):
-        chord, args = self.__getChordObject(targetNote)
-        return chord.getChord(*args)
+    def get_chord(self, target_note=None):
+        chord, args = self.__get_chord_object(target_note)
+        return chord.get_chord(*args)
 
-    def getBass(self, targetNote=None):
-        chord, args = self.__getChordObject(targetNote)
-        return chord.getBass(*args)
+    def get_bass(self, target_note=None):
+        chord, args = self.__get_chord_object(target_note)
+        return chord.get_bass(*args)
 
-    def getNoteTypes(self, targetNote=None):
-        chord, args = self.__getChordObject(targetNote)
-        return chord.getNoteTypes(*args)
+    def get_note_types(self, target_note=None):
+        chord, args = self.__get_chord_object(target_note)
+        return chord.get_note_types(*args)
 
-    def getRoot(self, targetNote=None):
-        chord, args = self.__getChordObject(targetNote)
-        return chord.getRoot(*args)
+    def get_root(self, target_note=None):
+        chord, args = self.__get_chord_object(target_note)
+        return chord.get_root(*args)
 
-    def __getChordObject(self, targetNote):
-        args = [] if targetNote is None else [targetNote]
+    def __get_chord_object(self, target_note):
+        args = [] if target_note is None else [target_note]
         if state.alternate:
             return self.alternate, args
         return self.main, args

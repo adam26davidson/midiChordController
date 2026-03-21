@@ -16,28 +16,28 @@ class AppParameterType(Enum):
 
 class AppParameter:
 
-    validCommandTypes: list[CommandType]
-    commandMappings: dict[Command, Callable]
+    valid_command_types: list[CommandType]
+    command_mappings: dict[Command, Callable]
     remappable: bool
     key: str
     label: str
-    labelAbreviation: str
+    label_abreviation: str
     type: AppParameterType
 
     def __init__(
             self,
-            validCommandTypes: list[CommandType],
-            commandMappings: dict[Command, Callable],
+            valid_command_types: list[CommandType],
+            command_mappings: dict[Command, Callable],
             key: str,
             label: str | None = None,
-            labelAbreviation: str | None = None,
+            label_abreviation: str | None = None,
             remappable: bool = True,
             type: AppParameterType = AppParameterType.MUSIC_ENGINE):
 
-        self.commandMappings = commandMappings
-        self.validCommandTypes = validCommandTypes
+        self.command_mappings = command_mappings
+        self.valid_command_types = valid_command_types
         self.key = key
         self.label = label
-        self.labelAbreviation = labelAbreviation
+        self.label_abreviation = label_abreviation
         self.remappable = remappable
         self.type = type

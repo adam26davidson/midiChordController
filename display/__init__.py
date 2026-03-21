@@ -8,7 +8,7 @@ from models.appParameter import AppParameter
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux import utils as reduxUtils
+from redux import utils as redux_utils
 from redux.actions import display as actions
 
 from .perform.performFrame import PerformFrame
@@ -42,8 +42,8 @@ class Display:
 
         self.state = DisplayState()
 
-        self.commandMap = {
-            "MENU": self.toggleMenu
+        self.command_map = {
+            "MENU": self.toggle_menu
         }
 
         self.frames = {}
@@ -54,73 +54,73 @@ class Display:
         self.frames["MENU"] = SettingsMenuFrame(self.root)
         self.frames["PERFORM"] = PerformFrame(self.root)
 
-        reduxUtils.addAppParameters(self.getParameters())
+        redux_utils.add_app_parameters(self.get_parameters())
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
     def start(self):
-        _task = asyncio.ensure_future(self.__mainLoop())
+        _task = asyncio.ensure_future(self.__main_loop())
 
-    async def __mainLoop(self):
-        _displayLoopCount = 0
+    async def __main_loop(self):
+        _display_loop_count = 0
         while True:
-            if self.state.activeFrame == 'PERFORM':
-                self.frames["PERFORM"].updateFrame()
+            if self.state.active_frame == 'PERFORM':
+                self.frames["PERFORM"].update_frame()
             self.root.update_idletasks()
             self.root.update()
-            _displayLoopCount += 1
-            if _displayLoopCount % 30 == 0:
-                print(f"[DISPLAY] heartbeat (loop #{_displayLoopCount})", flush=True)
+            _display_loop_count += 1
+            if _display_loop_count % 30 == 0:
+                print(f"[DISPLAY] heartbeat (loop #{_display_loop_count})", flush=True)
             await asyncio.sleep(ANIMATION_STEP)
 
-    def controllerEventHandler(self, event):
+    def controller_event_handler(self, event):
         controllers = store.get_state()['controllerManager']['controllers']
-        uiMap = None
+        ui_map = None
         for controller in controllers:
             if controller['role'] == 'primary':
-                uiMap = controller['uiMap']['map']
+                ui_map = controller['uiMap']['map']
 
-        if (event['name'] in uiMap):
-            command = uiMap[event['name']]
-            if (command in self.commandMap):
-                self.commandMap[command]()
+        if (event['name'] in ui_map):
+            command = ui_map[event['name']]
+            if (command in self.command_map):
+                self.command_map[command]()
 
-        if self.state.activeFrame == 'PERFORM':
-            self.frames["PERFORM"].handleControllerEvent(event)
+        if self.state.active_frame == 'PERFORM':
+            self.frames["PERFORM"].handle_controller_event(event)
 
-    def getParameters(self):
+    def get_parameters(self):
         return [
             AppParameter(
-                validCommandTypes=[CommandType.TOGGLE],
-                commandMappings={Command.TOGGLE: self.toggleMenu},
+                valid_command_types=[CommandType.TOGGLE],
+                command_mappings={Command.TOGGLE: self.toggle_menu},
                 key="MENU",
                 label="Menu",
-                labelAbreviation="☰",
+                label_abreviation="☰",
                 remappable=False
             )
         ]
 
 
-    def __handleStoreUpdate(self):
+    def __handle_store_update(self):
         state = store.get_state()
-        displayState = thaw(state['display'])
-        if (displayState['activeFrame'] != self.state.activeFrame):
-            if (displayState['activeFrame'] in self.frames):
-                self.state.activeFrame = displayState['activeFrame']
-                self.root.after(0, lambda: self.frames[displayState['activeFrame']].tkraise())
+        display_state = thaw(state['display'])
+        if (display_state['activeFrame'] != self.state.active_frame):
+            if (display_state['activeFrame'] in self.frames):
+                self.state.active_frame = display_state['activeFrame']
+                self.root.after(0, lambda: self.frames[display_state['activeFrame']].tkraise())
             else:
-                store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
+                store.dispatch(actions.change_active_frame(self.state.active_frame))
 
-    def toggleMenu(self):
-        if (self.state.activeFrame == "MENU"):
-            self.state.activeFrame = "PERFORM"
+    def toggle_menu(self):
+        if (self.state.active_frame == "MENU"):
+            self.state.active_frame = "PERFORM"
             self.frames["PERFORM"].tkraise()
         else:
-            self.state.activeFrame = "MENU"
+            self.state.active_frame = "MENU"
             self.frames["MENU"].tkraise()
 
-        store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
+        store.dispatch(actions.change_active_frame(self.state.active_frame))
 
 
 class DisplayState:
-    activeFrame = "PERFORM"
+    active_frame = "PERFORM"

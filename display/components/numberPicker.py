@@ -15,27 +15,27 @@ class NumberPicker(SettingControl):
 
         self.state = NumberPickerState(value)
 
-        self.contentsFrame = tk.Frame(self,
+        self.contents_frame = tk.Frame(self,
             highlightthickness=0,
             relief="flat",
             bg="#000000")
 
-        self.number = tk.Label(self.contentsFrame,
+        self.number = tk.Label(self.contents_frame,
             text=self.state.number,
             width=2,
             bg='#000000',
             fg=COLORS['root'],
             font=FONTS["big"])
 
-        self.rightButton = ArrowButton(self.contentsFrame, 'right', self.incrementNumber)
-        self.leftButton = ArrowButton(self.contentsFrame, 'left', self.decrementNumber)
+        self.right_button = ArrowButton(self.contents_frame, 'right', self.increment_number)
+        self.left_button = ArrowButton(self.contents_frame, 'left', self.decrement_number)
 
-        self.leftButton.pack(side='left', padx=(3, 3), pady=(3, 6))
+        self.left_button.pack(side='left', padx=(3, 3), pady=(3, 6))
         self.number.pack(side='left', padx=(3, 3), pady=(3, 3))
-        self.rightButton.pack(side='left', padx=(3, 3), pady=(3, 6))
-        self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
+        self.right_button.pack(side='left', padx=(3, 3), pady=(3, 6))
+        self.contents_frame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
-    def incrementNumber(self):
+    def increment_number(self):
         if self.state.number + 1 <= self.max:
             self.state.number += 1
         else:
@@ -44,7 +44,7 @@ class NumberPicker(SettingControl):
         self.number.configure(text=str(self.state.number))
         self.callback(self.state.number)
 
-    def decrementNumber(self):
+    def decrement_number(self):
         if self.state.number - 1 >= self.min:
             self.state.number -= 1
         else:
@@ -53,21 +53,21 @@ class NumberPicker(SettingControl):
         self.number.configure(text=str(self.state.number))
         self.callback(self.state.number)
 
-    def setDisabled(self):
-        self.rightButton.setDisabled()
-        self.leftButton.setDisabled()
+    def set_disabled(self):
+        self.right_button.set_disabled()
+        self.left_button.set_disabled()
         self.number.configure(fg=COLORS['chordDim'])
 
-    def setEnabled(self):
-        self.rightButton.setEnabled()
-        self.leftButton.setEnabled()
+    def set_enabled(self):
+        self.right_button.set_enabled()
+        self.left_button.set_enabled()
         self.number.configure(fg=COLORS['chord'])
 
-    def setValue(self, value):
+    def set_value(self, value):
         self.state.number = value
         self.number.configure(text=str(self.state.number))
 
-    def getValue(self):
+    def get_value(self):
         return self.state.number
 
 
@@ -93,10 +93,10 @@ class ArrowButton(tk.Button):
             text=text,
             command=callback)
 
-    def setDisabled(self):
+    def set_disabled(self):
         self.configure(state=tk.DISABLED)
 
-    def setEnabled(self):
+    def set_enabled(self):
         self.configure(state=tk.NORMAL)
 
 

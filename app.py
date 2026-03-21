@@ -4,33 +4,33 @@ from controllerCoupler import ControllerCoupler
 from controllerManager import ControllerManager
 from display import Display
 from musicEngine import MusicEngine
-from redux.settingsStorage import settingsStorageUtility
+from redux.settingsStorage import settings_storage_utility
 
 
 class App:
 
-    controllerManager: ControllerManager
-    controllerCoupler: ControllerCoupler
-    musicEngine: MusicEngine
+    controller_manager: ControllerManager
+    controller_coupler: ControllerCoupler
+    music_engine: MusicEngine
     display: Display
 
     def __init__(self, args):
-        self.useDisplay = args.display
-        if (self.useDisplay):
+        self.use_display = args.display
+        if (self.use_display):
             self.display = Display()
-        self.controllerManager = ControllerManager()
-        self.controllerCoupler = ControllerCoupler()
-        self.musicEngine = MusicEngine()
+        self.controller_manager = ControllerManager()
+        self.controller_coupler = ControllerCoupler()
+        self.music_engine = MusicEngine()
 
-        self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
+        self.controller_manager.subscribe(self.controller_coupler.event_handler)
 
 
     def start(self):
-        settingsStorageUtility.loadSettings()
+        settings_storage_utility.load_settings()
 
-        if (self.useDisplay):
+        if (self.use_display):
             self.display.start()
-        self.musicEngine.start()
-        self.controllerManager.start()
+        self.music_engine.start()
+        self.controller_manager.start()
 
         asyncio.get_event_loop().run_forever()

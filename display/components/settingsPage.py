@@ -15,21 +15,21 @@ class SettingsPage(tk.Frame):
             relief="flat",
             bg="#000000")
 
-        self.titleFrame = tk.Frame(self,
+        self.title_frame = tk.Frame(self,
             highlightthickness=0,
             relief="flat",
             bg="#000000",
             height=80,
             width=800)
 
-        self.title = tk.Label(self.titleFrame,
+        self.title = tk.Label(self.title_frame,
             text=name,
             bg='#000000',
             fg=COLORS['chord'],
             font=FONTS["big"],
             justify='center')
 
-        self.menuButton = tk.Button(self.titleFrame,
+        self.menu_button = tk.Button(self.title_frame,
             highlightthickness=0,
             relief="flat",
             bg="#000000",
@@ -42,11 +42,11 @@ class SettingsPage(tk.Frame):
             font=FONTS["big"],
             disabledforeground=COLORS['chordDim'],
             text='\u25C0 MENU',
-            command=lambda: store.dispatch(actions.changeActiveFrame('MENU')))
+            command=lambda: store.dispatch(actions.change_active_frame('MENU')))
 
-        self.menuButton.place(rely=0.5, relx=0.08, anchor='center')
+        self.menu_button.place(rely=0.5, relx=0.08, anchor='center')
         self.title.place(rely=0.5, relx=0.5, anchor='center')
-        self.titleFrame.grid(row=0, column=0, sticky='new', )
+        self.title_frame.grid(row=0, column=0, sticky='new', )
 
         self.grid(row=0, column=0, sticky='nsew')
 

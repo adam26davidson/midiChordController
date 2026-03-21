@@ -1,51 +1,51 @@
 
 
+
 class Modulation:
 
     def __init__(self, scale: list[int], setting):
         self.scale = scale
         if setting["type"] == "modal":
-            self.map = self.findModalMap(setting["map"])
+            self.map = self.find_modal_map(setting["map"])
         else:
             self.map = setting["map"]
-        self.offsets = self.findOffsets()
+        self.offsets = self.find_offsets()
 
-    def findModalMap(self, map):
-        scalePattern = []  # will be something like [T,F,T,F,T,T,F,T,F,T,F,T]
+    def find_modal_map(self, map):
+        scale_pattern = []  # will be something like [T,F,T,F,T,T,F,T,F,T,F,T]
         for i in range(12):
             if (self.scale.count(i) == 0):
-                scalePattern.append(False)
+                scale_pattern.append(False)
             else:
-                scalePattern.append(True)
+                scale_pattern.append(True)
         cycles = ((self.scale[map[0]] - self.scale[map[1]]) + 12) % 12
         for _ in range(cycles):
-            val = scalePattern.pop(0)
-            scalePattern.append(val)
-        explicitMap = []
+            val = scale_pattern.pop(0)
+            scale_pattern.append(val)
+        explicit_map = []
         for i in range(12):
-            if scalePattern[i]:
-                explicitMap.append(i)
-        return explicitMap
+            if scale_pattern[i]:
+                explicit_map.append(i)
+        return explicit_map
 
-    def findOffsets(self):
+    def find_offsets(self):
         offsets = []
         for i in range(len(self.scale)):
             offsets.append(self.map[i] - self.scale[i])
         return offsets
 
     def apply(self, notes, scale: list[int]):
-        modNotes = []
+        mod_notes = []
         for note in notes:
-            modNotes.append(self.applyOne(note, scale))
-        return modNotes
+            mod_notes.append(self.apply_one(note, scale))
+        return mod_notes
 
-    def applyOne(self, note, scale: list[int]):
+    def apply_one(self, note, scale: list[int]):
         index = scale.index(note % 12)
         return note + self.offsets[index]
 
-    def applyToScale(self):
-        newScale = []
+    def apply_to_scale(self):
+        new_scale = []
         for i in range(len(self.scale)):
-            newScale.append((self.scale[i] + self.offsets[i]) % 12)
-        return newScale
-
+            new_scale.append((self.scale[i] + self.offsets[i]) % 12)
+        return new_scale

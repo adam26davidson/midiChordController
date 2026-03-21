@@ -11,78 +11,78 @@ class TextDisplay(tk.Frame):
     width = 300
     height = 50
 
-    bgColor = "#000000"
+    bg_color = "#000000"
     color = COLORS["chord"]
-    inactiveColor = COLORS["chordDim"]
-    activeColor = COLORS["root"]
+    inactive_color = COLORS["chordDim"]
+    active_color = COLORS["root"]
 
     def __init__(self, master=None):
         super().__init__(master, width=self.width, height=self.height,
-                         highlightthickness=0, relief="flat", bg=self.bgColor, border=2, borderwidth=2)
+                         highlightthickness=0, relief="flat", bg=self.bg_color, border=2, borderwidth=2)
         self.master = master
 
         FONTS["big"]
         FONTS["medium"]
         FONTS["small"]
-        smallBoldFont = FONTS["smallBold"]
+        small_bold_font = FONTS["smallBold"]
 
-        rowSpacing = 50
+        row_spacing = 50
 
-        self.rowFrame = tk.Frame(self, bg=self.bgColor)
-        self.rowFrame.pack(side="top")
+        self.row_frame = tk.Frame(self, bg=self.bg_color)
+        self.row_frame.pack(side="top")
 
         # octave
-        self.octaveFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
-        self.octaveLabel = tk.Label(self.octaveFrame, text="o: ", bg=self.bgColor, fg=self.inactiveColor, font=smallBoldFont)
-        self.octaveValue = tk.Label(self.octaveFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
-        self.octaveLabel.pack(side="left")
-        self.octaveValue.pack(side="left")
-        self.octaveFrame.pack(side="left", padx=(0, 0))
+        self.octave_frame = tk.Frame(self.row_frame, bg=self.bg_color)
+        self.octave_label = tk.Label(self.octave_frame, text="o: ", bg=self.bg_color, fg=self.inactive_color, font=small_bold_font)
+        self.octave_value = tk.Label(self.octave_frame, text="0", bg=self.bg_color, fg=self.active_color, font=small_bold_font)
+        self.octave_label.pack(side="left")
+        self.octave_value.pack(side="left")
+        self.octave_frame.pack(side="left", padx=(0, 0))
 
         # voices
-        self.voicesFrame = tk.Frame(self.rowFrame, bg=self.bgColor)
-        self.voicesLabel = tk.Label(self.voicesFrame, text="v: ", bg=self.bgColor, fg=self.inactiveColor, font=smallBoldFont)
-        self.voicesValue = tk.Label(self.voicesFrame, text="0", bg=self.bgColor, fg=self.activeColor, font=smallBoldFont)
-        self.voicesLabel.pack(side="left")
-        self.voicesValue.pack(side="left")
-        self.voicesFrame.pack(side="left", padx=(rowSpacing, 0))
+        self.voices_frame = tk.Frame(self.row_frame, bg=self.bg_color)
+        self.voices_label = tk.Label(self.voices_frame, text="v: ", bg=self.bg_color, fg=self.inactive_color, font=small_bold_font)
+        self.voices_value = tk.Label(self.voices_frame, text="0", bg=self.bg_color, fg=self.active_color, font=small_bold_font)
+        self.voices_label.pack(side="left")
+        self.voices_value.pack(side="left")
+        self.voices_frame.pack(side="left", padx=(row_spacing, 0))
 
         # lock and hold
-        self.lockedImage = Image.open(PARENT_PATH + "/display/images/padlock.png")
-        self.lockedIcon = ImageTk.PhotoImage(self.lockedImage)
+        self.locked_image = Image.open(PARENT_PATH + "/display/images/padlock.png")
+        self.locked_icon = ImageTk.PhotoImage(self.locked_image)
 
-        self.unlockedImage = Image.open(PARENT_PATH + "/display/images/padlock-unlock.png")
-        self.unlockedIcon = ImageTk.PhotoImage(self.unlockedImage)
+        self.unlocked_image = Image.open(PARENT_PATH + "/display/images/padlock-unlock.png")
+        self.unlocked_icon = ImageTk.PhotoImage(self.unlocked_image)
 
-        self.holdActiveImage = Image.open(PARENT_PATH + "/display/images/hold-active.png")
-        self.holdActiveIcon = ImageTk.PhotoImage(self.holdActiveImage)
+        self.hold_active_image = Image.open(PARENT_PATH + "/display/images/hold-active.png")
+        self.hold_active_icon = ImageTk.PhotoImage(self.hold_active_image)
 
-        self.holdInactiveImage = Image.open(PARENT_PATH + "/display/images/hold-inactive.png")
-        self.holdInactiveIcon = ImageTk.PhotoImage(self.holdInactiveImage)
+        self.hold_inactive_image = Image.open(PARENT_PATH + "/display/images/hold-inactive.png")
+        self.hold_inactive_icon = ImageTk.PhotoImage(self.hold_inactive_image)
 
-        self.inversionLockIcon = tk.Label(self.rowFrame, image=self.unlockedIcon, bg=self.bgColor, padx=5)
-        self.inversionLockIcon.pack(side="left", padx=(rowSpacing, 0))
+        self.inversion_lock_icon = tk.Label(self.row_frame, image=self.unlocked_icon, bg=self.bg_color, padx=5)
+        self.inversion_lock_icon.pack(side="left", padx=(row_spacing, 0))
 
-        self.holdIcon = tk.Label(self.rowFrame, image=self.holdInactiveIcon, bg=self.bgColor, padx=5)
-        self.holdIcon.pack(side="left", padx=(rowSpacing, 0))
+        self.hold_icon = tk.Label(self.row_frame, image=self.hold_inactive_icon, bg=self.bg_color, padx=5)
+        self.hold_icon.pack(side="left", padx=(row_spacing, 0))
 
         self.pack(side="top", padx=(20, 20), pady=(15, 0))
 
 
-    def setInversionLock(self, active):
+    def set_inversion_lock(self, active):
         if active:
-            self.inversionLockIcon.configure(image=self.lockedIcon)
+            self.inversion_lock_icon.configure(image=self.locked_icon)
         else:
-            self.inversionLockIcon.configure(image=self.unlockedIcon)
+            self.inversion_lock_icon.configure(image=self.unlocked_icon)
 
-    def setHold(self, active):
+    def set_hold(self, active):
         if active:
-            self.holdIcon.configure(image=self.holdActiveIcon)
+            self.hold_icon.configure(image=self.hold_active_icon)
         else:
-            self.holdIcon.configure(image=self.holdInactiveIcon)
+            self.hold_icon.configure(image=self.hold_inactive_icon)
 
-    def setOctave(self, octave):
-        self.octaveValue.configure(text=str(octave))
+    def set_octave(self, octave):
+        self.octave_value.configure(text=str(octave))
 
-    def setVoices(self, voices):
-        self.voicesValue.configure(text=str(voices))
+    def set_voices(self, voices):
+        self.voices_value.configure(text=str(voices))

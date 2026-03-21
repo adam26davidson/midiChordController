@@ -4,8 +4,8 @@ from models.commandType import CommandType
 from musicEngine.chordEngine.externalChordEngine import ExternalChordEngine
 from musicEngine.chordEngine.internalChordEngine import InternalChordEngine
 from redux import store
-from redux import utils as reduxUtils
-from redux.actions import controllerCoupler as ccActions
+from redux import utils as redux_utils
+from redux.actions import controllerCoupler as cc_actions
 
 from .midi import Midi
 from .rhythmEngine import RhythmEngine
@@ -14,49 +14,49 @@ from .rhythmEngine import RhythmEngine
 class MusicEngine:
 
     def __init__(self):
-        self.internalChordEngine = InternalChordEngine()
-        self.externalChordEngine = ExternalChordEngine()
-        self.rhythmEngine = RhythmEngine()
+        self.internal_chord_engine = InternalChordEngine()
+        self.external_chord_engine = ExternalChordEngine()
+        self.rhythm_engine = RhythmEngine()
         self.midi = Midi()
 
-        self.processControllerEvents = True
+        self.process_controller_events = True
 
-        self.midi.subscribe(self.externalChordEngine.handleMidiMessage)
-        self.internalChordEngine.subscribe(self.rhythmEngine.handleMessage)
-        self.externalChordEngine.subscribe(self.rhythmEngine.handleMessage)
-        self.rhythmEngine.subscribe(self.midi.handleMessage)
+        self.midi.subscribe(self.external_chord_engine.handle_midi_message)
+        self.internal_chord_engine.subscribe(self.rhythm_engine.handle_message)
+        self.external_chord_engine.subscribe(self.rhythm_engine.handle_message)
+        self.rhythm_engine.subscribe(self.midi.handle_message)
 
-        reduxUtils.addAppParameters(self.getParameters())
+        redux_utils.add_app_parameters(self.get_parameters())
 
-        store.dispatch(ccActions.musicEngineAppParametersLoaded())
+        store.dispatch(cc_actions.music_engine_app_parameters_loaded())
 
     def start(self):
-        self.externalChordEngine.start()
+        self.external_chord_engine.start()
         self.midi.start()
 
-    def getParameters(self):
+    def get_parameters(self):
         parameters = [
             AppParameter(
-                validCommandTypes = [CommandType.ANALOG],
-                commandMappings = {
-                    Command.UPDATE: self.midi.setAfterTouch
+                valid_command_types = [CommandType.ANALOG],
+                command_mappings = {
+                    Command.UPDATE: self.midi.set_after_touch
                 },
                 key = "AFTERTOUCH",
                 label = "Aftertouch",
-                labelAbreviation="AT",
+                label_abreviation="AT",
             )
         ]
 
         for cc in range(1, 128):
             parameters.append(
                 AppParameter(
-                    validCommandTypes = [CommandType.ANALOG],
-                    commandMappings = {
-                        Command.UPDATE: self.midi.getCCSetter(cc)
+                    valid_command_types = [CommandType.ANALOG],
+                    command_mappings = {
+                        Command.UPDATE: self.midi.get_cc_setter(cc)
                     },
                     key = f"MIDI_CC_{cc}",
                     label = f"MIDI CC {cc}",
-                    labelAbreviation=f"CC{cc}",
+                    label_abreviation=f"CC{cc}",
                 )
             )
 

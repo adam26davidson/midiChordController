@@ -1,9 +1,9 @@
 from .default import default
-from .gyroInversions import gyroInversions
-from .touchpadBass import touchpadBass
+from .gyroInversions import gyro_inversions
+from .touchpadBass import touchpad_bass
 
-meMaps = {
+me_maps = {
   default['name']: default,
-  gyroInversions['name']: gyroInversions,
-  touchpadBass['name']: touchpadBass
+  gyro_inversions['name']: gyro_inversions,
+  touchpad_bass['name']: touchpad_bass
 }

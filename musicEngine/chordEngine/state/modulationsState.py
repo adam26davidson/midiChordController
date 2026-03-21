@@ -8,4 +8,4 @@ class ModulationSide(Enum):
 
 class ModulationsState:
     side: ModulationSide = ModulationSide.NONE
-    buttonQueue: list[ModulationSide] = []
+    button_queue: list[ModulationSide] = []

@@ -12,7 +12,7 @@ RAW_DIRECTIONAL_EVENTS = [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEv
 class RawControl:
     key: str
     label: str
-    evDevKey: int
+    ev_dev_key: int
     type: RawControlType
     config: RawControlConfig
 
@@ -20,62 +20,62 @@ class RawControl:
             self,
             key: str,
             label:str,
-            evDevKey: str,
+            ev_dev_key: str,
             type: RawControlType,
             config: RawControlConfig = None):
         self.key = key
         self.label = label
-        self.evDevKey = evDevKey
+        self.ev_dev_key = ev_dev_key
         self.type = type
         self.config = config
 
 
-    def getMappableControlKeys(self,
-                               mappableControlType: MappableControlType = None,
+    def get_mappable_control_keys(self,
+                               mappable_control_type: MappableControlType = None,
                                event: RawControlEvent = None
                                ) -> list[str]:
 
         if self.type == RawControlType.BUTTON:
             return [self.key]
 
-        if mappableControlType == MappableControlType.ON_OFF:
+        if mappable_control_type == MappableControlType.ON_OFF:
 
             if event in RAW_DIRECTIONAL_EVENTS:
                 return [self.key + "_" + event.name]
 
             if event == RawControlEvent.OFF:
                 keys = []
-                for polarEvent in self.config.polarEventMap.values():
-                    if polarEvent != RawControlEvent.OFF:
-                        keys.append(self.key + "_" + polarEvent.name)
+                for polar_event in self.config.polar_event_map.values():
+                    if polar_event != RawControlEvent.OFF:
+                        keys.append(self.key + "_" + polar_event.name)
                 return keys
 
-        elif mappableControlType == MappableControlType.POLAR:
+        elif mappable_control_type == MappableControlType.POLAR:
             if self.type == RawControlType.ANALOG:
                 return [self.key + "_" + MappableControlType.POLAR.name]
             if self.type == RawControlType.PAD:
                 return [self.key]
 
-        elif mappableControlType == MappableControlType.ANALOG:
+        elif mappable_control_type == MappableControlType.ANALOG:
             return [self.key]
         else:
-            print(f"no mappable control keys found for raw control: {self.key} : {self.type} : {mappableControlType} : {event}")
+            print(f"no mappable control keys found for raw control: {self.key} : {self.type} : {mappable_control_type} : {event}")
             return []
         return None
 
 
-    def getMappableControlEvent(self,
-                                mappableControlType: MappableControlType = None,
+    def get_mappable_control_event(self,
+                                mappable_control_type: MappableControlType = None,
                                 event: RawControlEvent = None
                                 ) -> MappableControlEvent:
 
         if event == RawControlEvent.OFF:
             return MappableControlEvent.OFF
 
-        if mappableControlType == MappableControlType.ON_OFF and event in RAW_ON_EVENTS:
+        if mappable_control_type == MappableControlType.ON_OFF and event in RAW_ON_EVENTS:
             return MappableControlEvent.ON
 
-        if mappableControlType == MappableControlType.POLAR:
+        if mappable_control_type == MappableControlType.POLAR:
 
             if event in [RawControlEvent.UP, RawControlEvent.RIGHT]:
                 return MappableControlEvent.POSITIVE
@@ -83,10 +83,10 @@ class RawControl:
             if event in [RawControlEvent.DOWN, RawControlEvent.LEFT]:
                 return MappableControlEvent.NEGATIVE
 
-        elif mappableControlType == MappableControlType.ANALOG:
+        elif mappable_control_type == MappableControlType.ANALOG:
             return MappableControlEvent.UPDATE
         else:
-            print(f"no mappable control event found for raw control: {self.key} : {self.type} : {mappableControlType} : {event}")
+            print(f"no mappable control event found for raw control: {self.key} : {self.type} : {mappable_control_type} : {event}")
             return None
         return None
 

@@ -1,3 +1,3 @@
 class KeyState:
     value: int = 0
-    incrementBy: int = 1
+    increment_by: int = 1

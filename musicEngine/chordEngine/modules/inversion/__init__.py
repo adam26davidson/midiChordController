@@ -8,7 +8,7 @@ from models.command import Command  # noqa: F401
 from models.commandType import CommandType  # noqa: F401
 from musicEngine.chordEngine.state.inversionState import InversionState
 from redux import store
-from redux import utils as reduxUtils
+from redux import utils as redux_utils
 from redux.actions import musicEngine as actions  # noqa: F401
 
 from ...chordEngineState import state  # noqa: F401
@@ -16,100 +16,99 @@ from ...chordEngineState import state  # noqa: F401
 
 class Inversion(ABC):
 
-    updateChordEngine: Callable
+    update_chord_engine: Callable
     type: AppParameterType
 
-    def __init__(self, type: AppParameterType, updateChordEngine: Callable):
-        self.updateChordEngine = updateChordEngine
+    def __init__(self, type: AppParameterType, update_chord_engine: Callable):
+        self.update_chord_engine = update_chord_engine
         self.type = type
 
-        store.subscribe(self.handleStoreUpdate)
+        store.subscribe(self.handle_store_update)
 
-        self.updateReduxRange()
-        self.updateReduxValue()
+        self.update_redux_range()
+        self.update_redux_value()
 
-        reduxUtils.addAppParameters(self.getParameters())
+        redux_utils.add_app_parameters(self.get_parameters())
 
     @abstractmethod
-    def getState(self) -> InversionState:
+    def get_state(self) -> InversionState:
         pass
 
     @abstractmethod
-    def updateReduxValue(self):
+    def update_redux_value(self):
         pass
 
     @abstractmethod
-    def updateReduxRange(self):
+    def update_redux_range(self):
         pass
 
     @abstractmethod
-    def updateReduxLocked(self):
+    def update_redux_locked(self):
         pass
 
     @abstractmethod
-    def handleStoreUpdate(self):
+    def handle_store_update(self):
         pass
 
-    def incrementRange(self):
-        self.setRange(self.getState().range + 1)
+    def increment_range(self):
+        self.set_range(self.get_state().range + 1)
 
-    def decrementRange(self):
-        self.setRange(self.getState().range - 1)
+    def decrement_range(self):
+        self.set_range(self.get_state().range - 1)
 
-    def setRange(self, range: int):
+    def set_range(self, range: int):
         range = max(min(range, MAX_INVERSION_RANGE), 0)
-        self.getState().range = range
-        oldInversion = self.getState().value
-        self.getState().value = max(min(oldInversion, range), -1*range)
+        self.get_state().range = range
+        old_inversion = self.get_state().value
+        self.get_state().value = max(min(old_inversion, range), -1*range)
 
-        self.updateChordEngine()
-        self.updateReduxValue()
-        self.updateReduxRange()
+        self.update_chord_engine()
+        self.update_redux_value()
+        self.update_redux_range()
 
     def increment(self):
-        newInversion = self.getState().value + 1
-        if abs(newInversion) <= self.getState().range:
-            self.setValue(newInversion)
+        new_inversion = self.get_state().value + 1
+        if abs(new_inversion) <= self.get_state().range:
+            self.set_value(new_inversion)
 
     def decrement(self):
-        newInversion = self.getState().value - 1
-        if abs(newInversion) <= self.getState().range:
-            self.setValue(newInversion)
+        new_inversion = self.get_state().value - 1
+        if abs(new_inversion) <= self.get_state().range:
+            self.set_value(new_inversion)
 
-    def setValue(self, inversion):
-        if (not self.getState().locked) and inversion != self.getState().value:
-                range = self.getState().range
-                self.getState().value = max(min(inversion, range), -1*range)
-                self.updateChordEngine()
-                self.updateReduxValue()
+    def set_value(self, inversion):
+        if (not self.get_state().locked) and inversion != self.get_state().value:
+                range = self.get_state().range
+                self.get_state().value = max(min(inversion, range), -1*range)
+                self.update_chord_engine()
+                self.update_redux_value()
 
-    def setAnalogValue(self, value):
-        inversion = self.processValue(value)
-        self.setValue(inversion)
+    def set_analog_value(self, value):
+        inversion = self.process_value(value)
+        self.set_value(inversion)
 
-    def toggleLock(self):
-        self.getState().locked = not self.getState().locked
-        self.updateReduxLocked()
+    def toggle_lock(self):
+        self.get_state().locked = not self.get_state().locked
+        self.update_redux_locked()
 
-    def processValue(self, rawValue):
-        maxSteps = self.getState().range
-        lastValue = self.getState().value
+    def process_value(self, raw_value):
+        max_steps = self.get_state().range
+        last_value = self.get_state().value
 
         # converts to an integer in the correct inversion range
-        def getValue(x):
-            return math.floor(((x+1)/2)*((2*maxSteps)+1)) - maxSteps
+        def get_value(x):
+            return math.floor(((x+1)/2)*((2*max_steps)+1)) - max_steps
 
         # snap processed value back into current window if within snap region
-        value = getValue(rawValue)
-        snap = (1.0 / (maxSteps + 1)) * INVERSION_SNAP
-        if value == lastValue + 1:
-            rawValue -= snap
-            value = getValue(rawValue)
-        if value == lastValue - 1:
-            rawValue += snap
-            value = getValue(rawValue)
+        value = get_value(raw_value)
+        snap = (1.0 / (max_steps + 1)) * INVERSION_SNAP
+        if value == last_value + 1:
+            raw_value -= snap
+            value = get_value(raw_value)
+        if value == last_value - 1:
+            raw_value += snap
+            value = get_value(raw_value)
 
         return value
-
 
 

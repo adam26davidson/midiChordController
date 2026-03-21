@@ -6,62 +6,62 @@ from .settingControl import SettingControl
 
 class ButtonGroup(SettingControl):
 
-    def __init__(self, container, name, optionsList, selected, callback):
+    def __init__(self, container, name, options_list, selected, callback):
         super().__init__(container, name)
 
-        self.optionsList = optionsList
+        self.options_list = options_list
         self.callback = callback
 
         self.state = ButtonGroupState(selected)
 
-        self.contentsFrame = tk.Frame(self,
+        self.contents_frame = tk.Frame(self,
             highlightthickness=0,
             relief="flat",
             bg="#000000")
 
         self.buttons = {}
 
-        for option in optionsList:
-            self.buttons[option['name']] = SingleButton(self.contentsFrame, option, self.setSelectedButton)
+        for option in options_list:
+            self.buttons[option['name']] = SingleButton(self.contents_frame, option, self.set_selected_button)
             self.buttons[option['name']].pack(side='left')
 
-        self.buttons[selected].setSelected()
+        self.buttons[selected].set_selected()
 
-        self.contentsFrame.pack(side='top', anchor='nw', padx=(4, 4), pady=(4, 4))
+        self.contents_frame.pack(side='top', anchor='nw', padx=(4, 4), pady=(4, 4))
 
-    def setSelectedButton(self, value, name):
-        self.buttons[self.state.activebutton].setUnSelected()
-        self.buttons[name].setSelected()
-        self.state.activebutton = name
+    def set_selected_button(self, value, name):
+        self.buttons[self.state.active_button].set_un_selected()
+        self.buttons[name].set_selected()
+        self.state.active_button = name
         self.callback(value)
 
-    def setValue(self, value):
+    def set_value(self, value):
         button = None
         for b in self.buttons.values():
             if b.value == value:
                 button = b
 
-        self.setSelectedButton(value, button.name)
+        self.set_selected_button(value, button.name)
 
-    def getValue(self):
-        return self.buttons[self.state.activebutton].value
+    def get_value(self):
+        return self.buttons[self.state.active_button].value
 
-    def setDisabled(self):
-        for buttonName in self.buttons:
-            button = self.buttons[buttonName]
+    def set_disabled(self):
+        for button_name in self.buttons:
+            button = self.buttons[button_name]
             button.configure(state=tk.DISABLED)
-            if buttonName == self.state.activebutton:
+            if button_name == self.state.active_button:
                 button.configure(
                     bg=COLORS['chordDim'],
                     fg='#000000',
                     disabledforeground='#000000'
                 )
 
-    def setEnabled(self):
-        for buttonName in self.buttons:
-            button = self.buttons[buttonName]
+    def set_enabled(self):
+        for button_name in self.buttons:
+            button = self.buttons[button_name]
             button.configure(state=tk.NORMAL)
-            if buttonName == self.state.activebutton:
+            if button_name == self.state.active_button:
                 button.configure(
                     bg=COLORS['root'],
                     fg='#000000'
@@ -87,19 +87,19 @@ class SingleButton(tk.Button):
             disabledforeground='#000000',
             font=FONTS["medium"],
             text=option['name'],
-            command=self.__onClick)
+            command=self.__on_click)
 
-    def __onClick(self):
+    def __on_click(self):
         self.callback(self.value, self.name)
 
-    def setSelected(self):
+    def set_selected(self):
         self.configure(
             bg=COLORS['root'],
             activebackground=COLORS['root'],
             fg="#000000",
             activeforeground="#000000")
 
-    def setUnSelected(self):
+    def set_un_selected(self):
         self.configure(
             bg="#000000",
             activebackground="#000000",
@@ -109,7 +109,7 @@ class SingleButton(tk.Button):
 
 class ButtonGroupState:
     disabled = False
-    activebutton = ''
+    active_button = ''
 
-    def __init__(self, activeButton):
-        self.activebutton = activeButton
+    def __init__(self, active_button):
+        self.active_button = active_button

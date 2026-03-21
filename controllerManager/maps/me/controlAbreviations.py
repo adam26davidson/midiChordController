@@ -1,4 +1,4 @@
-controlAbreviations = {
+control_abreviations = {
     "SOUTH_CHORD_ON": "S",
     "WEST_CHORD_ON": "W",
     "NORTH_CHORD_ON": "N",

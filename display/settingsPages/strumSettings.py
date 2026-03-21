@@ -2,7 +2,7 @@ from pyrsistent import thaw
 
 from redux import store
 from redux.actions import musicEngine as meActions
-from redux.settingsStorage import settingsStorageUtility
+from redux.settingsStorage import settings_storage_utility
 
 from ..components.buttonGroup import ButtonGroup
 from ..components.settingsContainer import SettingsContainer
@@ -27,7 +27,7 @@ class StrumSettingsFrame(SettingsPage):
                 {'name': 'OFF', 'value': 'off'},
             ],
             selected='REG',
-            callback=self.setStrumMode)
+            callback=self.set_strum_mode)
 
         self.strumOrder = ButtonGroup(self.topFrame,
             name='strum order',
@@ -37,7 +37,7 @@ class StrumSettingsFrame(SettingsPage):
                 {'name': 'RAND', 'value': 'random'},
             ],
             selected='RAND',
-            callback=self.setStrumOrder)
+            callback=self.set_strum_order)
 
         self.strumInterval = Slider(self.bottomFrame,
             name='strum interval',
@@ -46,7 +46,7 @@ class StrumSettingsFrame(SettingsPage):
             resolution=0.005,
             digits=4,
             value=0.02,
-            callback=self.setStrumInterval)
+            callback=self.set_strum_interval)
 
         self.strumMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.strumOrder.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
@@ -55,34 +55,34 @@ class StrumSettingsFrame(SettingsPage):
         self.strumInterval.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.bottomFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
 
-    def __handleStoreUpdate(self):
+    def __handle_store_update(self):
         state = store.get_state()
-        meState = thaw(state['musicEngine'])
+        me_state = thaw(state['musicEngine'])
 
-        if meState['strumMode'] != self.strumMode.getValue():
-            self.after(0, self.strumMode.setValue(meState['strumMode']))
-        if meState['strumInterval'] != self.strumInterval.getValue():
-            self.after(0, self.strumInterval.setValue(meState['strumInterval']))
-        if meState['strumOrder'] != self.strumOrder.getValue():
-            self.after(0, self.strumOrder.setValue(meState['strumOrder']))
+        if me_state['strumMode'] != self.strumMode.get_value():
+            self.after(0, self.strumMode.set_value(me_state['strumMode']))
+        if me_state['strumInterval'] != self.strumInterval.get_value():
+            self.after(0, self.strumInterval.set_value(me_state['strumInterval']))
+        if me_state['strumOrder'] != self.strumOrder.get_value():
+            self.after(0, self.strumOrder.set_value(me_state['strumOrder']))
 
-    def setStrumMode(self, mode):
-        store.dispatch(meActions.changeStrumMode(mode))
-        settingsStorageUtility.saveSettings()
+    def set_strum_mode(self, mode):
+        store.dispatch(meActions.change_strum_mode(mode))
+        settings_storage_utility.save_settings()
         if mode == 'off':
-            self.strumInterval.setDisabled()
-            self.strumOrder.setDisabled()
+            self.strumInterval.set_disabled()
+            self.strumOrder.set_disabled()
         else:
-            self.strumInterval.setEnabled()
-            self.strumOrder.setEnabled()
+            self.strumInterval.set_enabled()
+            self.strumOrder.set_enabled()
 
-    def setStrumInterval(self, interval):
-        store.dispatch(meActions.changeStrumInterval(interval))
-        settingsStorageUtility.saveSettings()
+    def set_strum_interval(self, interval):
+        store.dispatch(meActions.change_strum_interval(interval))
+        settings_storage_utility.save_settings()
 
-    def setStrumOrder(self, order):
-        store.dispatch(meActions.changeStrumOrder(order))
-        settingsStorageUtility.saveSettings()
+    def set_strum_order(self, order):
+        store.dispatch(meActions.change_strum_order(order))
+        settings_storage_utility.save_settings()

@@ -1,10 +1,10 @@
 from controllerCoupler.models.controlMap import ControlMap
 
-defaultControlMap = ControlMap(
+default_control_map = ControlMap(
     name = "default",
-    displayName = "Default",
-    inversionMode = "continuous",
-    bassMode = "continuous",
+    display_name = "Default",
+    inversion_mode = "continuous",
+    bass_mode = "continuous",
     map = {
 
         #MAIN BUTTONS

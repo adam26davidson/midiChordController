@@ -13,60 +13,60 @@ from ...chordEngineState import state
 
 class BassPosition(Inversion):
 
-    def __init__(self, type: AppParameterType, updateChordEngine: callable):
-        super().__init__(type, updateChordEngine)
+    def __init__(self, type: AppParameterType, update_chord_engine: callable):
+        super().__init__(type, update_chord_engine)
 
-    def getState(self) -> InversionState:
-        return state.bassPosition
+    def get_state(self) -> InversionState:
+        return state.bass_position
 
-    def updateReduxValue(self):
-        store.dispatch(actions.changeBassPosition(state.bassPosition.value))
+    def update_redux_value(self):
+        store.dispatch(actions.change_bass_position(state.bass_position.value))
 
-    def updateReduxRange(self):
-        store.dispatch(actions.changeBassRange(state.bassPosition.range))
+    def update_redux_range(self):
+        store.dispatch(actions.change_bass_range(state.bass_position.range))
 
-    def updateReduxLocked(self):
+    def update_redux_locked(self):
         pass
 
-    def handleStoreUpdate(self):
-        meState = thaw(store.get_state()['musicEngine'])
-        if (meState['bassRange'] != state.bassPosition.range):
-            self.setRange(meState['bassRange'])
+    def handle_store_update(self):
+        me_state = thaw(store.get_state()['musicEngine'])
+        if (me_state['bassRange'] != state.bass_position.range):
+            self.set_range(me_state['bassRange'])
 
-    def getParameters(self):
-        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
+    def get_parameters(self):
+        key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(
-                validCommandTypes = [CommandType.ANALOG, CommandType.INCREMENTAL],
-                commandMappings = {
-                    Command.UPDATE: self.setAnalogValue,
+                valid_command_types = [CommandType.ANALOG, CommandType.INCREMENTAL],
+                command_mappings = {
+                    Command.UPDATE: self.set_analog_value,
                     Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
-                key = f"{keyPrefix}BASS_POSITION",
+                key = f"{key_prefix}BASS_POSITION",
                 label = "Bass Position",
-                labelAbreviation="BP",
+                label_abreviation="BP",
                 type = self.type
             ),
             AppParameter(
-                validCommandTypes = [CommandType.TOGGLE],
-                commandMappings = {
-                    Command.TOGGLE: self.toggleLock
+                valid_command_types = [CommandType.TOGGLE],
+                command_mappings = {
+                    Command.TOGGLE: self.toggle_lock
                 },
-                key = f"{keyPrefix}BASS_POSITION_LOCK",
+                key = f"{key_prefix}BASS_POSITION_LOCK",
                 label = "Bass Position Lock",
-                labelAbreviation="BL",
+                label_abreviation="BL",
                 type = self.type
             ),
             AppParameter(
-                validCommandTypes = [CommandType.INCREMENTAL],
-                commandMappings = {
-                    Command.INCREMENT: self.incrementRange,
-                    Command.DECREMENT: self.decrementRange
+                valid_command_types = [CommandType.INCREMENTAL],
+                command_mappings = {
+                    Command.INCREMENT: self.increment_range,
+                    Command.DECREMENT: self.decrement_range
                 },
-                key = f"{keyPrefix}BASS_POSITION_RANGE",
+                key = f"{key_prefix}BASS_POSITION_RANGE",
                 label = "Bass Range",
-                labelAbreviation="BR",
+                label_abreviation="BR",
                 type = self.type
             )
         ]

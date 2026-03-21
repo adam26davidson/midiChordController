@@ -4,19 +4,19 @@ from controllerManager.models.mappableControlEvent import MappableControlEvent
 
 
 class ControlEvent:
-    controlKey: str
+    control_key: str
     event: MappableControlEvent
     value: float
-    controllerId: str
+    controller_id: str
 
     def __init__(
             self,
-            controlKey: str,
+            control_key: str,
             event: MappableControlEvent,
-            controllerId: str,
+            controller_id: str,
             value: float | None = None):
 
-        self.controlKey = controlKey
+        self.control_key = control_key
         self.event = event
-        self.controllerId = controllerId
+        self.controller_id = controller_id
         self.value = value

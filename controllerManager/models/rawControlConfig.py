@@ -6,39 +6,39 @@ from .rawControlEvent import RawControlEvent
 
 
 class RawControlConfig:
-    topValue: int
-    bottomValue: int
+    top_value: int
+    bottom_value: int
 
-    exposeOnOffEvents: bool
-    exposePolarEvents: bool
+    expose_on_off_events: bool
+    expose_polar_events: bool
 
-    averageCount: int
-    ignoreValues: list[int]
+    average_count: int
+    ignore_values: list[int]
 
-    centeredThreshold: float
+    centered_threshold: float
     threshold: float
 
-    polarEventMap: dict[int, RawControlEvent]
-    polerOrientation: PolarOrientation
+    polar_event_map: dict[int, RawControlEvent]
+    polar_orientation: PolarOrientation
 
     def __init__(self,
-                 topValue: int | None = None,
-                 bottomValue: int | None = None,
-                 exposeOnOffEvents: bool | None = None,
-                 exposePolarEvents: bool | None = None,
-                 averageCount: int | None = None,
-                 centeredThreshold: float | None = None,
+                 top_value: int | None = None,
+                 bottom_value: int | None = None,
+                 expose_on_off_events: bool | None = None,
+                 expose_polar_events: bool | None = None,
+                 average_count: int | None = None,
+                 centered_threshold: float | None = None,
                  threshold: float | None = None,
-                 ignoreValues: list[int] | None = None,
-                 polarEventMap: dict[int, RawControlEvent] | None = None,
-                 polarOrientation: PolarOrientation | None = None):
-        self.topValue = topValue
-        self.bottomValue = bottomValue
-        self.exposeOnOffEvents = exposeOnOffEvents
-        self.exposePolarEvents = exposePolarEvents
-        self.averageCount = averageCount
-        self.centeredThreshold = centeredThreshold
+                 ignore_values: list[int] | None = None,
+                 polar_event_map: dict[int, RawControlEvent] | None = None,
+                 polar_orientation: PolarOrientation | None = None):
+        self.top_value = top_value
+        self.bottom_value = bottom_value
+        self.expose_on_off_events = expose_on_off_events
+        self.expose_polar_events = expose_polar_events
+        self.average_count = average_count
+        self.centered_threshold = centered_threshold
         self.threshold = threshold
-        self.ignoreValues = ignoreValues
-        self.polarEventMap = polarEventMap
-        self.polarOrientation = polarOrientation
+        self.ignore_values = ignore_values
+        self.polar_event_map = polar_event_map
+        self.polar_orientation = polar_orientation

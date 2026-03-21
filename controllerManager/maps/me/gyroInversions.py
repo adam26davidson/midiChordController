@@ -1,4 +1,4 @@
-gyroInversions = {
+gyro_inversions = {
   'name': 'gyroInversions',
   'displayName': 'Gyro Inversions',
   'inversionMode': 'continuous',

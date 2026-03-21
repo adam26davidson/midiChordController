@@ -9,7 +9,7 @@ def reducer(state, action):
     })
 
   if action['type'] == 'controllerManager/controllerAdded':
-    newController = freeze({
+    new_controller = freeze({
       'id': action['data']['id'],
       'name': action['data']['name'],
       'role': action['data']['role'],
@@ -17,22 +17,22 @@ def reducer(state, action):
       'meMap': action['data']['meMap'],
       'uiMap': action['data']['uiMap']
     })
-    newControllers = state['controllers'].append(newController)
-    return  state.set('controllers', newControllers)
+    new_controllers = state['controllers'].append(new_controller)
+    return  state.set('controllers', new_controllers)
 
   if action['type'] == 'controllerManager/controllerRemoved':
     for controller in state['controllers']:
       if controller['id'] == action['data']['id']:
-        newControllers = state['controllers'].remove(controller)
-        return state.set('controllers', newControllers)
+        new_controllers = state['controllers'].remove(controller)
+        return state.set('controllers', new_controllers)
     return state
 
   if action['type'] == 'controllerManager/controllerMapUpdated':
     for index, controller in enumerate(state['controllers']):
       if controller['id'] == action['data']['id']:
-        newController = controller.set('meMap', action['data']['meMap'])
-        newControllers =  state['controllers'].set(index, newController)
-        return state.set('controllers', newControllers)
+        new_controller = controller.set('meMap', action['data']['meMap'])
+        new_controllers =  state['controllers'].set(index, new_controller)
+        return state.set('controllers', new_controllers)
     return state
 
   if action['type'] == 'controllerManager/startedWaitingForConnection':

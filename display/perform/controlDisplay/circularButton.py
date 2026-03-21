@@ -6,44 +6,44 @@ from .controlButton import ControlButton
 
 class CircularButton(ControlButton):
 
-    def __init__(self, master, param: AppParameter, centerX, centerY, unitSize):
+    def __init__(self, master, param: AppParameter, center_x, center_y, unit_size):
         super().__init__(master)
         self.master = master
-        self.label = "∅" if not param else param.labelAbreviation
-        self.centerX = centerX
-        self.centerY = centerY
-        self.unitSize = unitSize
-        self.radius = unitSize
+        self.label = "∅" if not param else param.label_abreviation
+        self.center_x = center_x
+        self.center_y = center_y
+        self.unit_size = unit_size
+        self.radius = unit_size
 
-        self.drawButton()
+        self.draw_button()
 
-    def setParam(self, param: AppParameter):
-        self.label = "∅" if not param else param.labelAbreviation
-        self.master.itemconfig(self.textObject, text=self.label)
+    def set_param(self, param: AppParameter):
+        self.label = "∅" if not param else param.label_abreviation
+        self.master.itemconfig(self.text_object, text=self.label)
 
-    def drawButton(self):
-        self.canvasObject = self.master.create_oval(
-            self.centerX - self.radius,
-            self.centerY - self.radius,
-            self.centerX + self.radius,
-            self.centerY + self.radius,
+    def draw_button(self):
+        self.canvas_object = self.master.create_oval(
+            self.center_x - self.radius,
+            self.center_y - self.radius,
+            self.center_x + self.radius,
+            self.center_y + self.radius,
             fill="#000000",
             outline=INACTIVE_COLOR,
             width=2
         )
 
-        self.textObject = self.master.create_text(
-            self.centerX,
-            self.centerY,
+        self.text_object = self.master.create_text(
+            self.center_x,
+            self.center_y,
             text=self.label,
             fill=INACTIVE_COLOR,
             font=FONT
         )
 
     def on(self):
-        self.master.itemconfig(self.canvasObject, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
-        self.master.itemconfig(self.textObject, fill='#000000')
+        self.master.itemconfig(self.canvas_object, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
+        self.master.itemconfig(self.text_object, fill='#000000')
 
     def off(self):
-        self.master.itemconfig(self.canvasObject, outline=INACTIVE_COLOR, fill="#000000")
-        self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)
+        self.master.itemconfig(self.canvas_object, outline=INACTIVE_COLOR, fill="#000000")
+        self.master.itemconfig(self.text_object, fill=INACTIVE_COLOR)

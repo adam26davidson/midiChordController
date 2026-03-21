@@ -10,60 +10,60 @@ from redux.actions import musicEngine as actions
 
 class SettingsStorageUtility:
 
-    loadingSettings = True
+    loading_settings = True
 
-    settingsFileDirectory = f'{PARENT_PATH}/userSettings.json'
+    settings_file_directory = f'{PARENT_PATH}/userSettings.json'
 
-    savedMusicEngineSettings = {
-        'bassChannel': actions.changeBassChannel,
-        'chordChannel': actions.changeChordChannel,
-        'distributeChannels': actions.changeDistributeChannels,
-        'velocity': actions.changeVelocity,
-        'velocityMode': actions.changeVelocityMode,
-        'velocityDeviation': actions.changeVelocityDeviation,
-        'aftertouchMode': actions.changeAftertouchMode,
-        'strumMode': actions.changeStrumMode,
-        'strumInterval': actions.changeStrumInterval,
-        'strumOrder': actions.changeStrumOrder,
+    saved_music_engine_settings = {
+        'bassChannel': actions.change_bass_channel,
+        'chordChannel': actions.change_chord_channel,
+        'distributeChannels': actions.change_distribute_channels,
+        'velocity': actions.change_velocity,
+        'velocityMode': actions.change_velocity_mode,
+        'velocityDeviation': actions.change_velocity_deviation,
+        'aftertouchMode': actions.change_aftertouch_mode,
+        'strumMode': actions.change_strum_mode,
+        'strumInterval': actions.change_strum_interval,
+        'strumOrder': actions.change_strum_order,
 
-        'inversionRange': actions.changeInversionRange,
-        'bassRange': actions.changeBassRange,
-        'transposeIncrement': actions.changeTransposeIncrement,
+        'inversionRange': actions.change_inversion_range,
+        'bassRange': actions.change_bass_range,
+        'transposeIncrement': actions.change_transpose_increment,
 
-        'key': actions.changeKey,
-        'spread': actions.changeSpread,
-        'voiceCount': actions.changeVoiceCount,
-        'chordOctave': actions.changeChordOctave
+        'key': actions.change_key,
+        'spread': actions.change_spread,
+        'voiceCount': actions.change_voice_count,
+        'chordOctave': actions.change_chord_octave
     }
 
-    def loadSettings(self):
-        self.loadingSettings = True
-        settingsFilePath = Path(self.settingsFileDirectory)
+    def load_settings(self):
+        self.loading_settings = True
+        settings_file_path = Path(self.settings_file_directory)
 
-        if ( not settingsFilePath.is_file()):
+        if ( not settings_file_path.is_file()):
             return
 
-        with open(self.settingsFileDirectory) as f:
-            settingsFromFile = json.load(f)
+        with open(self.settings_file_directory) as f:
+            settings_from_file = json.load(f)
 
-        for setting in self.savedMusicEngineSettings:
-            if setting in settingsFromFile:
-                print(f'loading {setting} = {settingsFromFile[setting]}')
-                store.dispatch(self.savedMusicEngineSettings[setting](settingsFromFile[setting]))
+        for setting in self.saved_music_engine_settings:
+            if setting in settings_from_file:
+                print(f'loading {setting} = {settings_from_file[setting]}')
+                store.dispatch(self.saved_music_engine_settings[setting](settings_from_file[setting]))
 
-        self.loadingSettings = False
+        self.loading_settings = False
 
-    def saveSettings(self):
-        if not self.loadingSettings:
-            settingsToSave = {}
+    def save_settings(self):
+        if not self.loading_settings:
+            settings_to_save = {}
 
             state = store.get_state()
-            meState = thaw(state['musicEngine'])
-            for setting in self.savedMusicEngineSettings:
-                settingsToSave[setting] = meState[setting]
+            me_state = thaw(state['musicEngine'])
+            for setting in self.saved_music_engine_settings:
+                settings_to_save[setting] = me_state[setting]
 
-            with open(self.settingsFileDirectory, "w") as outfile:
-                json.dump(settingsToSave, outfile)
+            with open(self.settings_file_directory, "w") as outfile:
+                json.dump(settings_to_save, outfile)
 
 
-settingsStorageUtility = SettingsStorageUtility()
+settings_storage_utility = SettingsStorageUtility()

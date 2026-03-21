@@ -13,59 +13,59 @@ from ...chordEngineState import state
 
 class ChordInversion(Inversion):
 
-    def __init__(self, type: AppParameterType, updateChordEngine: callable):
-        super().__init__(type, updateChordEngine)
+    def __init__(self, type: AppParameterType, update_chord_engine: callable):
+        super().__init__(type, update_chord_engine)
 
-    def getState(self) -> InversionState:
+    def get_state(self) -> InversionState:
         return state.inversion
 
-    def updateReduxValue(self):
-        store.dispatch(actions.changeInversion(state.inversion.value))
+    def update_redux_value(self):
+        store.dispatch(actions.change_inversion(state.inversion.value))
 
-    def updateReduxRange(self):
-        store.dispatch(actions.changeInversionRange(state.inversion.range))
+    def update_redux_range(self):
+        store.dispatch(actions.change_inversion_range(state.inversion.range))
 
-    def updateReduxLocked(self):
-        store.dispatch(actions.changeInversionLock(state.inversion.locked))
+    def update_redux_locked(self):
+        store.dispatch(actions.change_inversion_lock(state.inversion.locked))
 
-    def handleStoreUpdate(self):
-        meState = thaw(store.get_state()['musicEngine'])
-        if (meState['inversionRange'] != state.inversion.range):
-            self.setRange(meState['inversionRange'])
+    def handle_store_update(self):
+        me_state = thaw(store.get_state()['musicEngine'])
+        if (me_state['inversionRange'] != state.inversion.range):
+            self.set_range(me_state['inversionRange'])
 
-    def getParameters(self):
-        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
+    def get_parameters(self):
+        key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(
-                validCommandTypes = [CommandType.ANALOG, CommandType.INCREMENTAL],
-                commandMappings = {
-                    Command.UPDATE: self.setAnalogValue,
+                valid_command_types = [CommandType.ANALOG, CommandType.INCREMENTAL],
+                command_mappings = {
+                    Command.UPDATE: self.set_analog_value,
                     Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
-                key = f"{keyPrefix}INVERSION",
+                key = f"{key_prefix}INVERSION",
                 label = "Inversion",
-                labelAbreviation="I",
+                label_abreviation="I",
                 type = self.type
             ),
             AppParameter(
-                validCommandTypes = [CommandType.TOGGLE],
-                commandMappings = {
-                    Command.TOGGLE: self.toggleLock
+                valid_command_types = [CommandType.TOGGLE],
+                command_mappings = {
+                    Command.TOGGLE: self.toggle_lock
                 },
-                key = f"{keyPrefix}INVERSION_LOCK",
+                key = f"{key_prefix}INVERSION_LOCK",
                 label = "Inversion Lock",
-                labelAbreviation="IL",
+                label_abreviation="IL",
                 type = self.type
             ),
             AppParameter(
-                validCommandTypes = [CommandType.INCREMENTAL],
-                commandMappings = {
-                    Command.INCREMENT: self.incrementRange,
-                    Command.DECREMENT: self.decrementRange
+                valid_command_types = [CommandType.INCREMENTAL],
+                command_mappings = {
+                    Command.INCREMENT: self.increment_range,
+                    Command.DECREMENT: self.decrement_range
                 },
-                key = f"{keyPrefix}INVERSION_RANGE",
+                key = f"{key_prefix}INVERSION_RANGE",
                 label = "Inversion Range",
-                labelAbreviation="IR",
+                label_abreviation="IR",
             )
         ]

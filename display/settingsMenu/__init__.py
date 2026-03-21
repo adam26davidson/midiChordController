@@ -26,7 +26,7 @@ class SettingsMenuFrame(tk.Frame):
         self.buttons = {}
 
         for key in self.config:
-            self.buttons[key] = MenuItem(self, key, self.getButtonHandler(key))
+            self.buttons[key] = MenuItem(self, key, self.get_button_handler(key))
             self.buttons[key].place(
                 relx=self.config[key]['relx'],
                 rely=self.config[key]['rely'],
@@ -41,5 +41,5 @@ class SettingsMenuFrame(tk.Frame):
 
         self.grid(row=0, column=0, sticky='nsew')
 
-    def getButtonHandler(self, frame):
-        return lambda: store.dispatch(actions.changeActiveFrame(frame))
+    def get_button_handler(self, frame):
+        return lambda: store.dispatch(actions.change_active_frame(frame))

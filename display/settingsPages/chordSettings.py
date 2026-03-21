@@ -3,7 +3,7 @@ from pyrsistent import thaw
 from constants import MAX_BASS_RANGE, MAX_INVERSION_RANGE
 from redux import store
 from redux.actions import musicEngine as meActions
-from redux.settingsStorage import settingsStorageUtility
+from redux.settingsStorage import settings_storage_utility
 
 from ..components.buttonGroup import ButtonGroup
 from ..components.numberPicker import NumberPicker
@@ -24,21 +24,21 @@ class ChordSettingsFrame(SettingsPage):
             min=1,
             max=11,
             value=1,
-            callback=self.setTransposeIncrement)
+            callback=self.set_transpose_increment)
 
         self.inversionRange = NumberPicker(self.rowOne,
             name='inversion range',
             min=1,
             max=MAX_INVERSION_RANGE,
             value=4,
-            callback=self.setInversionRange)
+            callback=self.set_inversion_range)
 
         self.bassRange = NumberPicker(self.rowOne,
             name='bass range',
             min=1,
             max=MAX_BASS_RANGE,
             value=4,
-            callback=self.setBassRange)
+            callback=self.set_bass_range)
 
         self.transposeIncrement.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.inversionRange.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
@@ -52,38 +52,38 @@ class ChordSettingsFrame(SettingsPage):
             name='control mode',
             optionsList=[{'name': 'INT', 'value': 'internal'}, {'name': 'EXT', 'value': 'external'}],
             selected='INT',
-            callback=self.setControlMode)
+            callback=self.set_control_mode)
 
         self.controlMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.rowTwo.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
 
-    def __handleStoreUpdate(self):
-        meState = thaw(store.get_state()['musicEngine'])
+    def __handle_store_update(self):
+        me_state = thaw(store.get_state()['musicEngine'])
 
-        if meState['transposeIncrement'] != self.transposeIncrement.getValue():
-            self.after(0, self.transposeIncrement.setValue(meState['transposeIncrement']))
-        if meState['inversionRange'] != self.inversionRange.getValue():
-            self.after(0, self.inversionRange.setValue(meState['inversionRange']))
-        if meState['bassRange'] != self.bassRange.getValue():
-            self.after(0, self.bassRange.setValue(meState['bassRange']))
-        if meState['chordEngineControl'] != self.controlMode.getValue():
-            self.after(0, self.controlMode.setValue(meState['chordEngineControl']))
+        if me_state['transposeIncrement'] != self.transposeIncrement.get_value():
+            self.after(0, self.transposeIncrement.set_value(me_state['transposeIncrement']))
+        if me_state['inversionRange'] != self.inversionRange.get_value():
+            self.after(0, self.inversionRange.set_value(me_state['inversionRange']))
+        if me_state['bassRange'] != self.bassRange.get_value():
+            self.after(0, self.bassRange.set_value(me_state['bassRange']))
+        if me_state['chordEngineControl'] != self.controlMode.get_value():
+            self.after(0, self.controlMode.set_value(me_state['chordEngineControl']))
 
-    def setTransposeIncrement(self, increment):
-        store.dispatch(meActions.changeTransposeIncrement(increment))
-        settingsStorageUtility.saveSettings()
+    def set_transpose_increment(self, increment):
+        store.dispatch(meActions.change_transpose_increment(increment))
+        settings_storage_utility.save_settings()
 
-    def setInversionRange(self, range):
-        store.dispatch(meActions.changeInversionRange(range))
-        settingsStorageUtility.saveSettings()
+    def set_inversion_range(self, range):
+        store.dispatch(meActions.change_inversion_range(range))
+        settings_storage_utility.save_settings()
 
-    def setBassRange(self, range):
-        store.dispatch(meActions.changeBassRange(range))
-        settingsStorageUtility.saveSettings()
+    def set_bass_range(self, range):
+        store.dispatch(meActions.change_bass_range(range))
+        settings_storage_utility.save_settings()
 
-    def setControlMode(self, mode):
-        store.dispatch(meActions.changeChordEngineControl(mode))
-        settingsStorageUtility.saveSettings()
+    def set_control_mode(self, mode):
+        store.dispatch(meActions.change_chord_engine_control(mode))
+        settings_storage_utility.save_settings()

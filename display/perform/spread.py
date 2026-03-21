@@ -7,39 +7,39 @@ from redux import store
 class Spread(tk.Canvas):
     width = 720
     height = 30
-    numKeys = 61
+    num_keys = 61
     color = "#828282"
 
     def __init__(self, master=None):
         super().__init__(master, width=self.width, height=self.height,
                          highlightthickness=0, relief="flat", bg="#000000")
         self.state = {
-            'rawValue': SPREAD_STEPS_PER_OCTAVE,
+            'raw_value': SPREAD_STEPS_PER_OCTAVE,
             'value': 12
         }
-        self.arrow = self.__drawArrow()
+        self.arrow = self.__draw_arrow()
         self.pack(side="bottom")
-        store.subscribe(self.handleStoreUpdate)
+        store.subscribe(self.handle_store_update)
 
-    def handleStoreUpdate(self):
+    def handle_store_update(self):
         spread = store.get_state()['musicEngine']['spread']
-        if self.state['rawValue'] != spread:
-            self.after(0, lambda: self.__setValue(spread))
+        if self.state['raw_value'] != spread:
+            self.after(0, lambda: self.__set_value(spread))
 
-    def __drawArrow(self):
-        keyWidth = self.width / self.numKeys
+    def __draw_arrow(self):
+        key_width = self.width / self.num_keys
         center = self.width / 2
-        x1 = center - ((self.state['value']/2)*keyWidth)
-        x2 = center + ((self.state['value']/2)*keyWidth)
+        x1 = center - ((self.state['value']/2)*key_width)
+        x2 = center + ((self.state['value']/2)*key_width)
         y = self.height / 2
         return self.create_line(x1, y, x2, y, fill=self.color, arrow=tk.BOTH)
 
-    def __setValue(self, spread):
-        self.state['rawValue'] = spread
+    def __set_value(self, spread):
+        self.state['raw_value'] = spread
         self.state['value'] = (spread * (12/SPREAD_STEPS_PER_OCTAVE))
-        keyWidth = self.width / self.numKeys
+        key_width = self.width / self.num_keys
         center = self.width / 2
-        x1 = center - ((self.state['value']/2)*keyWidth)
-        x2 = center + ((self.state['value']/2)*keyWidth)
+        x1 = center - ((self.state['value']/2)*key_width)
+        x2 = center + ((self.state['value']/2)*key_width)
         y = self.height / 2
         self.coords(self.arrow, x1, y, x2, y)

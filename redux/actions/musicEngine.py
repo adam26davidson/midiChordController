@@ -1,219 +1,219 @@
 
-def changeSettingsList(list):
+def change_settings_list(list):
   return{
     'type': 'me/settingsListChanged',
     'data': {'settingsList': list}
   }
 
-def changeSetting(setting):
+def change_setting(setting):
   return{
     'type': 'me/settingChanged',
     'data': {'setting': setting}
   }
 
-def changeSettingLoading(isLoading):
+def change_setting_loading(is_loading):
   return {
     'type': 'me/settingLoadingChanged',
-    'data': {'settingLoading': isLoading}
+    'data': {'settingLoading': is_loading}
   }
 
-def changeKey(key):
+def change_key(key):
   return{
     'type': 'me/keyChanged',
     'data': {'key': key}
   }
 
-def changeScale(scale):
+def change_scale(scale):
   return{
     'type': 'me/scaleChanged',
     'data': {'scale': scale}
   }
 
-def changeSpread(spread):
+def change_spread(spread):
   return{
     'type': 'me/spreadChanged',
     'data': {'spread': spread}
   }
 
-def changeInversion(inversion):
+def change_inversion(inversion):
   return{
     'type': 'me/inversionChanged',
     'data': {'inversion': inversion}
   }
 
-def changeInversionMode(inversionMode):
+def change_inversion_mode(inversion_mode):
   return{
     'type': 'me/inversionModeChanged',
-    'data': {'inversionMode': inversionMode}
+    'data': {'inversionMode': inversion_mode}
   }
 
-def changeInversionRange(inversionRange):
+def change_inversion_range(inversion_range):
   return{
     'type': 'me/inversionRangeChanged',
-    'data': {'inversionRange': inversionRange}
+    'data': {'inversionRange': inversion_range}
   }
 
-def changeBassPosition(bassPosition):
+def change_bass_position(bass_position):
   return{
     'type': 'me/bassPositionChanged',
-    'data': {'bassPosition': bassPosition}
+    'data': {'bassPosition': bass_position}
   }
 
-def changeBassMode(bassMode):
+def change_bass_mode(bass_mode):
   return{
     'type': 'me/bassModeChanged',
-    'data': {'bassMode': bassMode}
+    'data': {'bassMode': bass_mode}
   }
 
-def changeBassRange(bassRange):
+def change_bass_range(bass_range):
   return{
     'type': 'me/bassRangeChanged',
-    'data': {'bassRange': bassRange}
+    'data': {'bassRange': bass_range}
   }
 
-def changeChordOctave(octave):
+def change_chord_octave(octave):
   return{
     'type': 'me/chordOctaveChanged',
     'data': {'chordOctave': octave}
   }
 
-def changeVoiceCount(voiceCount):
+def change_voice_count(voice_count):
   return{
     'type': 'me/voiceCountChanged',
-    'data': {'voiceCount': voiceCount}
+    'data': {'voiceCount': voice_count}
   }
 
-def changeModulation(modulation):
+def change_modulation(modulation):
   return{
     'type': 'me/modulationChanged',
     'data': {'modulation': modulation}
   }
 
-def changeSecondary(secondary):
+def change_secondary(secondary):
   return{
     'type': 'me/secondaryChanged',
     'data': {'secondary': secondary}
   }
 
-def playBass(bassNote):
+def play_bass(bass_note):
   return{
     'type': 'me/bassPlayed',
-    'data': {'bassNote': bassNote}
+    'data': {'bassNote': bass_note}
   }
 
-def stopBass():
+def stop_bass():
   return{
     'type': 'me/bassStopped'
   }
 
-def changeBassShadow(bassShadow):
+def change_bass_shadow(bass_shadow):
   return {
     'type': 'me/bassShadowChanged',
-    'data': {'bassShadow': bassShadow}
+    'data': {'bassShadow': bass_shadow}
   }
 
-def playChord(chordNotes):
+def play_chord(chord_notes):
   return {
     'type': 'me/chordPlayed',
-    'data': {'chordNotes': chordNotes}
+    'data': {'chordNotes': chord_notes}
   }
 
-def stopChord():
+def stop_chord():
   return{
     'type': 'me/chordStopped'
   }
 
-def changeChordType(chordType):
+def change_chord_type(chord_type):
   return {
     'type': 'me/chordTypeChanged',
-    'data': {'chordType': chordType}
+    'data': {'chordType': chord_type}
   }
 
-def changeChordShadow(chordShadow):
+def change_chord_shadow(chord_shadow):
   return {
     'type': 'me/chordShadowChanged',
-    'data': {'chordShadow': chordShadow}
+    'data': {'chordShadow': chord_shadow}
   }
 
-def changeChordChannel(channel):
+def change_chord_channel(channel):
   return {
     'type': 'me/chordChannelChanged',
     'data': {'chordChannel': channel}
   }
 
-def changeBassChannel(channel):
+def change_bass_channel(channel):
   return {
     'type': 'me/bassChannelChanged',
     'data': {'bassChannel': channel}
   }
 
-def changeDistributeChannels(distributeChannels):
+def change_distribute_channels(distribute_channels):
   return {
     'type': 'me/distributeChannelsChanged',
-    'data': {'distributeChannels': distributeChannels}
+    'data': {'distributeChannels': distribute_channels}
   }
 
-def changeVelocity(velocity):
+def change_velocity(velocity):
   return {
     'type': 'me/velocityChanged',
     'data': {'velocity': velocity}
   }
 
-def changeVelocityMode(mode):
+def change_velocity_mode(mode):
   return {
     'type': 'me/velocityModeChanged',
     'data': {'velocityMode': mode}
   }
 
-def changeVelocityDeviation(deviation):
+def change_velocity_deviation(deviation):
   return {
     'type': 'me/velocityDeviationChanged',
     'data': {'velocityDeviation': deviation}
   }
 
-def changeAftertouchMode(aftertouchMode):
+def change_aftertouch_mode(aftertouch_mode):
   return {
     'type': 'me/aftertouchModeChanged',
-    'data': {'aftertouchMode': aftertouchMode}
+    'data': {'aftertouchMode': aftertouch_mode}
   }
 
-def changeHold(hold):
+def change_hold(hold):
   return {
     'type': 'me/holdChanged',
     'data': {'hold': hold}
   }
 
-def changeInversionLock(lock):
+def change_inversion_lock(lock):
   return {
     'type': 'me/inversionLockChanged',
     'data': {'inversionLock': lock}
   }
 
-def changeStrumMode(mode):
+def change_strum_mode(mode):
   return {
     'type': 'me/strumModeChanged',
     'data': {'strumMode': mode}
   }
 
-def changeStrumInterval(interval):
+def change_strum_interval(interval):
   return {
     'type': 'me/strumIntervalChanged',
     'data': {'strumInterval': interval}
   }
 
-def changeStrumOrder(order):
+def change_strum_order(order):
   return {
     'type': 'me/strumOrderChanged',
     'data': {'strumOrder': order}
   }
 
-def changeTransposeIncrement(increment):
+def change_transpose_increment(increment):
   return {
     'type': 'me/transposeIncrementChanged',
     'data': {'transposeIncrement': increment}
   }
 
-def changeChordEngineControl(control):
+def change_chord_engine_control(control):
     return {
         'type': 'me/chordEngineControlChanged',
         'data': {'chordEngineControl': control}

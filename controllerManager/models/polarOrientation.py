@@ -7,7 +7,7 @@ class PolarOrientation(Enum):
     HORIZONTAL = 1
     VERTICAL = 2
 
-    def getRawControlEvents(self):
+    def get_raw_control_events(self):
         if self.name == "HORIZONTAL":
             return [RawControlEvent.UP, RawControlEvent.DOWN]
         if self.name == "VERTICAL":

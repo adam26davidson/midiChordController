@@ -1,5 +1,5 @@
 from .default import default
 
-uiMaps = {
+ui_maps = {
   default['name']: default
 }

@@ -7,66 +7,66 @@ from redux.actions import controllerCoupler as ccActions
 from redux.actions import controllerManager as actions
 from redux.reducers import controllerManager  # noqa: F401
 
-from .controllers import controllerClasses
+from .controllers import controller_classes
 
 
 class ControllerManager:
 
-    connectedControllers: list[Controller]
+    connected_controllers: list[Controller]
 
     def __init__(self):
-        self.controllerClasses = controllerClasses
-        self.connectedControllers = []
-        self.subscriberCallbacks = []
-        store.subscribe(self.handleStoreUpdate)
+        self.controller_classes = controller_classes
+        self.connected_controllers = []
+        self.subscriber_callbacks = []
+        store.subscribe(self.handle_store_update)
 
     def start(self):
-        _task = asyncio.ensure_future(self.checkConnection())
+        _task = asyncio.ensure_future(self.check_connection())
 
-    def subscribe(self, callBack):
-        self.subscriberCallbacks.append(callBack)
+    def subscribe(self, callback):
+        self.subscriber_callbacks.append(callback)
 
-    def sendEvent(self, event):
-        for callBack in self.subscriberCallbacks:
-            callBack(event)
+    def send_event(self, event):
+        for callback in self.subscriber_callbacks:
+            callback(event)
 
-    async def waitForConnection(self, sleepTime=0.25):
-        store.dispatch(actions.startWaitingForConnection())
-        foundController = False
-        connectedController = None
+    async def wait_for_connection(self, sleep_time=0.25):
+        store.dispatch(actions.start_waiting_for_connection())
+        found_controller = False
+        connected_controller = None
         print("entering controller search loop")
-        while (not foundController):
+        while (not found_controller):
             print("checking for new connections")
-            for controller in self.controllerClasses:
-                foundController = controller.checkForNewConnections()
-                if foundController:
+            for controller in self.controller_classes:
+                found_controller = controller.check_for_new_connections()
+                if found_controller:
                     print("found new controller")
-                    connectedController: Controller = controller(self.sendEvent)
-                    connectedController.open()
-                    self.connectedControllers.append(connectedController)
-                    store.dispatch(actions.stopWaitingForConnection())
+                    connected_controller: Controller = controller(self.send_event)
+                    connected_controller.open()
+                    self.connected_controllers.append(connected_controller)
+                    store.dispatch(actions.stop_waiting_for_connection())
 
                     controls = store.get_state()['controllerCoupler']['controls']
-                    store.dispatch(ccActions.updateControls({**controls, **connectedController.getControls()}))
+                    store.dispatch(ccActions.update_controls({**controls, **connected_controller.get_controls()}))
                     break
                 print("no new controller found")
-                await asyncio.sleep(sleepTime)
+                await asyncio.sleep(sleep_time)
 
-    async def checkConnection(self):
+    async def check_connection(self):
         while True:
-            self.connectedControllers = self.getUpdatedConnectedControllersList()
-            if not self.connectedControllers:
-                await self.waitForConnection()
+            self.connected_controllers = self.get_updated_connected_controllers_list()
+            if not self.connected_controllers:
+                await self.wait_for_connection()
             await asyncio.sleep(0.25)
 
-    def getUpdatedConnectedControllersList(self):
-        newConnectedControllerList = []
-        for controller in self.connectedControllers:
-            if controller.checkIfStillConnected():
-                newConnectedControllerList.append(controller)
+    def get_updated_connected_controllers_list(self):
+        new_connected_controller_list = []
+        for controller in self.connected_controllers:
+            if controller.check_if_still_connected():
+                new_connected_controller_list.append(controller)
             else:
                 controller.close()
-        return newConnectedControllerList
+        return new_connected_controller_list
 
-    def handleStoreUpdate(self):
+    def handle_store_update(self):
         pass

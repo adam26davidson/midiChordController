@@ -11,47 +11,47 @@ class SettingDisplay(tk.Frame):
     width = 300
     height = 50
 
-    bgColor = "#000000"
+    bg_color = "#000000"
     color = COLORS["chord"]
-    inactiveColor = COLORS["chordDim"]
-    activeColor = COLORS["root"]
+    inactive_color = COLORS["chordDim"]
+    active_color = COLORS["root"]
 
     def __init__(self, master=None):
         super().__init__(master, width=self.width, height=self.height,
-                         highlightthickness=0, relief="flat", bg=self.bgColor, border=2, borderwidth=2)
+                         highlightthickness=0, relief="flat", bg=self.bg_color, border=2, borderwidth=2)
         self.master = master
-        self.chorEngineControl = 'internal'
-        self.internalSettingName = 'Loading...'
+        self.chord_engine_control = 'internal'
+        self.internal_setting_name = 'Loading...'
 
-        bigFont = FONTS["big"]
-        smallFont = FONTS["small"]
+        big_font = FONTS["big"]
+        small_font = FONTS["small"]
 
         # setting dsiplay
-        self.settingFrame = tk.Frame(self, bg=self.bgColor, width=self.width)
-        self.settingFrame.pack(side="top", anchor="nw")
-        tk.Label(self.settingFrame, text="Setting: ", fg=self.inactiveColor, bg=self.bgColor, font=smallFont).pack(side="left")
-        self.setting = tk.Label(self.settingFrame, text="Loading...", bg=self.bgColor, fg=self.color, font=bigFont)
+        self.setting_frame = tk.Frame(self, bg=self.bg_color, width=self.width)
+        self.setting_frame.pack(side="top", anchor="nw")
+        tk.Label(self.setting_frame, text="Setting: ", fg=self.inactive_color, bg=self.bg_color, font=small_font).pack(side="left")
+        self.setting = tk.Label(self.setting_frame, text="Loading...", bg=self.bg_color, fg=self.color, font=big_font)
         self.setting.pack(side="top", pady=(0, 0))
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=20)
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
-    def __handleStoreUpdate(self):
+    def __handle_store_update(self):
         state = thaw(store.get_state()['musicEngine'])
-        if state['chordEngineControl'] != self.chorEngineControl:
-            self.chorEngineControl = state['chordEngineControl']
-            self.setchordEngineControl(state['chordEngineControl'])
+        if state['chordEngineControl'] != self.chord_engine_control:
+            self.chord_engine_control = state['chordEngineControl']
+            self.set_chord_engine_control(state['chordEngineControl'])
 
-    def setchordEngineControl(self, name):
+    def set_chord_engine_control(self, name):
         if name == 'internal':
-            self.setSetting(self.internalSettingName)
+            self.set_setting(self.internal_setting_name)
         else:
-            self.setSetting("External Control")
+            self.set_setting("External Control")
 
-    def setSetting(self, name):
-        if self.chorEngineControl == 'internal':
-            self.internalSettingName = name
+    def set_setting(self, name):
+        if self.chord_engine_control == 'internal':
+            self.internal_setting_name = name
         print('setting setting text to ' + name)
         self.setting.configure(text=name)
 

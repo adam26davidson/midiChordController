@@ -6,9 +6,9 @@ class ControllerConfig:
     name: str
     vendor: int
     product: int
-    meMap: str
-    uiMap: str
-    compatibleMeMaps: list[str]
+    me_map: str
+    ui_map: str
+    compatible_me_maps: list[str]
     controls: dict[str, list[RawControl]]
 
     def __init__(
@@ -16,15 +16,15 @@ class ControllerConfig:
             name: str,
             vendor: int,
             product: int,
-            meMap: str,
-            uiMap: str,
-            compatibleMeMaps: list[str],
+            me_map: str,
+            ui_map: str,
+            compatible_me_maps: list[str],
             controls: dict[str, list[RawControl]]):
         self.name = name
         self.vendor = vendor
         self.product = product
-        self.meMap = meMap
-        self.uiMap = uiMap
-        self.compatibleMeMaps = compatibleMeMaps
+        self.me_map = me_map
+        self.ui_map = ui_map
+        self.compatible_me_maps = compatible_me_maps
         self.controls = controls
 

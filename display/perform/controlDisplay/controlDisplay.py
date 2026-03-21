@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux import utils as ReduxUtils
+from redux import utils as redux_utils
 
 from .bumperButton import BumperButton
 from .circularButton import CircularButton
@@ -27,470 +27,470 @@ class ControlDisplay(tk.Canvas):
 
     width = 340
     margin = 5
-    widthUnits = 15
-    heightUnits = 14
+    width_units = 15
+    height_units = 14
 
     parameters: list[AppParameter]
 
     def __init__(self, master=None):
-        self.unitSize = (self.width - (2 * self.margin)) / self.widthUnits
-        self.height = (self.unitSize * self.heightUnits) + (2 * self.margin)
-        super().__init__(master, width=self.width, height=(self.width / self.widthUnits) * self.heightUnits,
+        self.unit_size = (self.width - (2 * self.margin)) / self.width_units
+        self.height = (self.unit_size * self.height_units) + (2 * self.margin)
+        super().__init__(master, width=self.width, height=(self.width / self.width_units) * self.height_units,
                          highlightthickness=0, relief="flat", bg="#000000")
 
         self.master = master
         self.parameters = []
-        self.appParameterLength = 0
-        self.buttonsCreated = False
-        self.chordEngineControlMode = 'internal'
+        self.app_parameter_length = 0
+        self.buttons_created = False
+        self.chord_engine_control_mode = 'internal'
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
-    def __handleStoreUpdate(self):
-        meState = thaw(store.get_state()['musicEngine'])
-        if (meState['chordEngineControl'] != self.chordEngineControlMode):
-            self.chordEngineControlMode = meState['chordEngineControl']
-            if self.buttonsCreated:
+    def __handle_store_update(self):
+        me_state = thaw(store.get_state()['musicEngine'])
+        if (me_state['chordEngineControl'] != self.chord_engine_control_mode):
+            self.chord_engine_control_mode = me_state['chordEngineControl']
+            if self.buttons_created:
                 state = store.get_state()['controllerCoupler']
                 params = state['appParameters']
-                controlMap: ControlMap = state['activeControlMap']
-                if controlMap is not None:
-                    self.after(0, lambda: self.__updateButtonParams(params, controlMap.map))
+                control_map: ControlMap = state['activeControlMap']
+                if control_map is not None:
+                    self.after(0, lambda: self.__update_button_params(params, control_map.map))
 
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']
-        controlMap: ControlMap = state['activeControlMap']
-        musicEngineParametersLoaded = state['musicEngineAppParametersLoaded']
-        if controlMap is not None and musicEngineParametersLoaded and len(params) != self.appParameterLength:
-            if (not self.buttonsCreated):
-                self.appParameterLength = len(params)
-                self.__createButtons(params, controlMap.map)
-                self.buttonsCreated = True
-                ReduxUtils.addAppParameters(self.parameters)
+        control_map: ControlMap = state['activeControlMap']
+        music_engine_parameters_loaded = state['musicEngineAppParametersLoaded']
+        if control_map is not None and music_engine_parameters_loaded and len(params) != self.app_parameter_length:
+            if (not self.buttons_created):
+                self.app_parameter_length = len(params)
+                self.__create_buttons(params, control_map.map)
+                self.buttons_created = True
+                redux_utils.add_app_parameters(self.parameters)
             else:
-                self.appParameterLength = len(params)
-                self.__updateButtonParams(params, controlMap.map)
+                self.app_parameter_length = len(params)
+                self.__update_button_params(params, control_map.map)
 
-    def __createButtons(self, params, map):
+    def __create_buttons(self, params, map):
 
-        def getParam(key):
-            return self.getFirstMEParameter(params, map, key)
+        def get_param(key):
+            return self.get_first_me_parameter(params, map, key)
 
-        self.createMainButtons(getParam)
-        self.createStartButton(map, params)
-        self.createDpadButtons(getParam)
-        self.createOptionsButtons(getParam)
-        self.createJoySticks(getParam)
-        self.createBumperButtons(getParam)
-        self.createTriggerButtons(getParam)
-        self.createTouchPadButton(getParam)
+        self.create_main_buttons(get_param)
+        self.create_start_button(map, params)
+        self.create_dpad_buttons(get_param)
+        self.create_options_buttons(get_param)
+        self.create_joy_sticks(get_param)
+        self.create_bumper_buttons(get_param)
+        self.create_trigger_buttons(get_param)
+        self.create_touch_pad_button(get_param)
 
-    def __updateButtonParams(self, params, map):
+    def __update_button_params(self, params, map):
 
-        def getParam(key):
-            return self.getFirstMEParameter(params, map, key)
+        def get_param(key):
+            return self.get_first_me_parameter(params, map, key)
 
-        self.southButton.setParam(getParam("SOUTH_BUTTON"))
-        self.eastButton.setParam(getParam("EAST_BUTTON"))
-        self.northButton.setParam(getParam("NORTH_BUTTON"))
-        self.westButton.setParam(getParam("WEST_BUTTON"))
-
-
-        self.startButton.setParam(self.getStartButtonParam(map, params))
-
-        leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
-
-        self.dpadDownButton.setParam(downParam, yType)
-        self.dpadUpButton.setParam(upParam, yType)
-        self.dpadLeftButton.setParam(leftParam, xType)
-        self.dpadRightButton.setParam(rightParam, xType)
-
-        self.leftOptionButton.setParam(getParam("LEFT_OPTION"))
-        self.rightOptionButton.setParam(getParam("RIGHT_OPTION"))
-
-        self.leftTriggerButton.setParam(getParam("LEFT_TRIGGER"))
-        self.rightTriggerButton.setParam(getParam("RIGHT_TRIGGER"))
-
-        self.leftBumperButton.setParam(getParam("LEFT_BUMPER"))
-        self.rightBumperButton.setParam(getParam("RIGHT_BUMPER"))
-
-        self.touchPadButton.setXParam(getParam("TOUCHPAD_X"))
-        self.touchPadButton.setYParam(getParam("TOUCHPAD_Y"))
-
-        leftXParams, leftXType = self.getJoystickAxisParams("LEFT_STICK", "X", getParam)
-        leftYParams, leftYType = self.getJoystickAxisParams("LEFT_STICK", "Y", getParam)
-        rightXParams, rightXType = self.getJoystickAxisParams("RIGHT_STICK", "X", getParam)
-        rightYParams, rightYType = self.getJoystickAxisParams("RIGHT_STICK", "Y", getParam)
-
-        self.leftStick.setXParams(leftXParams, leftXType)
-        self.leftStick.setYParams(leftYParams, leftYType)
-        self.rightStick.setXParams(rightXParams, rightXType)
-        self.rightStick.setYParams(rightYParams, rightYType)
+        self.southButton.set_param(get_param("SOUTH_BUTTON"))
+        self.eastButton.set_param(get_param("EAST_BUTTON"))
+        self.northButton.set_param(get_param("NORTH_BUTTON"))
+        self.westButton.set_param(get_param("WEST_BUTTON"))
 
 
-    def unitsToCoord(self, units):
-        return self.margin + (units * self.unitSize)
+        self.startButton.set_param(self.get_start_button_param(map, params))
 
-    def createMainButtons(self, getParam):
-        cX = 12
-        cY = 7.75
-        uToC = self.unitsToCoord
-        self.southButton = CircularButton(self, getParam("SOUTH_BUTTON"), uToC(cX), uToC(cY + 2), self.unitSize)
-        self.eastButton = CircularButton(self, getParam("EAST_BUTTON"), uToC(cX + 2), uToC(cY), self.unitSize)
-        self.northButton = CircularButton(self, getParam("NORTH_BUTTON"), uToC(cX), uToC(cY - 2), self.unitSize)
-        self.westButton = CircularButton(self, getParam("WEST_BUTTON"), uToC(cX - 2), uToC(cY), self.unitSize)
+        left_param, right_param, up_param, down_param, x_type, y_type = self.get_dpad_params(get_param)
+
+        self.dpadDownButton.set_param(down_param, y_type)
+        self.dpadUpButton.set_param(up_param, y_type)
+        self.dpadLeftButton.set_param(left_param, x_type)
+        self.dpadRightButton.set_param(right_param, x_type)
+
+        self.leftOptionButton.set_param(get_param("LEFT_OPTION"))
+        self.rightOptionButton.set_param(get_param("RIGHT_OPTION"))
+
+        self.leftTriggerButton.set_param(get_param("LEFT_TRIGGER"))
+        self.rightTriggerButton.set_param(get_param("RIGHT_TRIGGER"))
+
+        self.leftBumperButton.set_param(get_param("LEFT_BUMPER"))
+        self.rightBumperButton.set_param(get_param("RIGHT_BUMPER"))
+
+        self.touchPadButton.set_x_param(get_param("TOUCHPAD_X"))
+        self.touchPadButton.set_y_param(get_param("TOUCHPAD_Y"))
+
+        left_x_params, left_x_type = self.get_joystick_axis_params("LEFT_STICK", "X", get_param)
+        left_y_params, left_y_type = self.get_joystick_axis_params("LEFT_STICK", "Y", get_param)
+        right_x_params, right_x_type = self.get_joystick_axis_params("RIGHT_STICK", "X", get_param)
+        right_y_params, right_y_type = self.get_joystick_axis_params("RIGHT_STICK", "Y", get_param)
+
+        self.leftStick.set_x_params(left_x_params, left_x_type)
+        self.leftStick.set_y_params(left_y_params, left_y_type)
+        self.rightStick.set_x_params(right_x_params, right_x_type)
+        self.rightStick.set_y_params(right_y_params, right_y_type)
+
+
+    def units_to_coord(self, units):
+        return self.margin + (units * self.unit_size)
+
+    def create_main_buttons(self, get_param):
+        c_x = 12
+        c_y = 7.75
+        u_to_c = self.units_to_coord
+        self.southButton = CircularButton(self, get_param("SOUTH_BUTTON"), u_to_c(c_x), u_to_c(c_y + 2), self.unit_size)
+        self.eastButton = CircularButton(self, get_param("EAST_BUTTON"), u_to_c(c_x + 2), u_to_c(c_y), self.unit_size)
+        self.northButton = CircularButton(self, get_param("NORTH_BUTTON"), u_to_c(c_x), u_to_c(c_y - 2), self.unit_size)
+        self.westButton = CircularButton(self, get_param("WEST_BUTTON"), u_to_c(c_x - 2), u_to_c(c_y), self.unit_size)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.southButton.on, Command.OFF: self.southButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.southButton.on, Command.OFF: self.southButton.off},
                 key="UI_SOUTH_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.eastButton.on, Command.OFF: self.eastButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.eastButton.on, Command.OFF: self.eastButton.off},
                 key="UI_EAST_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.northButton.on, Command.OFF: self.northButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.northButton.on, Command.OFF: self.northButton.off},
                 key="UI_NORTH_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.westButton.on, Command.OFF: self.westButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.westButton.on, Command.OFF: self.westButton.off},
                 key="UI_WEST_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createTriggerButtons(self, getParam):
-        self.leftTriggerButton = TriggerButton(self, getParam("LEFT_TRIGGER"), 2.5, 0.8)
-        self.rightTriggerButton = TriggerButton(self, getParam("RIGHT_TRIGGER"), 12.5, 0.8)
+    def create_trigger_buttons(self, get_param):
+        self.leftTriggerButton = TriggerButton(self, get_param("LEFT_TRIGGER"), 2.5, 0.8)
+        self.rightTriggerButton = TriggerButton(self, get_param("RIGHT_TRIGGER"), 12.5, 0.8)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftTriggerButton.on, Command.OFF: self.leftTriggerButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftTriggerButton.on, Command.OFF: self.leftTriggerButton.off},
                 key="UI_LEFT_TRIGGER",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightTriggerButton.on, Command.OFF: self.rightTriggerButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightTriggerButton.on, Command.OFF: self.rightTriggerButton.off},
                 key="UI_RIGHT_TRIGGER",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createBumperButtons(self, getParam):
-        self.leftBumperButton = BumperButton(self, getParam("LEFT_BUMPER"), 2.5, 3.25)
-        self.rightBumperButton = BumperButton(self, getParam("RIGHT_BUMPER"), 12.5, 3.25)
+    def create_bumper_buttons(self, get_param):
+        self.leftBumperButton = BumperButton(self, get_param("LEFT_BUMPER"), 2.5, 3.25)
+        self.rightBumperButton = BumperButton(self, get_param("RIGHT_BUMPER"), 12.5, 3.25)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftBumperButton.on, Command.OFF: self.leftBumperButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftBumperButton.on, Command.OFF: self.leftBumperButton.off},
                 key="UI_LEFT_BUMPER",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightBumperButton.on, Command.OFF: self.rightBumperButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightBumperButton.on, Command.OFF: self.rightBumperButton.off},
                 key="UI_RIGHT_BUMPER",
                 label="UI Right Bumper",
-                labelAbreviation=None,
+                label_abreviation=None,
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createTouchPadButton(self, getParam):
+    def create_touch_pad_button(self, get_param):
 
-        self.touchPadButton = TouchPadButton(self, getParam("TOUCHPAD_X"), getParam("TOUCHPAD_Y"), 7.5, 1.5)
+        self.touchPadButton = TouchPadButton(self, get_param("TOUCHPAD_X"), get_param("TOUCHPAD_Y"), 7.5, 1.5)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.touchPadButton.update_x},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.touchPadButton.update_x},
                 key="UI_TOUCHPAD_X",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.touchPadButton.update_y},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.touchPadButton.update_y},
                 key="UI_TOUCHPAD_Y",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createStartButton(self, map, params: dict[str, AppParameter]):
-        param = self.getStartButtonParam(map, params)
+    def create_start_button(self, map, params: dict[str, AppParameter]):
+        param = self.get_start_button_param(map, params)
 
-        uToC = self.unitsToCoord
+        u_to_c = self.units_to_coord
 
-        self.startButton = CircularButton(self, param, uToC(7.5), uToC(9.5), self.unitSize)
+        self.startButton = CircularButton(self, param, u_to_c(7.5), u_to_c(9.5), self.unit_size)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.startButton.on, Command.OFF: self.startButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.startButton.on, Command.OFF: self.startButton.off},
                 key="UI_START_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createDpadButtons(self, getParam):
+    def create_dpad_buttons(self, get_param):
 
-        leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
+        left_param, right_param, up_param, down_param, x_type, y_type = self.get_dpad_params(get_param)
 
         cx = 3
         cy = 7.75
-        self.dpadDownButton = DPadButton(self, downParam, yType, "DOWN", cx, cy)
-        self.dpadUpButton = DPadButton(self, upParam, yType, "UP", cx, cy)
-        self.dpadLeftButton = DPadButton(self, leftParam, xType, "LEFT", cx, cy)
-        self.dpadRightButton = DPadButton(self, rightParam, xType, "RIGHT", cx, cy)
+        self.dpadDownButton = DPadButton(self, down_param, y_type, "DOWN", cx, cy)
+        self.dpadUpButton = DPadButton(self, up_param, y_type, "UP", cx, cy)
+        self.dpadLeftButton = DPadButton(self, left_param, x_type, "LEFT", cx, cy)
+        self.dpadRightButton = DPadButton(self, right_param, x_type, "RIGHT", cx, cy)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.dpadDownButton.on, Command.OFF: self.dpadDownButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.dpadDownButton.on, Command.OFF: self.dpadDownButton.off},
                 key="UI_DPAD_DOWN",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.dpadUpButton.on, Command.OFF: self.dpadUpButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.dpadUpButton.on, Command.OFF: self.dpadUpButton.off},
                 key="UI_DPAD_UP",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.dpadLeftButton.on, Command.OFF: self.dpadLeftButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.dpadLeftButton.on, Command.OFF: self.dpadLeftButton.off},
                 key="UI_DPAD_LEFT",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.dpadRightButton.on, Command.OFF: self.dpadRightButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.dpadRightButton.on, Command.OFF: self.dpadRightButton.off},
                 key="UI_DPAD_RIGHT",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createOptionsButtons(self, getParam):
-        self.leftOptionButton = OptionsButton(self, getParam("LEFT_OPTION"), 6, 4.75, self.unitSize)
-        self.rightOptionButton = OptionsButton(self, getParam("RIGHT_OPTION"), 9, 4.75, self.unitSize)
+    def create_options_buttons(self, get_param):
+        self.leftOptionButton = OptionsButton(self, get_param("LEFT_OPTION"), 6, 4.75, self.unit_size)
+        self.rightOptionButton = OptionsButton(self, get_param("RIGHT_OPTION"), 9, 4.75, self.unit_size)
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftOptionButton.on, Command.OFF: self.leftOptionButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftOptionButton.on, Command.OFF: self.leftOptionButton.off},
                 key="UI_LEFT_OPTION",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightOptionButton.on, Command.OFF: self.rightOptionButton.off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightOptionButton.on, Command.OFF: self.rightOptionButton.off},
                 key="UI_RIGHT_OPTION",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def createJoySticks(self, getParam):
+    def create_joy_sticks(self, get_param):
 
-        leftXParams, leftXType = self.getJoystickAxisParams("LEFT_STICK", "X", getParam)
-        leftYParams, leftYType = self.getJoystickAxisParams("LEFT_STICK", "Y", getParam)
-        rightXParams, rightXType = self.getJoystickAxisParams("RIGHT_STICK", "X", getParam)
-        rightYParams, rightYType = self.getJoystickAxisParams("RIGHT_STICK", "Y", getParam)
+        left_x_params, left_x_type = self.get_joystick_axis_params("LEFT_STICK", "X", get_param)
+        left_y_params, left_y_type = self.get_joystick_axis_params("LEFT_STICK", "Y", get_param)
+        right_x_params, right_x_type = self.get_joystick_axis_params("RIGHT_STICK", "X", get_param)
+        right_y_params, right_y_type = self.get_joystick_axis_params("RIGHT_STICK", "Y", get_param)
 
         self.leftStick = JoyStickButton(
             self,
-            leftXParams, leftYParams, leftXType, leftYType,
-            getParam("LEFT_STICK_BUTTON"),
+            left_x_params, left_y_params, left_x_type, left_y_type,
+            get_param("LEFT_STICK_BUTTON"),
             5.25, 12, "LEFT")
 
         self.rightStick = JoyStickButton(
             self,
-            rightXParams, rightYParams, rightXType, rightYType,
-            getParam("RIGHT_STICK_BUTTON"),
+            right_x_params, right_y_params, right_x_type, right_y_type,
+            get_param("RIGHT_STICK_BUTTON"),
             9.75, 12, "RIGHT")
         self.parameters.extend([
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftStick.button_on, Command.OFF: self.leftStick.button_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftStick.button_on, Command.OFF: self.leftStick.button_off},
                 key="UI_LEFT_STICK_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftStick.left_on, Command.OFF: self.leftStick.left_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftStick.left_on, Command.OFF: self.leftStick.left_off},
                 key="UI_LEFT_STICK_LEFT",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftStick.right_on, Command.OFF: self.leftStick.right_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftStick.right_on, Command.OFF: self.leftStick.right_off},
                 key="UI_LEFT_STICK_RIGHT",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftStick.up_on, Command.OFF: self.leftStick.up_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftStick.up_on, Command.OFF: self.leftStick.up_off},
                 key="UI_LEFT_STICK_UP",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.leftStick.down_on, Command.OFF: self.leftStick.down_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.leftStick.down_on, Command.OFF: self.leftStick.down_off},
                 key="UI_LEFT_STICK_DOWN",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.leftStick.update_x},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.leftStick.update_x},
                 key="UI_LEFT_STICK_X",
                 remappable=False
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.leftStick.update_y},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.leftStick.update_y},
                 key="UI_LEFT_STICK_Y",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightStick.button_on, Command.OFF: self.rightStick.button_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightStick.button_on, Command.OFF: self.rightStick.button_off},
                 key="UI_RIGHT_STICK_BUTTON",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightStick.left_on, Command.OFF: self.rightStick.left_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightStick.left_on, Command.OFF: self.rightStick.left_off},
                 key="UI_RIGHT_STICK_LEFT",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightStick.right_on, Command.OFF: self.rightStick.right_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightStick.right_on, Command.OFF: self.rightStick.right_off},
                 key="UI_RIGHT_STICK_RIGHT",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightStick.up_on, Command.OFF: self.rightStick.up_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightStick.up_on, Command.OFF: self.rightStick.up_off},
                 key="UI_RIGHT_STICK_UP",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ON_OFF],
-                commandMappings={Command.ON: self.rightStick.down_on, Command.OFF: self.rightStick.down_off},
+                valid_command_types=[CommandType.ON_OFF],
+                command_mappings={Command.ON: self.rightStick.down_on, Command.OFF: self.rightStick.down_off},
                 key="UI_RIGHT_STICK_DOWN",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.rightStick.update_x},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.rightStick.update_x},
                 key="UI_RIGHT_STICK_X",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.rightStick.update_y},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.rightStick.update_y},
                 key="UI_RIGHT_STICK_Y",
                 remappable=False,
                 type=AppParameterType.UI
             )
         ])
 
-    def getStartButtonParam(self, map, params: dict[str, AppParameter]):
+    def get_start_button_param(self, map, params: dict[str, AppParameter]):
         param = None
         if ("START_BUTTON" in map):
-            for parameterKey in map["START_BUTTON"]:
-                if (parameterKey in params):
-                    param =  params[parameterKey]
+            for parameter_key in map["START_BUTTON"]:
+                if (parameter_key in params):
+                    param =  params[parameter_key]
         return param
 
-    def getDPadParams(self, getParam):
-        xPolar = getParam("DPAD_X")
-        yPolar = getParam("DPAD_Y")
-        left = getParam("DPAD_X_LEFT")
-        right = getParam("DPAD_X_RIGHT")
-        up = getParam("DPAD_Y_UP")
-        down = getParam("DPAD_Y_DOWN")
+    def get_dpad_params(self, get_param):
+        x_polar = get_param("DPAD_X")
+        y_polar = get_param("DPAD_Y")
+        left = get_param("DPAD_X_LEFT")
+        right = get_param("DPAD_X_RIGHT")
+        up = get_param("DPAD_Y_UP")
+        down = get_param("DPAD_Y_DOWN")
 
-        xType, yType = None, None
-        leftParam, rightParam, upParam, downParam = None, None, None, None
+        x_type, y_type = None, None
+        left_param, right_param, up_param, down_param = None, None, None, None
 
-        if (xPolar):
-            xType = "POLAR"
-            leftParam = xPolar
-            rightParam = xPolar
+        if (x_polar):
+            x_type = "POLAR"
+            left_param = x_polar
+            right_param = x_polar
         elif (left and right):
-            xType = "ON_OFF"
-            leftParam = left
-            rightParam = right
+            x_type = "ON_OFF"
+            left_param = left
+            right_param = right
 
-        if (yPolar):
-            yType = "POLAR"
-            upParam = yPolar
-            downParam = yPolar
+        if (y_polar):
+            y_type = "POLAR"
+            up_param = y_polar
+            down_param = y_polar
         elif (up and down):
-            yType = "ON_OFF"
-            upParam = up
-            downParam = down
+            y_type = "ON_OFF"
+            up_param = up
+            down_param = down
 
-        return leftParam, rightParam, upParam, downParam, xType, yType
+        return left_param, right_param, up_param, down_param, x_type, y_type
 
-    def getJoystickAxisParams(self, prefix: str, axis: str, getParam):
-        positiveSuffix = "RIGHT" if axis == "X" else "UP"
-        negativeSuffix = "LEFT" if axis == "X" else "DOWN"
+    def get_joystick_axis_params(self, prefix: str, axis: str, get_param):
+        positive_suffix = "RIGHT" if axis == "X" else "UP"
+        negative_suffix = "LEFT" if axis == "X" else "DOWN"
 
-        pParam = getParam(f"{prefix}_{axis}_{positiveSuffix}")
-        nParam = getParam(f"{prefix}_{axis}_{negativeSuffix}")
-        polarParam = getParam(f"{prefix}_{axis}_POLAR")
-        analogParam = getParam(f"{prefix}_{axis}")
+        p_param = get_param(f"{prefix}_{axis}_{positive_suffix}")
+        n_param = get_param(f"{prefix}_{axis}_{negative_suffix}")
+        polar_param = get_param(f"{prefix}_{axis}_POLAR")
+        analog_param = get_param(f"{prefix}_{axis}")
 
-        if analogParam:
-            return [analogParam], "ANALOG"
-        if polarParam:
-            return [polarParam], "POLAR"
-        if nParam and pParam:
-            return [nParam, pParam], "ON_OFF"
+        if analog_param:
+            return [analog_param], "ANALOG"
+        if polar_param:
+            return [polar_param], "POLAR"
+        if n_param and p_param:
+            return [n_param, p_param], "ON_OFF"
         return [], None
 
-    def getFirstMEParameter(self, params: dict[str, AppParameter], map: dict[str, list[str]], key):
+    def get_first_me_parameter(self, params: dict[str, AppParameter], map: dict[str, list[str]], key):
         if (key in map):
-            for parameterKey in map[key]:
-                if (parameterKey in params and params[parameterKey].type != AppParameterType.UI):
-                    parameterType = params[parameterKey].type
-                    if (self.chordEngineControlMode == 'internal' and parameterType == AppParameterType.INTERNAL_CHORD_ENGINE) or (self.chordEngineControlMode == 'external' and parameterType == AppParameterType.EXTERNAL_CHORD_ENGINE):
-                        return params[parameterKey]
+            for parameter_key in map[key]:
+                if (parameter_key in params and params[parameter_key].type != AppParameterType.UI):
+                    parameter_type = params[parameter_key].type
+                    if (self.chord_engine_control_mode == 'internal' and parameter_type == AppParameterType.INTERNAL_CHORD_ENGINE) or (self.chord_engine_control_mode == 'external' and parameter_type == AppParameterType.EXTERNAL_CHORD_ENGINE):
+                        return params[parameter_key]
 
         return None

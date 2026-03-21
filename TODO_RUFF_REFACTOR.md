@@ -24,62 +24,25 @@ All 114 warnings resolved. Summary of what was done:
 - **B024/B027** (1): Added `@abstractmethod` to ABC method
 - **TC001** (1): Moved import into `TYPE_CHECKING` block
 
-Suppressed globally in `pyproject.toml` (intentional patterns, not worth changing):
-- **E402**: Test files with `sys.path` manipulation before imports
-- **RUF006**: Fire-and-forget `asyncio.ensure_future` tasks
-- **TC001**: Moving runtime imports to `TYPE_CHECKING` can break things
-
 ---
 
-## Phase 2: Naming Refactor (camelCase → snake_case)
+## Phase 2: Naming Refactor (camelCase → snake_case) — COMPLETE (steps 1-5)
 
-These rules are currently **ignored** in `pyproject.toml`. Remove them from the ignore list as each phase is completed.
+All 1320 naming violations resolved across the entire codebase. Renamed functions, methods, arguments, local variables, class attributes, and global variables from camelCase to snake_case.
 
-### 1. Function and method names (`N802`)
+### Steps 1-5: COMPLETE
 
-Rename all camelCase methods to snake_case. This is the largest change — 50+ methods across the codebase. Every call site must be updated too.
+- **N802** (467): All function/method names renamed
+- **N803** (184): All argument names renamed
+- **N806** (510): All local variable names renamed
+- **N815** (131): All class-scope variable names renamed
+- **N816** (28): All global-scope variable names renamed
 
-**Approach**: Do one module at a time and update all callers before moving on.
-
-- [ ] `models/` — `appParameter.py`, `command.py`, etc.
-- [ ] `controllerManager/` — `controller.py`, models
-- [ ] `controllerCoupler/` — `__init__.py`, models
-- [ ] `musicEngine/chordEngine/` — base class, both engines, all modules
-- [ ] `musicEngine/midi/` — MIDI I/O
-- [ ] `musicEngine/rhythmEngine/` — rhythm engine
-- [ ] `display/` — all display components
-- [ ] `redux/` — reducers, utils
-- [ ] `test/` — test files
-
-### 2. Function argument names (`N803`)
-
-Rename camelCase function parameters to snake_case. Often done alongside N802.
-
-- [ ] All files (same module-by-module order as above)
-
-### 3. Variable names in functions (`N806`)
-
-Rename camelCase local variables to snake_case.
-
-- [ ] All files (same module-by-module order as above)
-
-### 4. Class-scope variable names (`N815`)
-
-Rename camelCase instance/class attributes to snake_case.
-
-- [ ] All files (same module-by-module order as above)
-
-### 5. Global-scope variable names (`N816`)
-
-Rename camelCase module-level variables to snake_case.
-
-- [ ] All files
+Rules N802, N803, N806, N815, N816 are now **enforced** in `pyproject.toml`.
 
 ### 6. Module and directory renames (`N999`, `N812`, `N813`)
 
 Rename camelCase directories and files to snake_case. This requires updating every import in the project.
-
-**Do this last** — it touches every file and is easiest once all other naming is settled.
 
 - [ ] `controllerCoupler/` → `controller_coupler/`
 - [ ] `controllerManager/` → `controller_manager/`

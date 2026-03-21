@@ -8,18 +8,18 @@ class Sliders(tk.Canvas):
     def __init__(self, master=None):
         super().__init__(master, width=800, height=480, bd=0, relief="flat", bg="#ffffff")
         self.master = master
-        self.thumbs = self.drawSliders()
+        self.thumbs = self.draw_sliders()
         self.pack()
 
-    def drawSliders(self):
+    def draw_sliders(self):
         thumbs = []
         for i in range(6):
             #draw tracks
-            sX = 115 + (114*i)
-            sY = 40
-            eX = 115 + (114*i)
-            eY = 440
-            self.create_line(sX, sY, eX, eY)
+            s_x = 115 + (114*i)
+            s_y = 40
+            e_x = 115 + (114*i)
+            e_y = 440
+            self.create_line(s_x, s_y, e_x, e_y)
 
             #draw thumbs
             y = 240
@@ -29,7 +29,7 @@ class Sliders(tk.Canvas):
 
         return thumbs
 
-    def positionThumb(self, values, ranges, i):
+    def position_thumb(self, values, ranges, i):
         y = ((400 / (ranges[i]["max"] - ranges[i]["min"])) * values[i]) + 240
         x1 = 115 + (114*i) - 10
         x2 = 115 + (114*i) + 10
@@ -40,11 +40,11 @@ class Sliders(tk.Canvas):
 window = tk.Tk()
 sliders = Sliders(window)
 
-def startDS():
+def start_ds():
     DualShock(sliders)
 
     loop = asyncio.get_event_loop()
     loop.run_forever()
 
-window.after(0, startDS)
+window.after(0, start_ds)
 window.mainloop()

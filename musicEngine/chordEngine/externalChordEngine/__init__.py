@@ -14,15 +14,15 @@ from ..chordEngineState import ExternalChordMode, ExternalChordScaleMode, state
 
 class ExternalChordEngine(ChordEngine):
 
-    inputQueue: list[MidiInputMessage]
-    noteHistory: NoteHistory
+    input_queue: list[MidiInputMessage]
+    note_history: NoteHistory
 
     def __init__(self):
         super().__init__(AppParameterType.EXTERNAL_CHORD_ENGINE)
 
-        self.noteHistory = NoteHistory()
-        self.inputQueue = []
-        self.inputQueueLock = threading.Lock()
+        self.note_history = NoteHistory()
+        self.input_queue = []
+        self.input_queue_lock = threading.Lock()
 
         self.chords = {
             ChordButton.SOUTH: Chord([0, 3, 7], [0], 0),
@@ -31,148 +31,151 @@ class ExternalChordEngine(ChordEngine):
             ChordButton.EAST: Chord([0, 3, 7], [0], 0)
         }
 
-    def getChordNoteClasses(self):
-        chord = self.chords[state.chord.activeButton]
-        rootType = chord.getRoot()
-        chordTypes = chord.getNoteTypes()
-        return chordTypes, rootType
+    def get_chord_note_classes(self):
+        chord = self.chords[state.chord.active_button]
+        root_type = chord.get_root()
+        chord_types = chord.get_note_types()
+        return chord_types, root_type
 
-    def getChordNotes(self, button: ChordButton):
+    def get_chord_notes(self, button: ChordButton):
         chord = self.chords[button]
-        chordNotes = chord.getChord()
-        chordAdjustedOctaves = self.chordOctave.apply(chordNotes)
-        return chordAdjustedOctaves
+        chord_notes = chord.get_chord()
+        chord_adjusted_octaves = self.chord_octave.apply(chord_notes)
+        return chord_adjusted_octaves
 
-    def getBassNote(self):
-        chord = self.chords[state.chord.activeButton]
-        return chord.getBass()
+    def get_bass_note(self):
+        chord = self.chords[state.chord.active_button]
+        return chord.get_bass()
 
     def start(self):
-        _task = asyncio.ensure_future(self.__inputLoop())
+        _task = asyncio.ensure_future(self.__input_loop())
 
-    def handleMidiMessage(self, message: MidiInputMessage):
-        with self.inputQueueLock:
-            self.inputQueue.append(message)
+    def handle_midi_message(self, message: MidiInputMessage):
+        with self.input_queue_lock:
+            self.input_queue.append(message)
 
-    async def __inputLoop(self):
+    async def __input_loop(self):
         while True:
-            with self.inputQueueLock:
-                queue = self.inputQueue
-                self.inputQueue = []
+            with self.input_queue_lock:
+                queue = self.input_queue
+                self.input_queue = []
             if len(queue) > 0:
-                self.processQueue(queue)
+                self.process_queue(queue)
             await asyncio.sleep(MIDI_INPUT_STEP)
 
-    def processQueue(self, queue: list[MidiInputMessage]):
-        lastContiguousClasses = list(state.noteInHistory.lastContiguousClasses)
-        lastContiguousClasses.sort()
+    def process_queue(self, queue: list[MidiInputMessage]):
+        last_contiguous_classes = list(state.note_in_history.lastContiguousClasses)
+        last_contiguous_classes.sort()
         for message in queue:
             if message.type == MidiInputMessageType.NOTE_ON:
-                self.noteHistory.noteOn(message.note)
+                self.note_history.note_on(message.note)
             elif message.type == MidiInputMessageType.NOTE_OFF:
-                self.noteHistory.noteOff(message.note)
-        newContiguousClasses = list(state.noteInHistory.lastContiguousClasses)
-        newContiguousClasses.sort()
-        if lastContiguousClasses != newContiguousClasses:
+                self.note_history.note_off(message.note)
+        new_contiguous_classes = list(state.note_in_history.lastContiguousClasses)
+        new_contiguous_classes.sort()
+        if last_contiguous_classes != new_contiguous_classes:
             print("new chord")
-            self.determineChordAndScale()
+            self.determine_chord_and_scale()
 
-    def determineChordAndScale(self):
-        if state.chordMode == ExternalChordMode.MOST_RECENT_NOTE_SET:
-            noteClasses = state.noteInHistory.lastContiguousClasses
-            key, scale = self.getScaleAndKey(noteClasses)
+    def determine_chord_and_scale(self):
+        if state.chord_mode == ExternalChordMode.MOST_RECENT_NOTE_SET:
+            note_classes = state.note_in_history.lastContiguousClasses
+            key, scale = self.get_scale_and_key(note_classes)
 
             self.scale.update(scale)
             self.key.set(key)
 
-            lowestClass = state.noteInHistory.lowestInContiguousClasses % 12
-            rootClass = lowestClass
-            keyAgnosticRoot = self.rotateBack(key, [rootClass])[0]
-            keyAgnosticChord = self.rotateBack(key, noteClasses)
-            rootIndex = scale.index(keyAgnosticRoot)
+            lowest_class = state.note_in_history.lowest_in_contiguous_classes % 12
+            root_class = lowest_class
+            key_agnostic_root = self.rotate_back(key, [root_class])[0]
+            key_agnostic_chord = self.rotate_back(key, note_classes)
+            root_index = scale.index(key_agnostic_root)
 
-            chordIndecies = [scale.index(noteClass) for noteClass in keyAgnosticChord]
-            chordIndeciesFromRoot = [(chordIndex + (len(scale) - rootIndex)) % len(scale) for chordIndex in chordIndecies]
-            chordIndeciesFromRoot.sort()
+            chord_indices = [scale.index(note_class) for note_class in key_agnostic_chord]
+            chord_indices_from_root = [
+                (chord_index + (len(scale) - root_index)) % len(scale)
+                for chord_index in chord_indices
+            ]
+            chord_indices_from_root.sort()
 
-            if len(chordIndeciesFromRoot) > 1:
-                NoRootchordIndeciesFromRoot = chordIndeciesFromRoot[1:]
+            if len(chord_indices_from_root) > 1:
+                no_root_chord_indices_from_root = chord_indices_from_root[1:]
             else:
-                NoRootchordIndeciesFromRoot = chordIndeciesFromRoot
+                no_root_chord_indices_from_root = chord_indices_from_root
 
-            scaleChordIndecies = range(1, len(scale) + 1)
+            scale_chord_indices = range(1, len(scale) + 1)
             print("key agnostic scale: ", scale)
             print("key: ", key)
 
-            print("chordIndeciesFromRoot: ", chordIndeciesFromRoot)
-            print("rootIndex: ", rootIndex)
+            print("chord_indices_from_root: ", chord_indices_from_root)
+            print("root_index: ", root_index)
 
-            southChord = Chord(chordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
-            westChord = Chord(NoRootchordIndeciesFromRoot, chordIndeciesFromRoot, rootIndex, scale)
-            northChord = Chord(scaleChordIndecies, scaleChordIndecies, 0, scale)
-            eastChord = Chord(scaleChordIndecies, scaleChordIndecies, 0, scale)
+            south_chord = Chord(chord_indices_from_root, chord_indices_from_root, root_index, scale)
+            west_chord = Chord(no_root_chord_indices_from_root, chord_indices_from_root, root_index, scale)
+            north_chord = Chord(scale_chord_indices, scale_chord_indices, 0, scale)
+            east_chord = Chord(scale_chord_indices, scale_chord_indices, 0, scale)
 
-            self.chords[ChordButton.SOUTH] = southChord
-            self.chords[ChordButton.WEST] = westChord
-            self.chords[ChordButton.NORTH] = northChord
-            self.chords[ChordButton.EAST] = eastChord
+            self.chords[ChordButton.SOUTH] = south_chord
+            self.chords[ChordButton.WEST] = west_chord
+            self.chords[ChordButton.NORTH] = north_chord
+            self.chords[ChordButton.EAST] = east_chord
 
-            self.updateChordType()
+            self.update_chord_type()
 
-    def getScaleAndKey(self, noteClasses: list[int]) -> tuple[int, list[int]]:
-        lastSeven = state.noteInHistory.classRecencyRanking[:7]
-        for scale in state.preferredScaleClasses:
-            possibleRotations: list[int] = []
+    def get_scale_and_key(self, note_classes: list[int]) -> tuple[int, list[int]]:
+        last_seven = state.note_in_history.classRecencyRanking[:7]
+        for scale in state.preferred_scale_classes:
+            possible_rotations: list[int] = []
             for r in range(12):
-                rotatedScale = self.rotateForward(r, scale)
-                if self.notesFitInScale(noteClasses, rotatedScale):
-                    possibleRotations.append(r)
-            if len(possibleRotations) == 0:
+                rotated_scale = self.rotate_forward(r, scale)
+                if self.notes_fit_in_scale(note_classes, rotated_scale):
+                    possible_rotations.append(r)
+            if len(possible_rotations) == 0:
                 continue
-            if len(possibleRotations) == 1:
-                return possibleRotations[0], scale
-            if (len(possibleRotations) > 1
-                    and state.scaleMode == ExternalChordScaleMode.LAST_SEVEN):
-                    if not self.notesFitInScale(noteClasses, lastSeven):
-                        return self.useNotesAsScale(noteClasses)
-                    for r in possibleRotations:
-                        rotatedScale = self.rotateForward(r, scale)
-                        if self.notesFitInScale(lastSeven, rotatedScale):
+            if len(possible_rotations) == 1:
+                return possible_rotations[0], scale
+            if (len(possible_rotations) > 1
+                    and state.scale_mode == ExternalChordScaleMode.LAST_SEVEN):
+                    if not self.notes_fit_in_scale(note_classes, last_seven):
+                        return self.use_notes_as_scale(note_classes)
+                    for r in possible_rotations:
+                        rotated_scale = self.rotate_forward(r, scale)
+                        if self.notes_fit_in_scale(last_seven, rotated_scale):
                             return r, scale
-        if not self.notesFitInScale(noteClasses, lastSeven):
-            return self.useNotesAsScale(noteClasses)
-        return self.useNotesAsScale(lastSeven)
+        if not self.notes_fit_in_scale(note_classes, last_seven):
+            return self.use_notes_as_scale(note_classes)
+        return self.use_notes_as_scale(last_seven)
 
-    def useNotesAsScale(self, noteClasses: list[int]) -> tuple[int, list[int]]:
-        if len(noteClasses) == 0:
+    def use_notes_as_scale(self, note_classes: list[int]) -> tuple[int, list[int]]:
+        if len(note_classes) == 0:
             return 0, []
-        return noteClasses[0], self.rotateBack(noteClasses[0], noteClasses)
+        return note_classes[0], self.rotate_back(note_classes[0], note_classes)
 
-    def notesFitInScale(self, noteClasses: list[int], scale: list[int]) -> bool:
-        return all(chordClass in scale for chordClass in noteClasses)
+    def notes_fit_in_scale(self, note_classes: list[int], scale: list[int]) -> bool:
+        return all(chord_class in scale for chord_class in note_classes)
 
-    def getPrimeForm(self, noteClasses: list[int]):
-        classes = list(noteClasses)
+    def get_prime_form(self, note_classes: list[int]):
+        classes = list(note_classes)
         classes.sort()
-        lowestSum = 66
-        primeForm = []
+        lowest_sum = 66
+        prime_form = []
 
         for note in classes:
-            roatatedClasses = self.rotateBack(note, classes)
-            roatatedClasses.sort()
-            roatationSum = sum(roatatedClasses)
-            if roatationSum < lowestSum:
-                lowestSum = roatationSum
-                primeForm = roatatedClasses
+            rotated_classes = self.rotate_back(note, classes)
+            rotated_classes.sort()
+            rotation_sum = sum(rotated_classes)
+            if rotation_sum < lowest_sum:
+                lowest_sum = rotation_sum
+                prime_form = rotated_classes
 
-        return primeForm
+        return prime_form
 
-    def rotateBack(self, r: int, noteClasses: list[int]) -> list[int]:
-        newClasses = [(noteClass + (12 - r)) % 12 for noteClass in noteClasses]
-        newClasses.sort()
-        return newClasses
+    def rotate_back(self, r: int, note_classes: list[int]) -> list[int]:
+        new_classes = [(note_class + (12 - r)) % 12 for note_class in note_classes]
+        new_classes.sort()
+        return new_classes
 
-    def rotateForward(self, r: int, noteClasses: list[int]) -> list[int]:
-        newClasses = [(noteClass + r) % 12 for noteClass in noteClasses]
-        newClasses.sort()
-        return newClasses
+    def rotate_forward(self, r: int, note_classes: list[int]) -> list[int]:
+        new_classes = [(note_class + r) % 12 for note_class in note_classes]
+        new_classes.sort()
+        return new_classes

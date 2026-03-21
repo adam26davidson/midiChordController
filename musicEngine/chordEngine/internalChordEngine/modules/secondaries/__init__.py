@@ -3,13 +3,13 @@ from typing import Callable
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from musicEngine.chordEngine.internalChordEngine.modules.secondaries.parseSecondaries import parseSecondaries
+from musicEngine.chordEngine.internalChordEngine.modules.secondaries.parseSecondaries import parse_secondaries
 from musicEngine.chordEngine.internalChordEngine.modules.secondaries.secondary import Secondary  # noqa: F401
 from musicEngine.chordEngine.modules.chords.dualChord import DualChord
 from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.chordEngine.state.modulationsState import ModulationSide
 from musicEngine.chordEngine.state.secondariesState import SecondarySide
-from redux import utils as reduxUtils
+from redux import utils as redux_utils
 
 from ....chordEngineState import state
 
@@ -17,66 +17,65 @@ from ....chordEngineState import state
 class Secondaries:
 
     dict: dict[SecondarySide, dict[ChordButton, dict[ModulationSide, DualChord]]]
-    updateChordEngine: Callable
+    update_chord_engine: Callable
 
-    def __init__(self, setting: dict, updateChordEngine: Callable) -> None:
-        self.dict = parseSecondaries(setting)
-        self.updateChordEngine = updateChordEngine
+    def __init__(self, setting: dict, update_chord_engine: Callable) -> None:
+        self.dict = parse_secondaries(setting)
+        self.update_chord_engine = update_chord_engine
 
-        reduxUtils.addAppParameters(self.__getParameters())
+        redux_utils.add_app_parameters(self.__get_parameters())
 
     def set(self, side):
         if state.secondary.side != side:
             state.secondary.side = side
-            self.updateChordEngine()
+            self.update_chord_engine()
 
-    def getChord(self, chordRoot: int) -> list[int]:
+    def get_chord(self, chord_root: int) -> list[int]:
         secondary = self.get()
-        return None if secondary is None else secondary.getChord(chordRoot)
+        return None if secondary is None else secondary.get_chord(chord_root)
 
-    def getBass(self, chordRoot: int) -> int:
+    def get_bass(self, chord_root: int) -> int:
         secondary = self.get()
-        return None if secondary is None else secondary.getBass(chordRoot)
+        return None if secondary is None else secondary.get_bass(chord_root)
 
-    def getRoot(self, chordRoot: int) -> int:
+    def get_root(self, chord_root: int) -> int:
         secondary = self.get()
-        return None if secondary is None else secondary.getRoot(chordRoot)
+        return None if secondary is None else secondary.get_root(chord_root)
 
-    def getNoteTypes(self, chordRoot: int) -> list[int]:
+    def get_note_types(self, chord_root: int) -> list[int]:
         secondary = self.get()
-        return None if secondary is None else secondary.getNoteTypes(chordRoot)
+        return None if secondary is None else secondary.get_note_types(chord_root)
 
     def get(self, button: ChordButton = None) -> DualChord:
         if button is None:
-            button = state.chord.activeButton
+            button = state.chord.active_button
 
         if state.secondary.side == SecondarySide.NONE:
             return None
         return self.dict[state.secondary.side][button][state.modulation.side]
 
-    def __getParameters(self):
+    def __get_parameters(self):
         return [
             AppParameter(
-                validCommandTypes = [CommandType.ON_OFF],
-                commandMappings = {
+                valid_command_types = [CommandType.ON_OFF],
+                command_mappings = {
                     Command.ON: lambda: self.set(SecondarySide.LEFT),
                     Command.OFF: lambda: self.set(SecondarySide.NONE)
                 },
                 key = "LEFT_SECONDARY",
                 label = "Secondary 1",
-                labelAbreviation="S1",
+                label_abreviation="S1",
                 type = AppParameterType.INTERNAL_CHORD_ENGINE
             ),
             AppParameter(
-                validCommandTypes = [CommandType.ON_OFF],
-                commandMappings = {
+                valid_command_types = [CommandType.ON_OFF],
+                command_mappings = {
                     Command.ON: lambda: self.set(SecondarySide.RIGHT),
                     Command.OFF: lambda: self.set(SecondarySide.NONE)
                 },
                 key = "RIGHT_SECONDARY",
                 label = "Secondary 2",
-                labelAbreviation="S2",
+                label_abreviation="S2",
                 type = AppParameterType.INTERNAL_CHORD_ENGINE
             )
         ]
-

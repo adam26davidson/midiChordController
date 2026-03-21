@@ -1,3 +1,3 @@
 class BassState:
-    playingNote: int = None
-    isPlaying: bool = False
+    playing_note: int = None
+    is_playing: bool = False

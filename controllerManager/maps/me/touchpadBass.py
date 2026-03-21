@@ -1,4 +1,4 @@
-touchpadBass = {
+touchpad_bass = {
   'name': 'touchpadBass',
   'displayName': 'Touchpad Bass',
   'inversionMode': 'continuous',

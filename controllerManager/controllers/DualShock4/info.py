@@ -5,38 +5,38 @@ from controllerManager.models.rawControlConfig import RawControlConfig
 from controllerManager.models.rawControlEvent import RawControlEvent as Event
 from controllerManager.models.rawControlType import RawControlType as Type
 
-controllerConfig = ControllerConfig(
+controller_config = ControllerConfig(
     name="DualShock4",
     vendor=1356,
     product=2508,
-    meMap="touchpadBass",
-    uiMap="default",
-    compatibleMeMaps=['gyroInversions', 'default', 'touchpadBass'],
+    me_map="touchpadBass",
+    ui_map="default",
+    compatible_me_maps=['gyroInversions', 'default', 'touchpadBass'],
     controls={
         "main": [
             # MAIN BUTTONS
             RawControl(
                 key="SOUTH_BUTTON",
                 label="South Button",
-                evDevKey=304,
+                ev_dev_key=304,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="WEST_BUTTON",
                 label="West Button",
-                evDevKey=308,
+                ev_dev_key=308,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="NORTH_BUTTON",
                 label="North Button",
-                evDevKey=307,
+                ev_dev_key=307,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="EAST_BUTTON",
                 label="East Button",
-                evDevKey=305,
+                ev_dev_key=305,
                 type=Type.BUTTON,
             ),
 
@@ -44,13 +44,13 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="RIGHT_BUMPER",
                 label="Right Bumper",
-                evDevKey=311,
+                ev_dev_key=311,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="LEFT_BUMPER",
                 label="Left Bumper",
-                evDevKey=310,
+                ev_dev_key=310,
                 type=Type.BUTTON,
             ),
 
@@ -58,40 +58,40 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="RIGHT_TRIGGER",
                 label="Right Trigger",
-                evDevKey=313,
+                ev_dev_key=313,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="RIGHT_TRIGGER_ANALOG",
                 label="Right Trigger Analog",
-                evDevKey=5,
+                ev_dev_key=5,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=255,
-                    bottomValue=0,
-                    exposeOnOffEvents = False,
-                    exposePolarEvents = False,
-                    averageCount=1,
+                    top_value=255,
+                    bottom_value=0,
+                    expose_on_off_events = False,
+                    expose_polar_events = False,
+                    average_count=1,
                     threshold=0.2,
                 )
             ),
             RawControl(
                 key="LEFT_TRIGGER",
                 label="Left Trigger",
-                evDevKey=312,
+                ev_dev_key=312,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="LEFT_TRIGGER_ANALOG",
                 label="Left Trigger Analog",
-                evDevKey=2,
+                ev_dev_key=2,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=255,
-                    bottomValue=0,
-                    exposeOnOffEvents = False,
-                    exposePolarEvents = False,
-                    averageCount=1,
+                    top_value=255,
+                    bottom_value=0,
+                    expose_on_off_events = False,
+                    expose_polar_events = False,
+                    average_count=1,
                     threshold=0.2,
                 )
             ),
@@ -100,13 +100,13 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="RIGHT_OPTION",
                 label="Right Option",
-                evDevKey=315,
+                ev_dev_key=315,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="LEFT_OPTION",
                 label="Left Option",
-                evDevKey=314,
+                ev_dev_key=314,
                 type=Type.BUTTON,
             ),
 
@@ -114,25 +114,25 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="DPAD_X",
                 label="DPad X",
-                evDevKey=16,
+                ev_dev_key=16,
                 type=Type.PAD,
                 config=RawControlConfig(
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    polarEventMap={1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT},
-                    polarOrientation=PolarOrientation.HORIZONTAL
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    polar_event_map={1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT},
+                    polar_orientation=PolarOrientation.HORIZONTAL
                 )
             ),
             RawControl(
                 key="DPAD_Y",
                 label="DPad Y",
-                evDevKey=17,
+                ev_dev_key=17,
                 type=Type.PAD,
                 config=RawControlConfig(
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    polarEventMap={1: Event.DOWN, 0: Event.OFF, -1: Event.UP},
-                    polarOrientation=PolarOrientation.VERTICAL
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    polar_event_map={1: Event.DOWN, 0: Event.OFF, -1: Event.UP},
+                    polar_orientation=PolarOrientation.VERTICAL
                 )
             ),
 
@@ -140,7 +140,7 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="START_BUTTON",
                 label="Start Button",
-                evDevKey=316,
+                ev_dev_key=316,
                 type=Type.BUTTON,
             ),
 
@@ -148,81 +148,81 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="LEFT_STICK_BUTTON",
                 label="Left Stick Button",
-                evDevKey=317,
+                ev_dev_key=317,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="LEFT_STICK_X",
                 label="Left Stick X",
-                evDevKey=0,
+                ev_dev_key=0,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=0,
-                    bottomValue=255,
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    averageCount=1,
-                    centeredThreshold=0.6,
-                    ignoreValues=[0],
-                    polarEventMap={-1: Event.RIGHT, 0: Event.OFF, 1: Event.LEFT},
-                    polarOrientation=PolarOrientation.HORIZONTAL
+                    top_value=0,
+                    bottom_value=255,
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    average_count=1,
+                    centered_threshold=0.6,
+                    ignore_values=[0],
+                    polar_event_map={-1: Event.RIGHT, 0: Event.OFF, 1: Event.LEFT},
+                    polar_orientation=PolarOrientation.HORIZONTAL
                 )
             ),
             RawControl(
                 key="LEFT_STICK_Y",
                 label="Left Stick Y",
-                evDevKey=1,
+                ev_dev_key=1,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=0,
-                    bottomValue=255,
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    averageCount=1,
-                    centeredThreshold=0.6,
-                    ignoreValues=[0],
-                    polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
-                    polarOrientation=PolarOrientation.VERTICAL
+                    top_value=0,
+                    bottom_value=255,
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    average_count=1,
+                    centered_threshold=0.6,
+                    ignore_values=[0],
+                    polar_event_map={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
+                    polar_orientation=PolarOrientation.VERTICAL
                 )
             ),
             RawControl(
                 key="RIGHT_STICK_BUTTON",
                 label="Right Stick Button",
-                evDevKey=318,
+                ev_dev_key=318,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="RIGHT_STICK_X",
                 label="Right Stick X",
-                evDevKey=3,
+                ev_dev_key=3,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=0,
-                    bottomValue=255,
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    averageCount=1,
-                    centeredThreshold=0.6,
-                    ignoreValues=[0],
-                    polarEventMap={-1: Event.RIGHT, 0: Event.OFF, 1: Event.LEFT},
-                    polarOrientation=PolarOrientation.HORIZONTAL
+                    top_value=0,
+                    bottom_value=255,
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    average_count=1,
+                    centered_threshold=0.6,
+                    ignore_values=[0],
+                    polar_event_map={-1: Event.RIGHT, 0: Event.OFF, 1: Event.LEFT},
+                    polar_orientation=PolarOrientation.HORIZONTAL
                 )
             ),
             RawControl(
                 key="RIGHT_STICK_Y",
                 label="Right Stick Y",
-                evDevKey=4,
+                ev_dev_key=4,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=0,
-                    bottomValue=255,
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    averageCount=1,
-                    centeredThreshold=0.6,
-                    ignoreValues=[0],
-                    polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
-                    polarOrientation=PolarOrientation.VERTICAL
+                    top_value=0,
+                    bottom_value=255,
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    average_count=1,
+                    centered_threshold=0.6,
+                    ignore_values=[0],
+                    polar_event_map={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
+                    polar_orientation=PolarOrientation.VERTICAL
                 )
             )
         ],
@@ -231,35 +231,35 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="GYRO_PITCH",
                 label="Gyro Pitch",
-                evDevKey=2,
+                ev_dev_key=2,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=-8050,
-                    bottomValue=8050,
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    averageCount=1,
-                    centeredThreshold=0.6,
-                    ignoreValues=[0],
-                    polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
-                    polarOrientation=PolarOrientation.VERTICAL
+                    top_value=-8050,
+                    bottom_value=8050,
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    average_count=1,
+                    centered_threshold=0.6,
+                    ignore_values=[0],
+                    polar_event_map={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
+                    polar_orientation=PolarOrientation.VERTICAL
                 )
             ),
             RawControl(
                 key="GYRO_ROLL",
                 label="Gyro Roll",
-                evDevKey=0,
+                ev_dev_key=0,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=-8050,
-                    bottomValue=8050,
-                    exposeOnOffEvents = True,
-                    exposePolarEvents = True,
-                    averageCount=1,
-                    centeredThreshold=0.6,
-                    ignoreValues=[0],
-                    polarEventMap={1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT},
-                    polarOrientation=PolarOrientation.HORIZONTAL
+                    top_value=-8050,
+                    bottom_value=8050,
+                    expose_on_off_events = True,
+                    expose_polar_events = True,
+                    average_count=1,
+                    centered_threshold=0.6,
+                    ignore_values=[0],
+                    polar_event_map={1: Event.RIGHT, 0: Event.OFF, -1: Event.LEFT},
+                    polar_orientation=PolarOrientation.HORIZONTAL
                 )
             )
         ],
@@ -268,40 +268,40 @@ controllerConfig = ControllerConfig(
             RawControl(
                 key="TOUCHPAD_BUTTON",
                 label="Touchpad Button",
-                evDevKey=272,
+                ev_dev_key=272,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="TOUCHPAD_TOUCH",
                 label="Touchpad Touch",
-                evDevKey=325,
+                ev_dev_key=325,
                 type=Type.BUTTON,
             ),
             RawControl(
                 key="TOUCHPAD_X",
                 label="Touchpad X",
-                evDevKey=0,
+                ev_dev_key=0,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=1900,
-                    bottomValue=0,
-                    exposeOnOffEvents = False,
-                    exposePolarEvents = False,
-                    averageCount=1,
-                    ignoreValues=[0]
+                    top_value=1900,
+                    bottom_value=0,
+                    expose_on_off_events = False,
+                    expose_polar_events = False,
+                    average_count=1,
+                    ignore_values=[0]
                 )
             ),
             RawControl(
                 key="TOUCHPAD_Y",
                 label="Touchpad Y",
-                evDevKey=1,
+                ev_dev_key=1,
                 type=Type.ANALOG,
                 config=RawControlConfig(
-                    topValue=0,
-                    bottomValue=900,
-                    exposeOnOffEvents = False,
-                    exposePolarEvents = False,
-                    averageCount=1
+                    top_value=0,
+                    bottom_value=900,
+                    expose_on_off_events = False,
+                    expose_polar_events = False,
+                    average_count=1
                 )
             )
         ]

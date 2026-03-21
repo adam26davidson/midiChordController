@@ -6,7 +6,7 @@ from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux import utils as ReduxUtils
+from redux import utils as redux_utils
 
 from ..chordDisplay import ChordDisplay
 from .controlDisplay.controlDisplay import ControlDisplay
@@ -70,104 +70,104 @@ class PerformFrame(tk.Frame):
 
         self.grid(row=0, column=0, sticky='nsew')
 
-        ReduxUtils.addAppParameters(self.getParameters())
+        redux_utils.add_app_parameters(self.get_parameters())
 
-        store.subscribe(self.__handleStoreUpdate)
+        store.subscribe(self.__handle_store_update)
 
-    def __handleStoreUpdate(self):
+    def __handle_store_update(self):
         state = store.get_state()
-        meState = thaw(state['musicEngine'])
-        cState = thaw(state['controllerManager'])
+        me_state = thaw(state['musicEngine'])
+        c_state = thaw(state['controllerManager'])
 
-        if meState['chordShadow'] != self.state['shadowChordNotes']:
-            self.after(0, lambda: self.__setChordShadow(meState['chordShadow']))
-        if meState['chordNotes'] != self.state['playingChordNotes']:
-            print(f"[PERF_FRAME] chordNotes changed: store={meState['chordNotes']} local={self.state['playingChordNotes']}", flush=True)
-            if len(meState['chordNotes']) > 0:
-                self.after(0, lambda: self.__playChord(meState['chordNotes']))
+        if me_state['chordShadow'] != self.state['shadowChordNotes']:
+            self.after(0, lambda: self.__set_chord_shadow(me_state['chordShadow']))
+        if me_state['chordNotes'] != self.state['playingChordNotes']:
+            print(f"[PERF_FRAME] chordNotes changed: store={me_state['chordNotes']} local={self.state['playingChordNotes']}", flush=True)
+            if len(me_state['chordNotes']) > 0:
+                self.after(0, lambda: self.__play_chord(me_state['chordNotes']))
             else:
-                self.after(0, lambda: self.__stopChord(self.state['playingChordNotes']))
-        if meState['inversion'] != self.state['inversion']:
-            print(f"[PERF_FRAME] inversion changed: store={meState['inversion']} local={self.state['inversion']}", flush=True)
-        if meState['bassShadow'] != self.state['shadowBassNote']:
-            self.after(0, lambda: self.__setBassShadow(meState['bassShadow']))
-        if meState['bassNote'] != self.state['playingBassNote']:
-            if meState['bassNote'] is not None:
-                self.after(0, lambda: self.__playBass(meState['bassNote']))
+                self.after(0, lambda: self.__stop_chord(self.state['playingChordNotes']))
+        if me_state['inversion'] != self.state['inversion']:
+            print(f"[PERF_FRAME] inversion changed: store={me_state['inversion']} local={self.state['inversion']}", flush=True)
+        if me_state['bassShadow'] != self.state['shadowBassNote']:
+            self.after(0, lambda: self.__set_bass_shadow(me_state['bassShadow']))
+        if me_state['bassNote'] != self.state['playingBassNote']:
+            if me_state['bassNote'] is not None:
+                self.after(0, lambda: self.__play_bass(me_state['bassNote']))
             else:
-                self.after(0, lambda: self.__stopBass(self.state['playingBassNote']))
-        if meState['chordType']['chord'] != self.state['chordType']['notes'] or \
-                meState['chordType']['root'] != self.state['chordType']['root']:
-            self.after(0, lambda: self.__setChord(meState['chordType']['chord'], meState['chordType']['root']))
-        if meState['inversion'] != self.state['inversion']:
-            self.after(0, lambda: self.__setInversion(meState['inversion']))
-        if meState['bassPosition'] != self.state['bassPosition']:
-            self.after(0, lambda: self.__setBassPosition(meState['bassPosition']))
-        if meState['inversionRange'] != self.state['inversionRange']:
-            self.after(0, lambda: self.__setInversionRange(
-                meState['inversionRange'], meState['inversion']))
-        if meState['bassRange'] != self.state['bassRange']:
-            self.after(0, lambda: self.__setBassRange(meState['bassRange'], meState['bassPosition']))
-        if meState['key'] != self.state['key']:
-            self.after(0, lambda: self.__setKey(meState['key']))
-        if meState['scale'] != self.state['scale']:
-            self.after(0, lambda: self.__setScale(meState['scale']))
-        if meState['modulation']['side'] != self.state['modulationSide']:
-            self.after(0, lambda: self.__setModulation(
-                meState['modulation']['scale'], meState['modulation']['side']))
-        if meState['setting'] != self.state['settingIndex'] and len(meState['settingsList']) > 0:
-            self.state['settingName'] = meState['settingsList'][meState['setting']]
-            self.state['settingIndex'] = meState['setting']
-            self.after(0, lambda: self.__setSetting(self.state['settingName']))
+                self.after(0, lambda: self.__stop_bass(self.state['playingBassNote']))
+        if me_state['chordType']['chord'] != self.state['chordType']['notes'] or \
+                me_state['chordType']['root'] != self.state['chordType']['root']:
+            self.after(0, lambda: self.__set_chord(me_state['chordType']['chord'], me_state['chordType']['root']))
+        if me_state['inversion'] != self.state['inversion']:
+            self.after(0, lambda: self.__set_inversion(me_state['inversion']))
+        if me_state['bassPosition'] != self.state['bassPosition']:
+            self.after(0, lambda: self.__set_bass_position(me_state['bassPosition']))
+        if me_state['inversionRange'] != self.state['inversionRange']:
+            self.after(0, lambda: self.__set_inversion_range(
+                me_state['inversionRange'], me_state['inversion']))
+        if me_state['bassRange'] != self.state['bassRange']:
+            self.after(0, lambda: self.__set_bass_range(me_state['bassRange'], me_state['bassPosition']))
+        if me_state['key'] != self.state['key']:
+            self.after(0, lambda: self.__set_key(me_state['key']))
+        if me_state['scale'] != self.state['scale']:
+            self.after(0, lambda: self.__set_scale(me_state['scale']))
+        if me_state['modulation']['side'] != self.state['modulationSide']:
+            self.after(0, lambda: self.__set_modulation(
+                me_state['modulation']['scale'], me_state['modulation']['side']))
+        if me_state['setting'] != self.state['settingIndex'] and len(me_state['settingsList']) > 0:
+            self.state['settingName'] = me_state['settingsList'][me_state['setting']]
+            self.state['settingIndex'] = me_state['setting']
+            self.after(0, lambda: self.__set_setting(self.state['settingName']))
             print('setting name: ' + self.state['settingName'])
-        if meState['settingLoading'] != self.state['settingLoading']:
-            if meState['settingLoading']:
-                self.after(0, lambda: self.__setSettingLoading())
+        if me_state['settingLoading'] != self.state['settingLoading']:
+            if me_state['settingLoading']:
+                self.after(0, lambda: self.__set_setting_loading())
             else:
                 self.state['settingLoading'] = False
-                self.after(0, lambda: self.__setSetting(self.state['settingName']))
-        if meState['hold'] != self.state['hold']:
-            self.state['hold'] = meState['hold']
-            self.after(0, lambda: self.__setHold(self.state['hold']))
-        if meState['inversionLock'] != self.state['inversionLock']:
-            self.state['inversionLock'] = meState['inversionLock']
-            self.after(0, lambda: self.__setInversionLock(self.state['inversionLock']))
-        if meState['chordOctave'] != self.state['chordOctave']:
-            self.state['chordOctave'] = meState['chordOctave']
-            self.after(0, lambda: self.__setOctave(self.state['chordOctave']))
-        if meState['voiceCount'] != self.state['voiceCount']:
-            self.state['voiceCount'] = meState['voiceCount']
-            self.after(0, lambda: self.__setVoiceCount(self.state['voiceCount']))
+                self.after(0, lambda: self.__set_setting(self.state['settingName']))
+        if me_state['hold'] != self.state['hold']:
+            self.state['hold'] = me_state['hold']
+            self.after(0, lambda: self.__set_hold(self.state['hold']))
+        if me_state['inversionLock'] != self.state['inversionLock']:
+            self.state['inversionLock'] = me_state['inversionLock']
+            self.after(0, lambda: self.__set_inversion_lock(self.state['inversionLock']))
+        if me_state['chordOctave'] != self.state['chordOctave']:
+            self.state['chordOctave'] = me_state['chordOctave']
+            self.after(0, lambda: self.__set_octave(self.state['chordOctave']))
+        if me_state['voiceCount'] != self.state['voiceCount']:
+            self.state['voiceCount'] = me_state['voiceCount']
+            self.after(0, lambda: self.__set_voice_count(self.state['voiceCount']))
 
-        meMap = None
+        me_map = None
         primary = None
-        for controller in cState['controllers']:
+        for controller in c_state['controllers']:
             if controller['role'] == 'primary':
                 primary = controller
-                meMap = controller['meMap']
+                me_map = controller['meMap']
                 break
 
-        if meMap:
-            if meMap['inversionMode'] != self.state['inversionMode']:
-                self.state['inversionMode'] = meMap['inversionMode']
-            if meMap['bassMode'] != self.state['bassMode']:
-                self.state['bassMode'] = meMap['bassMode']
+        if me_map:
+            if me_map['inversionMode'] != self.state['inversionMode']:
+                self.state['inversionMode'] = me_map['inversionMode']
+            if me_map['bassMode'] != self.state['bassMode']:
+                self.state['bassMode'] = me_map['bassMode']
         if primary and primary['name'] != self.state['controllerName']:
             self.state['controllerName'] = primary['name']
-                #self.__setController(primary['name'])
+                #self.__set_controller(primary['name'])
 
-    def getParameters(self):
+    def get_parameters(self):
         parameters = [
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.__storeInversionThumb},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.__store_inversion_thumb},
                 key="UI_INVERSION_THUMB",
                 remappable=False,
                 type=AppParameterType.UI
             ),
             AppParameter(
-                validCommandTypes=[CommandType.ANALOG],
-                commandMappings={Command.UPDATE: self.__storeBassPositionThumb},
+                valid_command_types=[CommandType.ANALOG],
+                command_mappings={Command.UPDATE: self.__store_bass_position_thumb},
                 key="UI_BASS_THUMB",
                 remappable=False,
                 type=AppParameterType.UI
@@ -175,136 +175,136 @@ class PerformFrame(tk.Frame):
         ]
         return parameters
 
-    def updateFrame(self):
+    def update_frame(self):
         if not self.state['inversionLock']:
-            self.__setInversionThumb()
+            self.__set_inversion_thumb()
         if self.state['bassMode'] == 'continuous':
-            self.__setBassPositionThumb()
-        self.chordDisplay.runAnimationStep()
+            self.__set_bass_position_thumb()
+        self.chordDisplay.run_animation_step()
 
-    def __setController(self, text):
-        self.textDisplay.setController(text)
+    def __set_controller(self, text):
+        self.textDisplay.set_controller(text)
 
-    def __setSettingLoading(self):
+    def __set_setting_loading(self):
         self.state['settingLoading'] = True
-        self.settingDisplay.setSetting('Loading...')
+        self.settingDisplay.set_setting('Loading...')
 
-    def __setSetting(self, text):
+    def __set_setting(self, text):
         if not self.state['settingLoading']:
-            self.settingDisplay.setSetting(text)
+            self.settingDisplay.set_setting(text)
 
-    def __setKey(self, key):
+    def __set_key(self, key):
         self.state['key'] = key
-        self.chordDisplay.setKey(key)
+        self.chordDisplay.set_key(key)
 
-    def __setScale(self, scale):
+    def __set_scale(self, scale):
         self.state['scale'] = scale
-        self.chordDisplay.setScale(scale)
+        self.chordDisplay.set_scale(scale)
 
-    def __setInversionRange(self, range, inversion):
+    def __set_inversion_range(self, range, inversion):
         self.state['inversionRange'] = range
         self.state['inversion'] = inversion
-        self.inversion.setMax(range, inversion)
+        self.inversion.set_max(range, inversion)
 
-    def __setInversion(self, inversion):
+    def __set_inversion(self, inversion):
         self.state['inversion'] = inversion
-        self.inversion.setActiveRegion(inversion, self.state['inversionMode'])
+        self.inversion.set_active_region(inversion, self.state['inversionMode'])
 
-    def __storeInversionThumb(self, value):
+    def __store_inversion_thumb(self, value):
         self.state['inversionThumbValue'] = value
 
-    def __setInversionThumb(self):
-        self.inversion.positionThumb(self.state['inversionThumbValue'])
+    def __set_inversion_thumb(self):
+        self.inversion.position_thumb(self.state['inversionThumbValue'])
 
-    def __setBassRange(self, range, position):
+    def __set_bass_range(self, range, position):
         self.state['bassRange'] = range
         self.state['bassPosition'] = position
-        self.bassPosition.setMax(range, position)
+        self.bassPosition.set_max(range, position)
 
-    def __setBassPosition(self, position):
+    def __set_bass_position(self, position):
         self.state['bassPosition'] = position
-        self.bassPosition.setActiveRegion(position, self.state['bassMode'])
+        self.bassPosition.set_active_region(position, self.state['bassMode'])
 
-    def __storeBassPositionThumb(self, value):
+    def __store_bass_position_thumb(self, value):
         self.state['bassThumbValue'] = value
 
-    def __setBassPositionThumb(self):
-        self.bassPosition.positionThumb(self.state['bassThumbValue'])
+    def __set_bass_position_thumb(self):
+        self.bassPosition.position_thumb(self.state['bassThumbValue'])
 
-    def __stopChordShadow(self):
-        resetNotes = []
+    def __stop_chord_shadow(self):
+        reset_notes = []
         for note in self.state['shadowChordNotes']:
             if note != self.state['shadowBassNote']:
-                resetNotes.append(note)
-        self.keyboard.reset(resetNotes)
+                reset_notes.append(note)
+        self.keyboard.reset(reset_notes)
         # self.state['shadowChordNotes'] = []
 
-    def __stopBassShadow(self):
-        noteInPlayingChord = self.state['playingChordNotes'].count(
+    def __stop_bass_shadow(self):
+        note_in_playing_chord = self.state['playingChordNotes'].count(
             self.state['shadowBassNote']) != 0
-        noteInShadowChord = self.state['shadowChordNotes'].count(
+        note_in_shadow_chord = self.state['shadowChordNotes'].count(
             self.state['shadowBassNote']) != 0
-        if (not noteInPlayingChord) and (not noteInShadowChord)  \
+        if (not note_in_playing_chord) and (not note_in_shadow_chord)  \
                 and self.state['shadowBassNote'] is not None:
             self.keyboard.reset([self.state['shadowBassNote']])
         # self.state['shadowBassNote'] = None
 
-    def __setChord(self, chord, root):
+    def __set_chord(self, chord, root):
         self.state['chordType'] = {'notes': chord, 'root': root}
-        self.keyboard.setChord(chord, root)
-        self.chordDisplay.setChord(chord, root)
+        self.keyboard.set_chord(chord, root)
+        self.chordDisplay.set_chord(chord, root)
 
-    def __playChord(self, notes):
-        self.__stopChordShadow()
+    def __play_chord(self, notes):
+        self.__stop_chord_shadow()
         self.keyboard.play(notes)
         self.state['playingChordNotes'] = notes
-        self.chordDisplay.playChord()
+        self.chordDisplay.play_chord()
 
-    def __playBass(self, note):
-        self.__stopBassShadow()
+    def __play_bass(self, note):
+        self.__stop_bass_shadow()
         self.keyboard.play([note])
-        self.chordDisplay.playBass(note)
+        self.chordDisplay.play_bass(note)
         self.state['playingBassNote'] = note
 
-    def __stopChord(self, notes):
+    def __stop_chord(self, notes):
         self.state['shadowChordNotes'] = notes
-        self.keyboard.setShadow(notes)
+        self.keyboard.set_shadow(notes)
         self.state['playingChordNotes'] = []
-        self.chordDisplay.setChordShadow()
+        self.chordDisplay.set_chord_shadow()
 
-    def __stopBass(self, note):
+    def __stop_bass(self, note):
         if self.state['playingChordNotes'].count(note) == 0:
-            self.keyboard.setShadow([note])
-        self.chordDisplay.setBassShadow(note)
+            self.keyboard.set_shadow([note])
+        self.chordDisplay.set_bass_shadow(note)
         self.state['shadowBassNote'] = note
         self.state['playingBassNote'] = None
 
-    def __setChordShadow(self, notes):
+    def __set_chord_shadow(self, notes):
         self.keyboard.reset(self.state['shadowChordNotes'])
         self.state['shadowChordNotes'] = notes
-        self.keyboard.setShadow(notes)
-        self.chordDisplay.setChordShadow()
+        self.keyboard.set_shadow(notes)
+        self.chordDisplay.set_chord_shadow()
 
-    def __setBassShadow(self, note):
-        self.__stopBassShadow()
+    def __set_bass_shadow(self, note):
+        self.__stop_bass_shadow()
         self.state['shadowBassNote'] = note
-        noteInPlayingChord = self.state['playingChordNotes'].count(note) != 0
-        if not noteInPlayingChord:
-            self.keyboard.setShadow([note])
-        self.chordDisplay.setBassShadow(note)
+        note_in_playing_chord = self.state['playingChordNotes'].count(note) != 0
+        if not note_in_playing_chord:
+            self.keyboard.set_shadow([note])
+        self.chordDisplay.set_bass_shadow(note)
 
-    def __setModulation(self, newScale, side):
+    def __set_modulation(self, new_scale, side):
         self.state['modulationSide'] = side
-        self.chordDisplay.setModulation(newScale, side)
+        self.chordDisplay.set_modulation(new_scale, side)
 
-    def __setHold(self, hold):
-        self.textDisplay.setHold(hold)
+    def __set_hold(self, hold):
+        self.textDisplay.set_hold(hold)
 
-    def __setInversionLock(self, inversionLock):
-        self.textDisplay.setInversionLock(inversionLock)
+    def __set_inversion_lock(self, inversion_lock):
+        self.textDisplay.set_inversion_lock(inversion_lock)
 
-    def __setOctave(self, octave):
-        self.textDisplay.setOctave(octave)
+    def __set_octave(self, octave):
+        self.textDisplay.set_octave(octave)
 
-    def __setVoiceCount(self, voiceCount):
-        self.textDisplay.setVoices(voiceCount)
+    def __set_voice_count(self, voice_count):
+        self.textDisplay.set_voices(voice_count)

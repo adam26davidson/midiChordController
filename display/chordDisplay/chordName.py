@@ -7,85 +7,85 @@ from display.displayConstants import COLORS, FONTS
 class ChordName:
     def __init__(self, master):
         self.master = master
-        self.chordName = ""
-        self.pastChordNames = {}
-        self.textObject = self.createText()
+        self.chord_name = ""
+        self.past_chord_names = {}
+        self.text_object = self.create_text_element()
 
-    def createText(self):
+    def create_text_element(self):
         x = self.master.width / 2
         y = self.master.height - x
         return self.master.create_text(
-            x, y, fill=COLORS["chord"], text=self.chordName, font=FONTS["big"], justify="center"
+            x, y, fill=COLORS["chord"], text=self.chord_name, font=FONTS["big"], justify="center"
         )
 
-    def set(self, chordTypes, rootType):
-        allTypes = list(chordTypes)
-        allTypes.sort()
-        nameKey = str(rootType) + " " + "-".join([str(t) for t in allTypes])
+    def set(self, chord_types, root_type):
+        all_types = list(chord_types)
+        all_types.sort()
+        name_key = str(root_type) + " " + "-".join([str(t) for t in all_types])
 
-        if not allTypes.count(rootType) > 0:
-            allTypes.append(rootType)
-        allTypes.sort()
+        if not all_types.count(root_type) > 0:
+            all_types.append(root_type)
+        all_types.sort()
 
         text = ""
-        if (nameKey in self.pastChordNames):
-            text, fontSize = self.pastChordNames[nameKey]
+        if (name_key in self.past_chord_names):
+            text, font_size = self.past_chord_names[name_key]
         else:
-            text, fontSize = self.generateName(allTypes, rootType)
-            self.pastChordNames[nameKey] = (text, fontSize)
+            text, font_size = self.generate_name(all_types, root_type)
+            self.past_chord_names[name_key] = (text, font_size)
 
-        self.master.itemconfigure(self.textObject, text=text, font=("sans serif", fontSize))
+        self.master.itemconfigure(self.text_object, text=text, font=("sans serif", font_size))
 
-    def generateName(self, allTypes, rootType):
-        chord = m21Chord.Chord(allTypes)
+    def generate_name(self, all_types, root_type):
+        chord = m21Chord.Chord(all_types)
         # try:
-        #     chord.root(m21Pitch.Pitch(self.master.noteNames[rootType]))
+        #     chord.root(m21Pitch.Pitch(self.master.noteNames[root_type]))
         # except:
         #     pass
 
-        chordName = chord.pitchedCommonName
-        chordName = chordName.replace("-", " ")
+        chord_name = chord.pitchedCommonName
+        chord_name = chord_name.replace("-", " ")
 
         # deal with the enharmonic equivalent to stuff
-        if (chordName.find("enharmonic equivalent to") != -1 or chordName.find("enharmonic to") != -1):
-            chordName = chordName.replace("enharmonic to ", "")
-            chordName = chordName.replace("enharmonic equivalent to ", "")
-            chordName = chordName.replace("above ", "")
-            words = chordName.split(" ")
-            keyName = words[len(words) - 1]
-            words.remove(keyName)
-            words.insert(0, keyName + "")
-            chordName = " ".join(words)
+        if (chord_name.find("enharmonic equivalent to") != -1 or chord_name.find("enharmonic to") != -1):
+            chord_name = chord_name.replace("enharmonic to ", "")
+            chord_name = chord_name.replace("enharmonic equivalent to ", "")
+            chord_name = chord_name.replace("above ", "")
+            words = chord_name.split(" ")
+            key_name = words[len(words) - 1]
+            words.remove(key_name)
+            words.insert(0, key_name + "")
+            chord_name = " ".join(words)
 
-        chordName = chordName.replace("chord", "")
-        chordName = chordName.replace("seventh", "7")
-        chordName = chordName.replace("major", "maj")
-        chordName = chordName.replace("minor", "min")
-        chordName = chordName.replace("diminished", "dim")
-        chordName = chordName.replace("augmented", "aug")
-        chordName = chordName.replace("half-diminished", "h-dim")
-        chordName = chordName.replace("dominant", "dom")
-        chordName = chordName.replace("suspended", "sus")
-        chordName = chordName.replace("ninth", "9")
-        maxCharsPerLine = 15
+        chord_name = chord_name.replace("chord", "")
+        chord_name = chord_name.replace("seventh", "7")
+        chord_name = chord_name.replace("major", "maj")
+        chord_name = chord_name.replace("minor", "min")
+        chord_name = chord_name.replace("diminished", "dim")
+        chord_name = chord_name.replace("augmented", "aug")
+        chord_name = chord_name.replace("half-diminished", "h-dim")
+        chord_name = chord_name.replace("dominant", "dom")
+        chord_name = chord_name.replace("suspended", "sus")
+        chord_name = chord_name.replace("ninth", "9")
+        max_chars_per_line = 15
 
-        if len(chordName) > maxCharsPerLine:
+        if len(chord_name) > max_chars_per_line:
             lines = []
-            words = chordName.split(" ")
+            words = chord_name.split(" ")
             while len(words) > 0:
-                if len(words[0]) > maxCharsPerLine: # to prevent infinite loop
+                if len(words[0]) > max_chars_per_line: # to prevent infinite loop
                     lines.append(words.pop(0))
                 else:
                     line = ""
-                    while len(words) > 0 and (len(line) + len(words[0]) <= maxCharsPerLine):
+                    while len(words) > 0 and (len(line) + len(words[0]) <= max_chars_per_line):
                         line += words.pop(0) + " "
                     lines.append(line)
-            fontSize = (int) ((self.master.radius * 1.65) / (max([len(line) for line in lines])))
+            font_size = (int) ((self.master.radius * 1.65) / (max([len(line) for line in lines])))
         else:
-            lines = [chordName]
-            fontSize = (int) ((self.master.radius * 1.65) / (len(chordName)))
+            lines = [chord_name]
+            font_size = (int) ((self.master.radius * 1.65) / (len(chord_name)))
 
-        self.chordName = chordName
+        self.chord_name = chord_name
         text = "\n".join(lines)
 
-        return text, fontSize
+        return text, font_size

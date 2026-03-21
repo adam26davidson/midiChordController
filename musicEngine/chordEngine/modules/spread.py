@@ -7,33 +7,33 @@ from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux import utils as reduxUtils
+from redux import utils as redux_utils
 from redux.actions import musicEngine as actions
-from redux.settingsStorage import settingsStorageUtility
+from redux.settingsStorage import settings_storage_utility
 
 from ..chordEngineState import state
 
 
 class Spread:
 
-    updateChordEngine: Callable
+    update_chord_engine: Callable
     type: AppParameterType
 
-    def __init__(self, type: AppParameterType, updateChordEngine: Callable):
-        self.updateChordEngine = updateChordEngine
+    def __init__(self, type: AppParameterType, update_chord_engine: Callable):
+        self.update_chord_engine = update_chord_engine
         self.type = type
-        store.subscribe(self.__handleStoreUpdate)
-        store.dispatch(actions.changeSpread(state.spread))
+        store.subscribe(self.__handle_store_update)
+        store.dispatch(actions.change_spread(state.spread))
 
-        reduxUtils.addAppParameters(self.__getParameters())
+        redux_utils.add_app_parameters(self.__get_parameters())
 
     def set(self, spread):
-        maxSpread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
-        spread = max(min(spread, maxSpread), 0)
+        max_spread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
+        spread = max(min(spread, max_spread), 0)
         state.spread = spread
-        store.dispatch(actions.changeSpread(state.spread))
-        settingsStorageUtility.saveSettings()
-        self.updateChordEngine()
+        store.dispatch(actions.change_spread(state.spread))
+        settings_storage_utility.save_settings()
+        self.update_chord_engine()
 
     def increment(self):
         self.set(state.spread + 1)
@@ -41,23 +41,23 @@ class Spread:
     def decrement(self):
         self.set(state.spread - 1)
 
-    def __handleStoreUpdate(self):
-        meState = thaw(store.get_state()['musicEngine'])
-        if (meState['spread'] != state.spread):
-            self.set(meState['spread'])
+    def __handle_store_update(self):
+        me_state = thaw(store.get_state()['musicEngine'])
+        if (me_state['spread'] != state.spread):
+            self.set(me_state['spread'])
 
-    def __getParameters(self):
-        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
+    def __get_parameters(self):
+        key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(
-                validCommandTypes = [CommandType.INCREMENTAL],
-                commandMappings = {
+                valid_command_types = [CommandType.INCREMENTAL],
+                command_mappings = {
                     Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
-                key = f"{keyPrefix}SPREAD",
+                key = f"{key_prefix}SPREAD",
                 label = "Spread",
-                labelAbreviation="S",
+                label_abreviation="S",
                 type = self.type
             )
         ]

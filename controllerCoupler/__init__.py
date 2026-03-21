@@ -2,7 +2,7 @@ from enum import Enum
 
 from pyrsistent import thaw
 
-from controllerCoupler.controlMaps.defaultControlMap import defaultControlMap
+from controllerCoupler.controlMaps.defaultControlMap import default_control_map
 from controllerCoupler.models.controlMap import ControlMap
 from controllerManager.models.controlEvent import ControlEvent
 from controllerManager.models.mappableControl import MappableControl
@@ -12,7 +12,7 @@ from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux import utils as reduxUtils
+from redux import utils as redux_utils
 from redux.actions import controllerCoupler as actions
 
 
@@ -25,115 +25,115 @@ class ControllerCoupler:
     parameters: dict[str, AppParameter]
     controls: dict[str, dict[str, MappableControl]]
     map: ControlMap
-    chordEngineControlMode: ChordEngineControlMode
+    chord_engine_control_mode: ChordEngineControlMode
 
-    connectedControllerId: str
+    connected_controller_id: str
 
     def __init__(self):
-        self.map = defaultControlMap
+        self.map = default_control_map
         self.parameters = {}
         self.controls = {}
-        self.chordEngineControlMode = ChordEngineControlMode.INTERNAL
-        store.dispatch(actions.updateControlMap(self.map))
+        self.chord_engine_control_mode = ChordEngineControlMode.INTERNAL
+        store.dispatch(actions.update_control_map(self.map))
 
-        store.subscribe(self.handleStoreUpdate)
+        store.subscribe(self.handle_store_update)
 
-    def eventHandler(self, event: ControlEvent):
-        trace("COUPLER_IN", f"key={event.controlKey} event={event.event.name if event.event else None}")
-        if event.controlKey in self.map.map:
-            parameterKeys = self.map.map[event.controlKey]
-            for parameterKey in parameterKeys:
-                if parameterKey in self.parameters:
-                    parameter = self.parameters[parameterKey]
-                    if self.__useParameter(parameter):
-                        command = self.__mapControlEventToParameterEvent(event.event, parameter)
-                        if command in parameter.commandMappings:
-                            trace("COUPLER_EXEC", f"param={parameterKey} cmd={command.name}")
+    def event_handler(self, event: ControlEvent):
+        trace("COUPLER_IN", f"key={event.control_key} event={event.event.name if event.event else None}")
+        if event.control_key in self.map.map:
+            parameter_keys = self.map.map[event.control_key]
+            for parameter_key in parameter_keys:
+                if parameter_key in self.parameters:
+                    parameter = self.parameters[parameter_key]
+                    if self.__use_parameter(parameter):
+                        command = self.__map_control_event_to_parameter_event(event.event, parameter)
+                        if command in parameter.command_mappings:
+                            trace("COUPLER_EXEC", f"param={parameter_key} cmd={command.name}")
                             if event.event == MappableControlEvent.UPDATE:
-                                parameter.commandMappings[command](event.value)
+                                parameter.command_mappings[command](event.value)
                             else:
-                                parameter.commandMappings[command]()
+                                parameter.command_mappings[command]()
                         else:
-                            trace("COUPLER_DROP", f"param={parameterKey} cmd={command} not in commandMappings")
+                            trace("COUPLER_DROP", f"param={parameter_key} cmd={command} not in command_mappings")
                     else:
-                        trace("COUPLER_DROP", f"param={parameterKey} filtered by chordEngineMode={self.chordEngineControlMode.value}")
+                        trace("COUPLER_DROP", f"param={parameter_key} filtered by chordEngineMode={self.chord_engine_control_mode.value}")
                 else:
-                    trace("COUPLER_DROP", f"paramKey={parameterKey} not in parameters")
+                    trace("COUPLER_DROP", f"paramKey={parameter_key} not in parameters")
         else:
-            trace("COUPLER_DROP", f"key={event.controlKey} not in control map")
+            trace("COUPLER_DROP", f"key={event.control_key} not in control map")
 
-    def handleStoreUpdate(self):
+    def handle_store_update(self):
         state = store.get_state()['controllerCoupler']
         if len(state['appParameters']) != len(self.parameters):
             self.parameters = state['appParameters']
-            newParams = self.processNewParameters(state['appParameters'])
-            if len(newParams) > 0:
-                reduxUtils.addAppParameters(newParams)
+            new_params = self.process_new_parameters(state['appParameters'])
+            if len(new_params) > 0:
+                redux_utils.add_app_parameters(new_params)
             print(f"updating parameters. count: {len(self.parameters)}")
         if len(state['controls'].keys()) != len(self.controls.keys()):
             print("updating controls")
             self.controls = state['controls']
 
-        meState = thaw(store.get_state()['musicEngine'])
-        if (meState['chordEngineControl'] != self.chordEngineControlMode.value):
-            if (meState['chordEngineControl'] == ChordEngineControlMode.INTERNAL.value):
-                self.chordEngineControlMode = ChordEngineControlMode.INTERNAL
+        me_state = thaw(store.get_state()['musicEngine'])
+        if (me_state['chordEngineControl'] != self.chord_engine_control_mode.value):
+            if (me_state['chordEngineControl'] == ChordEngineControlMode.INTERNAL.value):
+                self.chord_engine_control_mode = ChordEngineControlMode.INTERNAL
             else:
-                self.chordEngineControlMode = ChordEngineControlMode.EXTERNAL
+                self.chord_engine_control_mode = ChordEngineControlMode.EXTERNAL
 
-    def processNewParameters(self, parameters: dict[str, AppParameter]):
+    def process_new_parameters(self, parameters: dict[str, AppParameter]):
 
-        parameterstoAdd = []
+        parameters_to_add = []
 
         for key, parameter in parameters.items():
 
-            for incrementalCommand in [Command.INCREMENT, Command.DECREMENT]:
+            for incremental_command in [Command.INCREMENT, Command.DECREMENT]:
 
-                sign = "+" if incrementalCommand == Command.INCREMENT else "-"
-                newKey = f"INCREMENT_{key}" if incrementalCommand == Command.INCREMENT else f"DECREMENT_{key}"
-                labelPrefix = "Increment" if incrementalCommand == Command.INCREMENT else "Decrement"
+                sign = "+" if incremental_command == Command.INCREMENT else "-"
+                new_key = f"INCREMENT_{key}" if incremental_command == Command.INCREMENT else f"DECREMENT_{key}"
+                label_prefix = "Increment" if incremental_command == Command.INCREMENT else "Decrement"
 
-                keyNotInExistingParameters = newKey not in self.parameters
-                keyNotInNewParameters = newKey not in parameters
+                key_not_in_existing_parameters = new_key not in self.parameters
+                key_not_in_new_parameters = new_key not in parameters
 
-                if incrementalCommand in parameter.commandMappings and keyNotInExistingParameters and keyNotInNewParameters:
+                if incremental_command in parameter.command_mappings and key_not_in_existing_parameters and key_not_in_new_parameters:
 
-                    parameterstoAdd.append(
+                    parameters_to_add.append(
                         AppParameter(
-                            validCommandTypes=[CommandType.ON_OFF],
-                            commandMappings={Command.ON: parameter.commandMappings[incrementalCommand]},
-                            key=newKey,
-                            label=f"{labelPrefix} {parameter.label}",
-                            labelAbreviation=f"{sign}{parameter.labelAbreviation}",
+                            valid_command_types=[CommandType.ON_OFF],
+                            command_mappings={Command.ON: parameter.command_mappings[incremental_command]},
+                            key=new_key,
+                            label=f"{label_prefix} {parameter.label}",
+                            label_abreviation=f"{sign}{parameter.label_abreviation}",
                             remappable=False
                     ))
 
-        return parameterstoAdd
+        return parameters_to_add
 
-    def __useParameter(self, parameter: AppParameter):
-        internalMode = self.chordEngineControlMode == ChordEngineControlMode.INTERNAL
-        if parameter.type == AppParameterType.INTERNAL_CHORD_ENGINE and not internalMode:
+    def __use_parameter(self, parameter: AppParameter):
+        internal_mode = self.chord_engine_control_mode == ChordEngineControlMode.INTERNAL
+        if parameter.type == AppParameterType.INTERNAL_CHORD_ENGINE and not internal_mode:
             return False
-        return not (parameter.type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode)
+        return not (parameter.type == AppParameterType.EXTERNAL_CHORD_ENGINE and internal_mode)
 
-    def __mapControlEventToParameterEvent(
+    def __map_control_event_to_parameter_event(
             self,
-            mappableControlEvent: MappableControlEvent,
+            mappable_control_event: MappableControlEvent,
             parameter: AppParameter
             ) -> Command:
 
-        if (mappableControlEvent == MappableControlEvent.ON):
-            if CommandType.TOGGLE in parameter.validCommandTypes:
+        if (mappable_control_event == MappableControlEvent.ON):
+            if CommandType.TOGGLE in parameter.valid_command_types:
                 return Command.TOGGLE
-            if CommandType.ON_OFF in parameter.validCommandTypes:
+            if CommandType.ON_OFF in parameter.valid_command_types:
                 return Command.ON
-        elif (mappableControlEvent == MappableControlEvent.OFF):
+        elif (mappable_control_event == MappableControlEvent.OFF):
             return Command.OFF
-        elif (mappableControlEvent == MappableControlEvent.POSITIVE):
+        elif (mappable_control_event == MappableControlEvent.POSITIVE):
             return Command.INCREMENT
-        elif (mappableControlEvent == MappableControlEvent.NEGATIVE):
+        elif (mappable_control_event == MappableControlEvent.NEGATIVE):
             return Command.DECREMENT
-        elif (mappableControlEvent == MappableControlEvent.UPDATE):
+        elif (mappable_control_event == MappableControlEvent.UPDATE):
             return Command.UPDATE
         else:
             return None

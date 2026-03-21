@@ -4,7 +4,7 @@ from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux import utils as reduxUtils
+from redux import utils as redux_utils
 from redux.actions import musicEngine as actions
 
 from ..chordEngineState import state
@@ -12,36 +12,36 @@ from ..chordEngineState import state
 
 class Hold:
 
-    stopChordAndBass: Callable
+    stop_chord_and_bass: Callable
     type: AppParameterType
 
-    def __init__(self, type: AppParameterType, stopChordAndBass: Callable):
-        self.stopChordAndBass = stopChordAndBass
+    def __init__(self, type: AppParameterType, stop_chord_and_bass: Callable):
+        self.stop_chord_and_bass = stop_chord_and_bass
         self.type = type
 
-        store.dispatch(actions.changeHold(state.hold))
-        reduxUtils.addAppParameters(self.__getParameters())
+        store.dispatch(actions.change_hold(state.hold))
+        redux_utils.add_app_parameters(self.__get_parameters())
 
 
     def toggle(self):
         if state.hold:
             state.hold = False
-            self.stopChordAndBass()
+            self.stop_chord_and_bass()
         else:
             state.hold = True
-        store.dispatch(actions.changeHold(state.hold))
+        store.dispatch(actions.change_hold(state.hold))
 
-    def __getParameters(self):
-        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
+    def __get_parameters(self):
+        key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(
-                validCommandTypes = [CommandType.TOGGLE],
-                commandMappings = {
+                valid_command_types = [CommandType.TOGGLE],
+                command_mappings = {
                     Command.TOGGLE: self.toggle
                 },
-                key = f"{keyPrefix}HOLD",
+                key = f"{key_prefix}HOLD",
                 label = "Hold",
-                labelAbreviation="H",
+                label_abreviation="H",
                 type = self.type
             )
         ]

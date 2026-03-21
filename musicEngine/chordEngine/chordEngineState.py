@@ -33,28 +33,28 @@ class ChordEngineState:
     scale: ScaleState = ScaleState()
     key: KeyState = KeyState()
     inversion: InversionState = InversionState()
-    bassPosition: InversionState = InversionState()
+    bass_position: InversionState = InversionState()
     chord: ChordsState = ChordsState()
     bass: BassState = BassState()
-    chordOctave: int = 0
+    chord_octave: int = 0
     spread: int = SPREAD_STEPS_PER_OCTAVE
-    voiceCount: int = 4
+    voice_count: int = 4
     hold: bool = False
 
     #Internal Chord Engine State
     modulation: ModulationsState = ModulationsState()
     secondary: SecondariesState = SecondariesState()
     alternate: bool = False
-    internalSettings: InternalControlSettingsState = InternalControlSettingsState()
+    internal_settings: InternalControlSettingsState = InternalControlSettingsState()
 
     #External Chord Engine State
-    noteInHistory: NoteHistoryState = NoteHistoryState()
-    scaleMode: ExternalChordScaleMode = ExternalChordScaleMode.LAST_SEVEN
-    chordMode: ExternalChordMode = ExternalChordMode.MOST_RECENT_NOTE_SET
-    rootMode: ExternalRootMode = ExternalRootMode.LOWEST
-    preferredScaleClasses: list[list[int]] = [[0, 2, 4, 5, 7, 9, 11], [0, 2, 4, 6, 7, 9, 10]]
-    extensionRanking: list[int] = [0, 4, 3, 7, 11, 10, 2, 5, 9, 8, 1, 6]
-    avoidInterval: list[int] = [6]
+    note_in_history: NoteHistoryState = NoteHistoryState()
+    scale_mode: ExternalChordScaleMode = ExternalChordScaleMode.LAST_SEVEN
+    chord_mode: ExternalChordMode = ExternalChordMode.MOST_RECENT_NOTE_SET
+    root_mode: ExternalRootMode = ExternalRootMode.LOWEST
+    preferred_scale_classes: list[list[int]] = [[0, 2, 4, 5, 7, 9, 11], [0, 2, 4, 6, 7, 9, 10]]
+    extension_ranking: list[int] = [0, 4, 3, 7, 11, 10, 2, 5, 9, 8, 1, 6]
+    avoid_interval: list[int] = [6]
 
 
 state = ChordEngineState()
