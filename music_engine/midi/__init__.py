@@ -191,12 +191,12 @@ class Midi:
             self.__note_off(note, player)
 
     def set_after_touch(self, value):
-        self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
+        self.state['afterTouch'] = min(math.floor(((value+1) / 2)*128), 127)
 
     def get_cc_setter(self, cc):
         self.state['lastSentCCValues'][cc] = None
         def set_cc_value(value):
-            self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
+            self.state['CCValues'][cc] = min(math.floor(((value+1) / 2)*128), 127)
         return set_cc_value
 
     def __handle_store_update(self):
@@ -344,9 +344,10 @@ class Midi:
             store.dispatch(actions.play_chord(self.state['playingChordNotes']))
 
     def __store_note_on(self, note: int, player: str, channel: Optional[int] = None) -> None:
-        if player == 'chord' and note not in self.state['playingChordNotes']:
-            self.state['playingChordNotes'].append(note)
-        else:
+        if player == 'chord':
+            if note not in self.state['playingChordNotes']:
+                self.state['playingChordNotes'].append(note)
+        elif player == 'bass':
             self.state['playingBassNote'] = note
         if self.state['distributeChannels'] and player == 'chord' and channel is not None:
             self.state['distChordChannels'][note] = channel

@@ -6,7 +6,17 @@ import pytest
 # Mock hardware-dependent modules before any project imports.
 # These must be set before importing anything from the project tree.
 sys.modules["rtmidi"] = MagicMock()
-sys.modules["rtmidi.midiconstants"] = MagicMock()
+
+# rtmidi.midiconstants must provide real MIDI constant values since
+# the Midi class uses them for byte construction via wildcard import.
+_midi_constants = MagicMock()
+_midi_constants.NOTE_ON = 0x90
+_midi_constants.NOTE_OFF = 0x80
+_midi_constants.CHANNEL_PRESSURE = 0xD0
+_midi_constants.POLY_AFTERTOUCH = 0xA0
+_midi_constants.CONTROL_CHANGE = 0xB0
+sys.modules["rtmidi.midiconstants"] = _midi_constants
+
 sys.modules["evdev"] = MagicMock()
 sys.modules["tkinter"] = MagicMock()
 

@@ -59,6 +59,13 @@ class TestMidiNoteTracking:
         midi._Midi__store_note_on(60, "chord")
         assert midi.state["playingChordNotes"].count(60) == 1
 
+    def test_duplicate_chord_note_does_not_set_bass(self):
+        """Regression: duplicate chord note previously fell through to set bass."""
+        midi = Midi()
+        midi._Midi__store_note_on(60, "chord")
+        midi._Midi__store_note_on(60, "chord")  # Duplicate
+        assert midi.state["playingBassNote"] is None
+
 
 class TestMidiChannelDistribution:
     def test_distribute_channel_assigns_first_free(self):
@@ -116,6 +123,21 @@ class TestMidiAftertouch:
         assert midi.state["afterTouch"] == math.floor(((0.5 + 1) / 2) * 128)  # 96
 
 
+class TestMidiAftertouchClamp:
+    def test_aftertouch_clamped_to_127(self):
+        """Regression: value=1.0 previously produced 128 (out of MIDI range)."""
+        midi = Midi()
+        midi.set_after_touch(1.0)
+        assert midi.state["afterTouch"] <= 127
+
+    def test_cc_clamped_to_127(self):
+        """Regression: value=1.0 previously produced 128 (out of MIDI range)."""
+        midi = Midi()
+        setter = midi.get_cc_setter(1)
+        setter(1.0)
+        assert midi.state["CCValues"][1] <= 127
+
+
 class TestMidiCCSetter:
     def test_cc_setter_closure(self):
         midi = Midi()
@@ -134,8 +156,7 @@ class TestMidiCCSetter:
         midi = Midi()
         setter = midi.get_cc_setter(7)
         setter(1.0)
-        expected = math.floor(((1.0 + 1) / 2) * 128)
-        assert midi.state["CCValues"][7] == expected
+        assert midi.state["CCValues"][7] == 127  # Clamped to valid MIDI range
 
 
 class TestMidiInputNoteTracking:
