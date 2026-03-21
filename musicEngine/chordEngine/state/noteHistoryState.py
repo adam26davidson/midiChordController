@@ -1,7 +1,6 @@
-from typing import Dict, List
 
 
-class NoteHistoryEvent():
+class NoteHistoryEvent:
     OnTime: int
     OffTime: int
 
@@ -10,15 +9,16 @@ class NoteHistoryEvent():
         self.OffTime = OffTime
 
 
-class NoteHistoryState():
-    notesPlayed: List[int] = []
-    classesPlayed: List[int] = []
-    lastContiguous: List[int] = []
-    lastContiguousClasses: List[int] = []
-    classRecencyRanking: List[int] = []
-    lowestInContiguousClasses: int = 127
+class NoteHistoryState:
+    lowestInContiguousClasses: int
+    memoryLength: float
 
-    all: Dict[int, List[NoteHistoryEvent]] = {}
-
-    memoryLength: float = 120.0
-    
+    def __init__(self):
+        self.notesPlayed: list[int] = []
+        self.classesPlayed: list[int] = []
+        self.lastContiguous: list[int] = []
+        self.lastContiguousClasses: list[int] = []
+        self.classRecencyRanking: list[int] = []
+        self.lowestInContiguousClasses = 127
+        self.all: dict[int, list[NoteHistoryEvent]] = {}
+        self.memoryLength = 120.0

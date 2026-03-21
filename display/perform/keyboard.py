@@ -1,5 +1,7 @@
 import tkinter as tk
+
 from ..displayConstants import COLORS
+
 
 class Keyboard(tk.Canvas):
 
@@ -104,22 +106,22 @@ class Keyboard(tk.Canvas):
 
       key = {
           "id": self.create_oval(
-            xL, yT, xR, yB, 
-            fill=self.chordColor, 
-            outline=self.chordColor, 
+            xL, yT, xR, yB,
+            fill=self.chordColor,
+            outline=self.chordColor,
             width=self.keyOutlineWidth),
           "center": {
-            "x": xL + self.smallRadius / 2, 
+            "x": xL + self.smallRadius / 2,
             "y": yT + self.smallRadius / 2
           }
         }
       keys[i] = key
 
-    return keys 
+    return keys
 
   def setArrowColor(self, side, color):
     self.itemconfigure(
-      self.arrows[side]["id"], 
+      self.arrows[side]["id"],
       fill=color,
       outline=color
     )
@@ -144,7 +146,8 @@ class Keyboard(tk.Canvas):
     y2 = y0 + (height / 2)
 
     sign = 1
-    if side == "right": sign = -1
+    if side == "right":
+      sign = -1
 
     x0 = center["x"] - sign * (width / 2)
     x1 = x0 + sign * width
@@ -160,7 +163,8 @@ class Keyboard(tk.Canvas):
 
   def resetKeyOutOfRange(self, note):
     side = "below"
-    if note < self.minKey: side = "above"
+    if note < self.minKey:
+      side = "above"
     for type in "shadow", "played":
       if self.keysOutOfRange[side][type].count(note) > 0:
         self.keysOutOfRange[side][type].remove(note)
@@ -170,7 +174,8 @@ class Keyboard(tk.Canvas):
 
   def setKeyOutOfRangeShadow(self, note):
     side = "below"
-    if note < self.minKey: side = "above"
+    if note < self.minKey:
+      side = "above"
     if self.keysOutOfRange[side]["played"].count(note) > 0:
       self.keysOutOfRange[side]["played"].remove(note)
     if self.keysOutOfRange[side]["shadow"].count(note) == 0:
@@ -181,7 +186,8 @@ class Keyboard(tk.Canvas):
 
   def setKeyOutOfRangePlayed(self, note):
     side = "below"
-    if note < self.minKey: side = "above"
+    if note < self.minKey:
+      side = "above"
     if self.keysOutOfRange[side]["shadow"].count(note) > 0:
       self.keysOutOfRange[side]["shadow"].remove(note)
     if self.keysOutOfRange[side]["played"].count(note) == 0:
@@ -196,21 +202,23 @@ class Keyboard(tk.Canvas):
 
   def setArrowShadow(self, side, isRoot=False):
     color = self.chordColor
-    if isRoot: color = self.rootColor
+    if isRoot:
+      color = self.rootColor
     self.setArrowSize(side, "large")
     self.setArrowHollow(side)
     self.setArrowOutlineColor(side, color)
 
   def setArrowPlayed(self, side, isRoot=False):
     color = self.chordColor
-    if isRoot: color = self.rootColor
+    if isRoot:
+      color = self.rootColor
     self.setArrowSize(side, "large")
     self.setArrowColor(side, color)
 
   def setKeyColor(self, note, color):
     self.itemconfigure(self.keys[note]["id"], fill=color)
     self.itemconfigure(self.keys[note]["id"], outline=color)
-  
+
   def setKeyHollow(self, note):
     self.itemconfigure(self.keys[note]["id"], fill='')
 
@@ -228,21 +236,24 @@ class Keyboard(tk.Canvas):
 
   def setKeyChord(self, note, isRoot=False):
     color = self.chordColorDim
-    if isRoot: color = self.rootColorDim
+    if isRoot:
+      color = self.rootColorDim
     self.setKeyRadius(note, self.mediumRadius)
     self.setKeyHollow(note)
     self.setKeyOutlineColor(note, color)
-  
+
   def setKeyShadow(self, note, isRoot=False):
     color = self.chordColor
-    if isRoot: color = self.rootColor
+    if isRoot:
+      color = self.rootColor
     self.setKeyRadius(note, self.largeRadius)
     self.setKeyHollow(note)
     self.setKeyOutlineColor(note, color)
-  
+
   def setKeyPlayed(self, note, isRoot=False):
     color = self.chordColor
-    if isRoot: color = self.rootColor
+    if isRoot:
+      color = self.rootColor
     self.setKeyRadius(note, self.largeRadius)
     self.setKeyColor(note, color)
 
@@ -276,11 +287,12 @@ class Keyboard(tk.Canvas):
           self.setKeyClear(note)
       else:
         side = "left"
-        if note > self.maxKey: side = "right"
+        if note > self.maxKey:
+          side = "right"
         allKeysOff = self.resetKeyOutOfRange(note)
         if allKeysOff:
           self.setArrowClear(side)
-  
+
   def setShadow(self, notes):
     for note in notes:
       isRoot = note % 12 == self.root
@@ -288,7 +300,8 @@ class Keyboard(tk.Canvas):
           self.setKeyShadow(note, isRoot=isRoot)
       else:
         side = "left"
-        if note > self.maxKey: side = "right"
+        if note > self.maxKey:
+          side = "right"
         noKeysPlayed, rootIsShadow = self.setKeyOutOfRangeShadow(note)
         if noKeysPlayed:
           self.setArrowShadow(side, isRoot=rootIsShadow)
@@ -300,10 +313,10 @@ class Keyboard(tk.Canvas):
           self.setKeyPlayed(note, isRoot=isRoot)
       else :
         side = "left"
-        if note > self.maxKey: side = "right"
+        if note > self.maxKey:
+          side = "right"
         rootIsPlayed = self.setKeyOutOfRangePlayed(note)
         self.setArrowPlayed(side, isRoot=rootIsPlayed)
 
-        
 
-  
+

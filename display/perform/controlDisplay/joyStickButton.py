@@ -1,7 +1,8 @@
-from typing import List
+
 from models.appParameter import AppParameter
+
+from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class JoyStickButton(ControlButton):
@@ -9,16 +10,16 @@ class JoyStickButton(ControlButton):
     radius = 1.4
     textRadius = 0.7
 
-    def __init__(self, master, 
-                 xParams: List[AppParameter], 
-                 yParams: List[AppParameter],
+    def __init__(self, master,
+                 xParams: list[AppParameter],
+                 yParams: list[AppParameter],
                  xType: str,
                  yType: str,
-                 cParam: AppParameter, 
+                 cParam: AppParameter,
                  centerX, centerY, side):
         super().__init__(master)
         self.master = master
-        
+
         self.setXParams(xParams, xType, False)
         self.setYParams(yParams, yType, False)
 
@@ -26,23 +27,23 @@ class JoyStickButton(ControlButton):
         self.centerX = centerX
         self.centerY = centerY
         self.side = side
-        
+
         self.drawButton()
 
-    def setXParams(self, params: List[AppParameter], type: str, update: bool = True):
+    def setXParams(self, params: list[AppParameter], type: str, update: bool = True):
         self.setAxisParams(params, type, "X", update)
 
-    def setYParams(self, params: List[AppParameter], type: str, update: bool = True):
+    def setYParams(self, params: list[AppParameter], type: str, update: bool = True):
         self.setAxisParams(params, type, "Y", update)
 
-    def setAxisParams(self, params: List[AppParameter], type: str, axis: str, update: bool = True):
+    def setAxisParams(self, params: list[AppParameter], type: str, axis: str, update: bool = True):
         if axis == "X":
             self.xParams = params
             self.xType = type
         else:
             self.yParams = params
             self.yType = type
-        
+
         if (len(params) == 0):
             if axis == "X":
                 self.leftLabel = "∅"
@@ -77,8 +78,10 @@ class JoyStickButton(ControlButton):
 
     def drawButton(self):
         uToC = self.master.unitsToCoord
-        r = self.radius; cx = self.centerX; cy = self.centerY
-        
+        r = self.radius
+        cx = self.centerX
+        cy = self.centerY
+
         self.canvasObject = self.master.create_oval(
             uToC(self.centerX - self.radius),
             uToC(self.centerY - self.radius),
@@ -90,14 +93,14 @@ class JoyStickButton(ControlButton):
         )
 
         self.rightTextBackgroundObject , self.rightTextObject = self.drawTextAndBackground(self.rightLabel, cx + r, cy)
-        self.leftTextBackgroundObject , self.leftTextObject = self.drawTextAndBackground(self.leftLabel, cx - r, cy)  
+        self.leftTextBackgroundObject , self.leftTextObject = self.drawTextAndBackground(self.leftLabel, cx - r, cy)
         self.topTextBackgroundObject , self.topTextObject = self.drawTextAndBackground(self.topLabel, cx, cy - r)
         self.bottomTextBackgroundObject , self.bottomTextObject = self.drawTextAndBackground(self.bottomLabel, cx, cy + r)
 
         yl = cy + r
         if self.side == "LEFT":
             self.arrowObject = self.drawTextForClick("↓", cx - (r + 0.5), yl)
-            self.clickTextObject = self.drawTextForClick(self.clickLabel, cx - (r + 1.2), yl) 
+            self.clickTextObject = self.drawTextForClick(self.clickLabel, cx - (r + 1.2), yl)
         else:
             self.arrowObject = self.drawTextForClick("↓", cx + (r + 0.5), yl)
             self.clickTextObject = self.drawTextForClick(self.clickLabel, cx + (r + 1.2), yl)
@@ -134,7 +137,7 @@ class JoyStickButton(ControlButton):
             fill=INACTIVE_COLOR,
             font=FONT
         )
-    
+
     def button_on(self):
         self.master.itemconfig(self.arrowObject, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.clickTextObject, fill=ACTIVE_COLOR)
@@ -146,7 +149,7 @@ class JoyStickButton(ControlButton):
     def left_on(self):
         self.master.itemconfig(self.leftTextBackgroundObject, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.leftTextObject, fill="#000000")
-    
+
     def left_off(self):
         self.master.itemconfig(self.leftTextBackgroundObject, fill="#000000", outline="#000000")
         self.master.itemconfig(self.leftTextObject, fill=INACTIVE_COLOR)
@@ -180,5 +183,4 @@ class JoyStickButton(ControlButton):
 
     def update_y(self, value):
         pass
-        
-    
+

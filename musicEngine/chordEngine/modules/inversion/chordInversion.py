@@ -1,3 +1,5 @@
+from pyrsistent import thaw
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
@@ -5,8 +7,9 @@ from musicEngine.chordEngine.modules.inversion import Inversion
 from musicEngine.chordEngine.state.inversionState import InversionState
 from redux import store
 from redux.actions import musicEngine as actions
+
 from ...chordEngineState import state
-from pyrsistent import thaw
+
 
 class ChordInversion(Inversion):
 

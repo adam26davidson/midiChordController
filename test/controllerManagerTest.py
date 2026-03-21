@@ -1,11 +1,12 @@
 from controllerManager import ControllerManager
 from redux import store
 
+
 def controllerManagerTest():
   c = ControllerManager()
 
   def handleControllerEvent(event):
-    if 'value' not in event.keys():
+    if 'value' not in event:
       print(event['name'])
 
   def handleStateChange():

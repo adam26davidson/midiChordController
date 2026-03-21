@@ -1,6 +1,7 @@
-from redux import store
-from ..displayConstants import COLORS, FONTS
 import tkinter as tk
+
+from ..displayConstants import COLORS, FONTS
+
 
 class MenuItem(tk.Button):
 
@@ -15,7 +16,7 @@ class MenuItem(tk.Button):
 
     def __init__(self, container, text, callback):
         super().__init__(
-            container, 
+            container,
             width=12,
             height=4,
             highlightthickness=self.border,
@@ -31,4 +32,4 @@ class MenuItem(tk.Button):
             font=self.bigFont,
             text=text,
             command=callback)
-        
+

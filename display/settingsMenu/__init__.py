@@ -1,9 +1,10 @@
-from redux import store
-from pyrsistent import thaw
+import tkinter as tk
+
 from redux import store
 from redux.actions import display as actions
-import tkinter as tk
+
 from .menuItem import MenuItem
+
 
 class SettingsMenuFrame(tk.Frame):
 
@@ -17,25 +18,25 @@ class SettingsMenuFrame(tk.Frame):
 
     def __init__(self, container):
         super().__init__(
-            container, 
-            highlightthickness=0, 
-            relief="flat", 
+            container,
+            highlightthickness=0,
+            relief="flat",
             bg="#000000")
-        
+
         self.buttons = {}
 
-        for key in self.config.keys():
+        for key in self.config:
             self.buttons[key] = MenuItem(self, key, self.getButtonHandler(key))
             self.buttons[key].place(
-                relx=self.config[key]['relx'], 
-                rely=self.config[key]['rely'], 
+                relx=self.config[key]['relx'],
+                rely=self.config[key]['rely'],
                 anchor='center')
 
         self.buttons['PERFORM'].focus_set()
 
         self.buttons['PATCHES'].configure(
             state = tk.DISABLED,
-            
+
         )
 
         self.grid(row=0, column=0, sticky='nsew')

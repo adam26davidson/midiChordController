@@ -1,6 +1,7 @@
 from models.appParameter import AppParameter
+
+from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class TriggerButton(ControlButton):
@@ -36,21 +37,21 @@ class TriggerButton(ControlButton):
         yb = self.centerY + (self.height / 2)
 
         self.arc1 = self.master.create_arc(
-            uToC(xl) - 1, uToC(yt) - 1, 
-            uToC(xm1 + r), uToC(ym + r), 
-            start=180, extent=-90, 
-            fill="", 
-            outline=INACTIVE_COLOR, 
-            width=2, 
+            uToC(xl) - 1, uToC(yt) - 1,
+            uToC(xm1 + r), uToC(ym + r),
+            start=180, extent=-90,
+            fill="",
+            outline=INACTIVE_COLOR,
+            width=2,
             style="arc")
-        
+
         self.arc2 = self.master.create_arc(
-            uToC(xm2 - r), uToC(yt), 
-            uToC(xr), uToC(ym + r), 
-            start=0, extent=90, 
-            fill="", 
-            outline=INACTIVE_COLOR, 
-            width=2, 
+            uToC(xm2 - r), uToC(yt),
+            uToC(xr), uToC(ym + r),
+            start=0, extent=90,
+            fill="",
+            outline=INACTIVE_COLOR,
+            width=2,
             style="arc")
 
         self.line1 = self.master.create_line(uToC(xm1) - 1, uToC(yt), uToC(xm2), uToC(yt), fill=INACTIVE_COLOR, width=2)

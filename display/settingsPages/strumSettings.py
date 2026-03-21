@@ -1,14 +1,14 @@
-from ..components.numberPicker import NumberPicker
-from ..components.buttonGroup import ButtonGroup
-from ..components.settingsPage import SettingsPage
-from ..components.slider import Slider
-from ..components.settingsContainer import SettingsContainer
+from pyrsistent import thaw
+
 from redux import store
 from redux.actions import musicEngine as meActions
 from redux.settingsStorage import settingsStorageUtility
-from pyrsistent import thaw
-from redux.actions import display as actions
-import tkinter as tk
+
+from ..components.buttonGroup import ButtonGroup
+from ..components.settingsContainer import SettingsContainer
+from ..components.settingsPage import SettingsPage
+from ..components.slider import Slider
+
 
 class StrumSettingsFrame(SettingsPage):
 
@@ -19,27 +19,27 @@ class StrumSettingsFrame(SettingsPage):
         self.topFrame = SettingsContainer(self)
         self.bottomFrame = SettingsContainer(self)
 
-        self.strumMode = ButtonGroup(self.topFrame, 
+        self.strumMode = ButtonGroup(self.topFrame,
             name='strum mode',
             optionsList=[
-                {'name': 'RAND', 'value': 'random'}, 
+                {'name': 'RAND', 'value': 'random'},
                 {'name': 'REG', 'value': 'regular'},
                 {'name': 'OFF', 'value': 'off'},
             ],
             selected='REG',
             callback=self.setStrumMode)
-        
-        self.strumOrder = ButtonGroup(self.topFrame, 
+
+        self.strumOrder = ButtonGroup(self.topFrame,
             name='strum order',
             optionsList=[
-                {'name': 'UP', 'value': 'up'}, 
+                {'name': 'UP', 'value': 'up'},
                 {'name': 'DOWN', 'value': 'down'},
                 {'name': 'RAND', 'value': 'random'},
             ],
             selected='RAND',
             callback=self.setStrumOrder)
-        
-        self.strumInterval = Slider(self.bottomFrame, 
+
+        self.strumInterval = Slider(self.bottomFrame,
             name='strum interval',
             min=0,
             max=1,
@@ -54,7 +54,7 @@ class StrumSettingsFrame(SettingsPage):
 
         self.strumInterval.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.bottomFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
-        
+
         store.subscribe(self.__handleStoreUpdate)
 
 
@@ -78,7 +78,7 @@ class StrumSettingsFrame(SettingsPage):
         else:
             self.strumInterval.setEnabled()
             self.strumOrder.setEnabled()
-    
+
     def setStrumInterval(self, interval):
         store.dispatch(meActions.changeStrumInterval(interval))
         settingsStorageUtility.saveSettings()

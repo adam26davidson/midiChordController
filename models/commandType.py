@@ -1,4 +1,5 @@
 from enum import Enum
+
 from .command import Command
 
 
@@ -11,23 +12,21 @@ class CommandType(Enum):
     def commands(self):
         if self.name == "ON_OFF":
             return [Command.ON, Command.OFF]
-        elif self.name == "TOGGLE":
+        if self.name == "TOGGLE":
             return [Command.TOGGLE]
-        elif self.name == "INCREMENTAL":
+        if self.name == "INCREMENTAL":
             return [Command.INCREMENT, Command.DECREMENT]
-        elif self.name == "ANALOG":
+        if self.name == "ANALOG":
             return [Command.UPDATE]
-        else:
-            return []
-        
+        return []
+
     def label(self):
         if self.name == "ON_OFF":
             return "On/Off"
-        elif self.name == "TOGGLE":
+        if self.name == "TOGGLE":
             return "Toggle"
-        elif self.name == "INCREMENTAL":
+        if self.name == "INCREMENTAL":
             return "Increment/Decrement"
-        elif self.name == "ANALOG":
+        if self.name == "ANALOG":
             return "Analog"
-        else:
-            return "Unknown"
+        return "Unknown"

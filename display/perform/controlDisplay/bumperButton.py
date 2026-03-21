@@ -1,6 +1,7 @@
 from models.appParameter import AppParameter
+
+from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class BumperButton(ControlButton):
@@ -36,11 +37,11 @@ class BumperButton(ControlButton):
         self.textObject = self.master.create_text(
             uToC(self.centerX),
             uToC(self.centerY),
-            text=self.label, 
+            text=self.label,
             fill=INACTIVE_COLOR,
             font=FONT
         )
-    
+
     def on(self):
         self.master.itemconfig(self.canvasObject, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.textObject, fill='#000000')

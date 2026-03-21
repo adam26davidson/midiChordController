@@ -1,7 +1,8 @@
-from typing import Dict
+
+from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.chordEngine.state.modulationsState import ModulationSide
 from musicEngine.chordEngine.state.secondariesState import SecondarySide
-from musicEngine.chordEngine.state.chordsState import ChordButton
+
 from ....modules.chords.dualChord import DualChord
 
 modKeyMap = {
@@ -11,8 +12,8 @@ modKeyMap = {
 }
 
 
-def parseSecondaries(settings) -> Dict[SecondarySide, Dict[ChordButton, Dict[ModulationSide, DualChord]]]:
-    def parseSecondary(setting) -> Dict[ChordButton, Dict[ModulationSide, DualChord]]:
+def parseSecondaries(settings) -> dict[SecondarySide, dict[ChordButton, dict[ModulationSide, DualChord]]]:
+    def parseSecondary(setting) -> dict[ChordButton, dict[ModulationSide, DualChord]]:
         secondaries = {}
         default = DualChord(setting, isSecondary=True)
         buttonsKeys = [ChordButton.SOUTH, ChordButton.WEST, ChordButton.NORTH, ChordButton.EAST]
@@ -24,7 +25,7 @@ def parseSecondaries(settings) -> Dict[SecondarySide, Dict[ChordButton, Dict[Mod
             return DualChord(overideSettings, isSecondary=True)
 
         for buttonKey in buttonsKeys:
-            if not (buttonKey.value in setting):
+            if buttonKey.value not in setting:
                 secondaries[buttonKey] = {
                     ModulationSide.NONE: default,
                     ModulationSide.LEFT: default,
@@ -32,7 +33,7 @@ def parseSecondaries(settings) -> Dict[SecondarySide, Dict[ChordButton, Dict[Mod
                 }
             else:
                 secondaries[buttonKey] = {}
-                for key in modKeyMap.keys():
+                for key in modKeyMap:
                     if key in setting[buttonKey.value]:
                         secondaries[buttonKey][modKeyMap[key]] = getOverrideSecondary(
                             setting[buttonKey.value][key])
@@ -41,6 +42,6 @@ def parseSecondaries(settings) -> Dict[SecondarySide, Dict[ChordButton, Dict[Mod
         return secondaries
 
     return {
-        SecondarySide.LEFT: parseSecondary(settings["left"]), 
+        SecondarySide.LEFT: parseSecondary(settings["left"]),
         SecondarySide.RIGHT: parseSecondary(settings["right"])
     }

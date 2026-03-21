@@ -1,21 +1,27 @@
+from __future__ import annotations
+
 import tkinter as tk
-from typing import Dict, List
-from controllerCoupler.models.controlMap import ControlMap
-from controllerManager.maps.me.controlAbreviations import controlAbreviations as CONTROL_ABREVIATIONS
+from typing import TYPE_CHECKING
+
+from pyrsistent import thaw
+
 from models.appParameter import AppParameter, AppParameterType
+
+if TYPE_CHECKING:
+    from controllerCoupler.models.controlMap import ControlMap
 from models.command import Command
 from models.commandType import CommandType
-from ...displayConstants import COLORS
-from .circularButton import CircularButton
-from .optionsButton import OptionsButton
-from .joyStickButton import JoyStickButton
+from redux import store
+from redux import utils as ReduxUtils
+
 from .bumperButton import BumperButton
-from .triggerButton import TriggerButton
+from .circularButton import CircularButton
+from .dpadButton import DPadButton
+from .joyStickButton import JoyStickButton
+from .optionsButton import OptionsButton
 from .touchPadButton import TouchPadButton
-from.dpadButton import DPadButton
-from redux import store, utils as ReduxUtils
-from redux.actions import controllerCoupler as actions
-from pyrsistent import thaw
+from .triggerButton import TriggerButton
+
 
 class ControlDisplay(tk.Canvas):
 
@@ -24,14 +30,14 @@ class ControlDisplay(tk.Canvas):
     widthUnits = 15
     heightUnits = 14
 
-    parameters: List[AppParameter]
+    parameters: list[AppParameter]
 
     def __init__(self, master=None):
         self.unitSize = (self.width - (2 * self.margin)) / self.widthUnits
         self.height = (self.unitSize * self.heightUnits) + (2 * self.margin)
         super().__init__(master, width=self.width, height=(self.width / self.widthUnits) * self.heightUnits,
                          highlightthickness=0, relief="flat", bg="#000000")
-        
+
         self.master = master
         self.parameters = []
         self.appParameterLength = 0
@@ -47,14 +53,18 @@ class ControlDisplay(tk.Canvas):
         if (meState['chordEngineControl'] != self.chordEngineControlMode):
             self.chordEngineControlMode = meState['chordEngineControl']
             if self.buttonsCreated:
-                self.after(0, self.__updateButtonParams())
+                state = store.get_state()['controllerCoupler']
+                params = state['appParameters']
+                controlMap: ControlMap = state['activeControlMap']
+                if controlMap is not None:
+                    self.after(0, lambda: self.__updateButtonParams(params, controlMap.map))
 
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']
         controlMap: ControlMap = state['activeControlMap']
         musicEngineParametersLoaded = state['musicEngineAppParametersLoaded']
-        if controlMap != None and musicEngineParametersLoaded and len(params) != self.appParameterLength:
-            if (not self.buttonsCreated): 
+        if controlMap is not None and musicEngineParametersLoaded and len(params) != self.appParameterLength:
+            if (not self.buttonsCreated):
                 self.appParameterLength = len(params)
                 self.__createButtons(params, controlMap.map)
                 self.buttonsCreated = True
@@ -64,10 +74,10 @@ class ControlDisplay(tk.Canvas):
                 self.__updateButtonParams(params, controlMap.map)
 
     def __createButtons(self, params, map):
-         
+
         def getParam(key):
             return self.getFirstMEParameter(params, map, key)
-         
+
         self.createMainButtons(getParam)
         self.createStartButton(map, params)
         self.createDpadButtons(getParam)
@@ -164,7 +174,7 @@ class ControlDisplay(tk.Canvas):
 
     def createTriggerButtons(self, getParam):
         self.leftTriggerButton = TriggerButton(self, getParam("LEFT_TRIGGER"), 2.5, 0.8)
-        self.rightTriggerButton = TriggerButton(self, getParam("RIGHT_TRIGGER"), 12.5, 0.8)  
+        self.rightTriggerButton = TriggerButton(self, getParam("RIGHT_TRIGGER"), 12.5, 0.8)
         self.parameters.extend([
             AppParameter(
                 validCommandTypes=[CommandType.ON_OFF],
@@ -205,7 +215,7 @@ class ControlDisplay(tk.Canvas):
         ])
 
     def createTouchPadButton(self, getParam):
-        
+
         self.touchPadButton = TouchPadButton(self, getParam("TOUCHPAD_X"), getParam("TOUCHPAD_Y"), 7.5, 1.5)
         self.parameters.extend([
             AppParameter(
@@ -224,9 +234,9 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def createStartButton(self, map, params: Dict[str, AppParameter]):
+    def createStartButton(self, map, params: dict[str, AppParameter]):
         param = self.getStartButtonParam(map, params)
-                
+
         uToC = self.unitsToCoord
 
         self.startButton = CircularButton(self, param, uToC(7.5), uToC(9.5), self.unitSize)
@@ -244,7 +254,8 @@ class ControlDisplay(tk.Canvas):
 
         leftParam, rightParam, upParam, downParam, xType, yType = self.getDPadParams(getParam)
 
-        cx = 3; cy = 7.75
+        cx = 3
+        cy = 7.75
         self.dpadDownButton = DPadButton(self, downParam, yType, "DOWN", cx, cy)
         self.dpadUpButton = DPadButton(self, upParam, yType, "UP", cx, cy)
         self.dpadLeftButton = DPadButton(self, leftParam, xType, "LEFT", cx, cy)
@@ -308,13 +319,13 @@ class ControlDisplay(tk.Canvas):
         rightYParams, rightYType = self.getJoystickAxisParams("RIGHT_STICK", "Y", getParam)
 
         self.leftStick = JoyStickButton(
-            self, 
+            self,
             leftXParams, leftYParams, leftXType, leftYType,
             getParam("LEFT_STICK_BUTTON"),
             5.25, 12, "LEFT")
-        
+
         self.rightStick = JoyStickButton(
-            self, 
+            self,
             rightXParams, rightYParams, rightXType, rightYType,
             getParam("RIGHT_STICK_BUTTON"),
             9.75, 12, "RIGHT")
@@ -418,7 +429,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def getStartButtonParam(self, map, params: Dict[str, AppParameter]):
+    def getStartButtonParam(self, map, params: dict[str, AppParameter]):
         param = None
         if ("START_BUTTON" in map):
             for parameterKey in map["START_BUTTON"]:
@@ -468,21 +479,18 @@ class ControlDisplay(tk.Canvas):
 
         if analogParam:
             return [analogParam], "ANALOG"
-        elif polarParam:
+        if polarParam:
             return [polarParam], "POLAR"
-        elif nParam and pParam:
+        if nParam and pParam:
             return [nParam, pParam], "ON_OFF"
-        else:
-            return [], None
+        return [], None
 
-    def getFirstMEParameter(self, params: Dict[str, AppParameter], map: Dict[str, List[str]], key):
+    def getFirstMEParameter(self, params: dict[str, AppParameter], map: dict[str, list[str]], key):
         if (key in map):
             for parameterKey in map[key]:
                 if (parameterKey in params and params[parameterKey].type != AppParameterType.UI):
                     parameterType = params[parameterKey].type
-                    if self.chordEngineControlMode == 'internal' and parameterType == AppParameterType.INTERNAL_CHORD_ENGINE:
+                    if (self.chordEngineControlMode == 'internal' and parameterType == AppParameterType.INTERNAL_CHORD_ENGINE) or (self.chordEngineControlMode == 'external' and parameterType == AppParameterType.EXTERNAL_CHORD_ENGINE):
                         return params[parameterKey]
-                    elif self.chordEngineControlMode == 'external' and parameterType == AppParameterType.EXTERNAL_CHORD_ENGINE:
-                        return params[parameterKey]
-            
+
         return None

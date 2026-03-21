@@ -1,16 +1,20 @@
+import tkinter as tk
+
+from pyrsistent import thaw
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from redux import store, utils as ReduxUtils
+from redux import store
+from redux import utils as ReduxUtils
+
 from ..chordDisplay import ChordDisplay
 from .controlDisplay.controlDisplay import ControlDisplay
-from .keyboard import Keyboard
 from .inversion import Inversion
+from .keyboard import Keyboard
+from .settingDisplay import SettingDisplay
 from .spread import Spread
 from .textDisplay import TextDisplay
-from .settingDisplay import SettingDisplay
-from pyrsistent import thaw
-import tkinter as tk
 
 
 class PerformFrame(tk.Frame):
@@ -76,61 +80,64 @@ class PerformFrame(tk.Frame):
         cState = thaw(state['controllerManager'])
 
         if meState['chordShadow'] != self.state['shadowChordNotes']:
-            self.after(0, self.__setChordShadow(meState['chordShadow']))
+            self.after(0, lambda: self.__setChordShadow(meState['chordShadow']))
         if meState['chordNotes'] != self.state['playingChordNotes']:
+            print(f"[PERF_FRAME] chordNotes changed: store={meState['chordNotes']} local={self.state['playingChordNotes']}", flush=True)
             if len(meState['chordNotes']) > 0:
-                self.after(0, self.__playChord(meState['chordNotes']))
+                self.after(0, lambda: self.__playChord(meState['chordNotes']))
             else:
-                self.after(0, self.__stopChord(self.state['playingChordNotes']))
+                self.after(0, lambda: self.__stopChord(self.state['playingChordNotes']))
+        if meState['inversion'] != self.state['inversion']:
+            print(f"[PERF_FRAME] inversion changed: store={meState['inversion']} local={self.state['inversion']}", flush=True)
         if meState['bassShadow'] != self.state['shadowBassNote']:
-            self.after(0, self.__setBassShadow(meState['bassShadow']))
+            self.after(0, lambda: self.__setBassShadow(meState['bassShadow']))
         if meState['bassNote'] != self.state['playingBassNote']:
             if meState['bassNote'] is not None:
-                self.after(0, self.__playBass(meState['bassNote']))
+                self.after(0, lambda: self.__playBass(meState['bassNote']))
             else:
-                self.after(0, self.__stopBass(self.state['playingBassNote']))
+                self.after(0, lambda: self.__stopBass(self.state['playingBassNote']))
         if meState['chordType']['chord'] != self.state['chordType']['notes'] or \
                 meState['chordType']['root'] != self.state['chordType']['root']:
-            self.after(0, self.__setChord(meState['chordType']['chord'], meState['chordType']['root']))
+            self.after(0, lambda: self.__setChord(meState['chordType']['chord'], meState['chordType']['root']))
         if meState['inversion'] != self.state['inversion']:
-            self.after(0, self.__setInversion(meState['inversion']))
+            self.after(0, lambda: self.__setInversion(meState['inversion']))
         if meState['bassPosition'] != self.state['bassPosition']:
-            self.after(0, self.__setBassPosition(meState['bassPosition']))
+            self.after(0, lambda: self.__setBassPosition(meState['bassPosition']))
         if meState['inversionRange'] != self.state['inversionRange']:
-            self.after(0, self.__setInversionRange(
+            self.after(0, lambda: self.__setInversionRange(
                 meState['inversionRange'], meState['inversion']))
         if meState['bassRange'] != self.state['bassRange']:
-            self.after(0, self.__setBassRange(meState['bassRange'], meState['bassPosition']))
+            self.after(0, lambda: self.__setBassRange(meState['bassRange'], meState['bassPosition']))
         if meState['key'] != self.state['key']:
-            self.after(0, self.__setKey(meState['key']))
+            self.after(0, lambda: self.__setKey(meState['key']))
         if meState['scale'] != self.state['scale']:
-            self.after(0, self.__setScale(meState['scale']))
+            self.after(0, lambda: self.__setScale(meState['scale']))
         if meState['modulation']['side'] != self.state['modulationSide']:
-            self.after(0, self.__setModulation(
+            self.after(0, lambda: self.__setModulation(
                 meState['modulation']['scale'], meState['modulation']['side']))
         if meState['setting'] != self.state['settingIndex'] and len(meState['settingsList']) > 0:
             self.state['settingName'] = meState['settingsList'][meState['setting']]
             self.state['settingIndex'] = meState['setting']
-            self.after(0, self.__setSetting(self.state['settingName']))
+            self.after(0, lambda: self.__setSetting(self.state['settingName']))
             print('setting name: ' + self.state['settingName'])
         if meState['settingLoading'] != self.state['settingLoading']:
             if meState['settingLoading']:
-                self.after(0, self.__setSettingLoading())
+                self.after(0, lambda: self.__setSettingLoading())
             else:
                 self.state['settingLoading'] = False
-                self.after(0, self.__setSetting(self.state['settingName']))
+                self.after(0, lambda: self.__setSetting(self.state['settingName']))
         if meState['hold'] != self.state['hold']:
             self.state['hold'] = meState['hold']
-            self.after(0, self.__setHold(self.state['hold']))
+            self.after(0, lambda: self.__setHold(self.state['hold']))
         if meState['inversionLock'] != self.state['inversionLock']:
             self.state['inversionLock'] = meState['inversionLock']
-            self.after(0, self.__setInversionLock(self.state['inversionLock']))
+            self.after(0, lambda: self.__setInversionLock(self.state['inversionLock']))
         if meState['chordOctave'] != self.state['chordOctave']:
             self.state['chordOctave'] = meState['chordOctave']
-            self.after(0, self.__setOctave(self.state['chordOctave']))
+            self.after(0, lambda: self.__setOctave(self.state['chordOctave']))
         if meState['voiceCount'] != self.state['voiceCount']:
             self.state['voiceCount'] = meState['voiceCount']
-            self.after(0, self.__setVoiceCount(self.state['voiceCount']))
+            self.after(0, lambda: self.__setVoiceCount(self.state['voiceCount']))
 
         meMap = None
         primary = None
@@ -145,11 +152,10 @@ class PerformFrame(tk.Frame):
                 self.state['inversionMode'] = meMap['inversionMode']
             if meMap['bassMode'] != self.state['bassMode']:
                 self.state['bassMode'] = meMap['bassMode']
-        if primary:
-            if primary['name'] != self.state['controllerName']:
-                self.state['controllerName'] = primary['name']
+        if primary and primary['name'] != self.state['controllerName']:
+            self.state['controllerName'] = primary['name']
                 #self.__setController(primary['name'])
-    
+
     def getParameters(self):
         parameters = [
             AppParameter(

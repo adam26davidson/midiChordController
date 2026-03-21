@@ -1,6 +1,8 @@
 from models.appParameter import AppParameter
+
+from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
+
 
 class DPadButton(ControlButton):
 
@@ -63,7 +65,7 @@ class DPadButton(ControlButton):
             yb3 = yb2 - 1
             ybt = yb1 - 0.75
             self.drawButtonFromParams(cX-1, yb1, cX-1, yb2, cX, yb3, cX+1, yb2, cX+1, yb1, cX, ybt)
-    
+
     def drawButtonFromParams(self, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, tx, ty):
         uToC = self.master.unitsToCoord
         self.canvasObject = self.master.create_polygon(
@@ -91,4 +93,3 @@ class DPadButton(ControlButton):
     def off(self):
         self.master.itemconfig(self.canvasObject, outline=INACTIVE_COLOR, fill="#000000")
         self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)
-    

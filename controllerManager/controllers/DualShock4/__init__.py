@@ -1,7 +1,11 @@
 import evdev
-from .info import info, controllerConfig as config
+
 from redux import store
+
 from ...controller import Controller
+from .info import controllerConfig as config
+from .info import info
+
 
 class DualShock4(Controller):
 
@@ -35,9 +39,8 @@ class DualShock4(Controller):
                 elif isCorrectId:
                     devices['main'] = device
                     print(f"found main device: {device.name}")
-        super().open(id, devices)
+        super().open(id, devices, recording=False)
 
     @staticmethod
     def checkForNewConnections():
         return Controller.checkForNewConnections(config)
-

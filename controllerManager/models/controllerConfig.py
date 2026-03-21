@@ -1,25 +1,25 @@
-from typing import List, Dict
+
 from .rawControl import RawControl
 
 
-class ControllerConfig():
+class ControllerConfig:
     name: str
     vendor: int
     product: int
     meMap: str
     uiMap: str
-    compatibleMeMaps: List[str]
-    controls: Dict[str, List[RawControl]]
+    compatibleMeMaps: list[str]
+    controls: dict[str, list[RawControl]]
 
     def __init__(
-            self, 
-            name: str, 
-            vendor: int, 
-            product: int, 
-            meMap: str, 
-            uiMap: str, 
-            compatibleMeMaps: List[str], 
-            controls: Dict[str, List[RawControl]]):
+            self,
+            name: str,
+            vendor: int,
+            product: int,
+            meMap: str,
+            uiMap: str,
+            compatibleMeMaps: list[str],
+            controls: dict[str, list[RawControl]]):
         self.name = name
         self.vendor = vendor
         self.product = product

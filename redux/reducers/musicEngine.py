@@ -1,11 +1,12 @@
 from pyrsistent import freeze
+
 from constants import SPREAD_STEPS_PER_OCTAVE
 
 
 def reducer(state, action):
     if state is None:
         return freeze({
-            'chordEngineControl': 'external',
+            'chordEngineControl': 'internal',
 
             'availableMidiPorts': [],
             'connectedMidiPort': '',
@@ -36,7 +37,6 @@ def reducer(state, action):
             'bassPosition': 0,
             'bassMode': 'incremental',
             'bassRange': 0,
-            'setting': 0,
             'chordOctave': 0,
             'voiceCount': 0,
             'modulation': {'side': 'none', 'scale': []},
@@ -51,10 +51,10 @@ def reducer(state, action):
     if action['type'] == 'me/settingsListChanged':
         return state.set('settingsList', action['data']['settingsList'])
 
-    elif action['type'] == 'me/settingChanged':
+    if action['type'] == 'me/settingChanged':
         return state.set('setting', action['data']['setting'])
 
-    elif action['type'] == 'me/settingLoadingChanged':
+    if action['type'] == 'me/settingLoadingChanged':
         return state.set('settingLoading', action['data']['settingLoading'])
 
     if action['type'] == 'me/keyChanged':
@@ -63,101 +63,100 @@ def reducer(state, action):
     if action['type'] == 'me/scaleChanged':
         return state.set('scale', action['data']['scale'])
 
-    elif action['type'] == 'me/spreadChanged':
+    if action['type'] == 'me/spreadChanged':
         return state.set('spread', action['data']['spread'])
 
-    elif action['type'] == 'me/inversionChanged':
+    if action['type'] == 'me/inversionChanged':
         return state.set('inversion', action['data']['inversion'])
 
-    elif action['type'] == 'me/inversionModeChanged':
+    if action['type'] == 'me/inversionModeChanged':
         return state.set('inversionMode', action['data']['inversionMode'])
 
-    elif action['type'] == 'me/inversionRangeChanged':
+    if action['type'] == 'me/inversionRangeChanged':
         return state.set('inversionRange', action['data']['inversionRange'])
 
-    elif action['type'] == 'me/bassPositionChanged':
+    if action['type'] == 'me/bassPositionChanged':
         return state.set('bassPosition', action['data']['bassPosition'])
 
-    elif action['type'] == 'me/bassModeChanged':
+    if action['type'] == 'me/bassModeChanged':
         return state.set('bassMode', action['data']['bassMode'])
 
-    elif action['type'] == 'me/bassRangeChanged':
+    if action['type'] == 'me/bassRangeChanged':
         return state.set('bassRange', action['data']['bassRange'])
 
-    elif action['type'] == 'me/chordOctaveChanged':
+    if action['type'] == 'me/chordOctaveChanged':
         return state.set('chordOctave', action['data']['chordOctave'])
 
-    elif action['type'] == 'me/voiceCountChanged':
+    if action['type'] == 'me/voiceCountChanged':
         return state.set('voiceCount', action['data']['voiceCount'])
 
-    elif action['type'] == 'me/modulationChanged':
+    if action['type'] == 'me/modulationChanged':
         return state.set('modulation', action['data']['modulation'])
 
-    elif action['type'] == 'me/secondaryChanged':
+    if action['type'] == 'me/secondaryChanged':
         return state.set('secondary', action['data']['secondary'])
 
-    elif action['type'] == 'me/bassPlayed':
+    if action['type'] == 'me/bassPlayed':
         return state.set('bassNote', action['data']['bassNote'])
 
-    elif action['type'] == 'me/bassStopped':
+    if action['type'] == 'me/bassStopped':
         return state.set('bassNote', None)
 
-    elif action['type'] == 'me/bassShadowChanged':
+    if action['type'] == 'me/bassShadowChanged':
         return state.set('bassShadow', action['data']['bassShadow'])
 
-    elif action['type'] == 'me/chordPlayed':
+    if action['type'] == 'me/chordPlayed':
         return state.set('chordNotes', action['data']['chordNotes'])
 
-    elif action['type'] == 'me/chordStopped':
+    if action['type'] == 'me/chordStopped':
         return state.set('chordNotes', [])
 
-    elif action['type'] == 'me/chordTypeChanged':
+    if action['type'] == 'me/chordTypeChanged':
         return state.set('chordType', action['data']['chordType'])
 
-    elif action['type'] == 'me/chordShadowChanged':
+    if action['type'] == 'me/chordShadowChanged':
         return state.set('chordShadow', action['data']['chordShadow'])
 
-    elif action['type'] == 'me/chordChannelChanged':
+    if action['type'] == 'me/chordChannelChanged':
         return state.set('chordChannel', action['data']['chordChannel'])
 
-    elif action['type'] == 'me/bassChannelChanged':
+    if action['type'] == 'me/bassChannelChanged':
         return state.set('bassChannel', action['data']['bassChannel'])
 
-    elif action['type'] == 'me/distributeChannelsChanged':
+    if action['type'] == 'me/distributeChannelsChanged':
         return state.set('distributeChannels', action['data']['distributeChannels'])
 
-    elif action['type'] == 'me/velocityChanged':
+    if action['type'] == 'me/velocityChanged':
         return state.set('velocity', action['data']['velocity'])
 
-    elif action['type'] == 'me/velocityModeChanged':
+    if action['type'] == 'me/velocityModeChanged':
         return state.set('velocityMode', action['data']['velocityMode'])
 
-    elif action['type'] == 'me/velocityDeviationChanged':
+    if action['type'] == 'me/velocityDeviationChanged':
         return state.set('velocityDeviation', action['data']['velocityDeviation'])
-    
-    elif action['type'] == 'me/aftertouchModeChanged':
+
+    if action['type'] == 'me/aftertouchModeChanged':
         return state.set('aftertouchMode', action['data']['aftertouchMode'])
 
-    elif action['type'] == 'me/holdChanged':
+    if action['type'] == 'me/holdChanged':
         return state.set('hold', action['data']['hold'])
 
-    elif action['type'] == 'me/inversionLockChanged':
+    if action['type'] == 'me/inversionLockChanged':
         return state.set('inversionLock', action['data']['inversionLock'])
-    
-    elif action['type'] == 'me/strumModeChanged':
+
+    if action['type'] == 'me/strumModeChanged':
         return state.set('strumMode', action['data']['strumMode'])
-    
-    elif action['type'] == 'me/strumIntervalChanged':
+
+    if action['type'] == 'me/strumIntervalChanged':
         return state.set('strumInterval', action['data']['strumInterval'])
-    
-    elif action['type'] == 'me/strumOrderChanged':
+
+    if action['type'] == 'me/strumOrderChanged':
         return state.set('strumOrder', action['data']['strumOrder'])
-    
-    elif action['type'] == 'me/transposeIncrementChanged':
+
+    if action['type'] == 'me/transposeIncrementChanged':
         return state.set('transposeIncrement', action['data']['transposeIncrement'])
-    
-    elif action['type'] == 'me/chordEngineControlChanged':
+
+    if action['type'] == 'me/chordEngineControlChanged':
         return state.set('chordEngineControl', action['data']['chordEngineControl'])
 
-    else:
-        return state
+    return state

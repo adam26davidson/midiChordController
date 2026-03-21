@@ -1,17 +1,19 @@
-from typing import List
-from musicEngine.midi.midiInputMessage import MidiInputMessageType, MidiInputMessage
-from rtmidi import MidiOut, MidiIn
+import asyncio
+import copy
+import math
+
+from numpy import random
+from pyrsistent import thaw
+from rtmidi import MidiIn, MidiOut
+from rtmidi.midiconstants import *  # noqa: F403
+
+from constants import *  # noqa: F403
+from musicEngine.midi.midiInputMessage import MidiInputMessage, MidiInputMessageType
 from redux import store
 from redux.actions import musicEngine as actions
-from pyrsistent import thaw
-from rtmidi.midiconstants import *
-from constants import *
-from numpy import random
-from datetime import datetime
-import copy
-import asyncio, math
 
-class Midi():
+
+class Midi:
     def __init__(self):
         self.utilityMidiOut = MidiOut()
         self.utilityMidiIn = MidiIn()
@@ -19,7 +21,7 @@ class Midi():
         self.midiInInstances = []
         self.subscriberCallBacks = []
 
-        self.midiInputMessageQueue: List[MidiInputMessage] = []
+        self.midiInputMessageQueue: list[MidiInputMessage] = []
 
         self.state = {
             'midiOutputConnected': False,
@@ -49,14 +51,14 @@ class Midi():
             'lastSentCCValues': {},
         }
 
-        for channel in range(0, 16):
+        for channel in range(16):
             if self.state['bassChannel'] == channel:
                 self.state['occupiedChannels'][channel] = True
             else:
                 self.state['occupiedChannels'][channel] = False
 
-    
-        for note in range(0, 128):
+
+        for note in range(128):
             self.state['distChordChannels'][note] = 0
 
         store.subscribe(self.__handleStoreUpdate)
@@ -68,19 +70,31 @@ class Midi():
         print(f"input ports: {self.availableInputPorts}")
 
         for i in range(1, len(self.availableInputPorts)):
+            portName = self.availableInputPorts[i]
             midiIn = MidiIn()
-            midiIn.open_port(i)
+            currentPorts = midiIn.get_ports()
+            try:
+                portIndex = currentPorts.index(portName)
+            except ValueError:
+                continue
+            midiIn.open_port(portIndex)
             self.midiInInstances.append(midiIn)
-            midiIn.set_callback(self.handleMidiIn, self.availableInputPorts[i])
-            self.state['midiInputControllerNames'].append(self.availableInputPorts[i])
+            midiIn.set_callback(self.handleMidiIn, portName)
+            self.state['midiInputControllerNames'].append(portName)
 
         for i in range(1, len(self.availableOutputPorts)):
+            portName = self.availableOutputPorts[i]
             midiOut = MidiOut()
-            midiOut.open_port(i)
+            currentPorts = midiOut.get_ports()
+            try:
+                portIndex = currentPorts.index(portName)
+            except ValueError:
+                continue
+            midiOut.open_port(portIndex)
             self.midiOutInstances.append(midiOut)
-            self.state['midiOutputControllerNames'].append(self.availableOutputPorts[i])
+            self.state['midiOutputControllerNames'].append(portName)
 
-        asyncio.ensure_future(self.__outputLoop())
+        _task = asyncio.ensure_future(self.__outputLoop())
 
     def subscribe(self, callback):
         self.subscriberCallBacks.append(callback)
@@ -100,7 +114,7 @@ class Midi():
             self.removeMidiInputNoteOn(note, channel, data)
 
     def addMidiInputNoteOn(self, note, channel, controller):
-        if note not in self.state['midiInputNotesOn'].keys():
+        if note not in self.state['midiInputNotesOn']:
             self.state['midiInputNotesOn'][note] = []
         noteFound = False
         for noteObj in self.state['midiInputNotesOn'][note]:
@@ -116,13 +130,13 @@ class Midi():
             self.state['mergedMidiInputNotesOn'].append(note)
             self.sendMessage(
                 MidiInputMessage(
-                    MidiInputMessageType.NOTE_ON, 
+                    MidiInputMessageType.NOTE_ON,
                     note
                     ))
 
     def removeMidiInputNoteOn(self, note, channel, controller):
         noteIsNotPlayedAnywhere = False
-        if note in self.state['midiInputNotesOn'].keys():
+        if note in self.state['midiInputNotesOn']:
             for noteObj in self.state['midiInputNotesOn'][note]:
                 if noteObj['channel'] == channel and noteObj['controller'] == controller:
                     self.state['midiInputNotesOn'][note].remove(noteObj)
@@ -133,7 +147,7 @@ class Midi():
             self.state['mergedMidiInputNotesOn'].remove(note)
             self.sendMessage(
                 MidiInputMessage(
-                    MidiInputMessageType.NOTE_OFF, 
+                    MidiInputMessageType.NOTE_OFF,
                     note
                     ))
 
@@ -150,7 +164,7 @@ class Midi():
             self.__noteOn(note, player)
         elif type == 'off':
             self.__noteOff(note, player)
-    
+
     def setAfterTouch(self, value):
         self.state['afterTouch'] = math.floor(((value+1) / 2)*128)
 
@@ -159,7 +173,7 @@ class Midi():
         def setCCValue(value):
             self.state['CCValues'][cc] = math.floor(((value+1) / 2)*128)
         return setCCValue
-  
+
     def __handleStoreUpdate(self):
         state = store.get_state()
         meState = thaw(state['musicEngine'])
@@ -196,7 +210,7 @@ class Midi():
             if midiOut.is_port_open():
                 midiOut.close_port()
             midiOut.delete()
-    
+
         self.availableOutputPorts = self.utilityMidiOut.get_ports()
         print(self.availableOutputPorts)
 
@@ -207,7 +221,12 @@ class Midi():
             if portName.count('Midi Through') > 0 or portName.count('RtMidi') > 0:
                 continue
             midiOut = MidiOut()
-            midiOut.open_port(i)
+            currentPorts = midiOut.get_ports()
+            try:
+                portIndex = currentPorts.index(portName)
+            except ValueError:
+                continue
+            midiOut.open_port(portIndex)
             self.midiOutInstances.append(midiOut)
             self.state['midiOutputControllerNames'].append(portName)
 
@@ -238,7 +257,7 @@ class Midi():
             if self.state['distributeChannels'] and len(chordNotes) > 0:
                 for note in chordNotes:
                     self.__noteOn(note, 'chord')
-  
+
     def __setChordChannel(self, channel):
         if (channel < 0 or channel > 15):
             store.dispatch(actions.changeChordChannel(self.state['chordChannel']))
@@ -319,31 +338,30 @@ class Midi():
         # this is here just in case a channel gets stuck on occupied
         if self.state['distributeChannels'] \
             and len(self.state['playingChordNotes']) == 0 \
-            and self.state['playingBassNote'] == None:
-            for channel in range(0, 16):
+            and self.state['playingBassNote'] is None:
+            for channel in range(16):
                 if channel != self.state['bassChannel']:
                     self.state['occupiedChannels'][channel] = False
-  
+
     def __getNoteChannel(self, note, player, type):
         if player == 'chord':
             if self.state['distributeChannels']:
                 if type == 'on':
                     return self.__distributeChannel()
-                else:
-                    return self.state['distChordChannels'][note]
-            else:
-                return self.state['chordChannel']
-        elif player == 'bass':
+                return self.state['distChordChannels'][note]
+            return self.state['chordChannel']
+        if player == 'bass':
             return self.state['bassChannel']
+        return None
 
     def __sendChannelAfterTouch(self, force=False):
         if not force and (self.state['afterTouch'] == self.state['lastSentAfterTouch']):
-            return None
+            return
 
         aftertouchValue = self.state['afterTouch']
         if self.state['distributeChannels']:
             channels = filter(
-                lambda x: self.state['occupiedChannels'][x], 
+                lambda x: self.state['occupiedChannels'][x],
                 self.state['occupiedChannels'].keys())
             for channel in channels:
                 channelCommand = self.__combineCommandAndChannel(CHANNEL_PRESSURE, channel)
@@ -362,7 +380,7 @@ class Midi():
 
     def __sendPolyphonicAftertouch(self, force=False):
         if not force and (self.state['afterTouch'] == self.state['lastSentAfterTouch']):
-            return None
+            return
 
         # send poly aftertouch for each chord note
         for note in self.state['playingChordNotes']:
@@ -390,7 +408,7 @@ class Midi():
     def __sendCCValues(self):
         for cc, val in self.state['CCValues'].items():
             if val != self.state['lastSentCCValues'][cc]:
-                for channel in range(0, 16):
+                for channel in range(16):
                     channelCommand = self.__combineCommandAndChannel(CONTROL_CHANGE, channel)
                     self.__sendMidiMessage([channelCommand, cc, val])
                 self.state['lastSentCCValues'][cc] = val
@@ -399,11 +417,12 @@ class Midi():
         return ((command & 0xf0) | (channel & 0xf))
 
     def __distributeChannel(self):
-        for channel in range(0, 16):
+        for channel in range(16):
             #print(f"{channel}: {self.state['occupiedChannels'][channel]}")
             if not self.state['occupiedChannels'][channel]:
                 self.state['occupiedChannels'][channel] = True
                 return channel
+        return 0
 
     def __openChannel(self, note, player):
         if player == 'chord':
@@ -415,11 +434,12 @@ class Midi():
             loc = self.state['velocity'],
             scale = self.state['velocityDeviation']
         )
-        return max(min(value, 127), 0)
+        return int(max(min(value, 127), 0))
 
     def __getVelocity(self):
         if self.state['velocityMode'] == 'constant':
             return self.state['velocity']
-        elif self.state['velocityMode'] == 'random':        
+        if self.state['velocityMode'] == 'random':
             return self.__getRandomVelocity()
+        return None
 

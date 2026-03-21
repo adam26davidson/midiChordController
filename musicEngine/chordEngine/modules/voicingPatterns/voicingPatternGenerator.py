@@ -1,6 +1,6 @@
-import json
-import itertools
 import copy
+import itertools
+import json
 
 
 class VoicingPatternGenerator:
@@ -19,7 +19,7 @@ class VoicingPatternGenerator:
             vps = {}
             for voiceCount in range(2, self.maxVoiceCount + 1):
                 vcps = [[]]
-                for degree in range(0, voiceCount):
+                for degree in range(voiceCount):
                     vcps[0].append(degree)
                 maxSpread = None
                 voicingsFinder = None
@@ -76,12 +76,11 @@ class VoicingPatternGenerator:
             topVoice = (adjustedSpread - 1) % n
             topOctave = ((adjustedSpread - 1) // n) + 1
             return topVoice, topOctave
-        else:
-            topVoice = (adjustedSpread % (n - 1))
-            if topVoice == 0:
-                topVoice = n - 1
-            topOctave = ((adjustedSpread - 1) // (n - 1)) + 1
-            return topVoice, topOctave
+        topVoice = (adjustedSpread % (n - 1))
+        if topVoice == 0:
+            topVoice = n - 1
+        topOctave = ((adjustedSpread - 1) // (n - 1)) + 1
+        return topVoice, topOctave
 
     def __findVoicings(self, choices):
         voicings = []
@@ -89,13 +88,12 @@ class VoicingPatternGenerator:
             for octave in choices[0]:
                 voicings.append([octave])
             return voicings
-        else:
-            firstVoiceChoices = choices.pop(0)
-            subVoicings = self.__findVoicings(choices)
-            for octave in firstVoiceChoices:
-                for subVoicing in subVoicings:
-                    voicings.append([octave] + subVoicing)
-            return voicings
+        firstVoiceChoices = choices.pop(0)
+        subVoicings = self.__findVoicings(choices)
+        for octave in firstVoiceChoices:
+            for subVoicing in subVoicings:
+                voicings.append([octave, *subVoicing])
+        return voicings
 
     def __findSmallVoicings(self, choices, voiceCount, topVoice, n):
         voicings = []
@@ -107,7 +105,7 @@ class VoicingPatternGenerator:
         combinations = itertools.combinations(innerVoices, numInnerVoices)
         for comb in combinations:
             combChoices = []
-            for voice in range(0, n):
+            for voice in range(n):
                 if voice == 0 or voice == topVoice or voice in comb:
                     combChoices.append(choices[voice].copy())
                 else:
@@ -151,21 +149,20 @@ class VoicingPatternGenerator:
                     reducedChoices, reducedVoiceCount, topVoice, voice+1)
                 for c in listCombinations:
                     for s in subVoicings:
-                        voicings.append([copy.deepcopy(c)] + copy.deepcopy(s))
+                        voicings.append([copy.deepcopy(c), *copy.deepcopy(s)])
             return voicings
-        else:
-            if (voice == 0):
-                voiceCount -= 1
-            if (voice == topVoice):
-                voiceCount -= 1
-            if voiceCount == 0:
-                return([[[]]])
-            combinations = itertools.combinations(choices[0], voiceCount)
-            return [[list(c)] for c in combinations]
+        if (voice == 0):
+            voiceCount -= 1
+        if (voice == topVoice):
+            voiceCount -= 1
+        if voiceCount == 0:
+            return([[[]]])
+        combinations = itertools.combinations(choices[0], voiceCount)
+        return [[list(c)] for c in combinations]
 
     def __findBigChoices(self, topVoice, topOctave, n):
         voicingChoices = []
-        for voice in range(0, n):
+        for voice in range(n):
             choices = []
             octave = 0
             while (voice + (octave * n)) < (topVoice + (topOctave * n)):
@@ -192,10 +189,10 @@ class VoicingPatternGenerator:
 
     def __getRealBigVoicingValues(self, voicing, n):
         realVoicing = []
-        for voice in range(0, len(voicing)):
-            for octave in range(0, len(voicing[voice])):
+        for voice in range(len(voicing)):
+            for octave in range(len(voicing[voice])):
                 if voicing[voice] is not None:
-                    realVoicing.append((voice + (voicing[voice][octave] * n)))
+                    realVoicing.append(voice + (voicing[voice][octave] * n))
         realVoicing.sort()
         return realVoicing
 
@@ -203,9 +200,9 @@ class VoicingPatternGenerator:
         if (type(voicing[0]) is list):
             return self.__getRealBigVoicingValues(voicing, n)
         realVoicing = []
-        for i in range(0, len(voicing)):
+        for i in range(len(voicing)):
             if voicing[i] is not None:
-                realVoicing.append((i + (voicing[i] * n)))
+                realVoicing.append(i + (voicing[i] * n))
         realVoicing.sort()
         return realVoicing
 
@@ -215,7 +212,7 @@ class VoicingPatternGenerator:
         for voicing in voicings:
             score = 1
             realVoicing = self.__getRealVoicingValues(voicing, n)
-            for i in range(0, len(realVoicing) - 1):
+            for i in range(len(realVoicing) - 1):
                 score = score * (realVoicing[i+1] - realVoicing[i])
             if score > topScore:
                 topVoicing = realVoicing

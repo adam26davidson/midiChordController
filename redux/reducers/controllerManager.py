@@ -1,4 +1,5 @@
-from pyrsistent import freeze, thaw, m, pmap, v, pvector
+from pyrsistent import freeze
+
 
 def reducer(state, action):
   if state is None:
@@ -19,14 +20,14 @@ def reducer(state, action):
     newControllers = state['controllers'].append(newController)
     return  state.set('controllers', newControllers)
 
-  elif action['type'] == 'controllerManager/controllerRemoved':
+  if action['type'] == 'controllerManager/controllerRemoved':
     for controller in state['controllers']:
       if controller['id'] == action['data']['id']:
         newControllers = state['controllers'].remove(controller)
         return state.set('controllers', newControllers)
     return state
 
-  elif action['type'] == 'controllerManager/controllerMapUpdated':
+  if action['type'] == 'controllerManager/controllerMapUpdated':
     for index, controller in enumerate(state['controllers']):
       if controller['id'] == action['data']['id']:
         newController = controller.set('meMap', action['data']['meMap'])
@@ -34,10 +35,10 @@ def reducer(state, action):
         return state.set('controllers', newControllers)
     return state
 
-  elif action['type'] == 'controllerManager/startedWaitingForConnection':
+  if action['type'] == 'controllerManager/startedWaitingForConnection':
     return state.set('waitingForConnection', True)
 
-  elif action['type'] == 'controllerManager/stoppedWaitingForConnection':
+  if action['type'] == 'controllerManager/stoppedWaitingForConnection':
     return state.set('waitingForConnection', False)
 
-  else: return state
+  return state

@@ -1,4 +1,4 @@
-from ....modules.chords import Chord, DEFAULT_SCALE
+from ....modules.chords import DEFAULT_SCALE, Chord
 
 
 class Secondary(Chord):

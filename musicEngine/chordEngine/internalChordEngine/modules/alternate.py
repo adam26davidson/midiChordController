@@ -1,12 +1,14 @@
-from typing import Any, Callable
+from typing import Callable
 
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from ...chordEngineState import state
 from redux import utils as reduxUtils
 
-class Alternate():
+from ...chordEngineState import state
+
+
+class Alternate:
 
     updateChordEngine: Callable
 
@@ -25,7 +27,7 @@ class Alternate():
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.set(True), 
+                    Command.ON: lambda: self.set(True),
                     Command.OFF: lambda: self.set(False)
                 },
                 key = "ALTERNATE",

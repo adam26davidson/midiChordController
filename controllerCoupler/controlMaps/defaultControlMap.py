@@ -1,13 +1,12 @@
 from controllerCoupler.models.controlMap import ControlMap
 
-
 defaultControlMap = ControlMap(
     name = "default",
     displayName = "Default",
     inversionMode = "continuous",
     bassMode = "continuous",
     map = {
-      
+
         #MAIN BUTTONS
         "SOUTH_BUTTON": ["INTERNAL_SOUTH_CHORD", "UI_SOUTH_BUTTON", "EXTERNAL_SOUTH_CHORD"],
         "WEST_BUTTON": ["INTERNAL_WEST_CHORD", "UI_WEST_BUTTON", "EXTERNAL_WEST_CHORD"],

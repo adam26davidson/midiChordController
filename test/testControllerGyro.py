@@ -1,6 +1,8 @@
-import tkinter as tk
-from dualShockTest import DualShock
 import asyncio
+import tkinter as tk
+
+from dualShockTest import DualShock
+
 
 class Sliders(tk.Canvas):
     def __init__(self, master=None):
@@ -11,7 +13,7 @@ class Sliders(tk.Canvas):
 
     def drawSliders(self):
         thumbs = []
-        for i in range(0, 6):
+        for i in range(6):
             #draw tracks
             sX = 115 + (114*i)
             sY = 40
@@ -39,10 +41,10 @@ window = tk.Tk()
 sliders = Sliders(window)
 
 def startDS():
-    ds = DualShock(sliders) 
+    DualShock(sliders)
 
     loop = asyncio.get_event_loop()
     loop.run_forever()
 
 window.after(0, startDS)
-window.mainloop()     
+window.mainloop()

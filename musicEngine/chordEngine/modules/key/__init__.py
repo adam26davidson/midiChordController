@@ -1,16 +1,19 @@
 from typing import Callable
+
+from pyrsistent import thaw
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
+from redux import utils as reduxUtils
 from redux.actions import musicEngine as actions
 from redux.settingsStorage import settingsStorageUtility
-from redux import utils as reduxUtils
+
 from ...chordEngineState import state
-from pyrsistent import thaw
 
 
-class Key():
+class Key:
 
     updateChordEngine: Callable
     type: AppParameterType
@@ -53,12 +56,12 @@ class Key():
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
                 commandMappings = {
-                    Command.INCREMENT: self.increment, 
+                    Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
                 key = f"{keyPrefix}KEY",
                 label = "Transpose",
                 labelAbreviation="T",
                 type = self.type
-            )      
+            )
         ]

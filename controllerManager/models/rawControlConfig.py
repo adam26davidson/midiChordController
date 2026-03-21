@@ -1,10 +1,11 @@
-from typing import List, Dict
-from controllerManager.models.mappableControlType import MappableControlType
+from __future__ import annotations
+
 from controllerManager.models.polarOrientation import PolarOrientation
+
 from .rawControlEvent import RawControlEvent
 
 
-class RawControlConfig():
+class RawControlConfig:
     topValue: int
     bottomValue: int
 
@@ -12,25 +13,25 @@ class RawControlConfig():
     exposePolarEvents: bool
 
     averageCount: int
-    ignoreValues: List[int]
+    ignoreValues: list[int]
 
     centeredThreshold: float
     threshold: float
 
-    polarEventMap: Dict[int, RawControlEvent]
+    polarEventMap: dict[int, RawControlEvent]
     polerOrientation: PolarOrientation
 
-    def __init__(self, 
-                 topValue: int = None, 
-                 bottomValue: int = None, 
-                 exposeOnOffEvents: bool = None,
-                 exposePolarEvents: bool = None,
-                 averageCount: int = None, 
-                 centeredThreshold: float = None, 
-                 threshold: float = None,
-                 ignoreValues: List[int] = None, 
-                 polarEventMap: Dict[int, RawControlEvent] = None,
-                 polarOrientation: PolarOrientation = None):
+    def __init__(self,
+                 topValue: int | None = None,
+                 bottomValue: int | None = None,
+                 exposeOnOffEvents: bool | None = None,
+                 exposePolarEvents: bool | None = None,
+                 averageCount: int | None = None,
+                 centeredThreshold: float | None = None,
+                 threshold: float | None = None,
+                 ignoreValues: list[int] | None = None,
+                 polarEventMap: dict[int, RawControlEvent] | None = None,
+                 polarOrientation: PolarOrientation | None = None):
         self.topValue = topValue
         self.bottomValue = bottomValue
         self.exposeOnOffEvents = exposeOnOffEvents

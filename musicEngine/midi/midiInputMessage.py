@@ -1,13 +1,12 @@
 
 from enum import Enum
-from typing import List
 
 
 class MidiInputMessageType(Enum):
     NOTE_ON = 0
     NOTE_OFF = 1
 
-class MidiInputMessage():
+class MidiInputMessage:
     type: MidiInputMessageType
     note: int
 

@@ -1,3 +1,4 @@
+from constants import SETTINGS
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
@@ -6,14 +7,13 @@ from musicEngine.chordEngine.internalChordEngine.modules.alternate import Altern
 from musicEngine.chordEngine.internalChordEngine.modules.modulations import Modulations
 from musicEngine.chordEngine.internalChordEngine.modules.secondaries import Secondaries
 from musicEngine.chordEngine.state.secondariesState import SecondarySide
-from ..modules.chords.dualChord import DualChord
-from ..state.chordsState import ChordButton
+from redux import store
+from redux import utils as reduxUtils
+from redux.actions import musicEngine as actions
 
 from ..chordEngineState import state
-from constants import SETTINGS
-from redux import store
-from redux.actions import musicEngine as actions
-from redux import utils as reduxUtils
+from ..modules.chords.dualChord import DualChord
+from ..state.chordsState import ChordButton
 
 
 class InternalChordEngine(ChordEngine):
@@ -80,12 +80,11 @@ class InternalChordEngine(ChordEngine):
             rootType = self.modulations.applyOne(chord.getRoot(), scale)
             modulatedTypes = self.modulations.apply(chord.getNoteTypes(), scale)
             return [note % 12 for note in modulatedTypes], rootType % 12
-        else:
-            chordRoot = self.modulations.apply(chord.getRoot(), scale)
-            rootType = self.secondaries.getRoot(chordRoot)
-            chordType = self.secondaries.getNoteTypes(chordRoot)
-            chordType.sort()
-            return chordType, rootType
+        chordRoot = self.modulations.apply(chord.getRoot(), scale)
+        rootType = self.secondaries.getRoot(chordRoot)
+        chordType = self.secondaries.getNoteTypes(chordRoot)
+        chordType.sort()
+        return chordType, rootType
 
     def getChordNotes(self, button: ChordButton):
         chord = self.chords[button]
@@ -107,16 +106,15 @@ class InternalChordEngine(ChordEngine):
         if (state.secondary.side == SecondarySide.NONE):
             bass = chord.getBass()
             return self.modulations.applyOne(bass, self.scale.get())
-        else:
-            chordRoot = self.modulations.applyOne(chord.getRoot(), self.scale.get())
-            return self.secondaries.getBass(chordRoot)
-        
+        chordRoot = self.modulations.applyOne(chord.getRoot(), self.scale.get())
+        return self.secondaries.getBass(chordRoot)
+
     def getInternalParamters(self):
         return [
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
                 commandMappings = {
-                    Command.INCREMENT: self.incrementSetting, 
+                    Command.INCREMENT: self.incrementSetting,
                     Command.DECREMENT: self.decrementSetting
                 },
                 key = "SETTING",

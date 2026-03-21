@@ -1,25 +1,27 @@
-from typing import List, Dict
-from controllerManager.controller import Controller
-from controllerManager.models.mappableControl import MappableControl
-from redux.reducers import controllerManager
-from .controllers import controllerClasses
-from redux import store
-from redux.actions import controllerManager as actions
-from redux.actions import controllerCoupler as ccActions
 import asyncio
 
-class ControllerManager():
-  
-    connectedControllers: List[Controller]
+from controllerManager.controller import Controller
+from controllerManager.models.mappableControl import MappableControl  # noqa: F401
+from redux import store
+from redux.actions import controllerCoupler as ccActions
+from redux.actions import controllerManager as actions
+from redux.reducers import controllerManager  # noqa: F401
+
+from .controllers import controllerClasses
+
+
+class ControllerManager:
+
+    connectedControllers: list[Controller]
 
     def __init__(self):
         self.controllerClasses = controllerClasses
         self.connectedControllers = []
         self.subscriberCallbacks = []
         store.subscribe(self.handleStoreUpdate)
-  
+
     def start(self):
-        asyncio.ensure_future(self.checkConnection())
+        _task = asyncio.ensure_future(self.checkConnection())
 
     def subscribe(self, callBack):
         self.subscriberCallbacks.append(callBack)
@@ -47,8 +49,7 @@ class ControllerManager():
                     controls = store.get_state()['controllerCoupler']['controls']
                     store.dispatch(ccActions.updateControls({**controls, **connectedController.getControls()}))
                     break
-                else:
-                    print("no new controller found")
+                print("no new controller found")
                 await asyncio.sleep(sleepTime)
 
     async def checkConnection(self):
@@ -57,7 +58,7 @@ class ControllerManager():
             if not self.connectedControllers:
                 await self.waitForConnection()
             await asyncio.sleep(0.25)
-  
+
     def getUpdatedConnectedControllersList(self):
         newConnectedControllerList = []
         for controller in self.connectedControllers:

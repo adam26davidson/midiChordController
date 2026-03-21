@@ -1,8 +1,10 @@
 
-from display.displayConstants import COLORS, FONTS
-from music21 import chord as m21Chord, pitch as m21Pitch
+from music21 import chord as m21Chord
 
-class ChordName():
+from display.displayConstants import COLORS, FONTS
+
+
+class ChordName:
     def __init__(self, master):
         self.master = master
         self.chordName = ""
@@ -15,25 +17,25 @@ class ChordName():
         return self.master.create_text(
             x, y, fill=COLORS["chord"], text=self.chordName, font=FONTS["big"], justify="center"
         )
-    
+
     def set(self, chordTypes, rootType):
-        allTypes = [n for n in chordTypes]
+        allTypes = list(chordTypes)
         allTypes.sort()
         nameKey = str(rootType) + " " + "-".join([str(t) for t in allTypes])
 
         if not allTypes.count(rootType) > 0:
             allTypes.append(rootType)
         allTypes.sort()
-        
+
         text = ""
-        if (nameKey in self.pastChordNames.keys()):
+        if (nameKey in self.pastChordNames):
             text, fontSize = self.pastChordNames[nameKey]
         else:
             text, fontSize = self.generateName(allTypes, rootType)
             self.pastChordNames[nameKey] = (text, fontSize)
-        
+
         self.master.itemconfigure(self.textObject, text=text, font=("sans serif", fontSize))
-    
+
     def generateName(self, allTypes, rootType):
         chord = m21Chord.Chord(allTypes)
         # try:

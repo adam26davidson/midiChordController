@@ -1,6 +1,7 @@
 from models.appParameter import AppParameter
+
+from .constants import FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class TouchPadButton(ControlButton):
@@ -53,4 +54,3 @@ class TouchPadButton(ControlButton):
 
     def update_y(self, value):
         pass
-    

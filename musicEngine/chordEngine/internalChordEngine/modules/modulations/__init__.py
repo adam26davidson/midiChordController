@@ -1,17 +1,20 @@
-from typing import Callable, Dict, List
+from typing import Callable
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from musicEngine.chordEngine.internalChordEngine.modules.modulations.modulation import Modulation
-from ....state.modulationsState import ModulationSide
-from ....chordEngineState import state
 from redux import store
-from redux.actions import musicEngine as actions
 from redux import utils as reduxUtils
+from redux.actions import musicEngine as actions
 
-class Modulations():
+from ....chordEngineState import state
+from ....state.modulationsState import ModulationSide
 
-    dict: Dict[ModulationSide, Modulation]
+
+class Modulations:
+
+    dict: dict[ModulationSide, Modulation]
     updateChordEngine: Callable
 
     def __init__(self, setting: dict, updateChordEngine: Callable):
@@ -29,20 +32,18 @@ class Modulations():
         if state.modulation.side == ModulationSide.NONE:
             return None
         return self.dict[state.modulation.side]
-    
-    def apply(self, notes: List[int], scale: List[int]) -> List[int]:
+
+    def apply(self, notes: list[int], scale: list[int]) -> list[int]:
         modulation = self.get()
         if modulation:
             return modulation.apply(notes, scale)
-        else:
-            return notes
-    
-    def applyOne(self, note: int, scale: List[int]) -> int:
+        return notes
+
+    def applyOne(self, note: int, scale: list[int]) -> int:
         modulation = self.get()
         if modulation:
             return modulation.applyOne(note, scale)
-        else:
-            return note
+        return note
 
     def set(self, side: ModulationSide):
         if state.modulation.side != side:
@@ -63,7 +64,7 @@ class Modulations():
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.set(ModulationSide.LEFT), 
+                    Command.ON: lambda: self.set(ModulationSide.LEFT),
                     Command.OFF: lambda: self.set(ModulationSide.NONE)
                 },
                 key = "LEFT_MODULATION",
@@ -74,7 +75,7 @@ class Modulations():
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.set(ModulationSide.RIGHT), 
+                    Command.ON: lambda: self.set(ModulationSide.RIGHT),
                     Command.OFF: lambda: self.set(ModulationSide.NONE)
                 },
                 key = "RIGHT_MODULATION",

@@ -1,7 +1,10 @@
 import tkinter as tk
+
+from PIL import Image, ImageTk
+
 from constants import PARENT_PATH
-from ..displayConstants import FONTS, COLORS
-from PIL import ImageTk, Image
+
+from ..displayConstants import COLORS, FONTS
 
 
 class TextDisplay(tk.Frame):
@@ -18,9 +21,9 @@ class TextDisplay(tk.Frame):
                          highlightthickness=0, relief="flat", bg=self.bgColor, border=2, borderwidth=2)
         self.master = master
 
-        bigFont = FONTS["big"]
-        mediumFont = FONTS["medium"]
-        smallFont = FONTS["small"]
+        FONTS["big"]
+        FONTS["medium"]
+        FONTS["small"]
         smallBoldFont = FONTS["smallBold"]
 
         rowSpacing = 50

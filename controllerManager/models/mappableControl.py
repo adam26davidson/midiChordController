@@ -1,8 +1,7 @@
 from .mappableControlType import MappableControlType
-from .mappableControlEvent import MappableControlEvent
 
 
-class MappableControl():
+class MappableControl:
     label: str
     key: str
     rawControlKey: str

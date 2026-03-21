@@ -11,7 +11,7 @@ controlAbreviations = {
     "EXTENSION_TWO_ON": "E2",
 
     "OCTAVE_UP": "+O",
-    "OCTAVE_DOWN": "-O",      
+    "OCTAVE_DOWN": "-O",
 
     "INCREMENT_VOICE_COUNT": "+V",
     "DECREMENT_VOICE_COUNT": "-V",

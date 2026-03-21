@@ -1,5 +1,6 @@
-import evdev
 import asyncio
+
+import evdev
 
 print([(evdev.InputDevice(path).uniq, evdev.InputDevice(path).name) for path in evdev.list_devices()])
 
@@ -19,17 +20,12 @@ async def buttonsLoop():
 
 async def touchLoop():
   async for event in touch.async_read_loop():
-    if event.type == evdev.ecodes.EV_KEY:
-      pass
-      # print("touch")
-      # print(evdev.categorize(event))
-      # print(event)
-    elif event.type == evdev.ecodes.EV_ABS and event.code in [0, 1]:
+    if event.type == evdev.ecodes.EV_KEY or (event.type == evdev.ecodes.EV_ABS and event.code in [0, 1]):
       pass
       #print(event)
 
 async def motionLoop():
-  async for event in motion.async_read_loop():
+  async for _event in motion.async_read_loop():
     pass
     # print("motion")
     # print(evdev.categorize(event))
@@ -41,8 +37,8 @@ if (evdev.list_devices().count('/dev/input/event1') == 1):
 
   #asyncio.ensure_future(motionLoop())
   #asyncio.ensure_future(buttonsLoop())
-  asyncio.ensure_future(touchLoop())
-  
+  _task = asyncio.ensure_future(touchLoop())
+
 loop = asyncio.get_event_loop()
 loop.run_forever()
 

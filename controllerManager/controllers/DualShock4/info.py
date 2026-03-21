@@ -1,9 +1,9 @@
 from controllerManager.models.controllerConfig import ControllerConfig
+from controllerManager.models.polarOrientation import PolarOrientation
+from controllerManager.models.rawControl import RawControl
 from controllerManager.models.rawControlConfig import RawControlConfig
 from controllerManager.models.rawControlEvent import RawControlEvent as Event
 from controllerManager.models.rawControlType import RawControlType as Type
-from controllerManager.models.rawControl import RawControl
-from controllerManager.models.polarOrientation import PolarOrientation
 
 controllerConfig = ControllerConfig(
     name="DualShock4",
@@ -239,7 +239,7 @@ controllerConfig = ControllerConfig(
                     exposeOnOffEvents = True,
                     exposePolarEvents = True,
                     averageCount=1,
-                    centeredThreshold=0.6,  
+                    centeredThreshold=0.6,
                     ignoreValues=[0],
                     polarEventMap={1: Event.UP, 0: Event.OFF, -1: Event.DOWN},
                     polarOrientation=PolarOrientation.VERTICAL

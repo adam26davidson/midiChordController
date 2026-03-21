@@ -1,7 +1,10 @@
 import evdev
-from .info import info
+
 from redux import store
+
 from ...controller import Controller
+from .info import info
+
 
 class Wired360Controller(Controller):
     def __init__(self, sendEvent):
@@ -26,4 +29,3 @@ class Wired360Controller(Controller):
     def checkForNewConnections():
         return Controller.checkForNewConnections(info)
 
-    

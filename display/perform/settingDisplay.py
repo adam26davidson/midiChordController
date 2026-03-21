@@ -1,8 +1,10 @@
 import tkinter as tk
-from constants import PARENT_PATH
-from ..displayConstants import FONTS, COLORS
-from redux import store
+
 from pyrsistent import thaw
+
+from redux import store
+
+from ..displayConstants import COLORS, FONTS
 
 
 class SettingDisplay(tk.Frame):

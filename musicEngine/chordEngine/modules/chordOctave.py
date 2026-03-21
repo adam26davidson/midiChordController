@@ -1,20 +1,24 @@
-from typing import Callable, List
-from constants import MAX_OCTAVE_SHIFT, MAX_SPREAD_OCTAVES, SPREAD_STEPS_PER_OCTAVE
+from typing import Callable
+
+from pyrsistent import thaw
+
+from constants import MAX_OCTAVE_SHIFT
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
+from redux import utils as reduxUtils
 from redux.actions import musicEngine as actions
 from redux.settingsStorage import settingsStorageUtility
-from ..chordEngineState import state
-from pyrsistent import thaw
-from redux import utils as reduxUtils
 
-class ChordOctave():
+from ..chordEngineState import state
+
+
+class ChordOctave:
 
     updateChordEngine: Callable
     type: AppParameterType
-    
+
     def __init__(self, type: AppParameterType, updateChordEngine: Callable):
         self.updateChordEngine = updateChordEngine
         self.type = type
@@ -28,7 +32,7 @@ class ChordOctave():
         if (meState['chordOctave'] != state.chordOctave):
             self.set(meState['chordOctave'])
 
-    def apply(self, notes: List[int]) -> List[int]:
+    def apply(self, notes: list[int]) -> list[int]:
         return [note + (state.chordOctave * 12) for note in notes]
 
     def set(self, octave):
@@ -43,14 +47,14 @@ class ChordOctave():
 
     def decrement(self):
         self.set(state.chordOctave - 1)
-        
+
     def __getParameters(self):
         keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
                 commandMappings = {
-                    Command.INCREMENT: self.increment, 
+                    Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
                 key = f"{keyPrefix}OCTAVE",

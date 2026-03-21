@@ -1,11 +1,14 @@
-from pathlib import Path
-from constants import PARENT_PATH
-from redux.actions import musicEngine as actions
-from pyrsistent import thaw
-from redux import store
 import json
+from pathlib import Path
 
-class SettingsStorageUtility():
+from pyrsistent import thaw
+
+from constants import PARENT_PATH
+from redux import store
+from redux.actions import musicEngine as actions
+
+
+class SettingsStorageUtility:
 
     loadingSettings = True
 
@@ -22,7 +25,7 @@ class SettingsStorageUtility():
         'strumMode': actions.changeStrumMode,
         'strumInterval': actions.changeStrumInterval,
         'strumOrder': actions.changeStrumOrder,
-        
+
         'inversionRange': actions.changeInversionRange,
         'bassRange': actions.changeBassRange,
         'transposeIncrement': actions.changeTransposeIncrement,
@@ -32,21 +35,22 @@ class SettingsStorageUtility():
         'voiceCount': actions.changeVoiceCount,
         'chordOctave': actions.changeChordOctave
     }
-    
+
     def loadSettings(self):
         self.loadingSettings = True
         settingsFilePath = Path(self.settingsFileDirectory)
 
         if ( not settingsFilePath.is_file()):
-            return None
+            return
 
-        settingsFromFile = json.load(open(self.settingsFileDirectory))
+        with open(self.settingsFileDirectory) as f:
+            settingsFromFile = json.load(f)
 
-        for setting in self.savedMusicEngineSettings.keys():
-            if setting in settingsFromFile.keys():
+        for setting in self.savedMusicEngineSettings:
+            if setting in settingsFromFile:
                 print(f'loading {setting} = {settingsFromFile[setting]}')
                 store.dispatch(self.savedMusicEngineSettings[setting](settingsFromFile[setting]))
-        
+
         self.loadingSettings = False
 
     def saveSettings(self):
@@ -55,7 +59,7 @@ class SettingsStorageUtility():
 
             state = store.get_state()
             meState = thaw(state['musicEngine'])
-            for setting in self.savedMusicEngineSettings.keys():
+            for setting in self.savedMusicEngineSettings:
                 settingsToSave[setting] = meState[setting]
 
             with open(self.settingsFileDirectory, "w") as outfile:

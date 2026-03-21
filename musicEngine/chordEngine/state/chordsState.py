@@ -1,4 +1,3 @@
-from typing import List
 from enum import Enum
 
 
@@ -8,11 +7,11 @@ class ChordButton(Enum):
     NORTH = "north"
     EAST = "east"
 
-class ChordsState():
+class ChordsState:
 
     rootClass: int = 0
-    NoteClasses: List[int] = []
-    playingNotes: List[int] = []
+    NoteClasses: list[int] = []
+    playingNotes: list[int] = []
     isPlaying: bool = False
     activeButton: ChordButton = ChordButton.SOUTH
-    buttonQueue: List[int] = []
+    buttonQueue: list[int] = []

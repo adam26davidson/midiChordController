@@ -1,4 +1,5 @@
-from constants import MIN_NOTE, MAX_NOTE
+from constants import MAX_NOTE, MIN_NOTE
+
 
 # find all octaves of the specified array of notes
 def findAllOctavesInRange(notes, min=MIN_NOTE, max=MAX_NOTE):
@@ -17,11 +18,11 @@ def findAllOctavesInRange(notes, min=MIN_NOTE, max=MAX_NOTE):
 
 def findClosestNote(targetNote, sortedNotes):
     upperIndex = 0
-    for index in range(0, len(sortedNotes)):
+    for index in range(len(sortedNotes)):
         if sortedNotes[index] > targetNote:
             upperIndex = index
             break
-        elif (index == len(sortedNotes) - 1):
+        if (index == len(sortedNotes) - 1):
             return index
     if (upperIndex == 0):
         return 0
@@ -29,5 +30,4 @@ def findClosestNote(targetNote, sortedNotes):
     lowerDistance = abs(sortedNotes[upperIndex - 1] - targetNote)
     if upperDistance < lowerDistance:
         return upperIndex
-    else:
-        return upperIndex - 1
+    return upperIndex - 1

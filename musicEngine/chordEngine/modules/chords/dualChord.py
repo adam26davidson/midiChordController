@@ -1,6 +1,6 @@
-from . import Chord, DEFAULT_SCALE
-from ...internalChordEngine.modules.secondaries.secondary import Secondary
 from ...chordEngineState import state
+from ...internalChordEngine.modules.secondaries.secondary import Secondary
+from . import DEFAULT_SCALE, Chord
 
 
 class DualChord:
@@ -40,5 +40,4 @@ class DualChord:
         args = [] if targetNote is None else [targetNote]
         if state.alternate:
             return self.alternate, args
-        else:
-            return self.main, args
+        return self.main, args

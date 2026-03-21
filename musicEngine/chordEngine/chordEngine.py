@@ -1,22 +1,24 @@
 from abc import ABC, abstractmethod
-from typing import Callable, List
+from typing import Callable
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
-from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordPlayer, ChordMessageType
-from musicEngine.chordEngine.modules.spread import Spread
+from musicEngine.chordEngine.chordEngineMessage import ChordEngineMessage, ChordMessageType, ChordPlayer
 from musicEngine.chordEngine.modules.chordOctave import ChordOctave
-from musicEngine.chordEngine.state.chordsState import ChordButton
 from musicEngine.chordEngine.modules.hold import Hold
 from musicEngine.chordEngine.modules.inversion.bassPosition import BassPosition
 from musicEngine.chordEngine.modules.inversion.chordInversion import ChordInversion
 from musicEngine.chordEngine.modules.key import Key
 from musicEngine.chordEngine.modules.scale import Scale
+from musicEngine.chordEngine.modules.spread import Spread
 from musicEngine.chordEngine.modules.voiceCount import VoiceCount
-from .chordEngineState import state
+from musicEngine.chordEngine.state.chordsState import ChordButton
 from redux import store
-from redux.actions import musicEngine as actions
 from redux import utils as reduxUtils
+from redux.actions import musicEngine as actions
+
+from .chordEngineState import state
 
 
 class ChordEngine(ABC):
@@ -32,7 +34,7 @@ class ChordEngine(ABC):
     voiceCount: VoiceCount
     hold: Hold
 
-    callbacks: List[Callable]
+    callbacks: list[Callable]
 
     def __init__(self, type: AppParameterType):
 
@@ -61,7 +63,7 @@ class ChordEngine(ABC):
 
     @abstractmethod
     def getBassNote(self):
-        pass    
+        pass
 
     def subscribe(self, callback):
         self.callbacks.append(callback)
@@ -70,7 +72,7 @@ class ChordEngine(ABC):
         for callback in self.callbacks:
             callback(message)
 
-    def sendNotesOn(self, notes: List[int], player: ChordPlayer):
+    def sendNotesOn(self, notes: list[int], player: ChordPlayer):
         message = ChordEngineMessage(
             type=ChordMessageType.ON,
             notes=notes,
@@ -78,7 +80,7 @@ class ChordEngine(ABC):
         )
         self.sendMessage(message)
 
-    def sendNotesOff(self, notes: List[int], player: ChordPlayer):
+    def sendNotesOff(self, notes: list[int], player: ChordPlayer):
         message = ChordEngineMessage(
             type=ChordMessageType.OFF,
             notes=notes,
@@ -87,18 +89,23 @@ class ChordEngine(ABC):
         self.sendMessage(message)
 
     def chordButtonOn(self, button):
+        alreadyActive = (len(state.chord.buttonQueue) > 0
+                         and state.chord.buttonQueue[-1] == button)
         if state.chord.buttonQueue.count(button) > 0:
             state.chord.buttonQueue.remove(button)
         state.chord.buttonQueue.append(button)
-        self.updateChordFromControlState()
+        if not alreadyActive:
+            self.updateChordFromControlState()
 
     def chordButtonOff(self, button):
+        if len(state.chord.buttonQueue) == 0:
+            return
         lastButton = state.chord.buttonQueue[-1]
         if state.chord.buttonQueue.count(button) > 0:
             state.chord.buttonQueue.remove(button)
         if button == lastButton:
             self.updateChordFromControlState()
-    
+
     def updateChordFromControlState(self):
         if len(state.chord.buttonQueue) == 0:
             self.stopChord()
@@ -130,7 +137,7 @@ class ChordEngine(ABC):
         self.stopBass(buttonUp=False)
 
     def stopChord(self, force=False):
-        if ((not state.hold and state.chord.isPlaying) or force):
+        if ((not state.hold and state.chord.isPlaying) or force) and state.chord.playingNotes:
             playingNotes = state.chord.playingNotes
             self.sendNotesOff(playingNotes, player=ChordPlayer.CHORD)
             store.dispatch(actions.stopChord())
@@ -181,7 +188,7 @@ class ChordEngine(ABC):
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.chordButtonOn(ChordButton.SOUTH), 
+                    Command.ON: lambda: self.chordButtonOn(ChordButton.SOUTH),
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.SOUTH)
                 },
                 key = f"{keyPrefix}SOUTH_CHORD",
@@ -192,7 +199,7 @@ class ChordEngine(ABC):
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.chordButtonOn(ChordButton.WEST), 
+                    Command.ON: lambda: self.chordButtonOn(ChordButton.WEST),
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.WEST)
                 },
                 key = f"{keyPrefix}WEST_CHORD",
@@ -203,7 +210,7 @@ class ChordEngine(ABC):
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.chordButtonOn(ChordButton.NORTH), 
+                    Command.ON: lambda: self.chordButtonOn(ChordButton.NORTH),
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.NORTH)
                 },
                 key = f"{keyPrefix}NORTH_CHORD",
@@ -214,7 +221,7 @@ class ChordEngine(ABC):
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: lambda: self.chordButtonOn(ChordButton.EAST), 
+                    Command.ON: lambda: self.chordButtonOn(ChordButton.EAST),
                     Command.OFF: lambda: self.chordButtonOff(ChordButton.EAST)
                 },
                 key = f"{keyPrefix}EAST_CHORD",
@@ -225,7 +232,7 @@ class ChordEngine(ABC):
             AppParameter(
                 validCommandTypes = [CommandType.ON_OFF],
                 commandMappings = {
-                    Command.ON: self.playBass, 
+                    Command.ON: self.playBass,
                     Command.OFF: self.stopBass
                 },
                 key = f"{keyPrefix}BASS",

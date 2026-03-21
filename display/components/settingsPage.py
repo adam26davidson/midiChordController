@@ -1,36 +1,36 @@
-from ..displayConstants import FONTS, COLORS
-from redux import store
-from redux.actions import musicEngine as meActions
-from pyrsistent import thaw
+import tkinter as tk
+
 from redux import store
 from redux.actions import display as actions
-import tkinter as tk
+
+from ..displayConstants import COLORS, FONTS
+
 
 class SettingsPage(tk.Frame):
 
     def __init__(self, container, name):
         super().__init__(
-            container, 
-            highlightthickness=0, 
-            relief="flat", 
+            container,
+            highlightthickness=0,
+            relief="flat",
             bg="#000000")
 
-        self.titleFrame = tk.Frame(self, 
-            highlightthickness=0, 
-            relief="flat", 
+        self.titleFrame = tk.Frame(self,
+            highlightthickness=0,
+            relief="flat",
             bg="#000000",
             height=80,
             width=800)
-        
+
         self.title = tk.Label(self.titleFrame,
             text=name,
-            bg='#000000', 
-            fg=COLORS['chord'], 
+            bg='#000000',
+            fg=COLORS['chord'],
             font=FONTS["big"],
             justify='center')
-        
+
         self.menuButton = tk.Button(self.titleFrame,
-            highlightthickness=0, 
+            highlightthickness=0,
             relief="flat",
             bg="#000000",
             height=2,

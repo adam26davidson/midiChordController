@@ -1,3 +1,5 @@
+from pyrsistent import thaw
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
@@ -5,11 +7,12 @@ from musicEngine.chordEngine.modules.inversion import Inversion
 from musicEngine.chordEngine.state.inversionState import InversionState
 from redux import store
 from redux.actions import musicEngine as actions
+
 from ...chordEngineState import state
-from pyrsistent import thaw
+
 
 class BassPosition(Inversion):
-        
+
     def __init__(self, type: AppParameterType, updateChordEngine: callable):
         super().__init__(type, updateChordEngine)
 
@@ -31,7 +34,7 @@ class BassPosition(Inversion):
             self.setRange(meState['bassRange'])
 
     def getParameters(self):
-        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"        
+        keyPrefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(
                 validCommandTypes = [CommandType.ANALOG, CommandType.INCREMENTAL],

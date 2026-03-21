@@ -1,21 +1,24 @@
 from typing import Callable
+
+from pyrsistent import thaw
+
 from constants import MAX_SPREAD_OCTAVES, SPREAD_STEPS_PER_OCTAVE
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
+from redux import utils as reduxUtils
 from redux.actions import musicEngine as actions
 from redux.settingsStorage import settingsStorageUtility
+
 from ..chordEngineState import state
-from pyrsistent import thaw
-from redux import utils as reduxUtils
 
 
-class Spread():
+class Spread:
 
     updateChordEngine: Callable
     type: AppParameterType
-    
+
     def __init__(self, type: AppParameterType, updateChordEngine: Callable):
         self.updateChordEngine = updateChordEngine
         self.type = type
@@ -31,7 +34,7 @@ class Spread():
         store.dispatch(actions.changeSpread(state.spread))
         settingsStorageUtility.saveSettings()
         self.updateChordEngine()
-        
+
     def increment(self):
         self.set(state.spread + 1)
 

@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from constants import SPREAD_STEPS_PER_OCTAVE
 from redux import store
 
@@ -23,7 +24,7 @@ class Spread(tk.Canvas):
     def handleStoreUpdate(self):
         spread = store.get_state()['musicEngine']['spread']
         if self.state['rawValue'] != spread:
-            self.after(0, self.__setValue(spread))
+            self.after(0, lambda: self.__setValue(spread))
 
     def __drawArrow(self):
         keyWidth = self.width / self.numKeys

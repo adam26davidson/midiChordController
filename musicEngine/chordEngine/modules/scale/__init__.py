@@ -1,9 +1,11 @@
-from ...utils import findAllOctavesInRange
-from ...chordEngineState import state 
 from redux import store
 from redux.actions import musicEngine as actions
 
-class Scale():
+from ...chordEngineState import state
+from ...utils import findAllOctavesInRange
+
+
+class Scale:
 
     def __init__(self):
         self.update(state.scale.keyAgnostic)
@@ -26,7 +28,7 @@ class Scale():
     def __findScaleNotes(self):
         scaleNotes = {}
         allScaleNotes = {}
-        for key in range(0, 12):
+        for key in range(12):
             scaleNotes[key] = self.__findScaleNotesForKey(key)
             allScaleNotes[key] = findAllOctavesInRange(scaleNotes[key])
         return scaleNotes, allScaleNotes

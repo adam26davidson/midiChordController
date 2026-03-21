@@ -1,6 +1,5 @@
 from enum import Enum
 
-from controllerManager.models.mappableControlEvent import MappableControlEvent
 
 class RawControlEvent(Enum):
     ON = 1

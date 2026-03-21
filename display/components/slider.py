@@ -1,10 +1,8 @@
-from redux import store
-from ..displayConstants import FONTS, COLORS
-from .settingControl import SettingControl
-from pyrsistent import thaw
-from redux import store
-from redux.actions import display as actions
 import tkinter as tk
+
+from ..displayConstants import COLORS, FONTS
+from .settingControl import SettingControl
+
 
 class Slider(SettingControl):
 
@@ -17,20 +15,20 @@ class Slider(SettingControl):
 
         self.state = SliderState(self, value)
 
-        self.contentsFrame = tk.Frame(self, 
-            highlightthickness=0, 
-            relief="flat", 
+        self.contentsFrame = tk.Frame(self,
+            highlightthickness=0,
+            relief="flat",
             bg="#000000")
 
-        self.number = tk.Label(self.contentsFrame, 
+        self.number = tk.Label(self.contentsFrame,
             textvariable=self.state.number,
-            bg='#000000', 
+            bg='#000000',
             width=4,
-            fg=COLORS['root'], 
+            fg=COLORS['root'],
             font=FONTS["big"],
             )
 
-        self.slider = tk.Scale(self.contentsFrame, 
+        self.slider = tk.Scale(self.contentsFrame,
             length=500,
             bd=0,
             from_=self.min,
@@ -51,7 +49,7 @@ class Slider(SettingControl):
             showvalue=False,
             variable=self.state.number,
             command=self.sliderCallback)
-        
+
         self.number.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.slider.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.contentsFrame.pack(side='top', anchor='nw', padx=(2, 2), pady=(5, 5))
@@ -62,19 +60,19 @@ class Slider(SettingControl):
     def setDisabled(self):
         self.slider.configure(state=tk.DISABLED, bg=COLORS['chordDim'])
         self.number.configure(fg=COLORS['chordDim'])
-    
+
     def setEnabled(self):
         self.slider.configure(state=tk.NORMAL, bg=COLORS['root'])
         self.number.configure(fg=COLORS['root'])
-    
+
     def setValue(self, value):
         self.state.number.set(str(value))
-    
+
     def getValue(self):
         return float(self.state.number.get())
 
 
-class SliderState():
+class SliderState:
     disabled = False
 
     def __init__(self, container, number):

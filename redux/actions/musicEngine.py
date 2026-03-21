@@ -46,7 +46,7 @@ def changeInversionMode(inversionMode):
     'type': 'me/inversionModeChanged',
     'data': {'inversionMode': inversionMode}
   }
-  
+
 def changeInversionRange(inversionRange):
   return{
     'type': 'me/inversionRangeChanged',
@@ -140,7 +140,7 @@ def changeChordChannel(channel):
     'type': 'me/chordChannelChanged',
     'data': {'chordChannel': channel}
   }
-  
+
 def changeBassChannel(channel):
   return {
     'type': 'me/bassChannelChanged',

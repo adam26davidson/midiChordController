@@ -14,12 +14,12 @@ def updateMap(data):
   return {
     'type': 'controllerManager/controllerMapUpdated',
     'data': data
-  } 
+  }
 
 def startWaitingForConnection():
   return {
     'type': 'controllerManager/startedWaitingForConnection'
-  } 
+  }
 
 def stopWaitingForConnection():
   return {

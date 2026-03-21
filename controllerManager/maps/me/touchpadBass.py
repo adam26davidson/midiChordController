@@ -4,7 +4,7 @@ touchpadBass = {
   'inversionMode': 'continuous',
   'bassMode': 'continuous',
   'map': {
-      
+
     #MAIN BUTTONS
     "SOUTH_BUTTON": "SOUTH_CHORD",
     "WEST_BUTTON": "WEST_CHORD",

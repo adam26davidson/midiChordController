@@ -1,0 +1,67 @@
+[project]
+name = "midishock3"
+version = "0.1.0"
+description = "Music theory based chord instrument using a game controller"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "evdev>=1.9.3 ; sys_platform == 'linux'",
+    "music21==8.3.0",
+    "numpy>=2.0.2",
+    "pydux==0.2.2",
+    "pyrsistent==0.18.0",
+    "python-rtmidi>=1.5",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.6",
+]
+
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "F",      # Pyflakes - unused imports, undefined names, etc.
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "I",      # isort - import sorting
+    "UP",     # pyupgrade - modernize syntax for target Python version
+    "B",      # flake8-bugbear - common bug patterns
+    "SIM",    # flake8-simplify - simplifiable code
+    "RUF",    # Ruff-specific rules
+    "N",      # pep8-naming - naming conventions (camelCase warnings)
+    "C4",     # flake8-comprehensions - unnecessary list/dict calls
+    "PIE",    # flake8-pie - misc lint
+    "PT",     # flake8-pytest-style
+    "RET",    # flake8-return - unnecessary return statements
+    "TCH",    # flake8-type-checking - move imports to TYPE_CHECKING
+]
+ignore = [
+    "E501",   # line too long - handled by formatter
+    "N802",   # function name should be lowercase - TODO: fix in naming refactor
+    "N803",   # argument name should be lowercase - TODO: fix in naming refactor
+    "N806",   # variable in function should be lowercase - TODO: fix in naming refactor
+    "N812",   # lowercase imported as non-lowercase - from camelCase modules
+    "N813",   # camelcase imported as lowercase - from camelCase modules
+    "N815",   # mixedCase variable in class scope - TODO: fix in naming refactor
+    "N816",   # mixedCase variable in global scope - TODO: fix in naming refactor
+    "N999",   # invalid module name (camelCase directories)
+    "RET504", # unnecessary assignment before return
+    "SIM108", # use ternary operator - sometimes less readable
+    "F405",   # undefined name from star import - used in __init__.py re-exports
+    "RUF012", # mutable class default - would require ClassVar annotations everywhere
+    "RUF006", # dangling asyncio task - fire-and-forget tasks are intentional in this codebase
+    "E402",   # import not at top - test files need sys.path manipulation before imports
+    "TC001",  # move import to TYPE_CHECKING - can break runtime usage, not worth the churn
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["controllerCoupler", "controllerManager", "display", "models", "musicEngine", "redux"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false

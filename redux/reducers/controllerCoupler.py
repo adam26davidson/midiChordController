@@ -1,4 +1,5 @@
-from pyrsistent import freeze, thaw, m, pmap, v, pvector
+from pyrsistent import freeze
+
 
 def reducer(state, action):
     if state is None:
@@ -11,14 +12,14 @@ def reducer(state, action):
 
     if action['type'] == 'controllerCoupler/controlMapUpdated':
         return state.set('activeControlMap', action['data'])
-  
-    elif action['type'] == 'controllerCoupler/appParametersUpdated':
+
+    if action['type'] == 'controllerCoupler/appParametersUpdated':
         return state.set('appParameters', action['data'])
-    
-    elif action['type'] == 'controllerCoupler/controlsUpdated':
+
+    if action['type'] == 'controllerCoupler/controlsUpdated':
         return state.set('controls', action['data'])
 
-    elif action['type'] == 'controllerCoupler/musicEngineAppParametersLoaded':
+    if action['type'] == 'controllerCoupler/musicEngineAppParametersLoaded':
         return state.set('musicEngineAppParametersLoaded', True)
-    
-    else: return state
+
+    return state

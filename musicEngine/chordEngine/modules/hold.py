@@ -1,18 +1,20 @@
 from typing import Callable
+
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux.actions import musicEngine as actions
-from ..chordEngineState import state
 from redux import utils as reduxUtils
+from redux.actions import musicEngine as actions
+
+from ..chordEngineState import state
 
 
-class Hold():
+class Hold:
 
     stopChordAndBass: Callable
     type: AppParameterType
-    
+
     def __init__(self, type: AppParameterType, stopChordAndBass: Callable):
         self.stopChordAndBass = stopChordAndBass
         self.type = type

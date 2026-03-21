@@ -1,7 +1,7 @@
 from controllerManager import ControllerManager
-from musicEngine import MusicEngine
 from display import Display
-from redux import store
+from musicEngine import MusicEngine
+
 
 def musicEngineTest():
   d = Display()

@@ -1,21 +1,22 @@
 
 
 import time
+
 from musicEngine.chordEngine.chordEngineState import state
 from musicEngine.chordEngine.state.noteHistoryState import NoteHistoryEvent
 
 
-class HistoryUpdateResponse():
+class HistoryUpdateResponse:
     lastContiguousClassesChanged: bool = False
     classesPlayedChanged: bool = False
     classRecencyRankingChanged: bool = False
     lowestChanged: bool = False
-    
 
-class NoteHistory():
+
+class NoteHistory:
 
     def __init__(self):
-        for note in range(0, 12):
+        for note in range(12):
             state.noteInHistory.all[note] = []
 
     def noteOn(self, note: int) -> HistoryUpdateResponse:
@@ -71,7 +72,7 @@ class NoteHistory():
         noteClasses = [n % 12 for n in state.noteInHistory.notesPlayed]
         if noteClass not in noteClasses and noteClass in state.noteInHistory.classesPlayed:
             state.noteInHistory.classesPlayed.remove(noteClass)
-        
+
         # update note history
         if len(state.noteInHistory.all[noteClass]) > 0 and self.__latestNoteIsOn(noteClass):
             state.noteInHistory.all[noteClass][-1].OffTime = time.time_ns()
@@ -81,7 +82,7 @@ class NoteHistory():
     def __removeExpired(self):
         for noteClassHistory in state.noteInHistory.all.values():
             for noteEvent in noteClassHistory:
-                if noteEvent.OffTime == None:
+                if noteEvent.OffTime is None:
                     continue
                 endAgeSeconds = (time.time_ns() - noteEvent.OffTime) / 1000000000
                 if endAgeSeconds > state.noteInHistory.memoryLength:
@@ -89,7 +90,6 @@ class NoteHistory():
 
     def __latestNoteIsOn(self, note: int) -> bool:
         if len(state.noteInHistory.all[note]) > 0:
-            return state.noteInHistory.all[note][-1].OffTime == None
+            return state.noteInHistory.all[note][-1].OffTime is None
         return False
-    
-        
+

@@ -1,19 +1,23 @@
+from __future__ import annotations
+
 from enum import Enum
-from models.commandType import CommandType
+from typing import Callable
+
 from models.command import Command
-from typing import Callable, Dict, List
+from models.commandType import CommandType
+
 
 class AppParameterType(Enum):
     MUSIC_ENGINE = 1
     CHORD_ENGINE = 2
     INTERNAL_CHORD_ENGINE = 3
     EXTERNAL_CHORD_ENGINE = 4
-    UI = 2
+    UI = 5
 
-class AppParameter():
+class AppParameter:
 
-    validCommandTypes: List[CommandType]
-    commandMappings: Dict[Command, Callable]
+    validCommandTypes: list[CommandType]
+    commandMappings: dict[Command, Callable]
     remappable: bool
     key: str
     label: str
@@ -21,15 +25,15 @@ class AppParameter():
     type: AppParameterType
 
     def __init__(
-            self, 
-            validCommandTypes: List[CommandType], 
-            commandMappings: Dict[Command, Callable], 
-            key: str, 
-            label: str = None, 
-            labelAbreviation: str = None,
+            self,
+            validCommandTypes: list[CommandType],
+            commandMappings: dict[Command, Callable],
+            key: str,
+            label: str | None = None,
+            labelAbreviation: str | None = None,
             remappable: bool = True,
             type: AppParameterType = AppParameterType.MUSIC_ENGINE):
-        
+
         self.commandMappings = commandMappings
         self.validCommandTypes = validCommandTypes
         self.key = key

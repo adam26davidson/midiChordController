@@ -1,7 +1,7 @@
-from constants import BASS_CENTER, VOICING_PATTERNS, SPREAD_STEPS_PER_OCTAVE, \
-    CENTER_NOTE
-from ...utils import findAllOctavesInRange, findClosestNote
+from constants import BASS_CENTER, CENTER_NOTE, SPREAD_STEPS_PER_OCTAVE, VOICING_PATTERNS
+
 from ...chordEngineState import state
+from ...utils import findAllOctavesInRange, findClosestNote
 
 DEFAULT_SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
@@ -42,14 +42,14 @@ class Chord:
 
     def __findRootNotes(self):
         rootNotes = {}
-        for key in range(0, 12):
+        for key in range(12):
             rootNotes[key] = (self.scale[self.root] + key) % 12
         return rootNotes
 
     def findAllNotes(self, noteDegrees):
         notes = {}
         allNotes = {}
-        for key in range(0, 12):
+        for key in range(12):
             keyNotes = []
             for note in noteDegrees:
                 keyNotes.append(self.getNoteForKey(note, key))
@@ -58,7 +58,7 @@ class Chord:
             allNotes[key] = findAllOctavesInRange(keyNotes)
         return notes, allNotes
 
-    def __convertSpread(spread, chordLength):
+    def __convertSpread(self, spread, chordLength):
         spreadsPerOct = chordLength - 1
         spreadOctaves = (spread * (1 / SPREAD_STEPS_PER_OCTAVE)) - 1
         return int(spreadOctaves*spreadsPerOct)

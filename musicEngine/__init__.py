@@ -1,16 +1,17 @@
+from models.appParameter import AppParameter
+from models.command import Command
+from models.commandType import CommandType
 from musicEngine.chordEngine.externalChordEngine import ExternalChordEngine
 from musicEngine.chordEngine.internalChordEngine import InternalChordEngine
-from .rhythmEngine import RhythmEngine
-from .midi import Midi
 from redux import store
 from redux import utils as reduxUtils
 from redux.actions import controllerCoupler as ccActions
-from models.appParameter import AppParameter
-from models.commandType import CommandType
-from models.command import Command
+
+from .midi import Midi
+from .rhythmEngine import RhythmEngine
 
 
-class MusicEngine():
+class MusicEngine:
 
     def __init__(self):
         self.internalChordEngine = InternalChordEngine()
@@ -26,7 +27,7 @@ class MusicEngine():
         self.rhythmEngine.subscribe(self.midi.handleMessage)
 
         reduxUtils.addAppParameters(self.getParameters())
-        
+
         store.dispatch(ccActions.musicEngineAppParametersLoaded())
 
     def start(self):

@@ -1,21 +1,24 @@
-from constants import FULLSCREEN, ANIMATION_STEP
+import asyncio
+import tkinter as tk
+
+from pyrsistent import thaw
+
+from constants import ANIMATION_STEP, FULLSCREEN
 from models.appParameter import AppParameter
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux.actions import display as actions
 from redux import utils as reduxUtils
+from redux.actions import display as actions
+
 from .perform.performFrame import PerformFrame
 from .settingsMenu import SettingsMenuFrame
+from .settingsPages.chordSettings import ChordSettingsFrame
 from .settingsPages.midiSettings import MidiSettingsFrame
 from .settingsPages.strumSettings import StrumSettingsFrame
-from .settingsPages.chordSettings import ChordSettingsFrame
-from pyrsistent import thaw
-import asyncio
-import tkinter as tk
 
 
-class Display():
+class Display:
     def __init__(self):
         self.root = tk.Tk()
 
@@ -56,13 +59,18 @@ class Display():
         store.subscribe(self.__handleStoreUpdate)
 
     def start(self):
-        asyncio.ensure_future(self.__mainLoop())
+        _task = asyncio.ensure_future(self.__mainLoop())
 
     async def __mainLoop(self):
+        _displayLoopCount = 0
         while True:
-            if self.state.activeFrame == 'PERFORM':     
+            if self.state.activeFrame == 'PERFORM':
                 self.frames["PERFORM"].updateFrame()
+            self.root.update_idletasks()
             self.root.update()
+            _displayLoopCount += 1
+            if _displayLoopCount % 30 == 0:
+                print(f"[DISPLAY] heartbeat (loop #{_displayLoopCount})", flush=True)
             await asyncio.sleep(ANIMATION_STEP)
 
     def controllerEventHandler(self, event):
@@ -71,15 +79,15 @@ class Display():
         for controller in controllers:
             if controller['role'] == 'primary':
                 uiMap = controller['uiMap']['map']
-                
-        if (event['name'] in uiMap.keys()):
+
+        if (event['name'] in uiMap):
             command = uiMap[event['name']]
-            if (command in self.commandMap.keys()):
+            if (command in self.commandMap):
                 self.commandMap[command]()
 
-        if self.state.activeFrame == 'PERFORM':  
+        if self.state.activeFrame == 'PERFORM':
             self.frames["PERFORM"].handleControllerEvent(event)
-    
+
     def getParameters(self):
         return [
             AppParameter(
@@ -91,18 +99,18 @@ class Display():
                 remappable=False
             )
         ]
-        
+
 
     def __handleStoreUpdate(self):
         state = store.get_state()
         displayState = thaw(state['display'])
         if (displayState['activeFrame'] != self.state.activeFrame):
-            if (displayState['activeFrame'] in self.frames.keys()):
+            if (displayState['activeFrame'] in self.frames):
                 self.state.activeFrame = displayState['activeFrame']
-                self.root.after(0, self.frames[displayState['activeFrame']].tkraise())
+                self.root.after(0, lambda: self.frames[displayState['activeFrame']].tkraise())
             else:
                 store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
-    
+
     def toggleMenu(self):
         if (self.state.activeFrame == "MENU"):
             self.state.activeFrame = "PERFORM"
@@ -110,9 +118,9 @@ class Display():
         else:
             self.state.activeFrame = "MENU"
             self.frames["MENU"].tkraise()
-        
+
         store.dispatch(actions.changeActiveFrame(self.state.activeFrame))
 
 
-class DisplayState():
+class DisplayState:
     activeFrame = "PERFORM"

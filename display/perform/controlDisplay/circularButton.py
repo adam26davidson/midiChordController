@@ -1,6 +1,7 @@
 from models.appParameter import AppParameter
+
+from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class CircularButton(ControlButton):
@@ -38,7 +39,7 @@ class CircularButton(ControlButton):
             fill=INACTIVE_COLOR,
             font=FONT
         )
-    
+
     def on(self):
         self.master.itemconfig(self.canvasObject, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.textObject, fill='#000000')
@@ -46,4 +47,3 @@ class CircularButton(ControlButton):
     def off(self):
         self.master.itemconfig(self.canvasObject, outline=INACTIVE_COLOR, fill="#000000")
         self.master.itemconfig(self.textObject, fill=INACTIVE_COLOR)
-    

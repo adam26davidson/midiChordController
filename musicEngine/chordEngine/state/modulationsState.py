@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 
 
 class ModulationSide(Enum):
@@ -7,6 +6,6 @@ class ModulationSide(Enum):
     NONE = 2
     RIGHT = 3
 
-class ModulationsState():
+class ModulationsState:
     side: ModulationSide = ModulationSide.NONE
-    buttonQueue: List[ModulationSide] = []
+    buttonQueue: list[ModulationSide] = []

@@ -1,16 +1,18 @@
-from abc import ABC, abstractmethod
 import math
+from abc import ABC, abstractmethod
 from typing import Callable
+
 from constants import INVERSION_SNAP, MAX_INVERSION_RANGE
-from models.appParameter import AppParameter, AppParameterType
-from models.command import Command
-from models.commandType import CommandType
+from models.appParameter import AppParameter, AppParameterType  # noqa: F401
+from models.command import Command  # noqa: F401
+from models.commandType import CommandType  # noqa: F401
 from musicEngine.chordEngine.state.inversionState import InversionState
-from ...chordEngineState import state
 from redux import store
-from redux.actions import musicEngine as actions
 from redux import utils as reduxUtils
-from pyrsistent import thaw
+from redux.actions import musicEngine as actions  # noqa: F401
+
+from ...chordEngineState import state  # noqa: F401
+
 
 class Inversion(ABC):
 
@@ -75,8 +77,7 @@ class Inversion(ABC):
             self.setValue(newInversion)
 
     def setValue(self, inversion):
-        if (not self.getState().locked):
-            if inversion != self.getState().value:
+        if (not self.getState().locked) and inversion != self.getState().value:
                 range = self.getState().range
                 self.getState().value = max(min(inversion, range), -1*range)
                 self.updateChordEngine()
@@ -110,5 +111,5 @@ class Inversion(ABC):
 
         return value
 
-    
+
 

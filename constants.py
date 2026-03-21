@@ -20,7 +20,7 @@ BASS_CENTER = 42
 BASS_OCTAVE_RANGE = {"min": 36, "max": 47}
 VOICING_PATTERN_PATH = \
     "/musicEngine/chordEngine/modules/voicingPatterns/voicingPatterns.json"
-VOICING_PATTERNS = json.load(open(
-    PARENT_PATH + VOICING_PATTERN_PATH))['voicingPatterns']
-SETTINGS = json.load(open(
-    PARENT_PATH + "/musicEngine/chordEngine/internalChordEngine/modules/settings/settings.json"))
+with open(PARENT_PATH + VOICING_PATTERN_PATH) as _f:
+    VOICING_PATTERNS = json.load(_f)['voicingPatterns']
+with open(PARENT_PATH + "/musicEngine/chordEngine/internalChordEngine/modules/settings/settings.json") as _f:
+    SETTINGS = json.load(_f)

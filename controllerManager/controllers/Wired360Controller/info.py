@@ -47,7 +47,7 @@ info = {
         "name": "RIGHT_TRIGGER_ANALOG",
         "type": "ANALOG",
         "range": {"top": 255, "bottom": 0},
-        "events":{ 
+        "events":{
           "value": "RIGHT_TRIGGER_UPDATE",
           "threshold": {
             1: "RIGHT_TRIGGER_DOWN",
@@ -60,7 +60,7 @@ info = {
         "name": "LEFT_TRIGGER_ANALOG",
         "type": "ANALOG",
         "range": {"top": 255, "bottom": 0},
-        "events":{ 
+        "events":{
           "value": "LEFT_TRIGGER_UPDATE",
           "threshold": {
             1: "LEFT_TRIGGER_DOWN",
@@ -111,9 +111,9 @@ info = {
         "name": "LEFT_STICK_X",
         "type": "ANALOG",
         "range": {"top": 0, "bottom": 255},
-        "events":{ 
-          "value": "LEFT_STICK_X_UPDATE", 
-          "threshold": { 
+        "events":{
+          "value": "LEFT_STICK_X_UPDATE",
+          "threshold": {
             1: "LEFT_STICK_RIGHT",
             0: "LEFT_STICK_X_OFF",
             -1: "LEFT_STICK_LEFT"
@@ -125,9 +125,9 @@ info = {
         "name": "LEFT_STICK_Y",
         "type": "ANALOG",
         "range": {"top": 0, "bottom": 255},
-        "events":{ 
-          "value": "LEFT_STICK_Y_UPDATE", 
-          "threshold": { 
+        "events":{
+          "value": "LEFT_STICK_Y_UPDATE",
+          "threshold": {
             1: "LEFT_STICK_UP",
             0: "LEFT_STICK_Y_OFF",
             -1: "LEFT_STICK_DOWN"
@@ -144,9 +144,9 @@ info = {
         "name": "RIGHT_STICK_X",
         "type": "ANALOG",
         "range": {"top": 0, "bottom": 255},
-        "events":{ 
-          "value": "RIGHT_STICK_X_UPDATE", 
-          "threshold": { 
+        "events":{
+          "value": "RIGHT_STICK_X_UPDATE",
+          "threshold": {
             1: "RIGHT_STICK_RIGHT",
             0: "RIGHT_STICK_X_OFF",
             -1: "RIGHT_STICK_LEFT"
@@ -158,9 +158,9 @@ info = {
         "name": "RIGHT_STICK_Y",
         "type": "ANALOG",
         "range": {"top": 0, "bottom": 255},
-        "events":{ 
-          "value": "RIGHT_STICK_Y_UPDATE", 
-          "threshold": { 
+        "events":{
+          "value": "RIGHT_STICK_Y_UPDATE",
+          "threshold": {
             1: "RIGHT_STICK_UP",
             0: "RIGHT_STICK_Y_OFF",
             -1: "RIGHT_STICK_DOWN"
@@ -176,9 +176,9 @@ info = {
         "name": "GYRO_PITCH",
         "type": "ANALOG",
         "range": {"top": -8050, "bottom": 8050},
-        "events":{ 
+        "events":{
           "value": "GYRO_PITCH_UPDATE",
-          "threshold": { 
+          "threshold": {
             1: "GYRO_PITCH_UP",
             0: "GYRO_PITCH_OFF",
             -1: "GYRO_PITCH_DOWN"
@@ -190,8 +190,8 @@ info = {
         "name": "GYRO_ROLL",
         "type": "ANALOG",
         "range": {"top": -8050, "bottom": 8050},
-        "events":{ 
-          "value": "GYRO_ROLL_UPDATE", 
+        "events":{
+          "value": "GYRO_ROLL_UPDATE",
           "threshold": {
             1: "GYRO_ROLL_RIGHT",
             0: "GYRO_ROLL_OFF",
@@ -202,7 +202,7 @@ info = {
       },
     },
     "touch": {
-      #TOUCH PAD 
+      #TOUCH PAD
       272: {
         "name": "TOUCHPAD_BUTTON",
         "type": "BUTTON",
@@ -218,7 +218,7 @@ info = {
         "name": "TOUCHPAD_X",
         "type": "ANALOG",
         "range": {"top": 1919, "bottom": 0},
-        "events":{ 
+        "events":{
           "value": "TOUCHPAD_X_UPDATE"
         },
         "config": { "averageCount": 1}
@@ -227,7 +227,7 @@ info = {
         "name": "TOUCHPAD_Y",
         "type": "ANALOG",
         "range": {"top": 0, "bottom": 1896},
-        "events":{ 
+        "events":{
           "value": "TOUCHPAD_Y_UPDATE"
         },
         "config": { "averageCount": 1}

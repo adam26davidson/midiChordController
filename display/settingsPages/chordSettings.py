@@ -1,13 +1,15 @@
-from ..components.numberPicker import NumberPicker
-from ..components.buttonGroup import ButtonGroup
-from ..components.settingsPage import SettingsPage
-from ..components.settingsContainer import SettingsContainer
-from constants import MAX_INVERSION_RANGE, MAX_BASS_RANGE
+from pyrsistent import thaw
+
+from constants import MAX_BASS_RANGE, MAX_INVERSION_RANGE
 from redux import store
 from redux.actions import musicEngine as meActions
 from redux.settingsStorage import settingsStorageUtility
-from pyrsistent import thaw
-import tkinter as tk
+
+from ..components.buttonGroup import ButtonGroup
+from ..components.numberPicker import NumberPicker
+from ..components.settingsContainer import SettingsContainer
+from ..components.settingsPage import SettingsPage
+
 
 class ChordSettingsFrame(SettingsPage):
 
@@ -17,24 +19,24 @@ class ChordSettingsFrame(SettingsPage):
 
         self.rowOne = SettingsContainer(self)
 
-        self.transposeIncrement = NumberPicker(self.rowOne, 
-            name='transpose increment', 
-            min=1, 
-            max=11, 
+        self.transposeIncrement = NumberPicker(self.rowOne,
+            name='transpose increment',
+            min=1,
+            max=11,
             value=1,
             callback=self.setTransposeIncrement)
 
-        self.inversionRange = NumberPicker(self.rowOne, 
-            name='inversion range', 
-            min=1, 
-            max=MAX_INVERSION_RANGE, 
+        self.inversionRange = NumberPicker(self.rowOne,
+            name='inversion range',
+            min=1,
+            max=MAX_INVERSION_RANGE,
             value=4,
             callback=self.setInversionRange)
 
-        self.bassRange = NumberPicker(self.rowOne, 
-            name='bass range', 
-            min=1, 
-            max=MAX_BASS_RANGE, 
+        self.bassRange = NumberPicker(self.rowOne,
+            name='bass range',
+            min=1,
+            max=MAX_BASS_RANGE,
             value=4,
             callback=self.setBassRange)
 
@@ -43,15 +45,15 @@ class ChordSettingsFrame(SettingsPage):
         self.bassRange.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
 
         self.rowOne.grid(row=1, column=0, sticky='new', padx=(5, 5))
-        
+
         self.rowTwo = SettingsContainer(self)
 
-        self.controlMode = ButtonGroup(self.rowTwo, 
+        self.controlMode = ButtonGroup(self.rowTwo,
             name='control mode',
             optionsList=[{'name': 'INT', 'value': 'internal'}, {'name': 'EXT', 'value': 'external'}],
             selected='INT',
             callback=self.setControlMode)
-        
+
         self.controlMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.rowTwo.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
@@ -73,10 +75,10 @@ class ChordSettingsFrame(SettingsPage):
     def setTransposeIncrement(self, increment):
         store.dispatch(meActions.changeTransposeIncrement(increment))
         settingsStorageUtility.saveSettings()
-    
+
     def setInversionRange(self, range):
         store.dispatch(meActions.changeInversionRange(range))
-        settingsStorageUtility.saveSettings
+        settingsStorageUtility.saveSettings()
 
     def setBassRange(self, range):
         store.dispatch(meActions.changeBassRange(range))

@@ -1,12 +1,13 @@
 import asyncio
+
 from controllerCoupler import ControllerCoupler
+from controllerManager import ControllerManager
 from display import Display
 from musicEngine import MusicEngine
-from controllerManager import ControllerManager
 from redux.settingsStorage import settingsStorageUtility
 
 
-class App():
+class App:
 
     controllerManager: ControllerManager
     controllerCoupler: ControllerCoupler
@@ -22,14 +23,14 @@ class App():
         self.musicEngine = MusicEngine()
 
         self.controllerManager.subscribe(self.controllerCoupler.eventHandler)
-        
+
 
     def start(self):
+        settingsStorageUtility.loadSettings()
+
         if (self.useDisplay):
             self.display.start()
         self.musicEngine.start()
         self.controllerManager.start()
 
-        settingsStorageUtility.loadSettings()
-        
         asyncio.get_event_loop().run_forever()

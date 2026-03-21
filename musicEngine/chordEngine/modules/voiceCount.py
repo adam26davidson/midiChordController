@@ -1,21 +1,24 @@
 from typing import Callable
-from constants import MAX_SPREAD_OCTAVES, MAX_VOICE_COUNT, SPREAD_STEPS_PER_OCTAVE
+
+from pyrsistent import thaw
+
+from constants import MAX_VOICE_COUNT
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
+from redux import utils as reduxUtils
 from redux.actions import musicEngine as actions
 from redux.settingsStorage import settingsStorageUtility
+
 from ..chordEngineState import state
-from pyrsistent import thaw
-from redux import utils as reduxUtils
 
 
-class VoiceCount():
+class VoiceCount:
 
     updateChordEngine: Callable
     type: AppParameterType
-    
+
     def __init__(self, type: AppParameterType, updateChordEngine: Callable):
         self.updateChordEngine = updateChordEngine
         self.type = type
@@ -49,7 +52,7 @@ class VoiceCount():
             AppParameter(
                 validCommandTypes = [CommandType.INCREMENTAL],
                 commandMappings = {
-                    Command.INCREMENT: self.increment, 
+                    Command.INCREMENT: self.increment,
                     Command.DECREMENT: self.decrement
                 },
                 key = f"{keyPrefix}VOICE_COUNT",

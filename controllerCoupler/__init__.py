@@ -1,26 +1,29 @@
 from enum import Enum
+
+from pyrsistent import thaw
+
+from controllerCoupler.controlMaps.defaultControlMap import defaultControlMap
 from controllerCoupler.models.controlMap import ControlMap
 from controllerManager.models.controlEvent import ControlEvent
 from controllerManager.models.mappableControl import MappableControl
-from controllerCoupler.controlMaps.defaultControlMap import defaultControlMap
 from controllerManager.models.mappableControlEvent import MappableControlEvent
+from eventTrace import trace
 from models.appParameter import AppParameter, AppParameterType
 from models.command import Command
 from models.commandType import CommandType
 from redux import store
-from redux.actions import controllerCoupler as actions
 from redux import utils as reduxUtils
-from pyrsistent import thaw
-from typing import Callable, Dict, List
+from redux.actions import controllerCoupler as actions
+
 
 class ChordEngineControlMode(Enum):
     INTERNAL = 'internal'
     EXTERNAL = 'external'
 
-class ControllerCoupler():
+class ControllerCoupler:
 
-    parameters: Dict[str, AppParameter]
-    controls: Dict[str, Dict[str, MappableControl]]
+    parameters: dict[str, AppParameter]
+    controls: dict[str, dict[str, MappableControl]]
     map: ControlMap
     chordEngineControlMode: ChordEngineControlMode
 
@@ -36,18 +39,28 @@ class ControllerCoupler():
         store.subscribe(self.handleStoreUpdate)
 
     def eventHandler(self, event: ControlEvent):
-        if event.controlKey in self.map.map.keys():
+        trace("COUPLER_IN", f"key={event.controlKey} event={event.event.name if event.event else None}")
+        if event.controlKey in self.map.map:
             parameterKeys = self.map.map[event.controlKey]
             for parameterKey in parameterKeys:
-                if parameterKey in self.parameters.keys():
+                if parameterKey in self.parameters:
                     parameter = self.parameters[parameterKey]
                     if self.__useParameter(parameter):
                         command = self.__mapControlEventToParameterEvent(event.event, parameter)
-                        if command in parameter.commandMappings.keys():
+                        if command in parameter.commandMappings:
+                            trace("COUPLER_EXEC", f"param={parameterKey} cmd={command.name}")
                             if event.event == MappableControlEvent.UPDATE:
                                 parameter.commandMappings[command](event.value)
                             else:
                                 parameter.commandMappings[command]()
+                        else:
+                            trace("COUPLER_DROP", f"param={parameterKey} cmd={command} not in commandMappings")
+                    else:
+                        trace("COUPLER_DROP", f"param={parameterKey} filtered by chordEngineMode={self.chordEngineControlMode.value}")
+                else:
+                    trace("COUPLER_DROP", f"paramKey={parameterKey} not in parameters")
+        else:
+            trace("COUPLER_DROP", f"key={event.controlKey} not in control map")
 
     def handleStoreUpdate(self):
         state = store.get_state()['controllerCoupler']
@@ -68,7 +81,7 @@ class ControllerCoupler():
             else:
                 self.chordEngineControlMode = ChordEngineControlMode.EXTERNAL
 
-    def processNewParameters(self, parameters: Dict[str, AppParameter]):
+    def processNewParameters(self, parameters: dict[str, AppParameter]):
 
         parameterstoAdd = []
 
@@ -80,11 +93,11 @@ class ControllerCoupler():
                 newKey = f"INCREMENT_{key}" if incrementalCommand == Command.INCREMENT else f"DECREMENT_{key}"
                 labelPrefix = "Increment" if incrementalCommand == Command.INCREMENT else "Decrement"
 
-                keyNotInExistingParameters = newKey not in self.parameters.keys()
-                keyNotInNewParameters = newKey not in parameters.keys()
+                keyNotInExistingParameters = newKey not in self.parameters
+                keyNotInNewParameters = newKey not in parameters
 
-                if incrementalCommand in parameter.commandMappings.keys() and keyNotInExistingParameters and keyNotInNewParameters:
-                    
+                if incrementalCommand in parameter.commandMappings and keyNotInExistingParameters and keyNotInNewParameters:
+
                     parameterstoAdd.append(
                         AppParameter(
                             validCommandTypes=[CommandType.ON_OFF],
@@ -96,25 +109,23 @@ class ControllerCoupler():
                     ))
 
         return parameterstoAdd
-    
+
     def __useParameter(self, parameter: AppParameter):
         internalMode = self.chordEngineControlMode == ChordEngineControlMode.INTERNAL
         if parameter.type == AppParameterType.INTERNAL_CHORD_ENGINE and not internalMode:
             return False
-        if parameter.type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode:
-            return False
-        return True
+        return not (parameter.type == AppParameterType.EXTERNAL_CHORD_ENGINE and internalMode)
 
     def __mapControlEventToParameterEvent(
             self,
-            mappableControlEvent: MappableControlEvent, 
+            mappableControlEvent: MappableControlEvent,
             parameter: AppParameter
             ) -> Command:
-        
+
         if (mappableControlEvent == MappableControlEvent.ON):
-            if (parameter.validCommandTypes.count(CommandType.TOGGLE)):
+            if CommandType.TOGGLE in parameter.validCommandTypes:
                 return Command.TOGGLE
-            elif (parameter.validCommandTypes.count(CommandType.ON_OFF)):
+            if CommandType.ON_OFF in parameter.validCommandTypes:
                 return Command.ON
         elif (mappableControlEvent == MappableControlEvent.OFF):
             return Command.OFF
@@ -126,4 +137,4 @@ class ControllerCoupler():
             return Command.UPDATE
         else:
             return None
-        
+        return None

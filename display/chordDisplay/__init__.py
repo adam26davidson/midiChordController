@@ -1,11 +1,11 @@
-from music21 import chord as m21Chord
-import tkinter as tk
 import math
-from constants import *
 import time
-import math
+import tkinter as tk
+
+from constants import *  # noqa: F403
+
 from ..displayConstants import COLORS, FONTS
-from.chordName import ChordName
+from .chordName import ChordName
 
 
 class ChordDisplay(tk.Canvas):
@@ -101,7 +101,7 @@ class ChordDisplay(tk.Canvas):
         notes = []
         centerX = self.width / 2
         centerY = (self.height - (0.5*self.keyTextOffset)) / 2
-        for i in range(0, 12):
+        for i in range(12):
             color = ""
             if self.scale.count(i) != 0:
                 color = COLORS["chordDim"]
@@ -146,15 +146,14 @@ class ChordDisplay(tk.Canvas):
         T = self.modAnimationLength
         if t <= T / 2:
             return ((2 * D) / (T**2)) * (t**2)
-        elif t > T / 2 and t <= T:
+        if t > T / 2 and t <= T:
             return ((((-2 * D) / (T**2)) * (t**2)) + ((4 * D * t) / T)) - D
-        else:
-            return D
+        return D
 
     def getNotePosition(self, note):
         if self.modulationState["status"] == "none":
             return self.notes[note]["center"]
-        elif self.modulationState["status"] == "startAnimation":
+        if self.modulationState["status"] == "startAnimation":
             newScale = self.modulationState["newScale"]
             oldScale = self.modulationState["oldScale"]
             if note in newScale:
@@ -171,12 +170,9 @@ class ChordDisplay(tk.Canvas):
                     x = x0 + (((x1 - x0) * d) / D)
                     y = y0 + (((y1 - y0) * d) / D)
                     return {"x": x, "y": y}
-                else:
-                    return self.notes[note]["center"]
-            else:
                 return self.notes[note]["center"]
-        else:
             return self.notes[note]["center"]
+        return self.notes[note]["center"]
 
     def setBassOutlineColor(self, color):
         self.itemconfigure(self.bass["id"], outline=color)
@@ -246,7 +242,7 @@ class ChordDisplay(tk.Canvas):
 
     def setScale(self, scale):
         self.scale = scale
-        for note in range(0, 12):
+        for note in range(12):
             if note in self.scale:
                 isRoot = note == self.root
                 self.setNoteInScale(note, isRoot)

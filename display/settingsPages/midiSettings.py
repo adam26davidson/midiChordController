@@ -1,15 +1,15 @@
-from ..components.numberPicker import NumberPicker
-from ..components.buttonGroup import ButtonGroup
-from ..components.settingsPage import SettingsPage
-from ..components.slider import Slider
-from ..components.settingsContainer import SettingsContainer
+from pyrsistent import thaw
+
 from redux import store
 from redux.actions import musicEngine as meActions
 from redux.settingsStorage import settingsStorageUtility
-from pyrsistent import thaw
-from redux import store
-from redux.actions import display as actions
-import tkinter as tk
+
+from ..components.buttonGroup import ButtonGroup
+from ..components.numberPicker import NumberPicker
+from ..components.settingsContainer import SettingsContainer
+from ..components.settingsPage import SettingsPage
+from ..components.slider import Slider
+
 
 class MidiSettingsFrame(SettingsPage):
 
@@ -19,21 +19,21 @@ class MidiSettingsFrame(SettingsPage):
 
         self.channelFrame = SettingsContainer(self)
 
-        self.bassChannel = NumberPicker(self.channelFrame, 
-            name='bass ch', 
-            min=1, 
-            max=16, 
+        self.bassChannel = NumberPicker(self.channelFrame,
+            name='bass ch',
+            min=1,
+            max=16,
             value=1,
             callback=self.setBassChannel)
 
-        self.chordChannel = NumberPicker(self.channelFrame, 
-            name='chord ch', 
-            min=1, 
-            max=16, 
+        self.chordChannel = NumberPicker(self.channelFrame,
+            name='chord ch',
+            min=1,
+            max=16,
             value=1,
             callback=self.setChordChannel)
 
-        self.distributeChannels = ButtonGroup(self.channelFrame, 
+        self.distributeChannels = ButtonGroup(self.channelFrame,
             name='distribute channels',
             optionsList=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
             selected='NO',
@@ -48,7 +48,7 @@ class MidiSettingsFrame(SettingsPage):
         self.velocityFrame = SettingsContainer(self)
 
         self.velocityLeftFrame = SettingsContainer(self.velocityFrame)
-        
+
         self.velocityMode = ButtonGroup(self.velocityLeftFrame,
             name='velocity mode',
             optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
@@ -60,24 +60,24 @@ class MidiSettingsFrame(SettingsPage):
             optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
             selected='CHAN',
             callback=self.setAftertouchMode)
-        
+
         self.slidersFrame = SettingsContainer(self.velocityFrame)
 
-        self.velocity = Slider(self.slidersFrame, 
+        self.velocity = Slider(self.slidersFrame,
             name='velocity',
             min=0,
             max=127,
             value=100,
             callback=self.setVelocity)
-        
-        self.velocityDeviation = Slider(self.slidersFrame, 
+
+        self.velocityDeviation = Slider(self.slidersFrame,
             name='velocity deviation',
             min=0,
             max=64,
             value=10,
             callback=self.setVelocityDeviation)
 
-        
+
         self.velocityMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.aftertouchMode.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.velocityLeftFrame.pack(side='left', anchor="nw")
@@ -85,7 +85,7 @@ class MidiSettingsFrame(SettingsPage):
         self.velocity.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.velocityDeviation.pack(side='top', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.slidersFrame.pack(side='left', anchor="nw")
-        
+
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
         store.subscribe(self.__handleStoreUpdate)
@@ -109,7 +109,7 @@ class MidiSettingsFrame(SettingsPage):
             self.after(0, self.distributeChannels.setValue(meState['distributeChannels']))
         if meState['aftertouchMode'] != self.aftertouchMode.getValue():
             self.after(0, self.aftertouchMode.setValue(meState['aftertouchMode']))
-        
+
 
     def setBassChannel(self, channel):
         store.dispatch(meActions.changeBassChannel(channel - 1))
@@ -118,7 +118,7 @@ class MidiSettingsFrame(SettingsPage):
     def setChordChannel(self, channel):
         store.dispatch(meActions.changeChordChannel(channel - 1))
         settingsStorageUtility.saveSettings()
-    
+
     def setDistributeChannels(self, value):
         store.dispatch(meActions.changeDistributeChannels(value))
         if (value):
@@ -126,7 +126,7 @@ class MidiSettingsFrame(SettingsPage):
         else:
             self.chordChannel.setEnabled()
         settingsStorageUtility.saveSettings()
-    
+
     def setVelocityMode(self, mode):
         if mode == 'constant':
             self.velocityDeviation.setDisabled()
@@ -134,11 +134,11 @@ class MidiSettingsFrame(SettingsPage):
             self.velocityDeviation.setEnabled()
         store.dispatch(meActions.changeVelocityMode(mode))
         settingsStorageUtility.saveSettings()
-    
+
     def setVelocity(self, velocity):
         store.dispatch(meActions.changeVelocity(velocity))
         settingsStorageUtility.saveSettings()
-    
+
     def setVelocityDeviation(self, deviation):
         store.dispatch(meActions.changeVelocityDeviation(deviation))
         settingsStorageUtility.saveSettings()

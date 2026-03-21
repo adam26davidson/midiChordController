@@ -1,6 +1,7 @@
 from models.appParameter import AppParameter
+
+from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .controlButton import ControlButton
-from .constants import ACTIVE_COLOR, INACTIVE_COLOR, FONT
 
 
 class OptionsButton(ControlButton):
@@ -33,26 +34,26 @@ class OptionsButton(ControlButton):
         arc1x2 = self.centerX + r
         arc1y2 = arc1y1 + (2*r)
         self.arc1 = self.master.create_arc(
-            uToC(arc1x1), uToC(arc1y1), 
-            uToC(arc1x2), uToC(arc1y2), 
-            start=0, extent=180, 
-            fill="", 
-            outline=INACTIVE_COLOR, 
-            width=2, 
+            uToC(arc1x1), uToC(arc1y1),
+            uToC(arc1x2), uToC(arc1y2),
+            start=0, extent=180,
+            fill="",
+            outline=INACTIVE_COLOR,
+            width=2,
             style="arc")
-        
+
         arc2x1 = self.centerX - r
         arc2y1 = (self.centerY + 1) - (2*r)
         arc2x2 = self.centerX + r
         arc2y2 = arc2y1 + (2*r)
         self.arc2 = self.master.create_arc(
-            uToC(arc2x1), uToC(arc2y1), 
-            uToC(arc2x2), uToC(arc2y2), 
-            start=0, extent=-180, 
+            uToC(arc2x1), uToC(arc2y1),
+            uToC(arc2x2), uToC(arc2y2),
+            start=0, extent=-180,
             fill="", outline=INACTIVE_COLOR, width=2, style="arc")
 
         l1x = self.centerX - r
-        ly1 = (self.centerY - 1) + r 
+        ly1 = (self.centerY - 1) + r
         ly2 = (self.centerY + 1) - r
         l2x = self.centerX + r
 
