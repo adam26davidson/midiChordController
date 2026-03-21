@@ -16,12 +16,23 @@ python3 main.py --no-display # Headless (no GUI)
 
 ## Running Tests
 
-No formal test runner is configured. Tests in `test/` are integration tests run directly:
+No formal test runner is configured. Tests in `test/` are run directly:
 
 ```bash
 python3 test/music_engine_test.py
 python3 test/controller_manager_test.py
+python3 test/replay_test.py          # Replays recorded evdev events through the pipeline
 ```
+
+The `test/` directory also contains debugging/analysis scripts (not tests) for profiling controller event processing against recorded sessions:
+
+```bash
+python3 test/analyze_recording.py           # Event rates, button timings, density stats
+python3 test/analyze_processing_cost.py     # Coupler throughput: executed vs dropped events
+python3 test/analyze_inversion_changes.py   # Gyro→inversion change rate (for tuning snap)
+```
+
+These scripts accept an optional path to a `.jsonl` recording file (defaults to `test/evdev_recording.jsonl`).
 
 ## Architecture
 
