@@ -35,9 +35,16 @@ class SettingDisplay(tk.Frame):
 
         self.pack(side="top", anchor="nw", padx=(20, 20), pady=20)
 
+        self._dirty = False
         store.subscribe(self.__handle_store_update)
 
     def __handle_store_update(self):
+        self._dirty = True
+
+    def check_state(self):
+        if not self._dirty:
+            return
+        self._dirty = False
         state = thaw(store.get_state()['musicEngine'])
         if state['chordEngineControl'] != self.chord_engine_control:
             self.chord_engine_control = state['chordEngineControl']

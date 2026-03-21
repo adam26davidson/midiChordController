@@ -69,6 +69,7 @@ class ChordDisplay(tk.Canvas):
         self.key = 0
         self.root = 0
         self.bass_note = 0
+        self.chord: list[Any] = []
         self.notes = self.create_notes()
         self.key_text = self.create_key_text()
         self.chord_name = ChordName(self)

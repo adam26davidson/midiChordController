@@ -1,5 +1,3 @@
-from pyrsistent import thaw
-
 from redux import store
 from redux.actions import music_engine as me_actions
 from redux.settings_storage import settings_storage_utility
@@ -88,27 +86,32 @@ class MidiSettingsFrame(SettingsPage):
 
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
+        self._dirty = False
         store.subscribe(self.__handle_store_update)
 
-
     def __handle_store_update(self):
-        state = store.get_state()
-        me_state = thaw(state['musicEngine'])
+        self._dirty = True
+
+    def check_state(self):
+        if not self._dirty:
+            return
+        self._dirty = False
+        me_state = store.get_state()['musicEngine']
 
         if me_state['velocity'] != self.velocity.get_value():
-            self.after(0, self.velocity.set_value(me_state['velocity']))
+            self.velocity.set_value(me_state['velocity'])
         if me_state['velocityMode'] != self.velocityMode.get_value():
-            self.after(0, self.velocityMode.set_value(me_state['velocityMode']))
+            self.velocityMode.set_value(me_state['velocityMode'])
         if me_state['velocityDeviation'] != self.velocityDeviation.get_value():
-            self.after(0, self.velocityDeviation.set_value(me_state['velocityDeviation']))
+            self.velocityDeviation.set_value(me_state['velocityDeviation'])
         if me_state['chordChannel'] != (self.chordChannel.get_value() - 1):
-            self.after(0, self.chordChannel.set_value(me_state['chordChannel'] + 1))
+            self.chordChannel.set_value(me_state['chordChannel'] + 1)
         if me_state['bassChannel'] != (self.bassChannel.get_value() - 1):
-            self.after(0, self.bassChannel.set_value(me_state['bassChannel'] + 1))
+            self.bassChannel.set_value(me_state['bassChannel'] + 1)
         if me_state['distributeChannels'] != self.distributeChannels.get_value():
-            self.after(0, self.distributeChannels.set_value(me_state['distributeChannels']))
+            self.distributeChannels.set_value(me_state['distributeChannels'])
         if me_state['aftertouchMode'] != self.aftertouchMode.get_value():
-            self.after(0, self.aftertouchMode.set_value(me_state['aftertouchMode']))
+            self.aftertouchMode.set_value(me_state['aftertouchMode'])
 
 
     def set_bass_channel(self, channel):

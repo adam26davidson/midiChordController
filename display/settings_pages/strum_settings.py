@@ -1,5 +1,3 @@
-from pyrsistent import thaw
-
 from redux import store
 from redux.actions import music_engine as me_actions
 from redux.settings_storage import settings_storage_utility
@@ -55,19 +53,24 @@ class StrumSettingsFrame(SettingsPage):
         self.strumInterval.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.bottomFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
+        self._dirty = False
         store.subscribe(self.__handle_store_update)
 
-
     def __handle_store_update(self):
-        state = store.get_state()
-        me_state = thaw(state['musicEngine'])
+        self._dirty = True
+
+    def check_state(self):
+        if not self._dirty:
+            return
+        self._dirty = False
+        me_state = store.get_state()['musicEngine']
 
         if me_state['strumMode'] != self.strumMode.get_value():
-            self.after(0, self.strumMode.set_value(me_state['strumMode']))
+            self.strumMode.set_value(me_state['strumMode'])
         if me_state['strumInterval'] != self.strumInterval.get_value():
-            self.after(0, self.strumInterval.set_value(me_state['strumInterval']))
+            self.strumInterval.set_value(me_state['strumInterval'])
         if me_state['strumOrder'] != self.strumOrder.get_value():
-            self.after(0, self.strumOrder.set_value(me_state['strumOrder']))
+            self.strumOrder.set_value(me_state['strumOrder'])
 
     def set_strum_mode(self, mode):
         store.dispatch(me_actions.change_strum_mode(mode))

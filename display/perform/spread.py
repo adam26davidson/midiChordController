@@ -17,14 +17,21 @@ class Spread(tk.Canvas):
             'raw_value': SPREAD_STEPS_PER_OCTAVE,
             'value': 12
         }
+        self._dirty = False
         self.arrow = self.__draw_arrow()
         self.pack(side="bottom")
-        store.subscribe(self.handle_store_update)
+        store.subscribe(self.__handle_store_update)
 
-    def handle_store_update(self):
+    def __handle_store_update(self):
+        self._dirty = True
+
+    def check_state(self):
+        if not self._dirty:
+            return
+        self._dirty = False
         spread = store.get_state()['musicEngine']['spread']
         if self.state['raw_value'] != spread:
-            self.after(0, lambda: self.__set_value(spread))
+            self.__set_value(spread)
 
     def __draw_arrow(self):
         key_width = self.width / self.num_keys

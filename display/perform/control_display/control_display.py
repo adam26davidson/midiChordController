@@ -46,9 +46,17 @@ class ControlDisplay(tk.Canvas):
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
+        self._dirty = False
         store.subscribe(self.__handle_store_update)
 
     def __handle_store_update(self):
+        self._dirty = True
+
+    def check_state(self):
+        if not self._dirty:
+            return
+        self._dirty = False
+
         me_state = thaw(store.get_state()['musicEngine'])
         if (me_state['chordEngineControl'] != self.chord_engine_control_mode):
             self.chord_engine_control_mode = me_state['chordEngineControl']
@@ -57,7 +65,7 @@ class ControlDisplay(tk.Canvas):
                 params = state['appParameters']
                 control_map: ControlMap = state['activeControlMap']
                 if control_map is not None:
-                    self.after(0, lambda: self.__update_button_params(params, control_map.map))
+                    self.__update_button_params(params, control_map.map)
 
         state = store.get_state()['controllerCoupler']
         params = state['appParameters']

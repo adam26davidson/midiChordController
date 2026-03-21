@@ -1,5 +1,3 @@
-from pyrsistent import thaw
-
 from constants import MAX_BASS_RANGE, MAX_INVERSION_RANGE
 from redux import store
 from redux.actions import music_engine as me_actions
@@ -57,20 +55,26 @@ class ChordSettingsFrame(SettingsPage):
         self.controlMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.rowTwo.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
+        self._dirty = False
         store.subscribe(self.__handle_store_update)
 
-
     def __handle_store_update(self):
-        me_state = thaw(store.get_state()['musicEngine'])
+        self._dirty = True
+
+    def check_state(self):
+        if not self._dirty:
+            return
+        self._dirty = False
+        me_state = store.get_state()['musicEngine']
 
         if me_state['transposeIncrement'] != self.transposeIncrement.get_value():
-            self.after(0, self.transposeIncrement.set_value(me_state['transposeIncrement']))
+            self.transposeIncrement.set_value(me_state['transposeIncrement'])
         if me_state['inversionRange'] != self.inversionRange.get_value():
-            self.after(0, self.inversionRange.set_value(me_state['inversionRange']))
+            self.inversionRange.set_value(me_state['inversionRange'])
         if me_state['bassRange'] != self.bassRange.get_value():
-            self.after(0, self.bassRange.set_value(me_state['bassRange']))
+            self.bassRange.set_value(me_state['bassRange'])
         if me_state['chordEngineControl'] != self.controlMode.get_value():
-            self.after(0, self.controlMode.set_value(me_state['chordEngineControl']))
+            self.controlMode.set_value(me_state['chordEngineControl'])
 
     def set_transpose_increment(self, increment):
         store.dispatch(me_actions.change_transpose_increment(increment))

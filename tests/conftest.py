@@ -18,7 +18,95 @@ _midi_constants.CONTROL_CHANGE = 0xB0
 sys.modules["rtmidi.midiconstants"] = _midi_constants
 
 sys.modules["evdev"] = MagicMock()
-sys.modules["tkinter"] = MagicMock()
+sys.modules["PIL"] = MagicMock()
+sys.modules["PIL.Image"] = MagicMock()
+sys.modules["PIL.ImageTk"] = MagicMock()
+sys.modules["music21"] = MagicMock()
+sys.modules["music21.chord"] = MagicMock()
+
+# Tkinter stub: real classes that support inheritance so display widget
+# tests can verify Python-level attribute state and method behavior.
+_tk_item_counter = 0
+
+
+def _next_item_id():
+    global _tk_item_counter
+    _tk_item_counter += 1
+    return _tk_item_counter
+
+
+class _WidgetStub:
+    """Base stub for all tkinter widgets."""
+    def __init__(self, *args, **kwargs):
+        pass
+    def pack(self, *args, **kwargs): pass
+    def grid(self, *args, **kwargs): pass
+    def place(self, *args, **kwargs): pass
+    def after(self, *args, **kwargs): pass
+    def configure(self, *args, **kwargs): pass
+    def config(self, *args, **kwargs): pass
+    def bind(self, *args, **kwargs): pass
+    def tkraise(self, *args, **kwargs): pass
+    def destroy(self, *args, **kwargs): pass
+    def winfo_children(self): return []
+
+
+class _CanvasStub(_WidgetStub):
+    def create_line(self, *args, **kwargs): return _next_item_id()
+    def create_oval(self, *args, **kwargs): return _next_item_id()
+    def create_text(self, *args, **kwargs): return _next_item_id()
+    def create_rectangle(self, *args, **kwargs): return _next_item_id()
+    def create_arc(self, *args, **kwargs): return _next_item_id()
+    def create_polygon(self, *args, **kwargs): return _next_item_id()
+    def create_image(self, *args, **kwargs): return _next_item_id()
+    def coords(self, *args, **kwargs): pass
+    def itemconfigure(self, *args, **kwargs): pass
+    def delete(self, *args, **kwargs): pass
+    def tag_raise(self, *args, **kwargs): pass
+
+
+class _TkStub(_WidgetStub):
+    def overrideredirect(self, *a): pass
+    def attributes(self, *a, **kw): pass
+    def wm_attributes(self, *a, **kw): pass
+    def focus_set(self): pass
+    def geometry(self, *a): pass
+    def mainloop(self): pass
+    def update(self): pass
+    def update_idletasks(self): pass
+    def __setitem__(self, key, value): pass
+
+
+class _ScaleStub(_WidgetStub):
+    def get(self): return 0
+    def set(self, value): pass
+
+
+class _DoubleVarStub:
+    def __init__(self, *args, **kwargs):
+        self._value = kwargs.get("value", 0.0)
+    def get(self): return self._value
+    def set(self, value): self._value = value
+
+
+_tk_mock = MagicMock()
+_tk_mock.Canvas = _CanvasStub
+_tk_mock.Frame = _WidgetStub
+_tk_mock.Label = _WidgetStub
+_tk_mock.Button = _WidgetStub
+_tk_mock.Scale = _ScaleStub
+_tk_mock.Tk = _TkStub
+_tk_mock.DoubleVar = _DoubleVarStub
+_tk_mock.BOTH = "both"
+_tk_mock.LEFT = "left"
+_tk_mock.RIGHT = "right"
+_tk_mock.TOP = "top"
+_tk_mock.BOTTOM = "bottom"
+_tk_mock.DISABLED = "disabled"
+_tk_mock.NORMAL = "normal"
+_tk_mock.NW = "nw"
+_tk_mock.HORIZONTAL = "horizontal"
+sys.modules["tkinter"] = _tk_mock
 
 
 @pytest.fixture(autouse=True)

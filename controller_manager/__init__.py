@@ -31,6 +31,7 @@ class ControllerManager:
             callback(event)
 
     async def wait_for_connection(self, sleep_time=0.25):
+        loop = asyncio.get_event_loop()
         store.dispatch(actions.start_waiting_for_connection())
         found_controller = False
         connected_controller = None
@@ -38,7 +39,8 @@ class ControllerManager:
         while (not found_controller):
             print("checking for new connections")
             for controller in self.controller_classes:
-                found_controller = controller.check_for_new_connections()
+                found_controller = await loop.run_in_executor(
+                    None, controller.check_for_new_connections)
                 if found_controller:
                     print("found new controller")
                     connected_controller: Controller = controller(self.send_event)
@@ -53,13 +55,15 @@ class ControllerManager:
                 await asyncio.sleep(sleep_time)
 
     async def check_connection(self):
+        loop = asyncio.get_event_loop()
         while True:
-            self.connected_controllers = self.get_updated_connected_controllers_list()
+            self.connected_controllers = await loop.run_in_executor(
+                None, self._get_updated_connected_controllers_list)
             if not self.connected_controllers:
                 await self.wait_for_connection()
             await asyncio.sleep(0.25)
 
-    def get_updated_connected_controllers_list(self):
+    def _get_updated_connected_controllers_list(self):
         new_connected_controller_list = []
         for controller in self.connected_controllers:
             if controller.check_if_still_connected():
