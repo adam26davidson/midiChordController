@@ -1,4 +1,4 @@
-
+from __future__ import annotations
 
 
 class ControlMap:
@@ -6,9 +6,9 @@ class ControlMap:
     display_name: str
     inversion_mode: str
     bass_mode: str
-    map: dict[str, str]
+    map: dict[str, list[str]]
 
-    def __init__(self, name: str, display_name: str, inversion_mode: str, bass_mode: str, map: dict[str, str]):
+    def __init__(self, name: str, display_name: str, inversion_mode: str, bass_mode: str, map: dict[str, list[str]]):
         self.name = name
         self.display_name = display_name
         self.inversion_mode = inversion_mode

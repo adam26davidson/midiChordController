@@ -80,7 +80,7 @@ class Display:
             if controller['role'] == 'primary':
                 ui_map = controller['uiMap']['map']
 
-        if (event['name'] in ui_map):
+        if ui_map is not None and (event['name'] in ui_map):
             command = ui_map[event['name']]
             if (command in self.command_map):
                 self.command_map[command]()

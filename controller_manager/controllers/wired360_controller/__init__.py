@@ -1,4 +1,4 @@
-import evdev
+import evdev  # type: ignore[import]
 
 from redux import store
 
@@ -8,9 +8,9 @@ from .info import info
 
 class Wired360Controller(Controller):
     def __init__(self, send_event):
-        super().__init__(send_event, info)
+        super().__init__(send_event, info)  # type: ignore[missing-argument]
 
-    def open(self):
+    def open(self):  # type: ignore[override]
         available_devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         connected_controllers = store.get_state()['controllerManager']['controllers']
         connected_ids = [c['id'] for c in connected_controllers]
@@ -26,6 +26,6 @@ class Wired360Controller(Controller):
         super().open(id, devices)
 
     @staticmethod
-    def check_for_new_connections():
-        return Controller.check_for_new_connections(info)
+    def check_for_new_connections():  # type: ignore[override]
+        return Controller.check_for_new_connections(info)  # type: ignore[arg-type]
 

@@ -21,15 +21,14 @@ class VoicingPatternGenerator:
                 vcps = [[]]
                 for degree in range(voice_count):
                     vcps[0].append(degree)
-                max_spread = None
-                voicings_finder = None
+                max_spread: int = 0
                 if voice_count < n:
                     max_spread = ((n-1) * self.max_octaves) + (n - voice_count)
                     voicings_finder = self.__generate_small_voicings
                 elif voice_count == n:
                     max_spread = (n-1) * self.max_octaves
                     voicings_finder = self.__generate_normal_voicings
-                elif voice_count > n:
+                else:  # voice_count > n
                     max_spread = (n*self.max_octaves + 1) - (voice_count - n)
                     voicings_finder = self.__generate_big_voicings
                 for spread in range(1, max_spread + 1):

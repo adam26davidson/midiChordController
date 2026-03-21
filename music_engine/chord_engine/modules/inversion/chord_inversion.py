@@ -1,3 +1,5 @@
+from typing import Callable
+
 from pyrsistent import thaw
 
 from models.app_parameter import AppParameter, AppParameterType
@@ -13,7 +15,7 @@ from ...chord_engine_state import state
 
 class ChordInversion(Inversion):
 
-    def __init__(self, type: AppParameterType, update_chord_engine: callable):
+    def __init__(self, type: AppParameterType, update_chord_engine: Callable):
         super().__init__(type, update_chord_engine)
 
     def get_state(self) -> InversionState:

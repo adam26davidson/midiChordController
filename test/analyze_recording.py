@@ -17,8 +17,8 @@ from pathlib import Path
 def analyze(path):
     events_by_device = defaultdict(lambda: defaultdict(list))  # device -> type -> [timestamps]
     button_events = []  # (timestamp, device, code, value)
-    first_t = None
-    last_t = None
+    first_t: "float | None" = None
+    last_t: "float | None" = None
     count = 0
 
     with open(path) as f:
@@ -35,6 +35,7 @@ def analyze(path):
             if data["type"] == 1:
                 button_events.append((t, data["device"], data["code"], data["value"]))
 
+    assert last_t is not None and first_t is not None
     duration = last_t - first_t
     print(f"Recording: {count} events over {duration:.2f}s\n")
 

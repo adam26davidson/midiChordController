@@ -83,6 +83,7 @@ class InternalChordEngine(ChordEngine):
         chord_root = self.modulations.apply(chord.get_root(), scale)
         root_type = self.secondaries.get_root(chord_root)
         chord_type = self.secondaries.get_note_types(chord_root)
+        assert chord_type is not None
         chord_type.sort()
         return chord_type, root_type
 
@@ -97,6 +98,7 @@ class InternalChordEngine(ChordEngine):
             modulated_root = self.modulations.apply_one(chord.get_root(), self.scale.get())
             chord_notes = self.secondaries.get_chord(modulated_root)
 
+        assert chord_notes is not None
         chord_adjusted_octaves = self.chord_octave.apply(chord_notes)
         return chord_adjusted_octaves
 

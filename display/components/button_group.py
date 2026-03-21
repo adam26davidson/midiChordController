@@ -36,12 +36,13 @@ class ButtonGroup(SettingControl):
         self.callback(value)
 
     def set_value(self, value):
-        button = None
+        button: "SingleButton | None" = None
         for b in self.buttons.values():
             if b.value == value:
                 button = b
 
-        self.set_selected_button(value, button.name)
+        if button is not None:
+            self.set_selected_button(value, button.name)
 
     def get_value(self):
         return self.buttons[self.state.active_button].value

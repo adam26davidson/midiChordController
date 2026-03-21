@@ -8,7 +8,7 @@ import time
 import traceback
 from abc import ABC
 
-import evdev
+import evdev  # type: ignore[import]
 
 from controller_manager.models.control_event import ControlEvent
 from redux import store
@@ -28,10 +28,10 @@ class Controller(ABC):
     config: ControllerConfig
 
     def __init__(self, send_event, info, config: ControllerConfig):
-        self.id = None
-        self.data = None
+        self.id: str | None = None
+        self.data: dict | None = None
         self.is_connected = False
-        self.devices = None
+        self.devices: dict | None = None
         self.send_event = send_event
         self.config = config
         self.info = info
@@ -128,6 +128,7 @@ class Controller(ABC):
             record_file = record_file_ctx
 
         try:
+            assert self.devices is not None
             print(f"[READER] starting for {device_key}, fd={self.devices[device_key].fd}, is_connected={self.is_connected}, id={self.id}", flush=True)
             device = self.devices[device_key]
             _read_count = 0
@@ -276,11 +277,14 @@ class Controller(ABC):
         return mappable_controls
 
     def create_mappable_controls(self, controls: list[RawControl]) -> dict[str, MappableControl]:
+        assert self.id is not None
         mappable_controls = {}
         for control in controls:
             #BUTTON ON_OFF controls
             if control.type == RawControlType.BUTTON:
-                key = control.get_mappable_control_keys()[0]
+                keys = control.get_mappable_control_keys()
+                assert keys is not None
+                key = keys[0]
                 mappable_controls[key] = MappableControl(
                     label=control.label,
                     key=key,
@@ -289,11 +293,15 @@ class Controller(ABC):
                     type=MappableControlType.ON_OFF,
                 )
             elif control.type in [RawControlType.PAD, RawControlType.ANALOG]:
+                assert control.config is not None
                 #ANALOG and PAD ON_OFF controls
                 if control.config.expose_on_off_events:
                     for event in [RawControlEvent.DOWN, RawControlEvent.UP, RawControlEvent.LEFT, RawControlEvent.RIGHT]:
+                        assert control.config.polar_event_map is not None
                         if (event in control.config.polar_event_map.values()):
-                            key = control.get_mappable_control_keys(MappableControlType.ON_OFF, event)[0]
+                            keys = control.get_mappable_control_keys(MappableControlType.ON_OFF, event)
+                            assert keys is not None
+                            key = keys[0]
                             mappable_controls[key] = MappableControl(
                                 label=control.label + " " + event.name.lower().capitalize(),
                                 key=key,
@@ -303,7 +311,9 @@ class Controller(ABC):
                             )
                 #ANALOG and PAD POLAR controls
                 if control.config.expose_polar_events:
-                    key = control.get_mappable_control_keys(MappableControlType.POLAR)[0]
+                    keys = control.get_mappable_control_keys(MappableControlType.POLAR)
+                    assert keys is not None
+                    key = keys[0]
                     mappable_controls[key] = MappableControl(
                         label=control.label + (" Incremental" if control.type == RawControlType.ANALOG else ""),
                         key=key,
@@ -313,7 +323,9 @@ class Controller(ABC):
                     )
             #ANALOG update controls
             if control.type == RawControlType.ANALOG:
-                key = control.get_mappable_control_keys(MappableControlType.ANALOG)[0]
+                keys = control.get_mappable_control_keys(MappableControlType.ANALOG)
+                assert keys is not None
+                key = keys[0]
                 mappable_controls[key] = MappableControl(
                     label=control.label,
                     key=key,
@@ -336,7 +348,7 @@ class Controller(ABC):
                 self.process_analog_event(event, control, control_state)
 
     def process_pad_event(self, event, control: RawControl):
-
+        assert control.config is not None and control.config.polar_event_map is not None
         if event.value not in control.config.polar_event_map:
             return
         raw_event = control.config.polar_event_map[event.value]
@@ -357,6 +369,8 @@ class Controller(ABC):
         self.state[control.key] = event.value
 
     def process_analog_event(self, event, control: RawControl, control_state):
+        assert control.config is not None
+        assert control.config.top_value is not None and control.config.bottom_value is not None and control.config.average_count is not None
         top = control.config.top_value
         bottom = control.config.bottom_value
 
@@ -394,6 +408,7 @@ class Controller(ABC):
             self.process_threshold(normalized_value, control, control_state)
 
     def process_threshold(self, normalized_value, control: RawControl, control_state):
+        assert control.config is not None
         if control.config.centered_threshold is not None:
 
             threshold_value = 0
@@ -414,6 +429,7 @@ class Controller(ABC):
 
             if threshold_value_changed:
 
+                assert control.config.polar_event_map is not None
                 raw_event = control.config.polar_event_map[threshold_value]
 
                 if control.config.expose_on_off_events:
@@ -429,8 +445,11 @@ class Controller(ABC):
         mappable_control_type: MappableControlType,
         value: float | None = None):
 
+        assert self.id is not None
         mappable_event = control.get_mappable_control_event(mappable_control_type, raw_event)
         keys = control.get_mappable_control_keys(mappable_control_type, raw_event)
+        if keys is None or mappable_event is None:
+            return
 
         for key in keys:
             self.send_event(ControlEvent(

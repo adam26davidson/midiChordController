@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
@@ -26,7 +26,7 @@ class Modulations:
 
         redux_utils.add_app_parameters(self.__get_parameters())
 
-    def get(self, side: ModulationSide = None) -> Modulation:
+    def get(self, side: Optional[ModulationSide] = None) -> Optional[Modulation]:
         if side:
             return self.dict[side]
         if state.modulation.side == ModulationSide.NONE:
@@ -49,7 +49,9 @@ class Modulations:
         if state.modulation.side != side:
             scale = state.scale.key_agnostic
             if side != ModulationSide.NONE:
-                scale = self.get(side).apply_to_scale()
+                modulation = self.get(side)
+                assert modulation is not None
+                scale = modulation.apply_to_scale()
 
             store.dispatch(actions.change_modulation({
                 'scale': scale,

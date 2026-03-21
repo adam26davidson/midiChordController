@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import tkinter as tk
+from typing import Any
 
 from pyrsistent import thaw
 
@@ -25,7 +28,7 @@ class PerformFrame(tk.Frame):
     def __init__(self, container):
         super().__init__(container, highlightthickness=0, relief="flat", bg="#000000")
 
-        self.state = {
+        self.state: dict[str, Any] = {
             'settingIndex': -1,
             'settingName': '',
             'settingLoading': False,

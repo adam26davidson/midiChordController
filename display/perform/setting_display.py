@@ -19,7 +19,7 @@ class SettingDisplay(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master, width=self.width, height=self.height,
                          highlightthickness=0, relief="flat", bg=self.bg_color, border=2, borderwidth=2)
-        self.master = master
+        self.parent = master
         self.chord_engine_control = 'internal'
         self.internal_setting_name = 'Loading...'
 

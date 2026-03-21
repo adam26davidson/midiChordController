@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 from controller_manager.models.mappable_control_type import MappableControlType
 
@@ -14,15 +15,15 @@ class RawControl:
     label: str
     ev_dev_key: int
     type: RawControlType
-    config: RawControlConfig
+    config: RawControlConfig | None
 
     def __init__(
             self,
             key: str,
-            label:str,
-            ev_dev_key: str,
+            label: str,
+            ev_dev_key: int,
             type: RawControlType,
-            config: RawControlConfig = None):
+            config: RawControlConfig | None = None):
         self.key = key
         self.label = label
         self.ev_dev_key = ev_dev_key
@@ -31,9 +32,9 @@ class RawControl:
 
 
     def get_mappable_control_keys(self,
-                               mappable_control_type: MappableControlType = None,
-                               event: RawControlEvent = None
-                               ) -> list[str]:
+                               mappable_control_type: MappableControlType | None = None,
+                               event: RawControlEvent | None = None
+                               ) -> list[str] | None:
 
         if self.type == RawControlType.BUTTON:
             return [self.key]
@@ -45,6 +46,7 @@ class RawControl:
 
             if event == RawControlEvent.OFF:
                 keys = []
+                assert self.config is not None and self.config.polar_event_map is not None
                 for polar_event in self.config.polar_event_map.values():
                     if polar_event != RawControlEvent.OFF:
                         keys.append(self.key + "_" + polar_event.name)
@@ -65,9 +67,9 @@ class RawControl:
 
 
     def get_mappable_control_event(self,
-                                mappable_control_type: MappableControlType = None,
-                                event: RawControlEvent = None
-                                ) -> MappableControlEvent:
+                                mappable_control_type: MappableControlType | None = None,
+                                event: RawControlEvent | None = None
+                                ) -> MappableControlEvent | None:
 
         if event == RawControlEvent.OFF:
             return MappableControlEvent.OFF

@@ -23,8 +23,8 @@ sys.modules['evdev'] = type(sys)('evdev')
 import sys as _sys
 
 rtmidi = _sys.modules['rtmidi']
-rtmidi.MidiOut = lambda: type('MidiOut', (), {'get_ports': lambda self: [], 'open_port': lambda self, p: None, 'send_message': lambda self, m: None})()
-rtmidi.MidiIn = lambda: type('MidiIn', (), {'get_ports': lambda self: [], 'set_callback': lambda self, cb, data=None: None, 'open_port': lambda self, p: None})()
+rtmidi.MidiOut = lambda: type('MidiOut', (), {'get_ports': lambda self: [], 'open_port': lambda self, p: None, 'send_message': lambda self, m: None})()  # type: ignore[attr-defined]
+rtmidi.MidiIn = lambda: type('MidiIn', (), {'get_ports': lambda self: [], 'set_callback': lambda self, cb, data=None: None, 'open_port': lambda self, p: None})()  # type: ignore[attr-defined]
 
 from controller_coupler import ControllerCoupler
 from controller_manager.controllers.dual_shock4.info import controller_config
@@ -50,8 +50,8 @@ def counting_handler(event):
         for parameter_key in parameter_keys:
             if parameter_key in coupler.parameters:
                 parameter = coupler.parameters[parameter_key]
-                if coupler._ControllerCoupler__use_parameter(parameter):
-                    command = coupler._ControllerCoupler__map_control_event_to_parameter_event(event.event, parameter)
+                if coupler._ControllerCoupler__use_parameter(parameter):  # type: ignore[attr-defined]
+                    command = coupler._ControllerCoupler__map_control_event_to_parameter_event(event.event, parameter)  # type: ignore[attr-defined]
                     if command in parameter.command_mappings:
                         exec_count[parameter_key] += 1
                     else:

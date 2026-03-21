@@ -66,14 +66,14 @@ class Slider(SettingControl):
         self.number.configure(fg=COLORS['root'])
 
     def set_value(self, value):
-        self.state.number.set(str(value))
+        self.state.number.set(float(value))
 
     def get_value(self):
-        return float(self.state.number.get())
+        return self.state.number.get()
 
 
 class SliderState:
     disabled = False
 
     def __init__(self, container, number):
-        self.number = tk.StringVar(container, value=number)
+        self.number: tk.DoubleVar = tk.DoubleVar(container, value=float(number))

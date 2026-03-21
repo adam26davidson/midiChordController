@@ -1,4 +1,4 @@
-import evdev
+import evdev  # type: ignore[import]
 
 from redux import store
 
@@ -13,7 +13,7 @@ class DualShock4(Controller):
         super().__init__(send_event, info, config)
         self.id = None
 
-    def open(self):
+    def open(self):  # type: ignore[override]
         available_devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         print(available_devices)
         found_device = False
@@ -42,5 +42,5 @@ class DualShock4(Controller):
         super().open(id, devices, recording=False)
 
     @staticmethod
-    def check_for_new_connections():
+    def check_for_new_connections():  # type: ignore[override]
         return Controller.check_for_new_connections(config)

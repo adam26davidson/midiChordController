@@ -1,13 +1,13 @@
 import asyncio
 import tkinter as tk
 
-from dualShockTest import DualShock
+from dualShockTest import DualShock  # type: ignore[import]
 
 
 class Sliders(tk.Canvas):
     def __init__(self, master=None):
         super().__init__(master, width=800, height=480, bd=0, relief="flat", bg="#ffffff")
-        self.master = master
+        self.master = master  # type: ignore[assignment]
         self.thumbs = self.draw_sliders()
         self.pack()
 
@@ -34,7 +34,7 @@ class Sliders(tk.Canvas):
         x1 = 115 + (114*i) - 10
         x2 = 115 + (114*i) + 10
         self.coords(self.thumbs[i], x1, y, x2, y)
-        self.master.update()
+        self.master.update()  # type: ignore[union-attr]
 
 
 window = tk.Tk()

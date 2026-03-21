@@ -21,7 +21,7 @@ class StrumSettingsFrame(SettingsPage):
 
         self.strumMode = ButtonGroup(self.topFrame,
             name='strum mode',
-            optionsList=[
+            options_list=[
                 {'name': 'RAND', 'value': 'random'},
                 {'name': 'REG', 'value': 'regular'},
                 {'name': 'OFF', 'value': 'off'},
@@ -31,7 +31,7 @@ class StrumSettingsFrame(SettingsPage):
 
         self.strumOrder = ButtonGroup(self.topFrame,
             name='strum order',
-            optionsList=[
+            options_list=[
                 {'name': 'UP', 'value': 'up'},
                 {'name': 'DOWN', 'value': 'down'},
                 {'name': 'RAND', 'value': 'random'},

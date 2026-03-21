@@ -20,8 +20,8 @@ sys.modules['tkinter'] = type(sys)('tkinter')
 sys.modules['evdev'] = type(sys)('evdev')
 
 rtmidi = sys.modules['rtmidi']
-rtmidi.MidiOut = lambda: type('MidiOut', (), {'get_ports': lambda s: [], 'send_message': lambda s,m: None})()
-rtmidi.MidiIn = lambda: type('MidiIn', (), {'get_ports': lambda s: [], 'set_callback': lambda s,c,d=None: None})()
+rtmidi.MidiOut = lambda: type('MidiOut', (), {'get_ports': lambda s: [], 'send_message': lambda s,m: None})()  # type: ignore[attr-defined]
+rtmidi.MidiIn = lambda: type('MidiIn', (), {'get_ports': lambda s: [], 'set_callback': lambda s,c,d=None: None})()  # type: ignore[attr-defined]
 
 from constants import INVERSION_SNAP
 

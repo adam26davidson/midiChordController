@@ -50,7 +50,7 @@ class ChordSettingsFrame(SettingsPage):
 
         self.controlMode = ButtonGroup(self.rowTwo,
             name='control mode',
-            optionsList=[{'name': 'INT', 'value': 'internal'}, {'name': 'EXT', 'value': 'external'}],
+            options_list=[{'name': 'INT', 'value': 'internal'}, {'name': 'EXT', 'value': 'external'}],
             selected='INT',
             callback=self.set_control_mode)
 

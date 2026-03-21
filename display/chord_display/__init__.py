@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import math
 import time
 import tkinter as tk
+from typing import Any
 
 from constants import *  # noqa: F403
 
@@ -53,8 +56,8 @@ class ChordDisplay(tk.Canvas):
             relief="flat",
             bg="#222222",
         )
-        self.scale = [0, 2, 4, 5, 7, 9, 11]
-        self.modulation_state = {
+        self.scale_notes: list[int] = [0, 2, 4, 5, 7, 9, 11]
+        self.modulation_state: dict[str, Any] = {
             "side": "none",
             "oldScale": [0, 2, 4, 5, 7, 9, 11],
             "newScale": None,
@@ -62,7 +65,7 @@ class ChordDisplay(tk.Canvas):
             "startTime": 0,
         }
         self.animation_in_progress = False
-        self.master = master
+        self.parent = master
         self.key = 0
         self.root = 0
         self.bass_note = 0
@@ -103,7 +106,7 @@ class ChordDisplay(tk.Canvas):
         center_y = (self.height - (0.5*self.key_text_offset)) / 2
         for i in range(12):
             color = ""
-            if self.scale.count(i) != 0:
+            if self.scale_notes.count(i) != 0:
                 color = COLORS["chordDim"]
             theta = ((i * -2 * math.pi) / 12) + (0.5 * math.pi)
             x = center_x + (self.radius * math.cos(theta))
@@ -241,9 +244,9 @@ class ChordDisplay(tk.Canvas):
         self.itemconfigure(self.key_text, text=self.note_names[self.key])
 
     def set_scale(self, scale):
-        self.scale = scale
+        self.scale_notes = scale
         for note in range(12):
-            if note in self.scale:
+            if note in self.scale_notes:
                 is_root = note == self.root
                 self.set_note_in_scale(note, is_root)
             else:
@@ -251,7 +254,7 @@ class ChordDisplay(tk.Canvas):
 
     def set_chord(self, chord_types, root_type):
         self.root = self.convert_note(root_type)
-        self.set_scale(self.scale)
+        self.set_scale(self.scale_notes)
         self.chord = [self.convert_note(i) for i in chord_types]
         # self.chord_name.set(chord_types, root_type)
 
@@ -289,7 +292,7 @@ class ChordDisplay(tk.Canvas):
         print(new_scale)
         self.modulation_state = {
             "side": side,
-            "oldScale": self.scale,
+            "oldScale": self.scale_notes,
             "newScale": new_scale,
             "status": "startAnimation",
             "startTime": time.time(),

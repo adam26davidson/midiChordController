@@ -1,16 +1,41 @@
 import asyncio
 import copy
 import math
+from typing import Optional, TypedDict
 
 from numpy import random
 from pyrsistent import thaw
-from rtmidi import MidiIn, MidiOut
+from rtmidi import MidiIn, MidiOut  # type: ignore[attr-defined]
 from rtmidi.midiconstants import *  # noqa: F403
 
 from constants import *  # noqa: F403
 from music_engine.midi.midi_input_message import MidiInputMessage, MidiInputMessageType
 from redux import store
 from redux.actions import music_engine as actions
+
+
+class MidiState(TypedDict):
+    midiOutputConnected: bool
+    midiOutputControllerNames: list[str]
+    midiInputConnected: bool
+    midiInputControllerNames: list[str]
+    midiInputNotesOn: dict[int, list[dict[str, object]]]
+    mergedMidiInputNotesOn: list[int]
+    velocity: int
+    velocityMode: str
+    velocityDeviation: int
+    playingChordNotes: list[int]
+    playingBassNote: Optional[int]
+    distributeChannels: bool
+    occupiedChannels: dict[int, bool]
+    distChordChannels: dict[int, int]
+    chordChannel: int
+    bassChannel: int
+    aftertouchMode: str
+    afterTouch: int
+    lastSentAfterTouch: int
+    CCValues: dict[int, int]
+    lastSentCCValues: dict[int, Optional[int]]
 
 
 class Midi:
@@ -23,7 +48,7 @@ class Midi:
 
         self.midi_input_message_queue: list[MidiInputMessage] = []
 
-        self.state = {
+        self.state: MidiState = {
             'midiOutputConnected': False,
             'midiOutputControllerNames': [],
             'midiInputConnected': False,
@@ -318,12 +343,12 @@ class Midi:
         if player == 'chord':
             store.dispatch(actions.play_chord(self.state['playingChordNotes']))
 
-    def __store_note_on(self, note, player, channel=None):
+    def __store_note_on(self, note: int, player: str, channel: Optional[int] = None) -> None:
         if player == 'chord' and note not in self.state['playingChordNotes']:
             self.state['playingChordNotes'].append(note)
         else:
             self.state['playingBassNote'] = note
-        if self.state['distributeChannels'] and player == 'chord':
+        if self.state['distributeChannels'] and player == 'chord' and channel is not None:
             self.state['distChordChannels'][note] = channel
 
     def __store_note_off(self, note, player):

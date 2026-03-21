@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 from pyrsistent import thaw
@@ -120,7 +122,7 @@ class ControllerCoupler:
             self,
             mappable_control_event: MappableControlEvent,
             parameter: AppParameter
-            ) -> Command:
+            ) -> Command | None:
 
         if (mappable_control_event == MappableControlEvent.ON):
             if CommandType.TOGGLE in parameter.valid_command_types:

@@ -20,8 +20,8 @@ class AppParameter:
     command_mappings: dict[Command, Callable]
     remappable: bool
     key: str
-    label: str
-    label_abreviation: str
+    label: str | None
+    label_abreviation: str | None
     type: AppParameterType
 
     def __init__(

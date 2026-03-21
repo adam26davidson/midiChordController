@@ -35,7 +35,7 @@ class MidiSettingsFrame(SettingsPage):
 
         self.distributeChannels = ButtonGroup(self.channelFrame,
             name='distribute channels',
-            optionsList=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
+            options_list=[{'name': 'YES', 'value': True}, {'name': 'NO', 'value': False}],
             selected='NO',
             callback=self.set_distribute_channels)
 
@@ -51,13 +51,13 @@ class MidiSettingsFrame(SettingsPage):
 
         self.velocityMode = ButtonGroup(self.velocityLeftFrame,
             name='velocity mode',
-            optionsList=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
+            options_list=[{'name': 'CONST', 'value': 'constant'}, {'name': 'RAND', 'value': 'random'}],
             selected='RAND',
             callback=self.set_velocity_mode)
 
         self.aftertouchMode = ButtonGroup(self.velocityLeftFrame,
             name='aftertouch mode',
-            optionsList=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
+            options_list=[{'name': 'CHAN', 'value': 'channel'}, {'name': 'POLY', 'value': 'poly'}],
             selected='CHAN',
             callback=self.set_aftertouch_mode)
 
@@ -68,7 +68,7 @@ class MidiSettingsFrame(SettingsPage):
             min=0,
             max=127,
             value=100,
-            callback=self.setVelocity)
+            callback=self.set_velocity)
 
         self.velocityDeviation = Slider(self.slidersFrame,
             name='velocity deviation',

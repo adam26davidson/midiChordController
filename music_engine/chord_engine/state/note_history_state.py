@@ -1,11 +1,11 @@
-
+from typing import Optional
 
 
 class NoteHistoryEvent:
     on_time: int
-    off_time: int
+    off_time: Optional[int]
 
-    def __init__(self, on_time: int, off_time: int):
+    def __init__(self, on_time: int, off_time: Optional[int]):
         self.on_time = on_time
         self.off_time = off_time
 

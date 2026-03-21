@@ -38,7 +38,7 @@ class ControlDisplay(tk.Canvas):
         super().__init__(master, width=self.width, height=(self.width / self.width_units) * self.height_units,
                          highlightthickness=0, relief="flat", bg="#000000")
 
-        self.master = master
+        self.parent = master
         self.parameters = []
         self.app_parameter_length = 0
         self.buttons_created = False

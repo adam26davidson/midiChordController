@@ -6,20 +6,20 @@ from .raw_control_event import RawControlEvent
 
 
 class RawControlConfig:
-    top_value: int
-    bottom_value: int
+    top_value: int | None
+    bottom_value: int | None
 
-    expose_on_off_events: bool
-    expose_polar_events: bool
+    expose_on_off_events: bool | None
+    expose_polar_events: bool | None
 
-    average_count: int
-    ignore_values: list[int]
+    average_count: int | None
+    ignore_values: list[int] | None
 
-    centered_threshold: float
-    threshold: float
+    centered_threshold: float | None
+    threshold: float | None
 
-    polar_event_map: dict[int, RawControlEvent]
-    polar_orientation: PolarOrientation
+    polar_event_map: dict[int, RawControlEvent] | None
+    polar_orientation: PolarOrientation | None
 
     def __init__(self,
                  top_value: int | None = None,

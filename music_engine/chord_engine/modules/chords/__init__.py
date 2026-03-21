@@ -19,18 +19,18 @@ class Chord:
         self.bass_notes, self.all_bass_notes = self.find_all_notes(self.bass)
         self.bass_roots, self.all_bass_roots = self.find_all_notes([self.bass[0]])
 
-    def get_chord(self):
+    def get_chord(self, target_root=None):
         all_notes = self.__get_all_notes(state.key.value)
         chord = self.get_chord_from_notes(all_notes)
         return chord
 
-    def get_root(self):
+    def get_root(self, target_root=None):
         return self.root_notes[state.key.value]
 
-    def get_note_types(self):
+    def get_note_types(self, target_root=None):
         return self.__get_notes(state.key.value)
 
-    def get_bass(self):
+    def get_bass(self, target_root=None):
         all_notes = self.__get_all_bass_notes(state.key.value)
         all_roots = self.__get_all_bass_roots(state.key.value)
         bass = self.get_bass_from_notes(all_notes, all_roots)
@@ -58,7 +58,8 @@ class Chord:
             all_notes[key] = find_all_octaves_in_range(key_notes)
         return notes, all_notes
 
-    def __convert_spread(self, spread, chord_length):
+    @staticmethod
+    def __convert_spread(spread, chord_length):
         spreads_per_oct = chord_length - 1
         spread_octaves = (spread * (1 / SPREAD_STEPS_PER_OCTAVE)) - 1
         return int(spread_octaves*spreads_per_oct)

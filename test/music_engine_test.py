@@ -18,7 +18,7 @@ def music_engine_test():
   #   controllers = store.get_state()['controllerManager']['controllers']
   #   waiting = store.get_state()['controllerManager']['waitingForConnection']
 
-  c.subscribe(m.controllerEventHandler)
+  c.subscribe(m.controllerEventHandler)  # type: ignore[attr-defined]
   c.subscribe(d.controller_event_handler)
   #c.subscribe(handle_controller_event)
   # store.subscribe(handle_state_change)

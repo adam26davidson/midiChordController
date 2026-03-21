@@ -50,6 +50,10 @@ class Inversion(ABC):
     def handle_store_update(self):
         pass
 
+    @abstractmethod
+    def get_parameters(self):
+        pass
+
     def increment_range(self):
         self.set_range(self.get_state().range + 1)
 

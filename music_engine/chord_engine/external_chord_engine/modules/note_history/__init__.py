@@ -1,6 +1,7 @@
 
 
 import time
+from typing import Optional
 
 from music_engine.chord_engine.chord_engine_state import state
 from music_engine.chord_engine.state.note_history_state import NoteHistoryEvent
@@ -19,7 +20,7 @@ class NoteHistory:
         for note in range(12):
             state.note_in_history.all[note] = []
 
-    def note_on(self, note: int) -> HistoryUpdateResponse:
+    def note_on(self, note: int) -> Optional[HistoryUpdateResponse]:
 
         note_class = note % 12
         response = HistoryUpdateResponse()
@@ -60,7 +61,7 @@ class NoteHistory:
         self.__remove_expired()
 
 
-    def note_off(self, note: int) -> HistoryUpdateResponse:
+    def note_off(self, note: int) -> Optional[HistoryUpdateResponse]:
 
         note_class = note % 12
 

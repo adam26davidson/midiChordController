@@ -1,15 +1,15 @@
 import asyncio
 
-import evdev
+import evdev  # type: ignore[import]
 
 print([(evdev.InputDevice(path).uniq, evdev.InputDevice(path).name) for path in evdev.list_devices()])
 
-motion = None
-touch = None
-buttons = None
+motion: evdev.InputDevice | None = None
+touch: evdev.InputDevice | None = None
+buttons: evdev.InputDevice | None = None
 
 async def buttons_loop():
-  async for event in buttons.async_read_loop():
+  async for event in buttons.async_read_loop():  # type: ignore[union-attr]
     if event.type == evdev.ecodes.EV_KEY:
       print("button")
       print(evdev.categorize(event))
@@ -19,13 +19,13 @@ async def buttons_loop():
       #print(event)
 
 async def touch_loop():
-  async for event in touch.async_read_loop():
+  async for event in touch.async_read_loop():  # type: ignore[union-attr]
     if event.type == evdev.ecodes.EV_KEY or (event.type == evdev.ecodes.EV_ABS and event.code in [0, 1]):
       pass
       #print(event)
 
 async def motion_loop():
-  async for _event in motion.async_read_loop():
+  async for _event in motion.async_read_loop():  # type: ignore[union-attr]
     pass
     # print("motion")
     # print(evdev.categorize(event))

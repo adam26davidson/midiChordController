@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List, Optional, Union
 
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
@@ -30,23 +30,23 @@ class Secondaries:
             state.secondary.side = side
             self.update_chord_engine()
 
-    def get_chord(self, chord_root: int) -> list[int]:
+    def get_chord(self, chord_root: Union[int, List[int]]) -> Optional[List[int]]:
         secondary = self.get()
         return None if secondary is None else secondary.get_chord(chord_root)
 
-    def get_bass(self, chord_root: int) -> int:
+    def get_bass(self, chord_root: Union[int, List[int]]) -> Optional[int]:
         secondary = self.get()
         return None if secondary is None else secondary.get_bass(chord_root)
 
-    def get_root(self, chord_root: int) -> int:
+    def get_root(self, chord_root: Union[int, List[int]]) -> Optional[int]:
         secondary = self.get()
         return None if secondary is None else secondary.get_root(chord_root)
 
-    def get_note_types(self, chord_root: int) -> list[int]:
+    def get_note_types(self, chord_root: Union[int, List[int]]) -> Optional[List[int]]:
         secondary = self.get()
         return None if secondary is None else secondary.get_note_types(chord_root)
 
-    def get(self, button: ChordButton = None) -> DualChord:
+    def get(self, button: Optional[ChordButton] = None) -> Optional[DualChord]:
         if button is None:
             button = state.chord.active_button
 

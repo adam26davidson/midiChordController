@@ -34,8 +34,8 @@ class Keyboard(tk.Canvas):
 
   def __init__(self, master=None):
     super().__init__(master, width=self.width, height=self.height, highlightthickness=0, relief="flat", bg="#000000")
-    self.master = master
-    self.keys = self.create_keys()
+    self.parent = master
+    self.key_items = self.create_keys()
     self.arrows = self.create_arrows()
     self.keys_out_of_range = {
       "above": {"played": [], "shadow": []},
@@ -44,7 +44,7 @@ class Keyboard(tk.Canvas):
     self.pack(side="bottom", pady=(0,20), padx=(15, 15))
 
     self.root = 0
-    self.chord = None
+    self.chord: "list[int] | None" = None
 
   def create_arrows(self):
     xl0 = self.arrow_x_padding + ((self.large_arrow_width - self.small_arrow_width)/ 2)
@@ -56,9 +56,9 @@ class Keyboard(tk.Canvas):
 
     left_arrow = {
       "id": self.create_polygon(
-        xl0, y0, xl1, y1, xl2, y2,
+        [xl0, y0, xl1, y1, xl2, y2],
         joinstyle="round",
-        smooth=0,
+        smooth=False,
         width=self.key_outline_width,
         fill='',
         outline=self.chord_color_dim
@@ -75,9 +75,9 @@ class Keyboard(tk.Canvas):
 
     right_arrow = {
       "id": self.create_polygon(
-        xr0, y0, xr1, y1, xr2, y2,
+        [xr0, y0, xr1, y1, xr2, y2],
         joinstyle="round",
-        smooth=0,
+        smooth=False,
         width=self.key_outline_width,
         fill='',
         outline=self.chord_color_dim
@@ -216,19 +216,19 @@ class Keyboard(tk.Canvas):
     self.set_arrow_color(side, color)
 
   def set_key_color(self, note, color):
-    self.itemconfigure(self.keys[note]["id"], fill=color)
-    self.itemconfigure(self.keys[note]["id"], outline=color)
+    self.itemconfigure(self.key_items[note]["id"], fill=color)
+    self.itemconfigure(self.key_items[note]["id"], outline=color)
 
   def set_key_hollow(self, note):
-    self.itemconfigure(self.keys[note]["id"], fill='')
+    self.itemconfigure(self.key_items[note]["id"], fill='')
 
   def set_key_outline_color(self, note, color):
-    self.itemconfigure(self.keys[note]["id"], outline=color)
+    self.itemconfigure(self.key_items[note]["id"], outline=color)
 
   def set_key_radius(self, note, radius):
-    x = self.keys[note]["center"]["x"]
-    y = self.keys[note]["center"]["y"]
-    self.coords(self.keys[note]["id"], x - radius, y - radius, x + radius, y + radius)
+    x = self.key_items[note]["center"]["x"]
+    y = self.key_items[note]["center"]["y"]
+    self.coords(self.key_items[note]["id"], x - radius, y - radius, x + radius, y + radius)
 
   def set_key_clear(self, note):
     self.set_key_radius(note, self.small_radius)
@@ -281,7 +281,7 @@ class Keyboard(tk.Canvas):
       if note in self.key_range:
         if note % 12 == self.root:
           self.set_key_chord(note, is_root=True)
-        elif self.chord.count(note % 12) > 0:
+        elif self.chord is not None and self.chord.count(note % 12) > 0:
           self.set_key_chord(note)
         else:
           self.set_key_clear(note)

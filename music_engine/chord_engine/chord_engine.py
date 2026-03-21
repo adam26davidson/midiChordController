@@ -146,7 +146,7 @@ class ChordEngine(ABC):
 
     def stop_bass(self, button_up=True):
         if not (button_up and state.hold) and state.bass.is_playing:
-            playing_bass = state.bass.playing_note
+            playing_bass: int = state.bass.playing_note  # type: ignore[assignment]
             self.send_notes_off([playing_bass], player=ChordPlayer.BASS)
             store.dispatch(actions.stop_bass())
             state.bass.playing_note = None
