@@ -1,10 +1,10 @@
 import asyncio
 
-from controllerCoupler import ControllerCoupler
-from controllerManager import ControllerManager
+from controller_coupler import ControllerCoupler
+from controller_manager import ControllerManager
 from display import Display
-from musicEngine import MusicEngine
-from redux.settingsStorage import settings_storage_utility
+from music_engine import MusicEngine
+from redux.settings_storage import settings_storage_utility
 
 
 class App:

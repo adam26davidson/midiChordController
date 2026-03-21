@@ -41,9 +41,6 @@ select = [
 ]
 ignore = [
     "E501",   # line too long - handled by formatter
-    "N812",   # lowercase imported as non-lowercase - from camelCase module names
-    "N813",   # camelcase imported as lowercase - from camelCase module names
-    "N999",   # invalid module name - camelCase directory/file names (TODO: Phase 2.6)
     "RET504", # unnecessary assignment before return
     "SIM108", # use ternary operator - sometimes less readable
     "F405",   # undefined name from star import - used in __init__.py re-exports
@@ -54,7 +51,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["controllerCoupler", "controllerManager", "display", "models", "musicEngine", "redux"]
+known-first-party = ["controller_coupler", "controller_manager", "display", "models", "music_engine", "redux"]
 
 [tool.ruff.format]
 quote-style = "double"

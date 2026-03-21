@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from ..displayConstants import COLORS
+from ..display_constants import COLORS
 
 
 class Keyboard(tk.Canvas):

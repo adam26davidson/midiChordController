@@ -4,18 +4,18 @@ import tkinter as tk
 from pyrsistent import thaw
 
 from constants import ANIMATION_STEP, FULLSCREEN
-from models.appParameter import AppParameter
+from models.app_parameter import AppParameter
 from models.command import Command
-from models.commandType import CommandType
+from models.command_type import CommandType
 from redux import store
 from redux import utils as redux_utils
 from redux.actions import display as actions
 
-from .perform.performFrame import PerformFrame
-from .settingsMenu import SettingsMenuFrame
-from .settingsPages.chordSettings import ChordSettingsFrame
-from .settingsPages.midiSettings import MidiSettingsFrame
-from .settingsPages.strumSettings import StrumSettingsFrame
+from .perform.perform_frame import PerformFrame
+from .settings_menu import SettingsMenuFrame
+from .settings_pages.chord_settings import ChordSettingsFrame
+from .settings_pages.midi_settings import MidiSettingsFrame
+from .settings_pages.strum_settings import StrumSettingsFrame
 
 
 class Display:

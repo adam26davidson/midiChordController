@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from ..displayConstants import COLORS, FONTS
-from .settingControl import SettingControl
+from ..display_constants import COLORS, FONTS
+from .setting_control import SettingControl
 
 
 class Slider(SettingControl):

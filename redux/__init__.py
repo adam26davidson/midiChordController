@@ -1,11 +1,11 @@
 import pydux
 
-from .reducers import controllerCoupler, controllerManager, display, musicEngine
+from .reducers import controller_coupler, controller_manager, display, music_engine
 
 reducer = pydux.combine_reducers({
-    'controllerManager': controllerManager.reducer,
-    'controllerCoupler': controllerCoupler.reducer,
-    'musicEngine': musicEngine.reducer,
+    'controllerManager': controller_manager.reducer,
+    'controllerCoupler': controller_coupler.reducer,
+    'musicEngine': music_engine.reducer,
     'display': display.reducer
 })
 

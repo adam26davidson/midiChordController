@@ -19,8 +19,8 @@ CENTER_NOTE = 65  # center of home chord
 BASS_CENTER = 42
 BASS_OCTAVE_RANGE = {"min": 36, "max": 47}
 VOICING_PATTERN_PATH = \
-    "/musicEngine/chordEngine/modules/voicingPatterns/voicingPatterns.json"
+    "/music_engine/chord_engine/modules/voicing_patterns/voicing_patterns.json"
 with open(PARENT_PATH + VOICING_PATTERN_PATH) as _f:
     VOICING_PATTERNS = json.load(_f)['voicingPatterns']
-with open(PARENT_PATH + "/musicEngine/chordEngine/internalChordEngine/modules/settings/settings.json") as _f:
+with open(PARENT_PATH + "/music_engine/chord_engine/internal_chord_engine/modules/settings/settings.json") as _f:
     SETTINGS = json.load(_f)

@@ -40,18 +40,20 @@ All 1320 naming violations resolved across the entire codebase. Renamed function
 
 Rules N802, N803, N806, N815, N816 are now **enforced** in `pyproject.toml`.
 
-### 6. Module and directory renames (`N999`, `N812`, `N813`)
+### 6. Module and directory renames (`N999`, `N812`, `N813`) — COMPLETE
 
-Rename camelCase directories and files to snake_case. This requires updating every import in the project.
+Renamed all camelCase directories, `.py` files, and `.json` files to snake_case. Updated all imports (79 files renamed, 17 directories renamed, 74+ files with import updates). Also fixed 6 remaining N812 violations (camelCase import aliases like `meActions` → `me_actions`).
 
-- [ ] `controllerCoupler/` → `controller_coupler/`
-- [ ] `controllerManager/` → `controller_manager/`
-- [ ] `musicEngine/` → `music_engine/`
-- [ ] `musicEngine/chordEngine/` → `chord_engine/`
-- [ ] `musicEngine/chordEngine/externalChordEngine/` → `external_chord_engine/`
-- [ ] `musicEngine/chordEngine/internalChordEngine/` → `internal_chord_engine/`
-- [ ] `musicEngine/rhythmEngine/` → `rhythm_engine/`
-- [ ] All camelCase `.py` filenames (e.g., `appParameter.py` → `app_parameter.py`)
-- [ ] Update `pyproject.toml` isort `known-first-party` list
-- [ ] Update `CLAUDE.md` references
-- [ ] Remove N812, N813, N999 from ruff ignore list
+- [x] `controllerCoupler/` → `controller_coupler/`
+- [x] `controllerManager/` → `controller_manager/`
+- [x] `musicEngine/` → `music_engine/`
+- [x] `musicEngine/chordEngine/` → `chord_engine/`
+- [x] `musicEngine/chordEngine/externalChordEngine/` → `external_chord_engine/`
+- [x] `musicEngine/chordEngine/internalChordEngine/` → `internal_chord_engine/`
+- [x] `musicEngine/rhythmEngine/` → `rhythm_engine/`
+- [x] All camelCase `.py` filenames (e.g., `appParameter.py` → `app_parameter.py`)
+- [x] Update `pyproject.toml` isort `known-first-party` list
+- [x] Update `CLAUDE.md` references
+- [x] Remove N812, N813, N999 from ruff ignore list
+- [x] Fix hardcoded file paths in `constants.py`
+- [x] Fix N812 import alias violations (`ccActions`, `meActions`, `m21Chord`)

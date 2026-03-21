@@ -2,7 +2,7 @@ import tkinter as tk
 
 from constants import INVERSION_SNAP
 
-from ..displayConstants import COLORS
+from ..display_constants import COLORS
 
 
 class Inversion(tk.Canvas):
