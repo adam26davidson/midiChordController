@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import threading
 
 from constants import MIDI_INPUT_STEP
@@ -13,8 +14,20 @@ from music_engine.midi.midi_input_message import MidiInputMessage, MidiInputMess
 
 from ..chord_engine_state import ExternalChordMode, ExternalChordScaleMode, state
 
+logger = logging.getLogger(__name__)
+
 
 class ExternalChordEngine(ChordEngine):
+    """Chord engine that recognizes chords from incoming MIDI input.
+
+    Threading model:
+    - ``handle_midi_message()`` is called from the MIDI input callback thread
+      and appends to ``input_queue`` under ``input_queue_lock``.
+    - ``__input_loop()`` is an asyncio task on the main event loop that drains
+      the queue under the same lock, then calls ``process_queue()`` and
+      ``determine_chord_and_scale()`` on the main thread. All mutations to
+      ``self.chords`` and the chord engine state happen on the main thread.
+    """
 
     input_queue: list[MidiInputMessage]
     note_history: NoteHistory
@@ -76,7 +89,7 @@ class ExternalChordEngine(ChordEngine):
         new_contiguous_classes = list(state.note_in_history.lastContiguousClasses)
         new_contiguous_classes.sort()
         if last_contiguous_classes != new_contiguous_classes:
-            print("new chord")
+            logger.debug("new chord")
             self.determine_chord_and_scale()
 
     def determine_chord_and_scale(self) -> None:
@@ -106,11 +119,11 @@ class ExternalChordEngine(ChordEngine):
                 no_root_chord_indices_from_root = chord_indices_from_root
 
             scale_chord_indices = list(range(1, len(scale) + 1))
-            print("key agnostic scale: ", scale)
-            print("key: ", key)
+            logger.debug("key agnostic scale: %s", scale)
+            logger.debug("key: %s", key)
 
-            print("chord_indices_from_root: ", chord_indices_from_root)
-            print("root_index: ", root_index)
+            logger.debug("chord_indices_from_root: %s", chord_indices_from_root)
+            logger.debug("root_index: %s", root_index)
 
             south_chord = Chord(chord_indices_from_root, chord_indices_from_root, root_index, scale)
             west_chord = Chord(no_root_chord_indices_from_root, chord_indices_from_root, root_index, scale)

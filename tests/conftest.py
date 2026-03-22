@@ -117,9 +117,6 @@ def _reset_chord_engine_state():
     We must modify the EXISTING object rather than replacing it, because every
     chord engine module holds its own import reference to the original object
     (via ``from ..chord_engine_state import state``).
-
-    Many state classes use class-level mutable defaults (e.g. ``button_queue: list = []``),
-    so we must explicitly set instance-level attributes to shadow them.
     """
     import music_engine.chord_engine.chord_engine_state as state_module
     from constants import SPREAD_STEPS_PER_OCTAVE
@@ -162,7 +159,7 @@ def _reset_chord_engine_state():
     state.bass_position.range = 4
     state.bass_position.locked = False
 
-    # Chords state — must set instance attrs to shadow class-level mutable defaults
+    # Chords state
     state.chord.root_class = 0
     state.chord.note_classes = []
     state.chord.playing_notes = []
@@ -182,9 +179,7 @@ def _reset_chord_engine_state():
 
     # Internal chord engine state
     state.modulation.side = ModulationSide.NONE
-    state.modulation.button_queue = []
     state.secondary.side = SecondarySide.NONE
-    state.secondary.button_queue = []
     state.alternate = False
     state.internal_settings.index = 0
     state.internal_settings.loading = False

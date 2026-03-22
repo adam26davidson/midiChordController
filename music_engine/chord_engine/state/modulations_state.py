@@ -7,5 +7,8 @@ class ModulationSide(Enum):
     RIGHT = 3
 
 class ModulationsState:
-    side: ModulationSide = ModulationSide.NONE
-    button_queue: list[ModulationSide] = []
+
+    side: ModulationSide
+
+    def __init__(self) -> None:
+        self.side = ModulationSide.NONE

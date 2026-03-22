@@ -44,11 +44,6 @@ class ChordName:
 
     def generate_name(self, all_types: list[int], root_type: int) -> tuple[str, int]:
         chord = m21_chord.Chord(all_types)
-        # try:
-        #     chord.root(m21Pitch.Pitch(self.master.noteNames[root_type]))
-        # except:
-        #     pass
-
         chord_name = chord.pitchedCommonName
         chord_name = chord_name.replace("-", " ")
 

@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 import asyncio
-import traceback
+import logging
 from typing import Callable, TypedDict
 
 from numpy import random
 
 from music_engine.chord_engine.chord_engine_message import ChordEngineMessage, ChordMessageType, ChordPlayer
 from redux import get_music_engine_state, store
+
+logger = logging.getLogger(__name__)
 
 
 class RhythmMessage(TypedDict):
@@ -132,8 +134,7 @@ class RhythmEngine:
     if not task.cancelled():
       exc = task.exception()
       if exc is not None:
-        print("Exception in scheduled note task:")
-        traceback.print_exception(type(exc), exc, exc.__traceback__)
+        logger.error("Exception in scheduled note task:", exc_info=exc)
 
   def __handle_chord_off_sync(self, notes: list[int]) -> None:
     self.scheduled_notes.cancel_all()

@@ -5,8 +5,6 @@ import time
 import tkinter as tk
 from typing import TypedDict
 
-from constants import *  # noqa: F403
-
 from ..display_constants import COLORS, FONTS
 from .chord_name import ChordName
 
@@ -99,7 +97,6 @@ class ChordDisplay(tk.Canvas):
         self.key_text: int = self.create_key_text()
         self.chord_name = ChordName(self)
         self.bass: BassItem = self.create_bass_note()
-        # self.bassPlayed = self.createBassPlayedNote()
         self.pack(side="top", pady=(20, 0), padx=(0, 0))
 
     def create_key_text(self) -> int:
@@ -284,7 +281,6 @@ class ChordDisplay(tk.Canvas):
         self.root = self.convert_note(root_type)
         self.set_scale(self.scale_notes)
         self.chord = [self.convert_note(i) for i in chord_types]
-        # self.chord_name.set(chord_types, root_type)
 
     def set_chord_shadow(self) -> None:
         for note in self.chord:

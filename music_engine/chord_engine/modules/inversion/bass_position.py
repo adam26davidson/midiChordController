@@ -31,6 +31,8 @@ class BassPosition(Inversion):
         store.dispatch(actions.change_bass_range(state.bass_position.range))
 
     def update_redux_locked(self) -> None:
+        # Intentional no-op: bass position lock is not displayed in the UI,
+        # unlike chord inversion lock which dispatches to Redux for display.
         pass
 
     def handle_store_update(self) -> None:

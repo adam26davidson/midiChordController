@@ -9,5 +9,7 @@ class SecondarySide(Enum):
 
 class SecondariesState:
 
-    side: SecondarySide = SecondarySide.NONE
-    button_queue: list[SecondarySide] = []
+    side: SecondarySide
+
+    def __init__(self) -> None:
+        self.side = SecondarySide.NONE

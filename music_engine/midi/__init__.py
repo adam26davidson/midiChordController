@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import logging
 import math
 from typing import TYPE_CHECKING, TypedDict
 
@@ -12,12 +13,20 @@ if TYPE_CHECKING:
 
 from numpy import random
 from rtmidi import MidiIn, MidiOut
-from rtmidi.midiconstants import *  # noqa: F403
+from rtmidi.midiconstants import (
+    CHANNEL_PRESSURE,
+    CONTROL_CHANGE,
+    NOTE_OFF,
+    NOTE_ON,
+    POLY_AFTERTOUCH,
+)
 
-from constants import *  # noqa: F403
+from constants import MIDI_OUTPUT_STEP
 from music_engine.midi.midi_input_message import MidiInputMessage, MidiInputMessageType
 from redux import get_music_engine_state, store
 from redux.actions import music_engine as actions
+
+logger = logging.getLogger(__name__)
 
 
 class MidiInputNoteInfo(TypedDict):
@@ -102,8 +111,8 @@ class Midi:
     def start(self) -> None:
         self.available_output_ports: list[str] = self.utility_midi_out.get_ports()
         self.available_input_ports: list[str] = self.utility_midi_in.get_ports()
-        print(f"output ports: {self.available_output_ports}")
-        print(f"input ports: {self.available_input_ports}")
+        logger.info("output ports: %s", self.available_output_ports)
+        logger.info("input ports: %s", self.available_input_ports)
 
         for i in range(1, len(self.available_input_ports)):
             port_name = self.available_input_ports[i]
@@ -242,14 +251,14 @@ class Midi:
             await asyncio.sleep(MIDI_OUTPUT_STEP)
 
     def __reconnect(self) -> None:
-        print("RECONNECTING TO MIDI OUTPUTS")
+        logger.warning("RECONNECTING TO MIDI OUTPUTS")
         for midi_out in self.midi_out_instances:
             if midi_out.is_port_open():
                 midi_out.close_port()
             midi_out.delete()
 
         self.available_output_ports = self.utility_midi_out.get_ports()
-        print(self.available_output_ports)
+        logger.info("available output ports: %s", self.available_output_ports)
 
         self.midi_out_instances = []
         self.state['midiOutputControllerNames'] = []

@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import logging
+
 from controller_manager.models.mappable_control_type import MappableControlType
 
 from .mappable_control_event import MappableControlEvent
 from .raw_control_config import RawControlConfig
 from .raw_control_event import RawControlEvent
 from .raw_control_type import RawControlType
+
+logger = logging.getLogger(__name__)
 
 RAW_ON_EVENTS = [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEvent.LEFT, RawControlEvent.RIGHT, RawControlEvent.ON]
 RAW_DIRECTIONAL_EVENTS = [RawControlEvent.UP, RawControlEvent.DOWN, RawControlEvent.LEFT, RawControlEvent.RIGHT]
@@ -62,7 +66,7 @@ class RawControl:
         elif mappable_control_type == MappableControlType.ANALOG:
             return [self.key]
         else:
-            print(f"no mappable control keys found for raw control: {self.key} : {self.type} : {mappable_control_type} : {event}")
+            logger.warning("no mappable control keys found for raw control: %s : %s : %s : %s", self.key, self.type, mappable_control_type, event)
             return []
         return None
 
@@ -89,7 +93,7 @@ class RawControl:
         elif mappable_control_type == MappableControlType.ANALOG:
             return MappableControlEvent.UPDATE
         else:
-            print(f"no mappable control event found for raw control: {self.key} : {self.type} : {mappable_control_type} : {event}")
+            logger.warning("no mappable control event found for raw control: %s : %s : %s : %s", self.key, self.type, mappable_control_type, event)
             return None
         return None
 

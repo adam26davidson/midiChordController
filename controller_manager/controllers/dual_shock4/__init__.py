@@ -1,3 +1,5 @@
+import logging
+
 import evdev
 
 from redux import get_controller_manager_state
@@ -5,6 +7,8 @@ from redux import get_controller_manager_state
 from ...controller import Controller
 from .info import controller_config as config
 from .info import info
+
+logger = logging.getLogger(__name__)
 
 
 class DualShock4(Controller):
@@ -15,7 +19,7 @@ class DualShock4(Controller):
 
     def open(self):  # type: ignore[override]
         available_devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-        print(available_devices)
+        logger.debug("available devices: %s", available_devices)
         found_device = False
         connected_controllers = get_controller_manager_state()['controllers']
         connected_ids = [c['id'] for c in connected_controllers]
@@ -32,13 +36,13 @@ class DualShock4(Controller):
                 is_correct_id = device.uniq == id
                 if (device.name.lower().find('motion') != -1 and is_correct_id):
                     devices['motion'] = device
-                    print(f"found motion device: {device.name}")
+                    logger.info("found motion device: %s", device.name)
                 elif (device.name.lower().find('touchpad') != -1 and is_correct_id):
                     devices['touch'] = device
-                    print(f"found touch device: {device.name}")
+                    logger.info("found touch device: %s", device.name)
                 elif is_correct_id:
                     devices['main'] = device
-                    print(f"found main device: {device.name}")
+                    logger.info("found main device: %s", device.name)
         if id is not None:
             super().open(id, devices, recording=False)
 

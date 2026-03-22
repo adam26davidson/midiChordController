@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import tkinter as tk
 from typing import TypedDict
 
@@ -16,6 +17,8 @@ from .keyboard import Keyboard
 from .setting_display import SettingDisplay
 from .spread import Spread
 from .text_display import TextDisplay
+
+logger = logging.getLogger(__name__)
 
 
 class ChordTypeState(TypedDict):
@@ -141,13 +144,13 @@ class PerformFrame(tk.Frame):
         if me_state['chordShadow'] != self.state['shadowChordNotes']:
             self.__set_chord_shadow(me_state['chordShadow'])
         if me_state['chordNotes'] != self.state['playingChordNotes']:
-            print(f"[PERF_FRAME] chordNotes changed: store={me_state['chordNotes']} local={self.state['playingChordNotes']}", flush=True)
+            logger.debug("chordNotes changed: store=%s local=%s", me_state['chordNotes'], self.state['playingChordNotes'])
             if len(me_state['chordNotes']) > 0:
                 self.__play_chord(me_state['chordNotes'])
             else:
                 self.__stop_chord(self.state['playingChordNotes'])
         if me_state['inversion'] != self.state['inversion']:
-            print(f"[PERF_FRAME] inversion changed: store={me_state['inversion']} local={self.state['inversion']}", flush=True)
+            logger.debug("inversion changed: store=%s local=%s", me_state['inversion'], self.state['inversion'])
         if me_state['bassShadow'] != self.state['shadowBassNote']:
             self.__set_bass_shadow(me_state['bassShadow'])
         if me_state['bassNote'] != self.state['playingBassNote']:
@@ -169,7 +172,7 @@ class PerformFrame(tk.Frame):
             self.state['settingName'] = me_state['settingsList'][me_state['setting']]
             self.state['settingIndex'] = me_state['setting']
             self.__set_setting(self.state['settingName'])
-            print('setting name: ' + self.state['settingName'])
+            logger.debug("setting name: %s", self.state['settingName'])
         if me_state['settingLoading'] != self.state['settingLoading']:
             if me_state['settingLoading']:
                 self.__set_setting_loading()
@@ -204,7 +207,6 @@ class PerformFrame(tk.Frame):
                 self.state['bassMode'] = me_map['bassMode']
         if primary and primary['name'] != self.state['controllerName']:
             self.state['controllerName'] = primary['name']
-                #self.__set_controller(primary['name'])
 
     def get_parameters(self) -> list[AppParameter]:
         parameters = [
@@ -287,7 +289,6 @@ class PerformFrame(tk.Frame):
             if note != self.state['shadowBassNote']:
                 reset_notes.append(note)
         self.keyboard.reset(reset_notes)
-        # self.state['shadowChordNotes'] = []
 
     def __stop_bass_shadow(self) -> None:
         note_in_playing_chord = self.state['playingChordNotes'].count(
@@ -297,7 +298,6 @@ class PerformFrame(tk.Frame):
         if (not note_in_playing_chord) and (not note_in_shadow_chord)  \
                 and self.state['shadowBassNote'] is not None:
             self.keyboard.reset([self.state['shadowBassNote']])
-        # self.state['shadowBassNote'] = None
 
     def __set_chord(self, chord: list[int], root: int) -> None:
         self.state['chordType'] = {'notes': chord, 'root': root}

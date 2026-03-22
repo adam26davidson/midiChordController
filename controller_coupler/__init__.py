@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from enum import Enum
 from typing import cast
 
@@ -15,6 +16,8 @@ from models.command_type import CommandType
 from redux import get_controller_coupler_state, get_music_engine_state, store
 from redux import utils as redux_utils
 from redux.actions import controller_coupler as actions
+
+logger = logging.getLogger(__name__)
 
 
 class ChordEngineControlMode(Enum):
@@ -70,9 +73,9 @@ class ControllerCoupler:
             new_params = self.process_new_parameters(self.parameters)
             if len(new_params) > 0:
                 redux_utils.add_app_parameters(new_params)
-            print(f"updating parameters. count: {len(self.parameters)}")
+            logger.info("updating parameters. count: %d", len(self.parameters))
         if cc_state['controls'] is not self.controls:
-            print("updating controls")
+            logger.info("updating controls")
             self.controls = cast('dict[str, dict[str, MappableControl]]', cc_state['controls'])
 
         me_state = get_music_engine_state()

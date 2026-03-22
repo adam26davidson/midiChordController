@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+logger = logging.getLogger(__name__)
 
 from constants import PARENT_PATH
 from redux import get_music_engine_state, store
@@ -45,15 +48,21 @@ class SettingsStorageUtility:
         self.loading_settings = True
         settings_file_path = Path(self.settings_file_directory)
 
-        if ( not settings_file_path.is_file()):
+        if not settings_file_path.is_file():
+            self.loading_settings = False
             return
 
-        with open(self.settings_file_directory) as f:
-            settings_from_file = json.load(f)
+        try:
+            with open(self.settings_file_directory) as f:
+                settings_from_file = json.load(f)
+        except (json.JSONDecodeError, OSError) as e:
+            logger.warning("Failed to load settings from %s: %s", self.settings_file_directory, e)
+            self.loading_settings = False
+            return
 
         for setting in self.saved_music_engine_settings:
             if setting in settings_from_file:
-                print(f'loading {setting} = {settings_from_file[setting]}')
+                logger.info("Loading %s = %s", setting, settings_from_file[setting])
                 store.dispatch(self.saved_music_engine_settings[setting](settings_from_file[setting]))
 
         self.loading_settings = False
@@ -66,8 +75,13 @@ class SettingsStorageUtility:
             for setting in self.saved_music_engine_settings:
                 settings_to_save[setting] = me_state[setting]  # type: ignore[literal-required]
 
-            with open(self.settings_file_directory, "w") as outfile:
-                json.dump(settings_to_save, outfile)
+            tmp_path = self.settings_file_directory + ".tmp"
+            try:
+                with open(tmp_path, "w") as outfile:
+                    json.dump(settings_to_save, outfile)
+                Path(tmp_path).replace(self.settings_file_directory)
+            except OSError as e:
+                logger.error("Failed to save settings to %s: %s", self.settings_file_directory, e)
 
 
 settings_storage_utility = SettingsStorageUtility()

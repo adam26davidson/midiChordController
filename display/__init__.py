@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import time
 import tkinter as tk
 from typing import Callable, cast
@@ -19,6 +20,8 @@ from .settings_pages.chord_settings import ChordSettingsFrame
 from .settings_pages.midi_settings import MidiSettingsFrame
 from .settings_pages.strum_settings import StrumSettingsFrame
 
+logger = logging.getLogger(__name__)
+
 
 class Display:
     def __init__(self) -> None:
@@ -36,7 +39,7 @@ class Display:
             self.root.geometry("800x480")
 
         def close_escape(event: object = None) -> None:
-            print("escaped")
+            logger.debug("escaped")
             self.root.destroy()
 
         self.root.bind("<Escape>", close_escape)
@@ -109,18 +112,16 @@ class Display:
 
             if total_frame_ms > 20:
                 _slow_frames += 1
-                print(f"[DISPLAY] SLOW frame #{_display_loop_count}: "
-                      f"work={work_ms:.1f}ms total={total_frame_ms:.1f}ms "
-                      f"gap={frame_gap_ms:.1f}ms", flush=True)
+                logger.debug("[DISPLAY] SLOW frame #%d: work=%.1fms total=%.1fms gap=%.1fms",
+                             _display_loop_count, work_ms, total_frame_ms, frame_gap_ms)
 
             if _display_loop_count % 60 == 0:
                 avg_work = _total_work_ms / 60
                 avg_frame = _total_frame_ms / 60
                 fps = 1000 / avg_frame if avg_frame > 0 else 0
-                print(f"[DISPLAY] fps={fps:.1f} "
-                      f"avg_work={avg_work:.1f}ms avg_frame={avg_frame:.1f}ms "
-                      f"max_work={_max_work_ms:.1f}ms max_frame={_max_frame_ms:.1f}ms "
-                      f"slow={_slow_frames}/60", flush=True)
+                logger.debug("[DISPLAY] fps=%.1f avg_work=%.1fms avg_frame=%.1fms "
+                             "max_work=%.1fms max_frame=%.1fms slow=%d/60",
+                             fps, avg_work, avg_frame, _max_work_ms, _max_frame_ms, _slow_frames)
                 _total_work_ms = 0.0
                 _total_frame_ms = 0.0
                 _max_work_ms = 0.0

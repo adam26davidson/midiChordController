@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from models.app_parameter import AppParameter
 
 from . import get_controller_coupler_state, get_controller_manager_state, store
 from .actions import controller_coupler as cc_actions
+
+logger = logging.getLogger(__name__)
 
 
 def get_active_me_map() -> Any | None:
@@ -27,7 +30,7 @@ def get_active_ui_map() -> Any | None:
     return None
 
 def add_app_parameters(parameters: list[AppParameter]) -> None:
-    print(f"adding {len(parameters)} parameters")
+    logger.debug("adding %d parameters", len(parameters))
     state = get_controller_coupler_state()
     existing_params = state['appParameters']
     new_params = {param.key: param for param in parameters}
@@ -36,4 +39,4 @@ def add_app_parameters(parameters: list[AppParameter]) -> None:
     else:
         store.dispatch(cc_actions.update_app_parameters(new_params))
     new_state = get_controller_coupler_state()
-    print(f"new parameterCount: {len(new_state['appParameters'])}")
+    logger.debug("new parameterCount: %d", len(new_state['appParameters']))

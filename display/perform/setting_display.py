@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import logging
 import tkinter as tk
 
 from redux import get_music_engine_state, store
 
 from ..display_constants import COLORS, FONTS
+
+logger = logging.getLogger(__name__)
 
 
 class SettingDisplay(tk.Frame):
@@ -59,5 +62,5 @@ class SettingDisplay(tk.Frame):
     def set_setting(self, name: str) -> None:
         if self.chord_engine_control == 'internal':
             self.internal_setting_name = name
-        print('setting setting text to ' + name)
+        logger.debug("setting setting text to %s", name)
         self.setting.configure(text=name)

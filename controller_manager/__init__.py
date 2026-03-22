@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from typing import Callable
 
 from controller_manager.controller import Controller
@@ -12,6 +13,8 @@ from redux.actions import controller_manager as actions
 from redux.reducers import controller_manager  # noqa: F401
 
 from .controllers import controller_classes
+
+logger = logging.getLogger(__name__)
 
 
 class ControllerManager:
@@ -39,14 +42,14 @@ class ControllerManager:
         store.dispatch(actions.start_waiting_for_connection())
         found_controller = False
         connected_controller = None
-        print("entering controller search loop")
+        logger.info("entering controller search loop")
         while (not found_controller):
-            print("checking for new connections")
+            logger.debug("checking for new connections")
             for controller in self.controller_classes:
                 found_controller = await loop.run_in_executor(
                     None, controller.check_for_new_connections)
                 if found_controller:
-                    print("found new controller")
+                    logger.info("found new controller")
                     connected_controller: Controller = controller(self.send_event)
                     connected_controller.open()
                     self.connected_controllers.append(connected_controller)
@@ -55,7 +58,7 @@ class ControllerManager:
                     controls = get_controller_coupler_state()['controls']
                     store.dispatch(cc_actions.update_controls({**controls, **connected_controller.get_controls()}))
                     break
-                print("no new controller found")
+                logger.debug("no new controller found")
                 await asyncio.sleep(sleep_time)
 
     async def check_connection(self) -> None:

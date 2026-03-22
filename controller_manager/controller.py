@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import asyncio
 import collections
+import logging
 import select
 import threading
 import time
-import traceback
 from abc import ABC
 from typing import Any, Callable
 
@@ -24,8 +24,24 @@ from .models.raw_control import RawControl
 from .models.raw_control_event import RawControlEvent
 from .models.raw_control_type import RawControlType
 
+logger = logging.getLogger(__name__)
+
 
 class Controller(ABC):
+    """Abstract base class for game controller hardware drivers.
+
+    Threading model:
+    - One daemon reader thread per evdev device (``_device_read_thread``), using
+      ``select()`` to block on device file descriptors. These threads only
+      append to thread-safe queues (``deque`` for discrete events, lock-guarded
+      dict for analog values). They never call ``process_event()``.
+    - One asyncio task (``_process_loop``) on the main event loop consumes
+      queued events at 200Hz and calls ``process_event()`` → ``send_event()``.
+    - ``is_connected`` is a plain bool read by reader threads and the asyncio
+      task, written by ``open()``/``close()`` on the main thread. This is safe
+      under CPython's GIL (bool assignment is atomic), but would need a
+      ``threading.Event`` if porting to a non-GIL interpreter.
+    """
 
     config: ControllerConfig
 
@@ -61,7 +77,7 @@ class Controller(ABC):
             product_match = device.info.product == config.product
             new_id = device.uniq not in connected_ids
             if (vendor_match and product_match and new_id):
-                print("found new Controller Device: " + device.name)
+                logger.info("found new Controller Device: %s", device.name)
                 return True
         return False
 
@@ -114,7 +130,7 @@ class Controller(ABC):
     def close(self) -> None:
         self.is_connected = False
         store.dispatch(actions.remove(self.data))
-        print(f"Closing connection for {self.config.product}:{self.config.vendor}:{self.id}")
+        logger.info("Closing connection for %s:%s:%s", self.config.product, self.config.vendor, self.id)
 
     def _device_read_thread(self, device_key: str) -> None:
         """Dedicated thread: reads evdev as fast as possible, never does processing."""
@@ -131,7 +147,7 @@ class Controller(ABC):
 
         try:
             assert self.devices is not None
-            print(f"[READER] starting for {device_key}, fd={self.devices[device_key].fd}, is_connected={self.is_connected}, id={self.id}", flush=True)
+            logger.debug("READER starting for %s, fd=%s, is_connected=%s, id=%s", device_key, self.devices[device_key].fd, self.is_connected, self.id)
             device = self.devices[device_key]
             _read_count = 0
 
@@ -139,10 +155,10 @@ class Controller(ABC):
                 try:
                     r, _, _ = select.select([device.fd], [], [], 1.0)
                 except Exception as e:
-                    print(f"[READER] {device_key} select() error: {e}", flush=True)
+                    logger.error("READER %s select() error: %s", device_key, e)
                     break
                 if not r:
-                    print(f"[READER] {device_key} select() timeout (no data for 1s)", flush=True)
+                    logger.debug("READER %s select() timeout (no data for 1s)", device_key)
                     continue
 
                 try:
@@ -179,17 +195,17 @@ class Controller(ABC):
                             control_name = control_name.key if control_name else f"unknown_{code}"
                             if val == 1:
                                 if button_states.get(code):
-                                    print(f"[BTN_WARN] {control_name} press without prior release!", flush=True)
+                                    logger.warning("BTN_WARN %s press without prior release!", control_name)
                                     button_stats["missing_releases"] += 1
                                 button_states[code] = True
                                 button_stats["presses"] += 1
                             elif val == 0:
                                 if not button_states.get(code):
-                                    print(f"[BTN_WARN] {control_name} release without prior press!", flush=True)
+                                    logger.warning("BTN_WARN %s release without prior press!", control_name)
                                     button_stats["orphan_releases"] += 1
                                 button_states[code] = False
                                 button_stats["releases"] += 1
-                            print(f"[EVDEV] {control_name} val={val} | press={button_stats['presses']} rel={button_stats['releases']} orphan={button_stats['orphan_releases']} miss={button_stats['missing_releases']}", flush=True)
+                            logger.debug("EVDEV %s val=%s | press=%s rel=%s orphan=%s miss=%s", control_name, val, button_stats['presses'], button_stats['releases'], button_stats['orphan_releases'], button_stats['missing_releases'])
 
                         self._discreteEventQueue.append((device_key, event))
 
@@ -199,15 +215,14 @@ class Controller(ABC):
 
                 _read_count += 1
                 if _read_count % 1000 == 0:
-                    print(f"[READER] {device_key} alive, {_read_count} reads, queue_size={len(self._latestAnalogValues)}", flush=True)
+                    logger.debug("READER %s alive, %s reads, queue_size=%s", device_key, _read_count, len(self._latestAnalogValues))
 
         except OSError as e:
             self.is_connected = False
-            print(f"[READER] device disconnected {device_key}: {e}")
+            logger.warning("READER device disconnected %s: %s", device_key, e)
         except Exception:
             self.is_connected = False
-            print(f"[READER] error in {device_key}")
-            traceback.print_exc()
+            logger.error("READER error in %s", device_key, exc_info=True)
         finally:
             if record_file_ctx is not None:
                 record_file_ctx.close()
@@ -234,7 +249,7 @@ class Controller(ABC):
                 try:
                     self.process_event(event, device_key)
                 except Exception as e:
-                    print(f"error processing discrete event (code={event.code}, value={event.value}): {e}", flush=True)
+                    logger.error("error processing discrete event (code=%s, value=%s): %s", event.code, event.value, e)
 
             # 2. Process latest analog values (one per axis — skips redundant intermediate values)
             with self._analogLock:
@@ -245,14 +260,14 @@ class Controller(ABC):
                 try:
                     self.process_event(event, device_key)
                 except Exception as e:
-                    print(f"error processing analog event (code={event.code}, value={event.value}): {e}", flush=True)
+                    logger.error("error processing analog event (code=%s, value=%s): %s", event.code, event.value, e)
 
             elapsed = time.monotonic() - loop_start
             _loop_count += 1
             _total_process_time += elapsed
             if _loop_count % 200 == 0:  # print every ~1 second
                 avg = (_total_process_time / _loop_count) * 1000
-                print(f"[LOOP] avg={avg:.1f}ms  discrete={discrete_count}  analog={len(analog_snapshot)}  elapsed={elapsed*1000:.1f}ms", flush=True)
+                logger.debug("LOOP avg=%.1fms  discrete=%s  analog=%s  elapsed=%.1fms", avg, discrete_count, len(analog_snapshot), elapsed*1000)
 
 
     def create_state(self, controls: list[RawControl]) -> dict[str, Any]:
@@ -364,10 +379,10 @@ class Controller(ABC):
 
     def process_button_event(self, event: InputEvent, control: RawControl) -> None:
         if event.value == 2:  # evdev repeat event — ignore, not a real press/release
-            print(f"[BTN_REPEAT] {control.key} (ignored)", flush=True)
+            logger.debug("BTN_REPEAT %s (ignored)", control.key)
             return
         raw_event = RawControlEvent.ON if event.value == 1 else RawControlEvent.OFF
-        print(f"[BTN] {control.key} -> {raw_event.name}", flush=True)
+        logger.debug("BTN %s -> %s", control.key, raw_event.name)
         self.__send_events(control, raw_event, MappableControlType.ON_OFF)
         self.state[control.key] = event.value
 
