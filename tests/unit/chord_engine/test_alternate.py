@@ -33,6 +33,6 @@ class TestAlternate:
 
     def test_parameters_key(self):
         alt = Alternate(MagicMock())
-        params = alt._Alternate__get_parameters()
+        params = alt._Alternate__get_parameters()  # type: ignore[unresolved-attribute]
         assert len(params) == 1
         assert params[0].key == "ALTERNATE"

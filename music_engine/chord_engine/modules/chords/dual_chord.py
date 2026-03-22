@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from ...chord_engine_state import state
 from ...internal_chord_engine.modules.secondaries.secondary import Secondary
 from . import DEFAULT_SCALE, Chord
@@ -5,7 +7,10 @@ from . import DEFAULT_SCALE, Chord
 
 class DualChord:
 
-    def __init__(self, setting, scale=DEFAULT_SCALE, is_secondary=False):
+    main: Chord
+    alternate: Chord
+
+    def __init__(self, setting: dict, scale: list[int] = DEFAULT_SCALE, is_secondary: bool = False) -> None:
         chord_class = Secondary if is_secondary else Chord
         root_or_interval = setting['interval'] if is_secondary \
             else setting['root']
@@ -20,24 +25,24 @@ class DualChord:
             root_or_interval, scale
         )
 
-    def get_chord(self, target_note=None):
+    def get_chord(self, target_note: int | None = None) -> list[int]:
         chord, args = self.__get_chord_object(target_note)
         return chord.get_chord(*args)
 
-    def get_bass(self, target_note=None):
+    def get_bass(self, target_note: int | None = None) -> int:
         chord, args = self.__get_chord_object(target_note)
         return chord.get_bass(*args)
 
-    def get_note_types(self, target_note=None):
+    def get_note_types(self, target_note: int | None = None) -> list[int]:
         chord, args = self.__get_chord_object(target_note)
         return chord.get_note_types(*args)
 
-    def get_root(self, target_note=None):
+    def get_root(self, target_note: int | None = None) -> int:
         chord, args = self.__get_chord_object(target_note)
         return chord.get_root(*args)
 
-    def __get_chord_object(self, target_note):
-        args = [] if target_note is None else [target_note]
+    def __get_chord_object(self, target_note: int | None) -> tuple[Chord, list[int]]:
+        args: list[int] = [] if target_note is None else [target_note]
         if state.alternate:
             return self.alternate, args
         return self.main, args

@@ -1,5 +1,10 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
@@ -34,9 +39,9 @@ class ChordEngine(ABC):
     voice_count: VoiceCount
     hold: Hold
 
-    callbacks: list[Callable]
+    callbacks: list[Callable[[ChordEngineMessage], None]]
 
-    def __init__(self, type: AppParameterType):
+    def __init__(self, type: AppParameterType) -> None:
 
         self.type = type
 
@@ -54,25 +59,25 @@ class ChordEngine(ABC):
         redux_utils.add_app_parameters(self.get_parameters())
 
     @abstractmethod
-    def get_chord_note_classes(self):
+    def get_chord_note_classes(self) -> tuple[list[int], int]:
         pass
 
     @abstractmethod
-    def get_chord_notes(self, button):
+    def get_chord_notes(self, button: ChordButton) -> list[int]:
         pass
 
     @abstractmethod
-    def get_bass_note(self):
+    def get_bass_note(self) -> int:
         pass
 
-    def subscribe(self, callback):
+    def subscribe(self, callback: Callable[[ChordEngineMessage], None]) -> None:
         self.callbacks.append(callback)
 
-    def send_message(self, message):
+    def send_message(self, message: ChordEngineMessage) -> None:
         for callback in self.callbacks:
             callback(message)
 
-    def send_notes_on(self, notes: list[int], player: ChordPlayer):
+    def send_notes_on(self, notes: list[int], player: ChordPlayer) -> None:
         message = ChordEngineMessage(
             type=ChordMessageType.ON,
             notes=notes,
@@ -80,7 +85,7 @@ class ChordEngine(ABC):
         )
         self.send_message(message)
 
-    def send_notes_off(self, notes: list[int], player: ChordPlayer):
+    def send_notes_off(self, notes: list[int], player: ChordPlayer) -> None:
         message = ChordEngineMessage(
             type=ChordMessageType.OFF,
             notes=notes,
@@ -88,7 +93,7 @@ class ChordEngine(ABC):
         )
         self.send_message(message)
 
-    def chord_button_on(self, button):
+    def chord_button_on(self, button: ChordButton) -> None:
         already_active = (len(state.chord.button_queue) > 0
                          and state.chord.button_queue[-1] == button)
         if state.chord.button_queue.count(button) > 0:
@@ -97,7 +102,7 @@ class ChordEngine(ABC):
         if not already_active:
             self.update_chord_from_control_state()
 
-    def chord_button_off(self, button):
+    def chord_button_off(self, button: ChordButton) -> None:
         if len(state.chord.button_queue) == 0:
             return
         last_button = state.chord.button_queue[-1]
@@ -106,25 +111,25 @@ class ChordEngine(ABC):
         if button == last_button:
             self.update_chord_from_control_state()
 
-    def update_chord_from_control_state(self):
+    def update_chord_from_control_state(self) -> None:
         if len(state.chord.button_queue) == 0:
             self.stop_chord()
         else:
             button = state.chord.button_queue[-1]
             self.play_chord(button)
 
-    def play_chord(self, button=None):
+    def play_chord(self, button: ChordButton | None = None) -> None:
         if button is not None:
             state.chord.active_button = button
         self.set_chord_type()
         self.stop_chord(force=True)
-        notes = self.get_chord_notes(button)
+        notes = self.get_chord_notes(state.chord.active_button)
         self.send_notes_on(notes, player=ChordPlayer.CHORD)
         self.update_bass(from_chord=True)
         state.chord.playing_notes = notes
         state.chord.is_playing = True
 
-    def play_bass(self):
+    def play_bass(self) -> None:
         self.stop_bass(button_up=False)
         bass_note = self.get_bass_note()
         self.send_notes_on([bass_note], player=ChordPlayer.BASS)
@@ -132,11 +137,11 @@ class ChordEngine(ABC):
         state.bass.playing_note = bass_note
         state.bass.is_playing = True
 
-    def stop_chord_and_bass(self):
+    def stop_chord_and_bass(self) -> None:
         self.stop_chord()
         self.stop_bass(button_up=False)
 
-    def stop_chord(self, force=False):
+    def stop_chord(self, force: bool = False) -> None:
         if ((not state.hold and state.chord.is_playing) or force) and state.chord.playing_notes:
             playing_notes = state.chord.playing_notes
             self.send_notes_off(playing_notes, player=ChordPlayer.CHORD)
@@ -144,7 +149,7 @@ class ChordEngine(ABC):
             state.chord.playing_notes = []
             state.chord.is_playing = False
 
-    def stop_bass(self, button_up=True):
+    def stop_bass(self, button_up: bool = True) -> None:
         if not (button_up and state.hold) and state.bass.is_playing:
             playing_bass: int = state.bass.playing_note  # type: ignore[assignment]
             self.send_notes_off([playing_bass], player=ChordPlayer.BASS)
@@ -152,25 +157,25 @@ class ChordEngine(ABC):
             state.bass.playing_note = None
             state.bass.is_playing = False
 
-    def update_chord_type(self):
+    def update_chord_type(self) -> None:
         self.set_chord_type()
         self.update_chord()
         self.update_bass()
 
-    def set_chord_type(self):
+    def set_chord_type(self) -> None:
         chord_note_classes, root_class = self.get_chord_note_classes()
         if chord_note_classes != state.chord.note_classes or root_class != state.chord.root_class:
             state.chord.note_classes, state.chord.root_class = chord_note_classes, root_class
             store.dispatch(actions.change_chord_type({'chord': chord_note_classes, 'root': root_class}))
 
-    def update_chord(self):
+    def update_chord(self) -> None:
         if (state.chord.is_playing):
             self.play_chord(state.chord.active_button)
         else:
             notes = self.get_chord_notes(state.chord.active_button)
             store.dispatch(actions.change_chord_shadow(notes))
 
-    def update_bass(self, from_chord=False):
+    def update_bass(self, from_chord: bool = False) -> None:
         if (state.bass.is_playing):
             if from_chord:
                 bass_note = self.get_bass_note()
@@ -182,7 +187,7 @@ class ChordEngine(ABC):
             note = self.get_bass_note()
             store.dispatch(actions.change_bass_shadow(note))
 
-    def get_parameters(self):
+    def get_parameters(self) -> list[AppParameter]:
         key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return[
             AppParameter(

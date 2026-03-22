@@ -8,12 +8,11 @@ The fix should reset old playing notes that are not in the new chord before
 calling keyboard.play() with the new notes.
 """
 
-from unittest.mock import MagicMock, call, patch
-
-from redux import store
-from redux.actions import music_engine as me_actions
+from unittest.mock import MagicMock, patch
 
 from display.perform.perform_frame import PerformFrame
+from redux import store
+from redux.actions import music_engine as me_actions
 
 
 class TestChordNoteResetOnChange:

@@ -1,10 +1,16 @@
+from __future__ import annotations
+
 import asyncio
+from typing import TYPE_CHECKING
 
 from controller_coupler import ControllerCoupler
 from controller_manager import ControllerManager
 from display import Display
 from music_engine import MusicEngine
 from redux.settings_storage import settings_storage_utility
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class App:
@@ -14,8 +20,8 @@ class App:
     music_engine: MusicEngine
     display: Display
 
-    def __init__(self, args):
-        self.use_display = args.display
+    def __init__(self, args: argparse.Namespace) -> None:
+        self.use_display: bool = args.display
         if (self.use_display):
             self.display = Display()
         self.controller_manager = ControllerManager()
@@ -25,7 +31,7 @@ class App:
         self.controller_manager.subscribe(self.controller_coupler.event_handler)
 
 
-    def start(self):
+    def start(self) -> None:
         settings_storage_utility.load_settings()
 
         if (self.use_display):

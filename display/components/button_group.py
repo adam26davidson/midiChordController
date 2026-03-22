@@ -1,12 +1,20 @@
+from __future__ import annotations
+
 import tkinter as tk
+from typing import Any, Callable, TypedDict
 
 from ..display_constants import COLORS, FONTS
 from .setting_control import SettingControl
 
 
+class ButtonOption(TypedDict):
+    name: str
+    value: Any
+
+
 class ButtonGroup(SettingControl):
 
-    def __init__(self, container, name, options_list, selected, callback):
+    def __init__(self, container: tk.Misc, name: str, options_list: list[ButtonOption], selected: str, callback: Callable[[Any], None]) -> None:
         super().__init__(container, name)
 
         self.options_list = options_list
@@ -19,7 +27,7 @@ class ButtonGroup(SettingControl):
             relief="flat",
             bg="#000000")
 
-        self.buttons = {}
+        self.buttons: dict[str, SingleButton] = {}
 
         for option in options_list:
             self.buttons[option['name']] = SingleButton(self.contents_frame, option, self.set_selected_button)
@@ -29,14 +37,14 @@ class ButtonGroup(SettingControl):
 
         self.contents_frame.pack(side='top', anchor='nw', padx=(4, 4), pady=(4, 4))
 
-    def set_selected_button(self, value, name):
+    def set_selected_button(self, value: Any, name: str) -> None:
         self.buttons[self.state.active_button].set_un_selected()
         self.buttons[name].set_selected()
         self.state.active_button = name
         self.callback(value)
 
-    def set_value(self, value):
-        button: "SingleButton | None" = None
+    def set_value(self, value: Any) -> None:
+        button: SingleButton | None = None
         for b in self.buttons.values():
             if b.value == value:
                 button = b
@@ -44,10 +52,10 @@ class ButtonGroup(SettingControl):
         if button is not None:
             self.set_selected_button(value, button.name)
 
-    def get_value(self):
+    def get_value(self) -> Any:
         return self.buttons[self.state.active_button].value
 
-    def set_disabled(self):
+    def set_disabled(self) -> None:
         for button_name in self.buttons:
             button = self.buttons[button_name]
             button.configure(state=tk.DISABLED)
@@ -58,7 +66,7 @@ class ButtonGroup(SettingControl):
                     disabledforeground='#000000'
                 )
 
-    def set_enabled(self):
+    def set_enabled(self) -> None:
         for button_name in self.buttons:
             button = self.buttons[button_name]
             button.configure(state=tk.NORMAL)
@@ -71,9 +79,9 @@ class ButtonGroup(SettingControl):
 
 class SingleButton(tk.Button):
 
-    def __init__(self, container, option, callback):
-        self.value = option['value']
-        self.name = option['name']
+    def __init__(self, container: tk.Misc, option: ButtonOption, callback: Callable[[Any, str], None]) -> None:
+        self.value: Any = option['value']
+        self.name: str = option['name']
         self.callback = callback
         super().__init__(container,
             highlightthickness=0,
@@ -90,17 +98,17 @@ class SingleButton(tk.Button):
             text=option['name'],
             command=self.__on_click)
 
-    def __on_click(self):
+    def __on_click(self) -> None:
         self.callback(self.value, self.name)
 
-    def set_selected(self):
+    def set_selected(self) -> None:
         self.configure(
             bg=COLORS['root'],
             activebackground=COLORS['root'],
             fg="#000000",
             activeforeground="#000000")
 
-    def set_un_selected(self):
+    def set_un_selected(self) -> None:
         self.configure(
             bg="#000000",
             activebackground="#000000",
@@ -109,8 +117,8 @@ class SingleButton(tk.Button):
 
 
 class ButtonGroupState:
-    disabled = False
-    active_button = ''
+    disabled: bool = False
+    active_button: str = ''
 
-    def __init__(self, active_button):
+    def __init__(self, active_button: str) -> None:
         self.active_button = active_button

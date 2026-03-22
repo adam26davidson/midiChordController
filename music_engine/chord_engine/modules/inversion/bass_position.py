@@ -1,13 +1,16 @@
-from typing import Callable
+from __future__ import annotations
 
-from pyrsistent import thaw
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
 from models.command_type import CommandType
 from music_engine.chord_engine.modules.inversion import Inversion
 from music_engine.chord_engine.state.inversion_state import InversionState
-from redux import store
+from redux import get_music_engine_state, store
 from redux.actions import music_engine as actions
 
 from ...chord_engine_state import state
@@ -15,27 +18,27 @@ from ...chord_engine_state import state
 
 class BassPosition(Inversion):
 
-    def __init__(self, type: AppParameterType, update_chord_engine: Callable):
+    def __init__(self, type: AppParameterType, update_chord_engine: Callable[[], None]) -> None:
         super().__init__(type, update_chord_engine)
 
     def get_state(self) -> InversionState:
         return state.bass_position
 
-    def update_redux_value(self):
+    def update_redux_value(self) -> None:
         store.dispatch(actions.change_bass_position(state.bass_position.value))
 
-    def update_redux_range(self):
+    def update_redux_range(self) -> None:
         store.dispatch(actions.change_bass_range(state.bass_position.range))
 
-    def update_redux_locked(self):
+    def update_redux_locked(self) -> None:
         pass
 
-    def handle_store_update(self):
-        me_state = thaw(store.get_state()['musicEngine'])
+    def handle_store_update(self) -> None:
+        me_state = get_music_engine_state()
         if (me_state['bassRange'] != state.bass_position.range):
             self.set_range(me_state['bassRange'])
 
-    def get_parameters(self):
+    def get_parameters(self) -> list[AppParameter]:
         key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(

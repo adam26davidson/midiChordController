@@ -6,10 +6,9 @@ change, preventing notes or indicators from getting "stuck on".
 
 from unittest.mock import MagicMock, patch
 
+from display.perform.perform_frame import PerformFrame
 from redux import store
 from redux.actions import music_engine as me_actions
-
-from display.perform.perform_frame import PerformFrame
 
 
 def _make_perform_frame():

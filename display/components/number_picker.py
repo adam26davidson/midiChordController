@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import tkinter as tk
+from typing import Callable
 
 from ..display_constants import COLORS, FONTS
 from .setting_control import SettingControl
@@ -6,7 +9,7 @@ from .setting_control import SettingControl
 
 class NumberPicker(SettingControl):
 
-    def __init__(self, container, name, min, max, value, callback):
+    def __init__(self, container: tk.Misc, name: str, min: int, max: int, value: int, callback: Callable[[int], None]) -> None:
         super().__init__(container, name)
 
         self.max = max
@@ -35,7 +38,7 @@ class NumberPicker(SettingControl):
         self.right_button.pack(side='left', padx=(3, 3), pady=(3, 6))
         self.contents_frame.pack(side='top', anchor='nw', padx=(2, 2), pady=(2, 2))
 
-    def increment_number(self):
+    def increment_number(self) -> None:
         if self.state.number + 1 <= self.max:
             self.state.number += 1
         else:
@@ -44,7 +47,7 @@ class NumberPicker(SettingControl):
         self.number.configure(text=str(self.state.number))
         self.callback(self.state.number)
 
-    def decrement_number(self):
+    def decrement_number(self) -> None:
         if self.state.number - 1 >= self.min:
             self.state.number -= 1
         else:
@@ -53,27 +56,27 @@ class NumberPicker(SettingControl):
         self.number.configure(text=str(self.state.number))
         self.callback(self.state.number)
 
-    def set_disabled(self):
+    def set_disabled(self) -> None:
         self.right_button.set_disabled()
         self.left_button.set_disabled()
         self.number.configure(fg=COLORS['chordDim'])
 
-    def set_enabled(self):
+    def set_enabled(self) -> None:
         self.right_button.set_enabled()
         self.left_button.set_enabled()
         self.number.configure(fg=COLORS['chord'])
 
-    def set_value(self, value):
+    def set_value(self, value: int) -> None:
         self.state.number = value
         self.number.configure(text=str(self.state.number))
 
-    def get_value(self):
+    def get_value(self) -> int:
         return self.state.number
 
 
 class ArrowButton(tk.Button):
 
-    def __init__(self, container, side, callback):
+    def __init__(self, container: tk.Misc, side: str, callback: Callable[[], None]) -> None:
         text = '\u25B6'
         if side == 'left':
             text = '\u25C0'
@@ -93,16 +96,16 @@ class ArrowButton(tk.Button):
             text=text,
             command=callback)
 
-    def set_disabled(self):
+    def set_disabled(self) -> None:
         self.configure(state=tk.DISABLED)
 
-    def set_enabled(self):
+    def set_enabled(self) -> None:
         self.configure(state=tk.NORMAL)
 
 
 class NumberPickerState:
-    disabled = False
-    number = 0
+    disabled: bool = False
+    number: int = 0
 
-    def __init__(self, number):
+    def __init__(self, number: int) -> None:
         self.number = number

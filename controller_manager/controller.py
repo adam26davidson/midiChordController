@@ -7,11 +7,13 @@ import threading
 import time
 import traceback
 from abc import ABC
+from typing import Any, Callable
 
-import evdev  # type: ignore[import]
+import evdev
+from evdev import InputDevice, InputEvent
 
 from controller_manager.models.control_event import ControlEvent
-from redux import store
+from redux import get_controller_manager_state, store
 from redux.actions import controller_manager as actions
 
 from .maps import me_maps, ui_maps
@@ -27,11 +29,11 @@ class Controller(ABC):
 
     config: ControllerConfig
 
-    def __init__(self, send_event, info, config: ControllerConfig):
+    def __init__(self, send_event: Callable[[ControlEvent], None], info: object, config: ControllerConfig) -> None:
         self.id: str | None = None
         self.data: dict | None = None
         self.is_connected = False
-        self.devices: dict | None = None
+        self.devices: dict[str, InputDevice] | None = None
         self.send_event = send_event
         self.config = config
         self.info = info
@@ -50,9 +52,9 @@ class Controller(ABC):
 
 
     @staticmethod
-    def check_for_new_connections(config: ControllerConfig):
+    def check_for_new_connections(config: ControllerConfig) -> bool:
         devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-        connected_controllers = store.get_state()['controllerManager']['controllers']
+        connected_controllers = get_controller_manager_state()['controllers']
         connected_ids = [c['id'] for c in connected_controllers]
         for device in devices:
             vendor_match = device.info.vendor == config.vendor
@@ -63,16 +65,16 @@ class Controller(ABC):
                 return True
         return False
 
-    def check_if_still_connected(self):
+    def check_if_still_connected(self) -> bool:
         devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         connected_ids = [d.uniq for d in devices]
         return self.id in connected_ids
 
-    def open(self, id, devices, recording=False):
+    def open(self, id: str, devices: dict[str, InputDevice], recording: bool = False) -> None:
         self.id = id
         self.devices = devices
         self._recording = recording
-        connected_controllers = store.get_state()['controllerManager']['controllers']
+        connected_controllers = get_controller_manager_state()['controllers']
         roles = [c['role'] for c in connected_controllers]
         role = 'primary'
         if 'primary' in roles:
@@ -109,12 +111,12 @@ class Controller(ABC):
 
         store.dispatch(actions.add(self.data))
 
-    def close(self):
+    def close(self) -> None:
         self.is_connected = False
         store.dispatch(actions.remove(self.data))
         print(f"Closing connection for {self.config.product}:{self.config.vendor}:{self.id}")
 
-    def _device_read_thread(self, device_key):
+    def _device_read_thread(self, device_key: str) -> None:
         """Dedicated thread: reads evdev as fast as possible, never does processing."""
         button_states = {}
         button_stats = {"presses": 0, "releases": 0, "orphan_releases": 0, "missing_releases": 0}
@@ -210,7 +212,7 @@ class Controller(ABC):
             if record_file_ctx is not None:
                 record_file_ctx.close()
 
-    async def _process_loop(self):
+    async def _process_loop(self) -> None:
         """Asyncio task: processes queued events on the main thread at a controlled rate."""
         process_interval = 0.005  # 200Hz — fast enough for responsive controls
         _loop_count = 0
@@ -253,8 +255,8 @@ class Controller(ABC):
                 print(f"[LOOP] avg={avg:.1f}ms  discrete={discrete_count}  analog={len(analog_snapshot)}  elapsed={elapsed*1000:.1f}ms", flush=True)
 
 
-    def create_state(self, controls: list[RawControl]):
-        state = {}
+    def create_state(self, controls: list[RawControl]) -> dict[str, Any]:
+        state: dict[str, Any] = {}
         for control in controls:
             if control.type in [RawControlType.BUTTON, RawControlType.PAD]:
                 state[control.key] = 0
@@ -336,7 +338,7 @@ class Controller(ABC):
         return mappable_controls
 
 
-    def process_event(self, event, device):
+    def process_event(self, event: InputEvent, device: str) -> None:
         if event.code in self.raw_control_key_map[device]:
             control = self.raw_control_key_map[device][event.code]
             if control.type == RawControlType.BUTTON:
@@ -347,8 +349,9 @@ class Controller(ABC):
                 control_state = self.state[control.key]
                 self.process_analog_event(event, control, control_state)
 
-    def process_pad_event(self, event, control: RawControl):
-        assert control.config is not None and control.config.polar_event_map is not None
+    def process_pad_event(self, event: InputEvent, control: RawControl) -> None:
+        assert control.config is not None
+        assert control.config.polar_event_map is not None
         if event.value not in control.config.polar_event_map:
             return
         raw_event = control.config.polar_event_map[event.value]
@@ -359,7 +362,7 @@ class Controller(ABC):
         if control.config.expose_polar_events:
             self.__send_events(control, raw_event, MappableControlType.POLAR)
 
-    def process_button_event(self, event, control: RawControl):
+    def process_button_event(self, event: InputEvent, control: RawControl) -> None:
         if event.value == 2:  # evdev repeat event — ignore, not a real press/release
             print(f"[BTN_REPEAT] {control.key} (ignored)", flush=True)
             return
@@ -368,9 +371,11 @@ class Controller(ABC):
         self.__send_events(control, raw_event, MappableControlType.ON_OFF)
         self.state[control.key] = event.value
 
-    def process_analog_event(self, event, control: RawControl, control_state):
+    def process_analog_event(self, event: InputEvent, control: RawControl, control_state: dict[str, Any]) -> None:
         assert control.config is not None
-        assert control.config.top_value is not None and control.config.bottom_value is not None and control.config.average_count is not None
+        assert control.config.top_value is not None
+        assert control.config.bottom_value is not None
+        assert control.config.average_count is not None
         top = control.config.top_value
         bottom = control.config.bottom_value
 
@@ -407,7 +412,7 @@ class Controller(ABC):
 
             self.process_threshold(normalized_value, control, control_state)
 
-    def process_threshold(self, normalized_value, control: RawControl, control_state):
+    def process_threshold(self, normalized_value: float, control: RawControl, control_state: dict[str, Any]) -> None:
         assert control.config is not None
         if control.config.centered_threshold is not None:
 

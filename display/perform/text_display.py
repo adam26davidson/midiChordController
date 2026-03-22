@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import tkinter as tk
 
 from PIL import Image, ImageTk
@@ -8,15 +10,15 @@ from ..display_constants import COLORS, FONTS
 
 
 class TextDisplay(tk.Frame):
-    width = 300
-    height = 50
+    width: int = 300
+    height: int = 50
 
-    bg_color = "#000000"
-    color = COLORS["chord"]
-    inactive_color = COLORS["chordDim"]
-    active_color = COLORS["root"]
+    bg_color: str = "#000000"
+    color: str = COLORS["chord"]
+    inactive_color: str = COLORS["chordDim"]
+    active_color: str = COLORS["root"]
 
-    def __init__(self, master=None):
+    def __init__(self, master: tk.Misc | None = None) -> None:
         super().__init__(master, width=self.width, height=self.height,
                          highlightthickness=0, relief="flat", bg=self.bg_color, border=2, borderwidth=2)
         self.parent = master
@@ -72,20 +74,20 @@ class TextDisplay(tk.Frame):
     def set_controller(self, text: str) -> None:
         pass
 
-    def set_inversion_lock(self, active):
+    def set_inversion_lock(self, active: bool) -> None:
         if active:
             self.inversion_lock_icon.configure(image=self.locked_icon)
         else:
             self.inversion_lock_icon.configure(image=self.unlocked_icon)
 
-    def set_hold(self, active):
+    def set_hold(self, active: bool) -> None:
         if active:
             self.hold_icon.configure(image=self.hold_active_icon)
         else:
             self.hold_icon.configure(image=self.hold_inactive_icon)
 
-    def set_octave(self, octave):
+    def set_octave(self, octave: int) -> None:
         self.octave_value.configure(text=str(octave))
 
-    def set_voices(self, voices):
+    def set_voices(self, voices: int) -> None:
         self.voices_value.configure(text=str(voices))

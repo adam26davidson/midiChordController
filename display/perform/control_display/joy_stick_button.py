@@ -1,5 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from models.app_parameter import AppParameter
+
+if TYPE_CHECKING:
+    from .control_display import ControlDisplay
 
 from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .control_button import ControlButton
@@ -7,36 +13,36 @@ from .control_button import ControlButton
 
 class JoyStickButton(ControlButton):
 
-    radius = 1.4
-    text_radius = 0.7
+    radius: float = 1.4
+    text_radius: float = 0.7
 
-    def __init__(self, master,
+    def __init__(self, master: ControlDisplay,
                  x_params: list[AppParameter],
                  y_params: list[AppParameter],
-                 x_type: str,
-                 y_type: str,
-                 c_param: AppParameter,
-                 center_x, center_y, side):
+                 x_type: str | None,
+                 y_type: str | None,
+                 c_param: AppParameter | None,
+                 center_x: float, center_y: float, side: str) -> None:
         super().__init__(master)
         self.master = master
 
         self.set_x_params(x_params, x_type, False)
         self.set_y_params(y_params, y_type, False)
 
-        self.click_label = "∅" if not c_param else c_param.label_abreviation
+        self.click_label: str = "∅" if not c_param else (c_param.label_abreviation or "")
         self.center_x = center_x
         self.center_y = center_y
         self.side = side
 
         self.draw_button()
 
-    def set_x_params(self, params: list[AppParameter], type: str, update: bool = True):
+    def set_x_params(self, params: list[AppParameter], type: str | None, update: bool = True) -> None:
         self.set_axis_params(params, type, "X", update)
 
-    def set_y_params(self, params: list[AppParameter], type: str, update: bool = True):
+    def set_y_params(self, params: list[AppParameter], type: str | None, update: bool = True) -> None:
         self.set_axis_params(params, type, "Y", update)
 
-    def set_axis_params(self, params: list[AppParameter], type: str, axis: str, update: bool = True):
+    def set_axis_params(self, params: list[AppParameter], type: str | None, axis: str, update: bool = True) -> None:
         if axis == "X":
             self.x_params = params
             self.x_type = type
@@ -54,18 +60,18 @@ class JoyStickButton(ControlButton):
         else:
             if type == "ANALOG" or type == "POLAR":
                 if axis == "X":
-                    self.left_label = f"-{params[0].label_abreviation}"
-                    self.right_label = f"+{params[0].label_abreviation}"
+                    self.left_label = f"-{params[0].label_abreviation or ''}"
+                    self.right_label = f"+{params[0].label_abreviation or ''}"
                 else:
-                    self.top_label = f"+{params[0].label_abreviation}"
-                    self.bottom_label = f"-{params[0].label_abreviation}"
+                    self.top_label = f"+{params[0].label_abreviation or ''}"
+                    self.bottom_label = f"-{params[0].label_abreviation or ''}"
             else:
                 if axis == "X":
-                    self.left_label = params[0].label_abreviation
-                    self.right_label = params[1].label_abreviation
+                    self.left_label = params[0].label_abreviation or ""
+                    self.right_label = params[1].label_abreviation or ""
                 else:
-                    self.top_label = params[0].label_abreviation
-                    self.bottom_label = params[1].label_abreviation
+                    self.top_label = params[0].label_abreviation or ""
+                    self.bottom_label = params[1].label_abreviation or ""
 
         if update:
             if axis == "X":
@@ -76,7 +82,7 @@ class JoyStickButton(ControlButton):
                 self.master.itemconfig(self.bottom_text_object, text=self.bottom_label)
 
 
-    def draw_button(self):
+    def draw_button(self) -> None:
         u_to_c = self.master.units_to_coord
         r = self.radius
         cx = self.center_x
@@ -106,7 +112,7 @@ class JoyStickButton(ControlButton):
             self.click_text_object = self.draw_text_for_click(self.click_label, cx + (r + 1.2), yl)
 
 
-    def draw_text_and_background(self, label, center_x, center_y):
+    def draw_text_and_background(self, label: str, center_x: float, center_y: float) -> tuple[int, int]:
         u_to_c = self.master.units_to_coord
         background_object = self.master.create_oval(
             u_to_c(center_x - self.text_radius),
@@ -128,7 +134,7 @@ class JoyStickButton(ControlButton):
 
         return background_object, text_object
 
-    def draw_text_for_click(self, label, center_x, center_y):
+    def draw_text_for_click(self, label: str, center_x: float, center_y: float) -> int:
         u_to_c = self.master.units_to_coord
         return self.master.create_text(
             u_to_c(center_x),
@@ -138,49 +144,48 @@ class JoyStickButton(ControlButton):
             font=FONT
         )
 
-    def button_on(self):
+    def button_on(self) -> None:
         self.master.itemconfig(self.arrow_object, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.click_text_object, fill=ACTIVE_COLOR)
 
-    def button_off(self):
+    def button_off(self) -> None:
         self.master.itemconfig(self.arrow_object, fill=INACTIVE_COLOR)
         self.master.itemconfig(self.click_text_object, fill=INACTIVE_COLOR)
 
-    def left_on(self):
+    def left_on(self) -> None:
         self.master.itemconfig(self.left_text_background_object, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.left_text_object, fill="#000000")
 
-    def left_off(self):
+    def left_off(self) -> None:
         self.master.itemconfig(self.left_text_background_object, fill="#000000", outline="#000000")
         self.master.itemconfig(self.left_text_object, fill=INACTIVE_COLOR)
 
-    def right_on(self):
+    def right_on(self) -> None:
         self.master.itemconfig(self.right_text_background_object, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.right_text_object, fill="#000000")
 
-    def right_off(self):
+    def right_off(self) -> None:
         self.master.itemconfig(self.right_text_background_object, fill="#000000", outline="#000000")
         self.master.itemconfig(self.right_text_object, fill=INACTIVE_COLOR)
 
-    def up_on(self):
+    def up_on(self) -> None:
         self.master.itemconfig(self.top_text_background_object, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.top_text_object, fill="#000000")
 
-    def up_off(self):
+    def up_off(self) -> None:
         self.master.itemconfig(self.top_text_background_object, fill="#000000", outline="#000000")
         self.master.itemconfig(self.top_text_object, fill=INACTIVE_COLOR)
 
-    def down_on(self):
+    def down_on(self) -> None:
         self.master.itemconfig(self.bottom_text_background_object, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
         self.master.itemconfig(self.bottom_text_object, fill="#000000")
 
-    def down_off(self):
+    def down_off(self) -> None:
         self.master.itemconfig(self.bottom_text_background_object, fill="#000000", outline="#000000")
         self.master.itemconfig(self.bottom_text_object, fill=INACTIVE_COLOR)
 
-    def update_x(self, value):
+    def update_x(self, value: float) -> None:
         pass
 
-    def update_y(self, value):
+    def update_y(self, value: float) -> None:
         pass
-

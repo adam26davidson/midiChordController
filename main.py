@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import argparse
 
 from app import App
 
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Parse arguments')
     parser.add_argument("--display", dest="display", action="store_true")
     parser.add_argument("--no-display", dest="display", action="store_false")

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 # COLORS = {
 #   "chordDim": "#828282",
 #   "rootDim": "#bf9536",

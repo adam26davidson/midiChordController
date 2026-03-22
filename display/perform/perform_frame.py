@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import tkinter as tk
-from typing import Any
-
-from pyrsistent import thaw
+from typing import TypedDict
 
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
 from models.command_type import CommandType
-from redux import store
+from redux import get_controller_manager_state, get_music_engine_state, store
 from redux import utils as redux_utils
 
 from ..chord_display import ChordDisplay
@@ -20,15 +18,48 @@ from .spread import Spread
 from .text_display import TextDisplay
 
 
+class ChordTypeState(TypedDict):
+    notes: list[int]
+    root: int
+
+
+class PerformFrameState(TypedDict):
+    settingIndex: int
+    settingName: str
+    settingLoading: bool
+    controllerName: str
+    chordType: ChordTypeState
+    shadowChordNotes: list[int]
+    playingChordNotes: list[int]
+    shadowBassNote: int
+    playingBassNote: int | None
+    chordOctave: int
+    voiceCount: int
+    inversionThumbValue: float
+    inversionMode: str
+    inversionLock: bool
+    hold: bool
+    bassThumbValue: float
+    bassMode: str
+    bassPosition: int
+    bassRange: int
+    inversion: int
+    inversionRange: int
+    key: int
+    scale: list[int]
+    alternate: str
+    modulationSide: str
+
+
 class PerformFrame(tk.Frame):
 
-    height = 480
-    width = 800
+    height: int = 480
+    width: int = 800
 
-    def __init__(self, container):
+    def __init__(self, container: tk.Misc) -> None:
         super().__init__(container, highlightthickness=0, relief="flat", bg="#000000")
 
-        self.state: dict[str, Any] = {
+        self.state: PerformFrameState = {
             'settingIndex': -1,
             'settingName': '',
             'settingLoading': False,
@@ -75,13 +106,13 @@ class PerformFrame(tk.Frame):
 
         redux_utils.add_app_parameters(self.get_parameters())
 
-        self._dirty = False
+        self._dirty: bool = False
         store.subscribe(self.__handle_store_update)
 
-    def __handle_store_update(self):
+    def __handle_store_update(self) -> None:
         self._dirty = True
 
-    def check_state(self):
+    def check_state(self) -> None:
         self.spread.check_state()
         self.setting_display.check_state()
         self.control_display.check_state()
@@ -90,9 +121,8 @@ class PerformFrame(tk.Frame):
             return
         self._dirty = False
 
-        state = store.get_state()
-        me_state = thaw(state['musicEngine'])
-        c_state = thaw(state['controllerManager'])
+        me_state = get_music_engine_state()
+        c_state = get_controller_manager_state()
 
         # 1. Scale context: key, scale, modulation — must resolve before chord visuals
         if me_state['key'] != self.state['key']:
@@ -176,7 +206,7 @@ class PerformFrame(tk.Frame):
             self.state['controllerName'] = primary['name']
                 #self.__set_controller(primary['name'])
 
-    def get_parameters(self):
+    def get_parameters(self) -> list[AppParameter]:
         parameters = [
             AppParameter(
                 valid_command_types=[CommandType.ANALOG],
@@ -195,71 +225,71 @@ class PerformFrame(tk.Frame):
         ]
         return parameters
 
-    def update_frame(self):
+    def update_frame(self) -> None:
         if not self.state['inversionLock']:
             self.__set_inversion_thumb()
         if self.state['bassMode'] == 'continuous':
             self.__set_bass_position_thumb()
         self.chord_display.run_animation_step()
 
-    def __set_controller(self, text):
+    def __set_controller(self, text: str) -> None:
         self.text_display.set_controller(text)
 
-    def __set_setting_loading(self):
+    def __set_setting_loading(self) -> None:
         self.state['settingLoading'] = True
         self.setting_display.set_setting('Loading...')
 
-    def __set_setting(self, text):
+    def __set_setting(self, text: str) -> None:
         if not self.state['settingLoading']:
             self.setting_display.set_setting(text)
 
-    def __set_key(self, key):
+    def __set_key(self, key: int) -> None:
         self.state['key'] = key
         self.chord_display.set_key(key)
 
-    def __set_scale(self, scale):
+    def __set_scale(self, scale: list[int]) -> None:
         self.state['scale'] = scale
         self.chord_display.set_scale(scale)
 
-    def __set_inversion_range(self, range, inversion):
+    def __set_inversion_range(self, range: int, inversion: int) -> None:
         self.state['inversionRange'] = range
         self.state['inversion'] = inversion
         self.inversion.set_max(range, inversion)
 
-    def __set_inversion(self, inversion):
+    def __set_inversion(self, inversion: int) -> None:
         self.state['inversion'] = inversion
         self.inversion.set_active_region(inversion, self.state['inversionMode'])
 
-    def __store_inversion_thumb(self, value):
+    def __store_inversion_thumb(self, value: float) -> None:
         self.state['inversionThumbValue'] = value
 
-    def __set_inversion_thumb(self):
+    def __set_inversion_thumb(self) -> None:
         self.inversion.position_thumb(self.state['inversionThumbValue'])
 
-    def __set_bass_range(self, range, position):
+    def __set_bass_range(self, range: int, position: int) -> None:
         self.state['bassRange'] = range
         self.state['bassPosition'] = position
         self.bass_position.set_max(range, position)
 
-    def __set_bass_position(self, position):
+    def __set_bass_position(self, position: int) -> None:
         self.state['bassPosition'] = position
         self.bass_position.set_active_region(position, self.state['bassMode'])
 
-    def __store_bass_position_thumb(self, value):
+    def __store_bass_position_thumb(self, value: float) -> None:
         self.state['bassThumbValue'] = value
 
-    def __set_bass_position_thumb(self):
+    def __set_bass_position_thumb(self) -> None:
         self.bass_position.position_thumb(self.state['bassThumbValue'])
 
-    def __stop_chord_shadow(self):
-        reset_notes = []
+    def __stop_chord_shadow(self) -> None:
+        reset_notes: list[int] = []
         for note in self.state['shadowChordNotes']:
             if note != self.state['shadowBassNote']:
                 reset_notes.append(note)
         self.keyboard.reset(reset_notes)
         # self.state['shadowChordNotes'] = []
 
-    def __stop_bass_shadow(self):
+    def __stop_bass_shadow(self) -> None:
         note_in_playing_chord = self.state['playingChordNotes'].count(
             self.state['shadowBassNote']) != 0
         note_in_shadow_chord = self.state['shadowChordNotes'].count(
@@ -269,14 +299,14 @@ class PerformFrame(tk.Frame):
             self.keyboard.reset([self.state['shadowBassNote']])
         # self.state['shadowBassNote'] = None
 
-    def __set_chord(self, chord, root):
+    def __set_chord(self, chord: list[int], root: int) -> None:
         self.state['chordType'] = {'notes': chord, 'root': root}
         self.keyboard.set_chord(chord, root)
         self.chord_display.set_chord(chord, root)
         if self.state['playingChordNotes']:
             self.keyboard.play(self.state['playingChordNotes'])
 
-    def __play_chord(self, notes):
+    def __play_chord(self, notes: list[int]) -> None:
         self.__stop_chord_shadow()
         old_notes = self.state['playingChordNotes']
         if old_notes:
@@ -287,7 +317,7 @@ class PerformFrame(tk.Frame):
         self.state['playingChordNotes'] = notes
         self.chord_display.play_chord()
 
-    def __play_bass(self, note):
+    def __play_bass(self, note: int) -> None:
         self.__stop_bass_shadow()
         old_note = self.state['playingBassNote']
         if old_note and old_note != note:
@@ -298,26 +328,27 @@ class PerformFrame(tk.Frame):
         self.chord_display.play_bass(note)
         self.state['playingBassNote'] = note
 
-    def __stop_chord(self, notes):
+    def __stop_chord(self, notes: list[int]) -> None:
         self.state['shadowChordNotes'] = notes
         self.keyboard.set_shadow(notes)
         self.state['playingChordNotes'] = []
         self.chord_display.set_chord_shadow()
 
-    def __stop_bass(self, note):
-        if self.state['playingChordNotes'].count(note) == 0:
-            self.keyboard.set_shadow([note])
-        self.chord_display.set_bass_shadow(note)
-        self.state['shadowBassNote'] = note
+    def __stop_bass(self, note: int | None) -> None:
+        if note is not None:
+            if self.state['playingChordNotes'].count(note) == 0:
+                self.keyboard.set_shadow([note])
+            self.chord_display.set_bass_shadow(note)
+            self.state['shadowBassNote'] = note
         self.state['playingBassNote'] = None
 
-    def __set_chord_shadow(self, notes):
+    def __set_chord_shadow(self, notes: list[int]) -> None:
         self.keyboard.reset(self.state['shadowChordNotes'])
         self.state['shadowChordNotes'] = notes
         self.keyboard.set_shadow(notes)
         self.chord_display.set_chord_shadow()
 
-    def __set_bass_shadow(self, note):
+    def __set_bass_shadow(self, note: int) -> None:
         self.__stop_bass_shadow()
         self.state['shadowBassNote'] = note
         note_in_playing_chord = self.state['playingChordNotes'].count(note) != 0
@@ -325,18 +356,18 @@ class PerformFrame(tk.Frame):
             self.keyboard.set_shadow([note])
         self.chord_display.set_bass_shadow(note)
 
-    def __set_modulation(self, new_scale, side):
+    def __set_modulation(self, new_scale: list[int], side: str) -> None:
         self.state['modulationSide'] = side
         self.chord_display.set_modulation(new_scale, side)
 
-    def __set_hold(self, hold):
+    def __set_hold(self, hold: bool) -> None:
         self.text_display.set_hold(hold)
 
-    def __set_inversion_lock(self, inversion_lock):
+    def __set_inversion_lock(self, inversion_lock: bool) -> None:
         self.text_display.set_inversion_lock(inversion_lock)
 
-    def __set_octave(self, octave):
+    def __set_octave(self, octave: int) -> None:
         self.text_display.set_octave(octave)
 
-    def __set_voice_count(self, voice_count):
+    def __set_voice_count(self, voice_count: int) -> None:
         self.text_display.set_voices(voice_count)

@@ -26,44 +26,44 @@ class TestMidiStateInit:
 class TestMidiNoteTracking:
     def test_store_chord_note_on(self):
         midi = Midi()
-        midi._Midi__store_note_on(60, "chord")
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]
         assert 60 in midi.state["playingChordNotes"]
 
     def test_store_chord_note_off(self):
         midi = Midi()
-        midi._Midi__store_note_on(60, "chord")
-        midi._Midi__store_note_off(60, "chord")
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]
+        midi._Midi__store_note_off(60, "chord")  # type: ignore[unresolved-attribute]
         assert 60 not in midi.state["playingChordNotes"]
 
     def test_store_bass_note_on(self):
         midi = Midi()
-        midi._Midi__store_note_on(36, "bass")
+        midi._Midi__store_note_on(36, "bass")  # type: ignore[unresolved-attribute]
         assert midi.state["playingBassNote"] == 36
 
     def test_store_bass_note_off(self):
         midi = Midi()
-        midi._Midi__store_note_on(36, "bass")
-        midi._Midi__store_note_off(36, "bass")
+        midi._Midi__store_note_on(36, "bass")  # type: ignore[unresolved-attribute]
+        midi._Midi__store_note_off(36, "bass")  # type: ignore[unresolved-attribute]
         assert midi.state["playingBassNote"] is None
 
     def test_multiple_chord_notes(self):
         midi = Midi()
-        midi._Midi__store_note_on(60, "chord")
-        midi._Midi__store_note_on(64, "chord")
-        midi._Midi__store_note_on(67, "chord")
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]
+        midi._Midi__store_note_on(64, "chord")  # type: ignore[unresolved-attribute]
+        midi._Midi__store_note_on(67, "chord")  # type: ignore[unresolved-attribute]
         assert midi.state["playingChordNotes"] == [60, 64, 67]
 
     def test_duplicate_chord_note_not_added(self):
         midi = Midi()
-        midi._Midi__store_note_on(60, "chord")
-        midi._Midi__store_note_on(60, "chord")
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]
         assert midi.state["playingChordNotes"].count(60) == 1
 
     def test_duplicate_chord_note_does_not_set_bass(self):
         """Regression: duplicate chord note previously fell through to set bass."""
         midi = Midi()
-        midi._Midi__store_note_on(60, "chord")
-        midi._Midi__store_note_on(60, "chord")  # Duplicate
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]
+        midi._Midi__store_note_on(60, "chord")  # type: ignore[unresolved-attribute]  # Duplicate
         assert midi.state["playingBassNote"] is None
 
 
@@ -72,22 +72,22 @@ class TestMidiChannelDistribution:
         midi = Midi()
         midi.state["distributeChannels"] = True
         # Channel 0 is occupied by bass by default
-        ch = midi._Midi__distribute_channel()
+        ch = midi._Midi__distribute_channel()  # type: ignore[unresolved-attribute]
         assert midi.state["occupiedChannels"][ch] is True
 
     def test_distribute_channel_sequential(self):
         midi = Midi()
         midi.state["distributeChannels"] = True
-        ch1 = midi._Midi__distribute_channel()
-        ch2 = midi._Midi__distribute_channel()
+        ch1 = midi._Midi__distribute_channel()  # type: ignore[unresolved-attribute]
+        ch2 = midi._Midi__distribute_channel()  # type: ignore[unresolved-attribute]
         assert ch1 != ch2
 
     def test_open_channel_frees_it(self):
         midi = Midi()
         midi.state["distributeChannels"] = True
-        ch = midi._Midi__distribute_channel()
+        ch = midi._Midi__distribute_channel()  # type: ignore[unresolved-attribute]
         midi.state["distChordChannels"][60] = ch
-        midi._Midi__open_channel(60, "chord")
+        midi._Midi__open_channel(60, "chord")  # type: ignore[unresolved-attribute]
         assert midi.state["occupiedChannels"][ch] is False
 
 
@@ -96,7 +96,7 @@ class TestMidiVelocity:
         midi = Midi()
         midi.state["velocity"] = 100
         midi.state["velocityMode"] = "constant"
-        vel = midi._Midi__get_velocity()
+        vel = midi._Midi__get_velocity()  # type: ignore[unresolved-attribute]
         assert vel == 100
 
     def test_random_velocity_within_range(self):
@@ -105,7 +105,7 @@ class TestMidiVelocity:
         midi.state["velocityMode"] = "random"
         midi.state["velocityDeviation"] = 10
         for _ in range(20):
-            vel = midi._Midi__get_velocity()
+            vel = midi._Midi__get_velocity()  # type: ignore[unresolved-attribute]
             assert 0 <= vel <= 127
 
 

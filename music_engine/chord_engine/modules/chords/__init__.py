@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from constants import BASS_CENTER, CENTER_NOTE, SPREAD_STEPS_PER_OCTAVE, VOICING_PATTERNS
 
 from ...chord_engine_state import state
@@ -8,7 +10,7 @@ DEFAULT_SCALE = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 class Chord:
 
-    def __init__(self, chord, bass, root, scale=DEFAULT_SCALE):
+    def __init__(self, chord: list[int], bass: list[int], root: int, scale: list[int] = DEFAULT_SCALE) -> None:
         self.scale = scale
         self.root = root
         self.chord = chord
@@ -19,38 +21,38 @@ class Chord:
         self.bass_notes, self.all_bass_notes = self.find_all_notes(self.bass)
         self.bass_roots, self.all_bass_roots = self.find_all_notes([self.bass[0]])
 
-    def get_chord(self, target_root=None):
+    def get_chord(self, target_root: int | None = None) -> list[int]:
         all_notes = self.__get_all_notes(state.key.value)
         chord = self.get_chord_from_notes(all_notes)
         return chord
 
-    def get_root(self, target_root=None):
+    def get_root(self, target_root: int | None = None) -> int:
         return self.root_notes[state.key.value]
 
-    def get_note_types(self, target_root=None):
+    def get_note_types(self, target_root: int | None = None) -> list[int]:
         return self.__get_notes(state.key.value)
 
-    def get_bass(self, target_root=None):
+    def get_bass(self, target_root: int | None = None) -> int:
         all_notes = self.__get_all_bass_notes(state.key.value)
         all_roots = self.__get_all_bass_roots(state.key.value)
         bass = self.get_bass_from_notes(all_notes, all_roots)
         return bass
 
-    def get_note_for_key(self, note, key):
+    def get_note_for_key(self, note: int, key: int) -> int:
         index = (note + self.root) % len(self.scale)
         return (self.scale[index] + key) % 12
 
-    def __find_root_notes(self):
-        root_notes = {}
+    def __find_root_notes(self) -> dict[int, int]:
+        root_notes: dict[int, int] = {}
         for key in range(12):
             root_notes[key] = (self.scale[self.root] + key) % 12
         return root_notes
 
-    def find_all_notes(self, note_degrees):
-        notes = {}
-        all_notes = {}
+    def find_all_notes(self, note_degrees: list[int]) -> tuple[dict[int, list[int]], dict[int, list[int]]]:
+        notes: dict[int, list[int]] = {}
+        all_notes: dict[int, list[int]] = {}
         for key in range(12):
-            key_notes = []
+            key_notes: list[int] = []
             for note in note_degrees:
                 key_notes.append(self.get_note_for_key(note, key))
                 key_notes.sort()
@@ -59,12 +61,12 @@ class Chord:
         return notes, all_notes
 
     @staticmethod
-    def __convert_spread(spread, chord_length):
+    def __convert_spread(spread: int, chord_length: int) -> int:
         spreads_per_oct = chord_length - 1
         spread_octaves = (spread * (1 / SPREAD_STEPS_PER_OCTAVE)) - 1
         return int(spread_octaves*spreads_per_oct)
 
-    def __get_chord_pattern(self, num_notes, voice_count, spread):
+    def __get_chord_pattern(self, num_notes: int, voice_count: int, spread: int) -> list[int]:
         pattern = [0]
         if (voice_count > 1):
             voice_count_patterns = VOICING_PATTERNS[str(
@@ -74,7 +76,7 @@ class Chord:
             pattern = voice_count_patterns[new_spread]
         return pattern
 
-    def __get_pattern_params(self):
+    def __get_pattern_params(self) -> tuple[int, int, int]:
         num_notes = len(self.chord)
         voice_count = state.voice_count
         voice_count_diff = voice_count - num_notes
@@ -87,7 +89,7 @@ class Chord:
         spread -= (voice_count - num_notes)
         return num_notes, voice_count, spread
 
-    def __get_chord_from_pattern(self, pattern, all_notes):
+    def __get_chord_from_pattern(self, pattern: list[int], all_notes: list[int]) -> list[int]:
         spread_semitones = (state.spread / SPREAD_STEPS_PER_OCTAVE) * 12
         middle_bottom_note_target = int(CENTER_NOTE - (spread_semitones / 2))
         middle_bottom_note_index = find_closest_note(
@@ -98,19 +100,19 @@ class Chord:
         if (top_note_index > (len(all_notes) - 1)):
             bottom_note_index -= top_note_index - (len(all_notes) - 1)
             top_note_index = (len(all_notes) - 1)
-        chord = []
+        chord: list[int] = []
         for note_offset in pattern:
             note_index = bottom_note_index + note_offset
             chord.append(all_notes[note_index])
         return chord
 
-    def get_chord_from_notes(self, all_notes):
+    def get_chord_from_notes(self, all_notes: list[int]) -> list[int]:
         params = self.__get_pattern_params()
         pattern = self.__get_chord_pattern(*params)
         chord = self.__get_chord_from_pattern(pattern, all_notes)
         return chord
 
-    def get_bass_from_notes(self, all_notes, all_roots):
+    def get_bass_from_notes(self, all_notes: list[int], all_roots: list[int]) -> int:
         center_index_in_roots = find_closest_note(BASS_CENTER, all_roots)
         center_note = all_roots[center_index_in_roots]
         center_index = find_closest_note(center_note, all_notes)
@@ -119,14 +121,14 @@ class Chord:
         index = max(min(index, max_index), 0)
         return all_notes[index]
 
-    def __get_notes(self, key):
+    def __get_notes(self, key: int) -> list[int]:
         return self.notes[key]
 
-    def __get_all_notes(self, key):
+    def __get_all_notes(self, key: int) -> list[int]:
         return self.all_notes[key]
 
-    def __get_all_bass_notes(self, key):
+    def __get_all_bass_notes(self, key: int) -> list[int]:
         return self.all_bass_notes[key]
 
-    def __get_all_bass_roots(self, key):
+    def __get_all_bass_roots(self, key: int) -> list[int]:
         return self.all_bass_roots[key]

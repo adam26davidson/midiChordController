@@ -71,11 +71,12 @@ class TestSettingsStorageSave:
 
         data1 = json.loads(settings_file.read_text())
 
-        # Load the saved settings into a fresh store
-        import importlib
+        # Reset store to initial state, then load saved settings back
+        import pydux
 
         import redux
-        importlib.reload(redux)
+        fresh = pydux.create_store(redux.reducer)
+        redux.store.update(fresh)  # type: ignore[unresolved-attribute]
 
         ssu2 = SettingsStorageUtility()
         ssu2.settings_file_directory = str(settings_file)

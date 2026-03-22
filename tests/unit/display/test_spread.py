@@ -3,10 +3,9 @@
 from unittest.mock import MagicMock
 
 from constants import SPREAD_STEPS_PER_OCTAVE
+from display.perform.spread import Spread
 from redux import store
 from redux.actions import music_engine as me_actions
-
-from display.perform.spread import Spread
 
 
 class TestSpreadInit:

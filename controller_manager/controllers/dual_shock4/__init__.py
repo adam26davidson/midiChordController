@@ -1,6 +1,6 @@
-import evdev  # type: ignore[import]
+import evdev
 
-from redux import store
+from redux import get_controller_manager_state
 
 from ...controller import Controller
 from .info import controller_config as config
@@ -17,7 +17,7 @@ class DualShock4(Controller):
         available_devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
         print(available_devices)
         found_device = False
-        connected_controllers = store.get_state()['controllerManager']['controllers']
+        connected_controllers = get_controller_manager_state()['controllers']
         connected_ids = [c['id'] for c in connected_controllers]
         devices = {}
         id = None
@@ -39,7 +39,8 @@ class DualShock4(Controller):
                 elif is_correct_id:
                     devices['main'] = device
                     print(f"found main device: {device.name}")
-        super().open(id, devices, recording=False)
+        if id is not None:
+            super().open(id, devices, recording=False)
 
     @staticmethod
     def check_for_new_connections():  # type: ignore[override]

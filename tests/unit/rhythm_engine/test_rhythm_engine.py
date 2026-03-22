@@ -60,8 +60,9 @@ class TestRhythmEngineIntervals:
         engine.state["strumMode"] = "regular"
         engine.state["strumOrder"] = "up"
         result = engine._RhythmEngine__get_intervals(4)
-        assert result == list(result)  # not shuffled when order is 'up'
         assert len(result) == 4
+        # Should be non-decreasing (ascending strum order)
+        assert all(result[i] <= result[i + 1] for i in range(len(result) - 1))
 
 
 class TestRhythmEngineMessageRouting:

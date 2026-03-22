@@ -1,5 +1,9 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from constants import MAX_BASS_RANGE, MAX_INVERSION_RANGE
-from redux import store
+from redux import get_music_engine_state, store
 from redux.actions import music_engine as me_actions
 from redux.settings_storage import settings_storage_utility
 
@@ -8,10 +12,13 @@ from ..components.number_picker import NumberPicker
 from ..components.settings_container import SettingsContainer
 from ..components.settings_page import SettingsPage
 
+if TYPE_CHECKING:
+    import tkinter as tk
+
 
 class ChordSettingsFrame(SettingsPage):
 
-    def __init__(self, container):
+    def __init__(self, container: tk.Misc) -> None:
         super().__init__(
             container, 'CHORD SETTINGS')
 
@@ -55,17 +62,17 @@ class ChordSettingsFrame(SettingsPage):
         self.controlMode.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.rowTwo.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        self._dirty = False
+        self._dirty: bool = False
         store.subscribe(self.__handle_store_update)
 
-    def __handle_store_update(self):
+    def __handle_store_update(self) -> None:
         self._dirty = True
 
-    def check_state(self):
+    def check_state(self) -> None:
         if not self._dirty:
             return
         self._dirty = False
-        me_state = store.get_state()['musicEngine']
+        me_state = get_music_engine_state()
 
         if me_state['transposeIncrement'] != self.transposeIncrement.get_value():
             self.transposeIncrement.set_value(me_state['transposeIncrement'])
@@ -76,18 +83,18 @@ class ChordSettingsFrame(SettingsPage):
         if me_state['chordEngineControl'] != self.controlMode.get_value():
             self.controlMode.set_value(me_state['chordEngineControl'])
 
-    def set_transpose_increment(self, increment):
+    def set_transpose_increment(self, increment: int) -> None:
         store.dispatch(me_actions.change_transpose_increment(increment))
         settings_storage_utility.save_settings()
 
-    def set_inversion_range(self, range):
+    def set_inversion_range(self, range: int) -> None:
         store.dispatch(me_actions.change_inversion_range(range))
         settings_storage_utility.save_settings()
 
-    def set_bass_range(self, range):
+    def set_bass_range(self, range: int) -> None:
         store.dispatch(me_actions.change_bass_range(range))
         settings_storage_utility.save_settings()
 
-    def set_control_mode(self, mode):
+    def set_control_mode(self, mode: str) -> None:
         store.dispatch(me_actions.change_chord_engine_control(mode))
         settings_storage_utility.save_settings()

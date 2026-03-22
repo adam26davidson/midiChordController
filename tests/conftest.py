@@ -61,6 +61,7 @@ class _CanvasStub(_WidgetStub):
     def create_image(self, *args, **kwargs): return _next_item_id()
     def coords(self, *args, **kwargs): pass
     def itemconfigure(self, *args, **kwargs): pass
+    def itemconfig(self, *args, **kwargs): pass
     def delete(self, *args, **kwargs): pass
     def tag_raise(self, *args, **kwargs): pass
 
@@ -204,6 +205,26 @@ def _reset_chord_engine_state():
     state.extension_ranking = [0, 4, 3, 7, 11, 10, 2, 5, 9, 8, 1, 6]
     state.avoid_interval = [6]
 
+    return
+
+
+@pytest.fixture(autouse=True)
+def _reset_redux_store():
+    """Reset the Redux store to its initial state before each test.
+
+    Without this, store subscribers and state from prior tests leak across
+    test boundaries, causing ordering-dependent failures.
+
+    We create a fresh store and copy its internal closures into the existing
+    store object so that all modules holding a reference to the original
+    store (via ``from redux import store``) automatically see the reset.
+    """
+    import pydux
+
+    import redux
+
+    fresh_store = pydux.create_store(redux.reducer)
+    redux.store.update(fresh_store)  # type: ignore[unresolved-attribute]
     return
 
 

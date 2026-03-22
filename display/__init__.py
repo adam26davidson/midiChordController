@@ -1,12 +1,15 @@
+from __future__ import annotations
+
 import asyncio
 import time
 import tkinter as tk
+from typing import Callable, cast
 
 from constants import ANIMATION_STEP, FULLSCREEN
 from models.app_parameter import AppParameter
 from models.command import Command
 from models.command_type import CommandType
-from redux import store
+from redux import get_controller_manager_state, get_display_state, store
 from redux import utils as redux_utils
 from redux.actions import display as actions
 
@@ -18,7 +21,7 @@ from .settings_pages.strum_settings import StrumSettingsFrame
 
 
 class Display:
-    def __init__(self):
+    def __init__(self) -> None:
         self.root = tk.Tk()
 
         self.root.overrideredirect(True)
@@ -32,7 +35,7 @@ class Display:
         else:
             self.root.geometry("800x480")
 
-        def close_escape(event=None):
+        def close_escape(event: object = None) -> None:
             print("escaped")
             self.root.destroy()
 
@@ -41,45 +44,55 @@ class Display:
 
         self.state = DisplayState()
 
-        self.command_map = {
+        self.command_map: dict[str, Callable[[], None]] = {
             "MENU": self.toggle_menu
         }
 
-        self.frames = {}
+        self.frames: dict[str, tk.Frame] = {}
 
-        self.frames["CHORD"] = ChordSettingsFrame(self.root)
-        self.frames["STRUM"] = StrumSettingsFrame(self.root)
-        self.frames["MIDI"] = MidiSettingsFrame(self.root)
-        self.frames["MENU"] = SettingsMenuFrame(self.root)
-        self.frames["PERFORM"] = PerformFrame(self.root)
+        self.chord_settings = ChordSettingsFrame(self.root)
+        self.strum_settings = StrumSettingsFrame(self.root)
+        self.midi_settings = MidiSettingsFrame(self.root)
+        self.menu_frame = SettingsMenuFrame(self.root)
+        self.perform_frame = PerformFrame(self.root)
+
+        self.frames["CHORD"] = self.chord_settings
+        self.frames["STRUM"] = self.strum_settings
+        self.frames["MIDI"] = self.midi_settings
+        self.frames["MENU"] = self.menu_frame
+        self.frames["PERFORM"] = self.perform_frame
 
         redux_utils.add_app_parameters(self.get_parameters())
 
-        self._dirty = False
-        self._settings_frames = {'CHORD', 'STRUM', 'MIDI'}
+        self._dirty: bool = False
+        self._settings_frames: set[str] = {'CHORD', 'STRUM', 'MIDI'}
         store.subscribe(self.__handle_store_update)
 
-    def start(self):
+    def start(self) -> None:
         _task = asyncio.ensure_future(self.__main_loop())
 
-    async def __main_loop(self):
-        _display_loop_count = 0
-        _last_frame_end = time.monotonic()
-        _total_work_ms = 0.0
-        _total_frame_ms = 0.0
-        _max_work_ms = 0.0
-        _max_frame_ms = 0.0
-        _slow_frames = 0
+    async def __main_loop(self) -> None:
+        _display_loop_count: int = 0
+        _last_frame_end: float = time.monotonic()
+        _total_work_ms: float = 0.0
+        _total_frame_ms: float = 0.0
+        _max_work_ms: float = 0.0
+        _max_frame_ms: float = 0.0
+        _slow_frames: int = 0
         while True:
             frame_start = time.monotonic()
             frame_gap_ms = (frame_start - _last_frame_end) * 1000
 
             self._check_state()
             if self.state.active_frame == 'PERFORM':
-                self.frames["PERFORM"].check_state()
-                self.frames["PERFORM"].update_frame()
-            elif self.state.active_frame in self._settings_frames:
-                self.frames[self.state.active_frame].check_state()
+                self.perform_frame.check_state()
+                self.perform_frame.update_frame()
+            elif self.state.active_frame == 'CHORD':
+                self.chord_settings.check_state()
+            elif self.state.active_frame == 'STRUM':
+                self.strum_settings.check_state()
+            elif self.state.active_frame == 'MIDI':
+                self.midi_settings.check_state()
             self.root.update_idletasks()
             self.root.update()
 
@@ -117,22 +130,25 @@ class Display:
             elapsed = now - frame_start
             await asyncio.sleep(max(0, ANIMATION_STEP - elapsed))
 
-    def controller_event_handler(self, event):
-        controllers = store.get_state()['controllerManager']['controllers']
+    def controller_event_handler(self, event: dict[str, object]) -> None:
+        controllers = get_controller_manager_state()['controllers']
         ui_map = None
         for controller in controllers:
             if controller['role'] == 'primary':
-                ui_map = controller['uiMap']['map']
+                ui_map_obj = controller['uiMap']
+                if ui_map_obj is not None:
+                    ui_map = ui_map_obj['map']
 
-        if ui_map is not None and (event['name'] in ui_map):
-            command = ui_map[event['name']]
+        event_name = cast('str', event.get('name'))
+        if ui_map is not None and event_name is not None and (event_name in ui_map):
+            command = ui_map[event_name]
             if (command in self.command_map):
                 self.command_map[command]()
 
-        if self.state.active_frame == 'PERFORM':
-            self.frames["PERFORM"].handle_controller_event(event)
+        # Controller events are now handled via redux store subscriptions
+        # in PerformFrame.check_state() and ControlDisplay.check_state()
 
-    def get_parameters(self):
+    def get_parameters(self) -> list[AppParameter]:
         return [
             AppParameter(
                 valid_command_types=[CommandType.TOGGLE],
@@ -145,15 +161,14 @@ class Display:
         ]
 
 
-    def __handle_store_update(self):
+    def __handle_store_update(self) -> None:
         self._dirty = True
 
-    def _check_state(self):
+    def _check_state(self) -> None:
         if not self._dirty:
             return
         self._dirty = False
-        state = store.get_state()
-        display_state = state['display']
+        display_state = get_display_state()
         if (display_state['activeFrame'] != self.state.active_frame):
             if (display_state['activeFrame'] in self.frames):
                 self.state.active_frame = display_state['activeFrame']
@@ -161,7 +176,7 @@ class Display:
             else:
                 store.dispatch(actions.change_active_frame(self.state.active_frame))
 
-    def toggle_menu(self):
+    def toggle_menu(self) -> None:
         if (self.state.active_frame == "MENU"):
             self.state.active_frame = "PERFORM"
             self.frames["PERFORM"].tkraise()
@@ -173,4 +188,4 @@ class Display:
 
 
 class DisplayState:
-    active_frame = "PERFORM"
+    active_frame: str = "PERFORM"

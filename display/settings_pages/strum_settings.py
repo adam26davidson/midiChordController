@@ -1,4 +1,8 @@
-from redux import store
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from redux import get_music_engine_state, store
 from redux.actions import music_engine as me_actions
 from redux.settings_storage import settings_storage_utility
 
@@ -7,10 +11,13 @@ from ..components.settings_container import SettingsContainer
 from ..components.settings_page import SettingsPage
 from ..components.slider import Slider
 
+if TYPE_CHECKING:
+    import tkinter as tk
+
 
 class StrumSettingsFrame(SettingsPage):
 
-    def __init__(self, container):
+    def __init__(self, container: tk.Misc) -> None:
         super().__init__(
             container, 'STRUM SETTINGS')
 
@@ -53,17 +60,17 @@ class StrumSettingsFrame(SettingsPage):
         self.strumInterval.pack(side='left', anchor="nw", pady=(5, 5), padx=(5, 5))
         self.bottomFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        self._dirty = False
+        self._dirty: bool = False
         store.subscribe(self.__handle_store_update)
 
-    def __handle_store_update(self):
+    def __handle_store_update(self) -> None:
         self._dirty = True
 
-    def check_state(self):
+    def check_state(self) -> None:
         if not self._dirty:
             return
         self._dirty = False
-        me_state = store.get_state()['musicEngine']
+        me_state = get_music_engine_state()
 
         if me_state['strumMode'] != self.strumMode.get_value():
             self.strumMode.set_value(me_state['strumMode'])
@@ -72,7 +79,7 @@ class StrumSettingsFrame(SettingsPage):
         if me_state['strumOrder'] != self.strumOrder.get_value():
             self.strumOrder.set_value(me_state['strumOrder'])
 
-    def set_strum_mode(self, mode):
+    def set_strum_mode(self, mode: str) -> None:
         store.dispatch(me_actions.change_strum_mode(mode))
         settings_storage_utility.save_settings()
         if mode == 'off':
@@ -82,10 +89,10 @@ class StrumSettingsFrame(SettingsPage):
             self.strumInterval.set_enabled()
             self.strumOrder.set_enabled()
 
-    def set_strum_interval(self, interval):
+    def set_strum_interval(self, interval: float) -> None:
         store.dispatch(me_actions.change_strum_interval(interval))
         settings_storage_utility.save_settings()
 
-    def set_strum_order(self, order):
+    def set_strum_order(self, order: str) -> None:
         store.dispatch(me_actions.change_strum_order(order))
         settings_storage_utility.save_settings()

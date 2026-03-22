@@ -1,6 +1,6 @@
-import evdev  # type: ignore[import]
+import evdev
 
-from redux import store
+from redux import get_controller_manager_state
 
 from ...controller import Controller
 from .info import info
@@ -12,7 +12,7 @@ class Wired360Controller(Controller):
 
     def open(self):  # type: ignore[override]
         available_devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-        connected_controllers = store.get_state()['controllerManager']['controllers']
+        connected_controllers = get_controller_manager_state()['controllers']
         connected_ids = [c['id'] for c in connected_controllers]
         devices = {}
         id = None
@@ -23,7 +23,8 @@ class Wired360Controller(Controller):
             if (vendor_match and product_match and new_id):
                 devices['main'] = device
                 id = device.uniq
-        super().open(id, devices)
+        if id is not None:
+            super().open(id, devices)
 
     @staticmethod
     def check_for_new_connections():  # type: ignore[override]

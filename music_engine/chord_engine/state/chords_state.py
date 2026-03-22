@@ -14,4 +14,4 @@ class ChordsState:
     playing_notes: list[int] = []
     is_playing: bool = False
     active_button: ChordButton = ChordButton.SOUTH
-    button_queue: list[int] = []
+    button_queue: list[ChordButton] = []

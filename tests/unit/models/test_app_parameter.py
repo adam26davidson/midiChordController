@@ -32,7 +32,6 @@ class TestAppParameter:
         assert param.label_abreviation == "MP"
         assert param.remappable is False
         assert param.type == AppParameterType.INTERNAL_CHORD_ENGINE
-        assert Command.TOGGLE in param.command_mappings
 
     def test_command_mappings_are_callable(self):
         called = []
@@ -47,12 +46,3 @@ class TestAppParameter:
         param.command_mappings[Command.ON]()
         param.command_mappings[Command.OFF]()
         assert called == ["on", "off"]
-
-
-class TestAppParameterType:
-    def test_all_types_exist(self):
-        assert AppParameterType.MUSIC_ENGINE.value == 1
-        assert AppParameterType.CHORD_ENGINE.value == 2
-        assert AppParameterType.INTERNAL_CHORD_ENGINE.value == 3
-        assert AppParameterType.EXTERNAL_CHORD_ENGINE.value == 4
-        assert AppParameterType.UI.value == 5

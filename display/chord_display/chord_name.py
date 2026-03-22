@@ -1,24 +1,30 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from music21 import chord as m21_chord
 
 from display.display_constants import COLORS, FONTS
 
+if TYPE_CHECKING:
+    from display.chord_display import ChordDisplay
+
 
 class ChordName:
-    def __init__(self, master):
+    def __init__(self, master: ChordDisplay) -> None:
         self.master = master
-        self.chord_name = ""
-        self.past_chord_names = {}
-        self.text_object = self.create_text_element()
+        self.chord_name: str = ""
+        self.past_chord_names: dict[str, tuple[str, int]] = {}
+        self.text_object: int = self.create_text_element()
 
-    def create_text_element(self):
+    def create_text_element(self) -> int:
         x = self.master.width / 2
         y = self.master.height - x
         return self.master.create_text(
             x, y, fill=COLORS["chord"], text=self.chord_name, font=FONTS["big"], justify="center"
         )
 
-    def set(self, chord_types, root_type):
+    def set(self, chord_types: list[int], root_type: int) -> None:
         all_types = list(chord_types)
         all_types.sort()
         name_key = str(root_type) + " " + "-".join([str(t) for t in all_types])
@@ -36,7 +42,7 @@ class ChordName:
 
         self.master.itemconfigure(self.text_object, text=text, font=("sans serif", font_size))
 
-    def generate_name(self, all_types, root_type):
+    def generate_name(self, all_types: list[int], root_type: int) -> tuple[str, int]:
         chord = m21_chord.Chord(all_types)
         # try:
         #     chord.root(m21Pitch.Pitch(self.master.noteNames[root_type]))
@@ -70,7 +76,7 @@ class ChordName:
         max_chars_per_line = 15
 
         if len(chord_name) > max_chars_per_line:
-            lines = []
+            lines: list[str] = []
             words = chord_name.split(" ")
             while len(words) > 0:
                 if len(words[0]) > max_chars_per_line: # to prevent infinite loop

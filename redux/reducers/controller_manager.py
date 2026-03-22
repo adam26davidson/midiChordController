@@ -1,12 +1,23 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, cast
+
 from pyrsistent import freeze
 
+from redux.types import ReduxAction
 
-def reducer(state, action):
+if TYPE_CHECKING:
+  from pyrsistent.typing import PMap, PVector
+
+
+def reducer(state: PMap[str, object] | None, action: ReduxAction) -> PMap[str, object]:
   if state is None:
     return freeze({
       'waitingForConnection': False,
       'controllers': []
     })
+
+  controllers = cast('PVector[PMap[str, object]]', state['controllers'])
 
   if action['type'] == 'controllerManager/controllerAdded':
     new_controller = freeze({
@@ -17,21 +28,21 @@ def reducer(state, action):
       'meMap': action['data']['meMap'],
       'uiMap': action['data']['uiMap']
     })
-    new_controllers = state['controllers'].append(new_controller)
-    return  state.set('controllers', new_controllers)
+    new_controllers = controllers.append(new_controller)
+    return state.set('controllers', new_controllers)
 
   if action['type'] == 'controllerManager/controllerRemoved':
-    for controller in state['controllers']:
+    for controller in controllers:
       if controller['id'] == action['data']['id']:
-        new_controllers = state['controllers'].remove(controller)
+        new_controllers = controllers.remove(controller)
         return state.set('controllers', new_controllers)
     return state
 
   if action['type'] == 'controllerManager/controllerMapUpdated':
-    for index, controller in enumerate(state['controllers']):
+    for index, controller in enumerate(controllers):
       if controller['id'] == action['data']['id']:
         new_controller = controller.set('meMap', action['data']['meMap'])
-        new_controllers =  state['controllers'].set(index, new_controller)
+        new_controllers = controllers.set(index, new_controller)
         return state.set('controllers', new_controllers)
     return state
 

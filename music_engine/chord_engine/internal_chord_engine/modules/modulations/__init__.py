@@ -1,6 +1,11 @@
-from typing import Callable, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from models.app_parameter import AppParameter, AppParameterType
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 from models.command import Command
 from models.command_type import CommandType
 from music_engine.chord_engine.internal_chord_engine.modules.modulations.modulation import Modulation
@@ -15,9 +20,9 @@ from ....state.modulations_state import ModulationSide
 class Modulations:
 
     dict: dict[ModulationSide, Modulation]
-    update_chord_engine: Callable
+    update_chord_engine: Callable[[], None]
 
-    def __init__(self, setting: dict, update_chord_engine: Callable):
+    def __init__(self, setting: dict, update_chord_engine: Callable[[], None]) -> None:
         self.update_chord_engine = update_chord_engine
         self.dict = {
             ModulationSide.LEFT: Modulation(state.scale.key_agnostic, setting["left"]),
@@ -26,7 +31,7 @@ class Modulations:
 
         redux_utils.add_app_parameters(self.__get_parameters())
 
-    def get(self, side: Optional[ModulationSide] = None) -> Optional[Modulation]:
+    def get(self, side: ModulationSide | None = None) -> Modulation | None:
         if side:
             return self.dict[side]
         if state.modulation.side == ModulationSide.NONE:
@@ -45,7 +50,7 @@ class Modulations:
             return modulation.apply_one(note, scale)
         return note
 
-    def set(self, side: ModulationSide):
+    def set(self, side: ModulationSide) -> None:
         if state.modulation.side != side:
             scale = state.scale.key_agnostic
             if side != ModulationSide.NONE:
@@ -61,7 +66,7 @@ class Modulations:
             state.modulation.side = side
             self.update_chord_engine()
 
-    def __get_parameters(self):
+    def __get_parameters(self) -> list[AppParameter]:
         return [
             AppParameter(
                 valid_command_types = [CommandType.ON_OFF],

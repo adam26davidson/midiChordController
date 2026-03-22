@@ -1,11 +1,13 @@
 """Tests for redux/utils.py — add_app_parameters and get_active_map."""
 
+from typing import Any, cast
 
 from models.app_parameter import AppParameter
 from models.command import Command
 from models.command_type import CommandType
 from redux import store
 from redux import utils as redux_utils
+from redux.types import ReduxAction
 
 
 class TestAddAppParameters:
@@ -24,7 +26,7 @@ class TestAddAppParameters:
         ]
         redux_utils.add_app_parameters(params)
 
-        state = store.get_state()["controllerCoupler"]
+        state = cast("Any", store.get_state()["controllerCoupler"])
         assert "TEST_1" in state["appParameters"]
         assert "TEST_2" in state["appParameters"]
 
@@ -47,7 +49,7 @@ class TestAddAppParameters:
         ]
         redux_utils.add_app_parameters(params2)
 
-        state = store.get_state()["controllerCoupler"]
+        state = cast("Any", store.get_state()["controllerCoupler"])
         assert "FIRST" in state["appParameters"]
         assert "SECOND" in state["appParameters"]
 
@@ -70,7 +72,7 @@ class TestAddAppParameters:
             ),
         ])
 
-        state = store.get_state()["controllerCoupler"]
+        state = cast("Any", store.get_state()["controllerCoupler"])
         param = state["appParameters"]["DUPE"]
         assert param.command_mappings[Command.ON] is cb2
 
@@ -82,7 +84,7 @@ class TestGetActiveMap:
 
     def test_returns_none_with_no_primary(self):
         # Add a non-primary controller
-        action = {
+        action: ReduxAction = {
             "type": "controllerManager/controllerAdded",
             "data": {
                 "id": "ctrl1",
@@ -98,7 +100,7 @@ class TestGetActiveMap:
         assert result is None
 
     def test_returns_map_for_primary_controller(self):
-        action = {
+        action: ReduxAction = {
             "type": "controllerManager/controllerAdded",
             "data": {
                 "id": "ctrl1",

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-
-from pyrsistent import thaw
+from typing import cast
 
 from controller_coupler.control_maps.default_control_map import default_control_map
 from controller_coupler.models.control_map import ControlMap
@@ -13,7 +12,7 @@ from event_trace import trace
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
 from models.command_type import CommandType
-from redux import store
+from redux import get_controller_coupler_state, get_music_engine_state, store
 from redux import utils as redux_utils
 from redux.actions import controller_coupler as actions
 
@@ -40,7 +39,7 @@ class ControllerCoupler:
 
         store.subscribe(self.handle_store_update)
 
-    def event_handler(self, event: ControlEvent):
+    def event_handler(self, event: ControlEvent) -> None:
         trace("COUPLER_IN", f"key={event.control_key} event={event.event.name if event.event else None}")
         if event.control_key in self.map.map:
             parameter_keys = self.map.map[event.control_key]
@@ -64,26 +63,26 @@ class ControllerCoupler:
         else:
             trace("COUPLER_DROP", f"key={event.control_key} not in control map")
 
-    def handle_store_update(self):
-        state = store.get_state()['controllerCoupler']
-        if len(state['appParameters']) != len(self.parameters):
-            self.parameters = state['appParameters']
-            new_params = self.process_new_parameters(state['appParameters'])
+    def handle_store_update(self) -> None:
+        cc_state = get_controller_coupler_state()
+        if cc_state['appParameters'] is not self.parameters:
+            self.parameters = cast('dict[str, AppParameter]', cc_state['appParameters'])
+            new_params = self.process_new_parameters(self.parameters)
             if len(new_params) > 0:
                 redux_utils.add_app_parameters(new_params)
             print(f"updating parameters. count: {len(self.parameters)}")
-        if len(state['controls'].keys()) != len(self.controls.keys()):
+        if cc_state['controls'] is not self.controls:
             print("updating controls")
-            self.controls = state['controls']
+            self.controls = cast('dict[str, dict[str, MappableControl]]', cc_state['controls'])
 
-        me_state = thaw(store.get_state()['musicEngine'])
+        me_state = get_music_engine_state()
         if (me_state['chordEngineControl'] != self.chord_engine_control_mode.value):
             if (me_state['chordEngineControl'] == ChordEngineControlMode.INTERNAL.value):
                 self.chord_engine_control_mode = ChordEngineControlMode.INTERNAL
             else:
                 self.chord_engine_control_mode = ChordEngineControlMode.EXTERNAL
 
-    def process_new_parameters(self, parameters: dict[str, AppParameter]):
+    def process_new_parameters(self, parameters: dict[str, AppParameter]) -> list[AppParameter]:
 
         parameters_to_add = []
 
@@ -112,7 +111,7 @@ class ControllerCoupler:
 
         return parameters_to_add
 
-    def __use_parameter(self, parameter: AppParameter):
+    def __use_parameter(self, parameter: AppParameter) -> bool:
         internal_mode = self.chord_engine_control_mode == ChordEngineControlMode.INTERNAL
         if parameter.type == AppParameterType.INTERNAL_CHORD_ENGINE and not internal_mode:
             return False

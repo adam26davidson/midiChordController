@@ -10,10 +10,9 @@ Bug 3: pyrsistent types leaking into widget methods when thaw() is removed
 
 from unittest.mock import MagicMock
 
+from display.perform.perform_frame import PerformFrame
 from redux import store
 from redux.actions import music_engine as me_actions
-
-from display.perform.perform_frame import PerformFrame
 
 
 class TestPerformFrameFirstFrame:
@@ -91,7 +90,10 @@ class TestPerformFrameDirtyFlag:
 
     def test_check_state_noop_when_not_dirty(self):
         pf = PerformFrame(container=MagicMock())
-        pf._dirty = False
+        # Process any pending state from prior tests
+        pf._dirty = True
+        pf.check_state()
+
         original_key = pf.state["key"]
         store.dispatch(me_actions.change_key(7))
         pf._dirty = False  # force not dirty

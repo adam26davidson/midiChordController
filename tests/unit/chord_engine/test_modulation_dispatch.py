@@ -9,24 +9,33 @@ For Minor Nines (scale [0, 2, 3, 5, 7, 8, 10]) with left modal modulation
 
 from unittest.mock import patch
 
+import pytest
 from pyrsistent import thaw
 
-from music_engine.chord_engine.internal_chord_engine import InternalChordEngine
 from music_engine.chord_engine.chord_engine_state import state as engine_state
+from music_engine.chord_engine.internal_chord_engine import InternalChordEngine
 from music_engine.chord_engine.state.chords_state import ChordButton
 from music_engine.chord_engine.state.modulations_state import ModulationSide
 from redux import store
+from redux.actions import controller_coupler as cc_actions
 from redux.actions import music_engine as me_actions
-
 
 MINOR_NINES_INDEX = 3
 MINOR_NINES_SCALE = [0, 2, 3, 5, 7, 8, 10]
 MINOR_NINES_LEFT_MOD_SCALE = [0, 2, 4, 5, 7, 9, 11]
 
 
-def _create_engine():
-    # Reset modulation state from prior tests
+@pytest.fixture(autouse=True)
+def _reset_store_after_test():
+    yield
     store.dispatch(me_actions.change_modulation({'scale': [], 'side': 'none'}))
+    store.dispatch(cc_actions.update_app_parameters({}))
+    engine_state.modulation.side = ModulationSide.NONE
+
+
+def _create_engine():
+    store.dispatch(me_actions.change_modulation({'scale': [], 'side': 'none'}))
+    engine_state.modulation.side = ModulationSide.NONE
     engine = InternalChordEngine()
     engine.subscribe(lambda msg: None)
     return engine

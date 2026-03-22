@@ -10,7 +10,7 @@ class TestHandleMessage:
         midi.state["velocityMode"] = "constant"
         midi.state["velocity"] = 100
         sent = []
-        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]
+        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]  # type: ignore[invalid-assignment]
 
         midi.handle_message({"note": 60, "type": "on", "player": "chord"})
         # First message is NOTE_ON, subsequent may be aftertouch
@@ -24,7 +24,7 @@ class TestHandleMessage:
         midi.state["velocityMode"] = "constant"
         midi.state["velocity"] = 100
         sent = []
-        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]
+        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]  # type: ignore[invalid-assignment]
 
         # Must turn on first so there's state to turn off
         midi.handle_message({"note": 60, "type": "on", "player": "chord"})
@@ -42,7 +42,7 @@ class TestHandleMessage:
         midi.state["velocity"] = 100
         midi.state["bassChannel"] = 3
         sent = []
-        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]
+        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]  # type: ignore[invalid-assignment]
 
         midi.handle_message({"note": 36, "type": "on", "player": "bass"})
         assert sent[0][0] & 0x0F == 3  # Channel 3
@@ -53,7 +53,7 @@ class TestHandleMessage:
         midi.state["velocity"] = 100
         midi.state["chordChannel"] = 5
         sent = []
-        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]
+        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(msg)})()]  # type: ignore[invalid-assignment]
 
         midi.handle_message({"note": 60, "type": "on", "player": "chord"})
         assert sent[0][0] & 0x0F == 5  # Channel 5
@@ -64,7 +64,7 @@ class TestHandleMessage:
         midi.state["velocity"] = 100
         sent1 = []
         sent2 = []
-        midi.midi_out_instances = [
+        midi.midi_out_instances = [  # type: ignore[invalid-assignment]
             type("MockOut", (), {"send_message": lambda self, msg, s=sent1: s.append(msg)})(),
             type("MockOut", (), {"send_message": lambda self, msg, s=sent2: s.append(msg)})(),
         ]
@@ -78,23 +78,23 @@ class TestHandleMessage:
 class TestCombineCommandAndChannel:
     def test_note_on_channel_0(self):
         midi = Midi()
-        result = midi._Midi__combine_command_and_channel(0x90, 0)
+        result = midi._Midi__combine_command_and_channel(0x90, 0)  # type: ignore[unresolved-attribute]
         assert result == 0x90
 
     def test_note_on_channel_5(self):
         midi = Midi()
-        result = midi._Midi__combine_command_and_channel(0x90, 5)
+        result = midi._Midi__combine_command_and_channel(0x90, 5)  # type: ignore[unresolved-attribute]
         assert result == 0x95
 
     def test_note_off_channel_15(self):
         midi = Midi()
-        result = midi._Midi__combine_command_and_channel(0x80, 15)
+        result = midi._Midi__combine_command_and_channel(0x80, 15)  # type: ignore[unresolved-attribute]
         assert result == 0x8F
 
     def test_channel_masked_to_4_bits(self):
         midi = Midi()
         # Channel > 15 should be masked
-        result = midi._Midi__combine_command_and_channel(0x90, 0x1F)
+        result = midi._Midi__combine_command_and_channel(0x90, 0x1F)  # type: ignore[unresolved-attribute]
         assert result == 0x9F  # Only lower nibble
 
 
@@ -105,7 +105,7 @@ class TestHandleMidiIn:
         midi.subscriber_callbacks.append(lambda msg: messages.append(msg))
 
         # NOTE_ON (0x90) on channel 0, note 60, velocity 100
-        midi.handle_midi_in(([0x90, 60, 100],), "test_port")
+        midi.handle_midi_in(([0x90, 60, 100], 0.0), "test_port")
         assert len(messages) == 1
         assert messages[0].note == 60
 
@@ -115,9 +115,9 @@ class TestHandleMidiIn:
         midi.subscriber_callbacks.append(lambda msg: messages.append(msg))
 
         # First note on
-        midi.handle_midi_in(([0x90, 60, 100],), "test_port")
+        midi.handle_midi_in(([0x90, 60, 100], 0.0), "test_port")
         # Then note off (0x80)
-        midi.handle_midi_in(([0x80, 60, 0],), "test_port")
+        midi.handle_midi_in(([0x80, 60, 0], 0.0), "test_port")
         assert len(messages) == 2
 
     def test_note_on_velocity_zero_is_note_off(self):
@@ -125,9 +125,9 @@ class TestHandleMidiIn:
         messages = []
         midi.subscriber_callbacks.append(lambda msg: messages.append(msg))
 
-        midi.handle_midi_in(([0x90, 60, 100],), "test_port")
+        midi.handle_midi_in(([0x90, 60, 100], 0.0), "test_port")
         # NOTE_ON with velocity 0 = NOTE_OFF
-        midi.handle_midi_in(([0x90, 60, 0],), "test_port")
+        midi.handle_midi_in(([0x90, 60, 0], 0.0), "test_port")
         assert len(messages) == 2
 
     def test_different_channels_parsed(self):
@@ -136,7 +136,7 @@ class TestHandleMidiIn:
         midi.subscriber_callbacks.append(lambda msg: messages.append(msg))
 
         # NOTE_ON on channel 5
-        midi.handle_midi_in(([0x95, 60, 100],), "port_a")
+        midi.handle_midi_in(([0x95, 60, 100], 0.0), "port_a")
         assert len(messages) == 1
         assert messages[0].note == 60
 
@@ -148,7 +148,7 @@ class TestDistributeChannels:
         midi.state["velocityMode"] = "constant"
         midi.state["velocity"] = 100
         sent = []
-        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(list(msg))})()]
+        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(list(msg))})()]  # type: ignore[invalid-assignment]
 
         midi.handle_message({"note": 60, "type": "on", "player": "chord"})
         midi.handle_message({"note": 64, "type": "on", "player": "chord"})
@@ -163,7 +163,7 @@ class TestDistributeChannels:
         midi.state["velocityMode"] = "constant"
         midi.state["velocity"] = 100
         sent = []
-        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(list(msg))})()]
+        midi.midi_out_instances = [type("MockOut", (), {"send_message": lambda self, msg: sent.append(list(msg))})()]  # type: ignore[invalid-assignment]
 
         midi.handle_message({"note": 60, "type": "on", "player": "chord"})
         on_channel = midi.state["distChordChannels"][60]

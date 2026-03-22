@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from constants import SETTINGS
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
@@ -20,7 +22,7 @@ class InternalChordEngine(ChordEngine):
 
     modulations: Modulations
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(AppParameterType.INTERNAL_CHORD_ENGINE)
 
         self.alternate = Alternate(self.update_chord_type)
@@ -29,16 +31,16 @@ class InternalChordEngine(ChordEngine):
 
         redux_utils.add_app_parameters(self.get_internal_parameters())
 
-    def increment_setting(self):
+    def increment_setting(self) -> None:
         self.load_setting((state.internal_settings.index + 1) % len(SETTINGS))
 
-    def decrement_setting(self):
+    def decrement_setting(self) -> None:
         new_index = state.internal_settings.index - 1
         if (new_index < 0):
             new_index = len(SETTINGS) - 1
         self.load_setting(new_index)
 
-    def load_setting(self, index):
+    def load_setting(self, index: int) -> None:
         state.internal_settings.loading = True
         store.dispatch(actions.change_setting_loading(True))
 
@@ -73,21 +75,22 @@ class InternalChordEngine(ChordEngine):
         store.dispatch(actions.change_setting_loading(False))
         state.internal_settings.loading = False
 
-    def get_chord_note_classes(self):
+    def get_chord_note_classes(self) -> tuple[list[int], int]:
         chord = self.chords[state.chord.active_button]
         scale = self.scale.get()
         if (state.secondary.side == SecondarySide.NONE):
             root_type = self.modulations.apply_one(chord.get_root(), scale)
             modulated_types = self.modulations.apply(chord.get_note_types(), scale)
             return [note % 12 for note in modulated_types], root_type % 12
-        chord_root = self.modulations.apply(chord.get_root(), scale)
+        chord_root = self.modulations.apply_one(chord.get_root(), scale)
         root_type = self.secondaries.get_root(chord_root)
         chord_type = self.secondaries.get_note_types(chord_root)
         assert chord_type is not None
+        assert root_type is not None
         chord_type.sort()
         return chord_type, root_type
 
-    def get_chord_notes(self, button: ChordButton):
+    def get_chord_notes(self, button: ChordButton) -> list[int]:
         chord = self.chords[button]
         chord_notes = []
 
@@ -102,16 +105,18 @@ class InternalChordEngine(ChordEngine):
         chord_adjusted_octaves = self.chord_octave.apply(chord_notes)
         return chord_adjusted_octaves
 
-    def get_bass_note(self):
+    def get_bass_note(self) -> int:
         chord = self.chords[state.chord.active_button]
 
         if (state.secondary.side == SecondarySide.NONE):
             bass = chord.get_bass()
             return self.modulations.apply_one(bass, self.scale.get())
         chord_root = self.modulations.apply_one(chord.get_root(), self.scale.get())
-        return self.secondaries.get_bass(chord_root)
+        bass = self.secondaries.get_bass(chord_root)
+        assert bass is not None
+        return bass
 
-    def get_internal_parameters(self):
+    def get_internal_parameters(self) -> list[AppParameter]:
         return [
             AppParameter(
                 valid_command_types = [CommandType.INCREMENTAL],

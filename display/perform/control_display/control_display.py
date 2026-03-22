@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import tkinter as tk
-from typing import TYPE_CHECKING
-
-from pyrsistent import thaw
+from typing import TYPE_CHECKING, Callable
 
 from models.app_parameter import AppParameter, AppParameterType
 
@@ -11,7 +9,7 @@ if TYPE_CHECKING:
     from controller_coupler.models.control_map import ControlMap
 from models.command import Command
 from models.command_type import CommandType
-from redux import store
+from redux import get_controller_coupler_state, get_music_engine_state, store
 from redux import utils as redux_utils
 
 from .bumper_button import BumperButton
@@ -25,14 +23,14 @@ from .trigger_button import TriggerButton
 
 class ControlDisplay(tk.Canvas):
 
-    width = 340
-    margin = 5
-    width_units = 15
-    height_units = 14
+    width: int = 340
+    margin: int = 5
+    width_units: int = 15
+    height_units: int = 14
 
     parameters: list[AppParameter]
 
-    def __init__(self, master=None):
+    def __init__(self, master: tk.Misc | None = None) -> None:
         self.unit_size = (self.width - (2 * self.margin)) / self.width_units
         self.height = (self.unit_size * self.height_units) + (2 * self.margin)
         super().__init__(master, width=self.width, height=(self.width / self.width_units) * self.height_units,
@@ -40,36 +38,36 @@ class ControlDisplay(tk.Canvas):
 
         self.parent = master
         self.parameters = []
-        self.app_parameter_length = 0
-        self.buttons_created = False
-        self.chord_engine_control_mode = 'internal'
+        self.app_parameter_length: int = 0
+        self.buttons_created: bool = False
+        self.chord_engine_control_mode: str = 'internal'
 
         self.pack(side="top", anchor="nw", padx=(0, 0), pady=(0, 0))
 
-        self._dirty = False
+        self._dirty: bool = False
         store.subscribe(self.__handle_store_update)
 
-    def __handle_store_update(self):
+    def __handle_store_update(self) -> None:
         self._dirty = True
 
-    def check_state(self):
+    def check_state(self) -> None:
         if not self._dirty:
             return
         self._dirty = False
 
-        me_state = thaw(store.get_state()['musicEngine'])
+        me_state = get_music_engine_state()
         if (me_state['chordEngineControl'] != self.chord_engine_control_mode):
             self.chord_engine_control_mode = me_state['chordEngineControl']
             if self.buttons_created:
-                state = store.get_state()['controllerCoupler']
-                params = state['appParameters']
-                control_map: ControlMap = state['activeControlMap']
+                cc_state = get_controller_coupler_state()
+                params = cc_state['appParameters']
+                control_map: ControlMap | None = cc_state['activeControlMap']
                 if control_map is not None:
                     self.__update_button_params(params, control_map.map)
 
-        state = store.get_state()['controllerCoupler']
+        state = get_controller_coupler_state()
         params = state['appParameters']
-        control_map: ControlMap = state['activeControlMap']
+        control_map: ControlMap | None = state['activeControlMap']
         music_engine_parameters_loaded = state['musicEngineAppParametersLoaded']
         if control_map is not None and music_engine_parameters_loaded and len(params) != self.app_parameter_length:
             if (not self.buttons_created):
@@ -81,9 +79,9 @@ class ControlDisplay(tk.Canvas):
                 self.app_parameter_length = len(params)
                 self.__update_button_params(params, control_map.map)
 
-    def __create_buttons(self, params, map):
+    def __create_buttons(self, params: dict[str, AppParameter], map: dict[str, list[str]]) -> None:
 
-        def get_param(key):
+        def get_param(key: str) -> AppParameter | None:
             return self.get_first_me_parameter(params, map, key)
 
         self.create_main_buttons(get_param)
@@ -95,9 +93,9 @@ class ControlDisplay(tk.Canvas):
         self.create_trigger_buttons(get_param)
         self.create_touch_pad_button(get_param)
 
-    def __update_button_params(self, params, map):
+    def __update_button_params(self, params: dict[str, AppParameter], map: dict[str, list[str]]) -> None:
 
-        def get_param(key):
+        def get_param(key: str) -> AppParameter | None:
             return self.get_first_me_parameter(params, map, key)
 
         self.southButton.set_param(get_param("SOUTH_BUTTON"))
@@ -138,10 +136,10 @@ class ControlDisplay(tk.Canvas):
         self.rightStick.set_y_params(right_y_params, right_y_type)
 
 
-    def units_to_coord(self, units):
+    def units_to_coord(self, units: float) -> float:
         return self.margin + (units * self.unit_size)
 
-    def create_main_buttons(self, get_param):
+    def create_main_buttons(self, get_param: Callable[[str], AppParameter | None]) -> None:
         c_x = 12
         c_y = 7.75
         u_to_c = self.units_to_coord
@@ -180,7 +178,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_trigger_buttons(self, get_param):
+    def create_trigger_buttons(self, get_param: Callable[[str], AppParameter | None]) -> None:
         self.leftTriggerButton = TriggerButton(self, get_param("LEFT_TRIGGER"), 2.5, 0.8)
         self.rightTriggerButton = TriggerButton(self, get_param("RIGHT_TRIGGER"), 12.5, 0.8)
         self.parameters.extend([
@@ -200,7 +198,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_bumper_buttons(self, get_param):
+    def create_bumper_buttons(self, get_param: Callable[[str], AppParameter | None]) -> None:
         self.leftBumperButton = BumperButton(self, get_param("LEFT_BUMPER"), 2.5, 3.25)
         self.rightBumperButton = BumperButton(self, get_param("RIGHT_BUMPER"), 12.5, 3.25)
         self.parameters.extend([
@@ -222,7 +220,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_touch_pad_button(self, get_param):
+    def create_touch_pad_button(self, get_param: Callable[[str], AppParameter | None]) -> None:
 
         self.touch_pad_button = TouchPadButton(self, get_param("TOUCHPAD_X"), get_param("TOUCHPAD_Y"), 7.5, 1.5)
         self.parameters.extend([
@@ -242,7 +240,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_start_button(self, map, params: dict[str, AppParameter]):
+    def create_start_button(self, map: dict[str, list[str]], params: dict[str, AppParameter]) -> None:
         param = self.get_start_button_param(map, params)
 
         u_to_c = self.units_to_coord
@@ -258,7 +256,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_dpad_buttons(self, get_param):
+    def create_dpad_buttons(self, get_param: Callable[[str], AppParameter | None]) -> None:
 
         left_param, right_param, up_param, down_param, x_type, y_type = self.get_dpad_params(get_param)
 
@@ -299,7 +297,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_options_buttons(self, get_param):
+    def create_options_buttons(self, get_param: Callable[[str], AppParameter | None]) -> None:
         self.leftOptionButton = OptionsButton(self, get_param("LEFT_OPTION"), 6, 4.75, self.unit_size)
         self.rightOptionButton = OptionsButton(self, get_param("RIGHT_OPTION"), 9, 4.75, self.unit_size)
         self.parameters.extend([
@@ -319,7 +317,7 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def create_joy_sticks(self, get_param):
+    def create_joy_sticks(self, get_param: Callable[[str], AppParameter | None]) -> None:
 
         left_x_params, left_x_type = self.get_joystick_axis_params("LEFT_STICK", "X", get_param)
         left_y_params, left_y_type = self.get_joystick_axis_params("LEFT_STICK", "Y", get_param)
@@ -437,15 +435,15 @@ class ControlDisplay(tk.Canvas):
             )
         ])
 
-    def get_start_button_param(self, map, params: dict[str, AppParameter]):
-        param = None
+    def get_start_button_param(self, map: dict[str, list[str]], params: dict[str, AppParameter]) -> AppParameter | None:
+        param: AppParameter | None = None
         if ("START_BUTTON" in map):
             for parameter_key in map["START_BUTTON"]:
                 if (parameter_key in params):
                     param =  params[parameter_key]
         return param
 
-    def get_dpad_params(self, get_param):
+    def get_dpad_params(self, get_param: Callable[[str], AppParameter | None]) -> tuple[AppParameter | None, AppParameter | None, AppParameter | None, AppParameter | None, str | None, str | None]:
         x_polar = get_param("DPAD_X")
         y_polar = get_param("DPAD_Y")
         left = get_param("DPAD_X_LEFT")
@@ -453,8 +451,12 @@ class ControlDisplay(tk.Canvas):
         up = get_param("DPAD_Y_UP")
         down = get_param("DPAD_Y_DOWN")
 
-        x_type, y_type = None, None
-        left_param, right_param, up_param, down_param = None, None, None, None
+        x_type: str | None = None
+        y_type: str | None = None
+        left_param: AppParameter | None = None
+        right_param: AppParameter | None = None
+        up_param: AppParameter | None = None
+        down_param: AppParameter | None = None
 
         if (x_polar):
             x_type = "POLAR"
@@ -476,7 +478,7 @@ class ControlDisplay(tk.Canvas):
 
         return left_param, right_param, up_param, down_param, x_type, y_type
 
-    def get_joystick_axis_params(self, prefix: str, axis: str, get_param):
+    def get_joystick_axis_params(self, prefix: str, axis: str, get_param: Callable[[str], AppParameter | None]) -> tuple[list[AppParameter], str | None]:
         positive_suffix = "RIGHT" if axis == "X" else "UP"
         negative_suffix = "LEFT" if axis == "X" else "DOWN"
 
@@ -493,7 +495,7 @@ class ControlDisplay(tk.Canvas):
             return [n_param, p_param], "ON_OFF"
         return [], None
 
-    def get_first_me_parameter(self, params: dict[str, AppParameter], map: dict[str, list[str]], key):
+    def get_first_me_parameter(self, params: dict[str, AppParameter], map: dict[str, list[str]], key: str) -> AppParameter | None:
         if (key in map):
             for parameter_key in map[key]:
                 if (parameter_key in params and params[parameter_key].type != AppParameterType.UI):

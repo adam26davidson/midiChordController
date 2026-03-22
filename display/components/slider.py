@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import tkinter as tk
+from typing import Callable
 
 from ..display_constants import COLORS, FONTS
 from .setting_control import SettingControl
@@ -6,7 +9,7 @@ from .setting_control import SettingControl
 
 class Slider(SettingControl):
 
-    def __init__(self, container, name, min, max, value, callback, resolution=1, digits=0):
+    def __init__(self, container: tk.Misc, name: str, min: float, max: float, value: float, callback: Callable[[float], None], resolution: float = 1, digits: int = 0) -> None:
         super().__init__(container, name)
 
         self.max = max
@@ -54,26 +57,26 @@ class Slider(SettingControl):
         self.slider.pack(side='left', pady=(4, 4), padx=(4, 4))
         self.contents_frame.pack(side='top', anchor='nw', padx=(2, 2), pady=(5, 5))
 
-    def slider_callback(self, value):
+    def slider_callback(self, value: str) -> None:
         self.callback(float(value))
 
-    def set_disabled(self):
+    def set_disabled(self) -> None:
         self.slider.configure(state=tk.DISABLED, bg=COLORS['chordDim'])
         self.number.configure(fg=COLORS['chordDim'])
 
-    def set_enabled(self):
+    def set_enabled(self) -> None:
         self.slider.configure(state=tk.NORMAL, bg=COLORS['root'])
         self.number.configure(fg=COLORS['root'])
 
-    def set_value(self, value):
+    def set_value(self, value: float) -> None:
         self.state.number.set(float(value))
 
-    def get_value(self):
+    def get_value(self) -> float:
         return self.state.number.get()
 
 
 class SliderState:
-    disabled = False
+    disabled: bool = False
 
-    def __init__(self, container, number):
+    def __init__(self, container: tk.Misc, number: float) -> None:
         self.number: tk.DoubleVar = tk.DoubleVar(container, value=float(number))

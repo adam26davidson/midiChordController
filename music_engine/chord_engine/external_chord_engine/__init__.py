@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import threading
 
@@ -17,7 +19,7 @@ class ExternalChordEngine(ChordEngine):
     input_queue: list[MidiInputMessage]
     note_history: NoteHistory
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(AppParameterType.EXTERNAL_CHORD_ENGINE)
 
         self.note_history = NoteHistory()
@@ -31,30 +33,30 @@ class ExternalChordEngine(ChordEngine):
             ChordButton.EAST: Chord([0, 3, 7], [0], 0)
         }
 
-    def get_chord_note_classes(self):
+    def get_chord_note_classes(self) -> tuple[list[int], int]:
         chord = self.chords[state.chord.active_button]
         root_type = chord.get_root()
         chord_types = chord.get_note_types()
         return chord_types, root_type
 
-    def get_chord_notes(self, button: ChordButton):
+    def get_chord_notes(self, button: ChordButton) -> list[int]:
         chord = self.chords[button]
         chord_notes = chord.get_chord()
         chord_adjusted_octaves = self.chord_octave.apply(chord_notes)
         return chord_adjusted_octaves
 
-    def get_bass_note(self):
+    def get_bass_note(self) -> int:
         chord = self.chords[state.chord.active_button]
         return chord.get_bass()
 
-    def start(self):
+    def start(self) -> None:
         _task = asyncio.ensure_future(self.__input_loop())
 
-    def handle_midi_message(self, message: MidiInputMessage):
+    def handle_midi_message(self, message: MidiInputMessage) -> None:
         with self.input_queue_lock:
             self.input_queue.append(message)
 
-    async def __input_loop(self):
+    async def __input_loop(self) -> None:
         while True:
             with self.input_queue_lock:
                 queue = self.input_queue
@@ -63,7 +65,7 @@ class ExternalChordEngine(ChordEngine):
                 self.process_queue(queue)
             await asyncio.sleep(MIDI_INPUT_STEP)
 
-    def process_queue(self, queue: list[MidiInputMessage]):
+    def process_queue(self, queue: list[MidiInputMessage]) -> None:
         last_contiguous_classes = list(state.note_in_history.lastContiguousClasses)
         last_contiguous_classes.sort()
         for message in queue:
@@ -77,7 +79,7 @@ class ExternalChordEngine(ChordEngine):
             print("new chord")
             self.determine_chord_and_scale()
 
-    def determine_chord_and_scale(self):
+    def determine_chord_and_scale(self) -> None:
         if state.chord_mode == ExternalChordMode.MOST_RECENT_NOTE_SET:
             note_classes = state.note_in_history.lastContiguousClasses
             key, scale = self.get_scale_and_key(note_classes)
@@ -103,7 +105,7 @@ class ExternalChordEngine(ChordEngine):
             else:
                 no_root_chord_indices_from_root = chord_indices_from_root
 
-            scale_chord_indices = range(1, len(scale) + 1)
+            scale_chord_indices = list(range(1, len(scale) + 1))
             print("key agnostic scale: ", scale)
             print("key: ", key)
 
@@ -154,7 +156,7 @@ class ExternalChordEngine(ChordEngine):
     def notes_fit_in_scale(self, note_classes: list[int], scale: list[int]) -> bool:
         return all(chord_class in scale for chord_class in note_classes)
 
-    def get_prime_form(self, note_classes: list[int]):
+    def get_prime_form(self, note_classes: list[int]) -> list[int]:
         classes = list(note_classes)
         classes.sort()
         lowest_sum = 66

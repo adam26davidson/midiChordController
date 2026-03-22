@@ -108,7 +108,7 @@ class TestNoteHistory:
         nh = make_history()
         nh.note_on(60)
         history = state_module.state.note_in_history.all[0]
-        assert len(history) >= 1
+        assert len(history) == 1
         assert history[-1].off_time is None  # Still on
 
     def test_note_off_sets_off_time(self):

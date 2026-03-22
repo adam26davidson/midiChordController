@@ -1,9 +1,17 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pyrsistent import freeze
 
 from constants import SPREAD_STEPS_PER_OCTAVE
+from redux.types import ReduxAction
+
+if TYPE_CHECKING:
+    from pyrsistent.typing import PMap
 
 
-def reducer(state, action):
+def reducer(state: PMap[str, object] | None, action: ReduxAction) -> PMap[str, object]:
     if state is None:
         return freeze({
             'chordEngineControl': 'internal',

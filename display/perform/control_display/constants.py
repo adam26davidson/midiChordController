@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from ...display_constants import COLORS, FONTS
 
 ACTIVE_COLOR = COLORS["root"]

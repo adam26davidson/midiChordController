@@ -111,3 +111,8 @@ Controller buttons/axes map to AppParameters via `controller_coupler/`. Paramete
 - uv is used for dependency management / project configuration. when running python requiring a venv use uv run xyz.py
 - ruff used for formatting / linting
 - ty used for type checking
+
+
+## Development Guidelines
+- Typing is enforced in this project - Any and object should be avoided unless there is a legitimate reason they should be used. If new types need to be added to accomplish something, take the time to create the types.
+- After completing work, run `uv run ruff check`, `uv run ty check`, and `uv run pytest`

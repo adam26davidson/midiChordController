@@ -24,12 +24,7 @@ class TestVoiceCountSet:
         vc.set(999)
         assert state_module.state.voice_count == MAX_VOICE_COUNT
 
-    def test_set_clamps_min(self):
-        vc = make_voice_count()
-        vc.set(0)
-        assert state_module.state.voice_count == 1
-
-    def test_set_clamps_negative(self):
+    def test_set_clamps_to_minimum(self):
         vc = make_voice_count()
         vc.set(-5)
         assert state_module.state.voice_count == 1

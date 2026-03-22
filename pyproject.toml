@@ -18,6 +18,7 @@ dev = [
     "ruff>=0.15.6",
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
+    "ty>=0.0.24",
 ]
 
 [tool.pytest.ini_options]
@@ -58,6 +59,12 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["controller_coupler", "controller_manager", "display", "models", "music_engine", "redux"]
+
+[tool.ty.src]
+exclude = ["test/"]
+
+[tool.ty.environment]
+extra-paths = ["typings"]
 
 [tool.ruff.format]
 quote-style = "double"

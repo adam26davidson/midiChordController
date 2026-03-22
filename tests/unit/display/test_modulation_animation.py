@@ -13,10 +13,9 @@ For notes where old_note == note, there should be zero distance and no movement.
 """
 
 import time
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from display.chord_display import ChordDisplay
-
 
 # Minor Nines preset scales
 MINOR_NINES_SCALE = [0, 2, 3, 5, 7, 8, 10]
@@ -117,11 +116,13 @@ class TestModulationAnimationPositioning:
         for note in stationary_notes:
             fixed_pos = cd.notes[note]["center"]
             animated_pos = cd.get_note_position(note)
-            assert animated_pos["x"] == fixed_pos["x"] and \
-                   animated_pos["y"] == fixed_pos["y"], (
-                f"Note {note} should be stationary but moved: "
-                f"fixed=({fixed_pos['x']}, {fixed_pos['y']}), "
-                f"animated=({animated_pos['x']}, {animated_pos['y']})"
+            assert animated_pos["x"] == fixed_pos["x"], (
+                f"Note {note} should be stationary but moved x: "
+                f"fixed={fixed_pos['x']}, animated={animated_pos['x']}"
+            )
+            assert animated_pos["y"] == fixed_pos["y"], (
+                f"Note {note} should be stationary but moved y: "
+                f"fixed={fixed_pos['y']}, animated={animated_pos['y']}"
             )
 
 
@@ -146,9 +147,11 @@ class TestModulationAnimationMidway:
         for note in [0, 2, 5, 7]:
             fixed_pos = cd.notes[note]["center"]
             animated_pos = cd.get_note_position(note)
-            assert animated_pos["x"] == fixed_pos["x"] and \
-                   animated_pos["y"] == fixed_pos["y"], (
-                f"Note {note} moved at animation midpoint"
+            assert animated_pos["x"] == fixed_pos["x"], (
+                f"Note {note} x moved at animation midpoint"
+            )
+            assert animated_pos["y"] == fixed_pos["y"], (
+                f"Note {note} y moved at animation midpoint"
             )
 
     def test_moving_notes_are_between_old_and_new_midway(self):

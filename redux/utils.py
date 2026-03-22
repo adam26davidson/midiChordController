@@ -1,35 +1,39 @@
+from __future__ import annotations
+
+from typing import Any
 
 from models.app_parameter import AppParameter
 
-from . import store
+from . import get_controller_coupler_state, get_controller_manager_state, store
 from .actions import controller_coupler as cc_actions
 
 
-def get_active_me_map():
-    return get_active_map('meMap')
-
-def get_active_ui_map():
-    return get_active_map('uiMap')
-
-def get_active_map(map_type):
-    map = None
-
-    controllers = store.get_state()['controllerManager']['controllers']
+def get_active_me_map() -> Any | None:
+    controllers = get_controller_manager_state()['controllers']
     for controller in controllers:
         if controller['role'] == 'primary':
-            map = controller[map_type]['map']
-            break
+            me_map = controller['meMap']
+            if me_map is not None:
+                return me_map['map']
+    return None
 
-    return map
+def get_active_ui_map() -> Any | None:
+    controllers = get_controller_manager_state()['controllers']
+    for controller in controllers:
+        if controller['role'] == 'primary':
+            ui_map = controller['uiMap']
+            if ui_map is not None:
+                return ui_map['map']
+    return None
 
-def add_app_parameters(parameters: list[AppParameter]):
+def add_app_parameters(parameters: list[AppParameter]) -> None:
     print(f"adding {len(parameters)} parameters")
-    state = store.get_state()['controllerCoupler']
+    state = get_controller_coupler_state()
     existing_params = state['appParameters']
     new_params = {param.key: param for param in parameters}
     if existing_params:
         store.dispatch(cc_actions.update_app_parameters({**existing_params, **new_params}))
     else:
         store.dispatch(cc_actions.update_app_parameters(new_params))
-    new_state = store.get_state()['controllerCoupler']
+    new_state = get_controller_coupler_state()
     print(f"new parameterCount: {len(new_state['appParameters'])}")

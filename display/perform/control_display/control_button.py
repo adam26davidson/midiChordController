@@ -1,4 +1,12 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .control_display import ControlDisplay
+
+
 class ControlButton:
 
-    def __init__(self, master):
+    def __init__(self, master: ControlDisplay) -> None:
         self.master = master

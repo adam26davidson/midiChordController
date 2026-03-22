@@ -34,14 +34,14 @@ class TestDualChord:
         pitch_classes = sorted({n % 12 for n in result})
         assert pitch_classes == [0, 3, 7]  # Minor triad
 
-    def test_get_bass_main(self):
+    def test_get_bass_pitch_class(self):
         setting = self._make_setting()
         dc = DualChord(setting)
         state_module.state.alternate = False
         state_module.state.key.value = 0
 
         bass = dc.get_bass()
-        assert isinstance(bass, int)
+        assert bass % 12 == 0  # Root is C
 
     def test_get_root(self):
         setting = self._make_setting()
@@ -61,7 +61,7 @@ class TestDualChord:
         note_types = dc.get_note_types()
         assert sorted(note_types) == [0, 4, 7]
 
-    def test_different_scale(self):
+    def test_major_scale_changes_pitch_classes(self):
         setting = self._make_setting()
         major = [0, 2, 4, 5, 7, 9, 11]
         dc = DualChord(setting, scale=major)
@@ -70,4 +70,8 @@ class TestDualChord:
         state_module.state.voice_count = 3
 
         result = dc.get_chord()
+        pitch_classes = sorted({n % 12 for n in result})
+        # With major scale, degrees [0,4,7] map to scale[0]=0, scale[4]=7, scale[7]=... wraps
+        # The output should differ from chromatic scale
         assert len(result) == 3
+        assert all(pc in [0, 2, 4, 5, 7, 9, 11] for pc in pitch_classes)

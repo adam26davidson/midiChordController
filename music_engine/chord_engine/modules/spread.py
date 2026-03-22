@@ -1,12 +1,15 @@
-from typing import Callable
+from __future__ import annotations
 
-from pyrsistent import thaw
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 from constants import MAX_SPREAD_OCTAVES, SPREAD_STEPS_PER_OCTAVE
 from models.app_parameter import AppParameter, AppParameterType
 from models.command import Command
 from models.command_type import CommandType
-from redux import store
+from redux import get_music_engine_state, store
 from redux import utils as redux_utils
 from redux.actions import music_engine as actions
 from redux.settings_storage import settings_storage_utility
@@ -16,10 +19,10 @@ from ..chord_engine_state import state
 
 class Spread:
 
-    update_chord_engine: Callable
+    update_chord_engine: Callable[[], None]
     type: AppParameterType
 
-    def __init__(self, type: AppParameterType, update_chord_engine: Callable):
+    def __init__(self, type: AppParameterType, update_chord_engine: Callable[[], None]) -> None:
         self.update_chord_engine = update_chord_engine
         self.type = type
         store.subscribe(self.__handle_store_update)
@@ -27,7 +30,7 @@ class Spread:
 
         redux_utils.add_app_parameters(self.__get_parameters())
 
-    def set(self, spread):
+    def set(self, spread: int) -> None:
         max_spread = SPREAD_STEPS_PER_OCTAVE * MAX_SPREAD_OCTAVES - 1
         spread = max(min(spread, max_spread), 0)
         state.spread = spread
@@ -35,18 +38,18 @@ class Spread:
         settings_storage_utility.save_settings()
         self.update_chord_engine()
 
-    def increment(self):
+    def increment(self) -> None:
         self.set(state.spread + 1)
 
-    def decrement(self):
+    def decrement(self) -> None:
         self.set(state.spread - 1)
 
-    def __handle_store_update(self):
-        me_state = thaw(store.get_state()['musicEngine'])
+    def __handle_store_update(self) -> None:
+        me_state = get_music_engine_state()
         if (me_state['spread'] != state.spread):
             self.set(me_state['spread'])
 
-    def __get_parameters(self):
+    def __get_parameters(self) -> list[AppParameter]:
         key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(

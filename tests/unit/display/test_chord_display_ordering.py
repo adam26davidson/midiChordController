@@ -10,16 +10,18 @@ Fix: chordType must be updated before chordNotes in check_state(), so
 chord_display.chord is current when play_chord() iterates it.
 """
 
-from unittest.mock import MagicMock, call, patch
-
-from redux import store
-from redux.actions import music_engine as me_actions
+from unittest.mock import MagicMock, patch
 
 from display.perform.perform_frame import PerformFrame
+from redux import store
+from redux.actions import music_engine as me_actions
 
 
 def _make_perform_frame():
     pf = PerformFrame(container=MagicMock())
+    # Process any pending state from prior tests
+    pf._dirty = True
+    pf.check_state()
     pf._dirty = False
     return pf
 

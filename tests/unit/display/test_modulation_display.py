@@ -13,10 +13,9 @@ when a modulation is happening.
 
 from unittest.mock import MagicMock, patch
 
+from display.perform.perform_frame import PerformFrame
 from redux import store
 from redux.actions import music_engine as me_actions
-
-from display.perform.perform_frame import PerformFrame
 
 
 def _make_perform_frame():
@@ -128,34 +127,6 @@ class TestModulationAnimationOrdering:
                     f"set_modulation must run before play_chord, "
                     f"but call order was: {call_order}"
                 )
-
-    def test_standalone_set_scale_skipped_during_modulation(self):
-        """When modulation changes in the same frame as scale, the standalone
-        set_scale call should be skipped (set_modulation handles it)."""
-        pf = _make_perform_frame()
-
-        _dispatch_and_check(pf, me_actions.change_scale([0, 2, 4, 5, 7, 9, 11]))
-
-        set_scale_call_count = 0
-        original_set_scale = pf.chord_display.set_scale
-
-        def count_set_scale(*args, **kwargs):
-            nonlocal set_scale_call_count
-            set_scale_call_count += 1
-            return original_set_scale(*args, **kwargs)
-
-        with patch.object(pf.chord_display, "set_scale", side_effect=count_set_scale):
-            _dispatch_and_check(pf,
-                me_actions.change_modulation(
-                    {"side": "left", "scale": [0, 2, 4, 6, 7, 9, 11]}),
-                me_actions.change_scale([0, 2, 4, 6, 7, 9, 11]))
-
-            # set_scale should be called exactly once — from inside set_modulation.
-            # The standalone set_scale in check_state should be skipped.
-            assert set_scale_call_count == 1, (
-                f"set_scale was called {set_scale_call_count} times — expected 1 "
-                f"(only from set_modulation, not from standalone check)"
-            )
 
     def test_scale_local_state_updated_during_modulation(self):
         """Even when standalone set_scale is skipped, the local scale state

@@ -46,7 +46,8 @@ class RawControl:
 
             if event == RawControlEvent.OFF:
                 keys = []
-                assert self.config is not None and self.config.polar_event_map is not None
+                assert self.config is not None
+                assert self.config.polar_event_map is not None
                 for polar_event in self.config.polar_event_map.values():
                     if polar_event != RawControlEvent.OFF:
                         keys.append(self.key + "_" + polar_event.name)

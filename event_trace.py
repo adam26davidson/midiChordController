@@ -1,12 +1,14 @@
+from __future__ import annotations
+
 import time
 
-TRACE_ENABLED = False
-_start_time = time.time()
+TRACE_ENABLED: bool = False
+_start_time: float = time.time()
 
-def _ts():
+def _ts() -> str:
     return f"{time.time() - _start_time:.3f}"
 
-def trace(stage, msg):
+def trace(stage: str, msg: str) -> None:
     if not TRACE_ENABLED:
         return
     line = f"[{_ts()}] {stage}: {msg}\n"

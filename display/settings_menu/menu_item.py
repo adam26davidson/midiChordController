@@ -1,20 +1,23 @@
+from __future__ import annotations
+
 import tkinter as tk
+from typing import Callable
 
 from ..display_constants import COLORS, FONTS
 
 
 class MenuItem(tk.Button):
 
-    height = 80
-    width = 100
-    border = 5
+    height: int = 80
+    width: int = 100
+    border: int = 5
 
-    inactive_color = COLORS['chord']
-    active_color = COLORS['root']
+    inactive_color: str = COLORS['chord']
+    active_color: str = COLORS['root']
 
-    big_font = FONTS["big"]
+    big_font: tuple[str, int] | tuple[str, int, str] = FONTS["big"]
 
-    def __init__(self, container, text, callback):
+    def __init__(self, container: tk.Misc, text: str, callback: Callable[[], None]) -> None:
         super().__init__(
             container,
             width=12,
@@ -32,4 +35,3 @@ class MenuItem(tk.Button):
             font=self.big_font,
             text=text,
             command=callback)
-

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from models.app_parameter import AppParameter
 from models.command import Command
 from models.command_type import CommandType
@@ -13,13 +15,13 @@ from .rhythm_engine import RhythmEngine
 
 class MusicEngine:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.internal_chord_engine = InternalChordEngine()
         self.external_chord_engine = ExternalChordEngine()
         self.rhythm_engine = RhythmEngine()
         self.midi = Midi()
 
-        self.process_controller_events = True
+        self.process_controller_events: bool = True
 
         self.midi.subscribe(self.external_chord_engine.handle_midi_message)
         self.internal_chord_engine.subscribe(self.rhythm_engine.handle_message)
@@ -30,12 +32,12 @@ class MusicEngine:
 
         store.dispatch(cc_actions.music_engine_app_parameters_loaded())
 
-    def start(self):
+    def start(self) -> None:
         self.external_chord_engine.start()
         self.midi.start()
 
-    def get_parameters(self):
-        parameters = [
+    def get_parameters(self) -> list[AppParameter]:
+        parameters: list[AppParameter] = [
             AppParameter(
                 valid_command_types = [CommandType.ANALOG],
                 command_mappings = {

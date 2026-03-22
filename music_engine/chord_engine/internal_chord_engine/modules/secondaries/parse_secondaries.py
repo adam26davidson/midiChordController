@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 from music_engine.chord_engine.state.chords_state import ChordButton
 from music_engine.chord_engine.state.modulations_state import ModulationSide
@@ -5,20 +6,20 @@ from music_engine.chord_engine.state.secondaries_state import SecondarySide
 
 from ....modules.chords.dual_chord import DualChord
 
-mod_key_map = {
+mod_key_map: dict[str, ModulationSide] = {
     "default": ModulationSide.NONE,
     "leftModulation": ModulationSide.LEFT,
     "rightModulation": ModulationSide.RIGHT
 }
 
 
-def parse_secondaries(settings) -> dict[SecondarySide, dict[ChordButton, dict[ModulationSide, DualChord]]]:
-    def parse_secondary(setting) -> dict[ChordButton, dict[ModulationSide, DualChord]]:
-        secondaries = {}
+def parse_secondaries(settings: dict) -> dict[SecondarySide, dict[ChordButton, dict[ModulationSide, DualChord]]]:
+    def parse_secondary(setting: dict) -> dict[ChordButton, dict[ModulationSide, DualChord]]:
+        secondaries: dict[ChordButton, dict[ModulationSide, DualChord]] = {}
         default = DualChord(setting, is_secondary=True)
         buttons_keys = [ChordButton.SOUTH, ChordButton.WEST, ChordButton.NORTH, ChordButton.EAST]
 
-        def get_override_secondary(overrides):
+        def get_override_secondary(overrides: dict) -> DualChord:
             override_settings = setting.copy()
             for key in overrides:
                 override_settings[key] = overrides[key]

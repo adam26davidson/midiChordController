@@ -1,4 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from models.app_parameter import AppParameter
+
+if TYPE_CHECKING:
+    from .control_display import ControlDisplay
 
 from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .control_button import ControlButton
@@ -6,14 +13,14 @@ from .control_button import ControlButton
 
 class OptionsButton(ControlButton):
 
-    x_offset = 0.2
-    y_offset = 0.2
-    line_extension = 0.05
+    x_offset: float = 0.2
+    y_offset: float = 0.2
+    line_extension: float = 0.05
 
-    def __init__(self, master, param: AppParameter, center_x, center_y, unit_size):
+    def __init__(self, master: ControlDisplay, param: AppParameter | None, center_x: float, center_y: float, unit_size: float) -> None:
         super().__init__(master)
         self.master = master
-        self.label = "∅" if not param else param.label_abreviation
+        self.label: str = "∅" if not param else (param.label_abreviation or "")
 
         self.center_x = center_x
         self.center_y = center_y
@@ -22,11 +29,11 @@ class OptionsButton(ControlButton):
 
         self.draw_button()
 
-    def set_param(self, param: AppParameter):
-        self.label = "∅" if not param else param.label_abreviation
+    def set_param(self, param: AppParameter | None) -> None:
+        self.label = "∅" if not param else (param.label_abreviation or "")
         self.master.itemconfig(self.text_object, text=self.label)
 
-    def draw_button(self):
+    def draw_button(self) -> None:
         u_to_c = self.master.units_to_coord
         r = (1 - self.x_offset)
         arc1x1 = self.center_x - r
@@ -77,7 +84,7 @@ class OptionsButton(ControlButton):
             font=FONT
         )
 
-    def on(self):
+    def on(self) -> None:
         self.master.itemconfig(self.arc1, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR, style="pieslice")
         self.master.itemconfig(self.arc2, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR, style="pieslice")
         self.master.itemconfig(self.background, fill=ACTIVE_COLOR, outline=ACTIVE_COLOR)
@@ -85,7 +92,7 @@ class OptionsButton(ControlButton):
         self.master.itemconfig(self.line2, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.text_object, fill='#000000')
 
-    def off(self):
+    def off(self) -> None:
         self.master.itemconfig(self.arc1, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR, style="arc")
         self.master.itemconfig(self.arc2, outline=INACTIVE_COLOR, fill=INACTIVE_COLOR, style="arc")
         self.master.itemconfig(self.background, fill="#000000", outline="#000000")

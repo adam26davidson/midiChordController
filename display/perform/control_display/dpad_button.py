@@ -1,4 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from models.app_parameter import AppParameter
+
+if TYPE_CHECKING:
+    from .control_display import ControlDisplay
 
 from .constants import ACTIVE_COLOR, FONT, INACTIVE_COLOR
 from .control_button import ControlButton
@@ -6,9 +13,9 @@ from .control_button import ControlButton
 
 class DPadButton(ControlButton):
 
-    radius = 2.5
+    radius: float = 2.5
 
-    def __init__(self, master, param: AppParameter, type: str, direction, center_x, center_y):
+    def __init__(self, master: ControlDisplay, param: AppParameter | None, type: str | None, direction: str, center_x: float, center_y: float) -> None:
         super().__init__(master)
         self.master = master
 
@@ -20,7 +27,7 @@ class DPadButton(ControlButton):
 
         self.draw_button()
 
-    def set_param(self, param: AppParameter, type: str, update: bool = True):
+    def set_param(self, param: AppParameter | None, type: str | None, update: bool = True) -> None:
         self.param = param
         self.type = type
         if not param:
@@ -28,16 +35,16 @@ class DPadButton(ControlButton):
         else:
             if type == "POLAR":
                 if self.direction == "LEFT" or self.direction == "DOWN":
-                    self.label = f"-{param.label_abreviation}"
+                    self.label = f"-{param.label_abreviation or ''}"
                 else:
-                    self.label = f"+{param.label_abreviation}"
+                    self.label = f"+{param.label_abreviation or ''}"
             else:
-                self.label = param.label_abreviation
+                self.label = param.label_abreviation or ""
 
         if update:
             self.master.itemconfig(self.text_object, text=self.label)
 
-    def draw_button(self):
+    def draw_button(self) -> None:
         c_x = self.center_x
         c_y = self.center_y
 
@@ -66,7 +73,7 @@ class DPadButton(ControlButton):
             ybt = yb1 - 0.75
             self.draw_button_from_params(c_x-1, yb1, c_x-1, yb2, c_x, yb3, c_x+1, yb2, c_x+1, yb1, c_x, ybt)
 
-    def draw_button_from_params(self, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, tx, ty):
+    def draw_button_from_params(self, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, x4: float, y4: float, x5: float, y5: float, tx: float, ty: float) -> None:
         u_to_c = self.master.units_to_coord
         self.canvas_object = self.master.create_polygon(
             u_to_c(x1), u_to_c(y1),
@@ -86,10 +93,10 @@ class DPadButton(ControlButton):
             font=FONT
         )
 
-    def on(self):
+    def on(self) -> None:
         self.master.itemconfig(self.canvas_object, outline=ACTIVE_COLOR, fill=ACTIVE_COLOR)
         self.master.itemconfig(self.text_object, fill='#000000')
 
-    def off(self):
+    def off(self) -> None:
         self.master.itemconfig(self.canvas_object, outline=INACTIVE_COLOR, fill="#000000")
         self.master.itemconfig(self.text_object, fill=INACTIVE_COLOR)

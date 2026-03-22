@@ -1,6 +1,11 @@
-from typing import Callable
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from models.app_parameter import AppParameter, AppParameterType
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 from models.command import Command
 from models.command_type import CommandType
 from redux import store
@@ -12,10 +17,10 @@ from ..chord_engine_state import state
 
 class Hold:
 
-    stop_chord_and_bass: Callable
+    stop_chord_and_bass: Callable[[], None]
     type: AppParameterType
 
-    def __init__(self, type: AppParameterType, stop_chord_and_bass: Callable):
+    def __init__(self, type: AppParameterType, stop_chord_and_bass: Callable[[], None]) -> None:
         self.stop_chord_and_bass = stop_chord_and_bass
         self.type = type
 
@@ -23,7 +28,7 @@ class Hold:
         redux_utils.add_app_parameters(self.__get_parameters())
 
 
-    def toggle(self):
+    def toggle(self) -> None:
         if state.hold:
             state.hold = False
             self.stop_chord_and_bass()
@@ -31,7 +36,7 @@ class Hold:
             state.hold = True
         store.dispatch(actions.change_hold(state.hold))
 
-    def __get_parameters(self):
+    def __get_parameters(self) -> list[AppParameter]:
         key_prefix = "EXTERNAL_" if self.type == AppParameterType.EXTERNAL_CHORD_ENGINE else "INTERNAL_"
         return [
             AppParameter(

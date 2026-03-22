@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import tkinter as tk
 
 from redux import store
@@ -8,7 +10,7 @@ from ..display_constants import COLORS, FONTS
 
 class SettingsPage(tk.Frame):
 
-    def __init__(self, container, name):
+    def __init__(self, container: tk.Misc, name: str) -> None:
         super().__init__(
             container,
             highlightthickness=0,
@@ -49,4 +51,3 @@ class SettingsPage(tk.Frame):
         self.title_frame.grid(row=0, column=0, sticky='new', )
 
         self.grid(row=0, column=0, sticky='nsew')
-

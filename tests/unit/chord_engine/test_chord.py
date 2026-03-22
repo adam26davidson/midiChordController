@@ -70,25 +70,15 @@ class TestChordFindAllNotes:
 class TestChordGetChord:
     """Test full chord voicing via get_chord (uses state for inversion/spread/voice_count)."""
 
-    def test_basic_major_triad_default_state(self):
+    def test_major_triad_in_c(self):
         chord = Chord([0, 4, 7], [0], 0)
         state_module.state.voice_count = 3
         state_module.state.key.value = 0
         result = chord.get_chord()
-        # Should return 3 notes
         assert len(result) == 3
-        # All notes should be valid MIDI
         assert all(21 <= n <= 108 for n in result)
-        # Notes should be in ascending order
         assert result == sorted(result)
-
-    def test_chord_notes_are_correct_pitch_classes(self):
-        chord = Chord([0, 4, 7], [0], 0)
-        state_module.state.voice_count = 3
-        state_module.state.key.value = 0
-        result = chord.get_chord()
-        pitch_classes = sorted({n % 12 for n in result})
-        assert pitch_classes == [0, 4, 7]
+        assert sorted({n % 12 for n in result}) == [0, 4, 7]
 
     def test_key_transposition(self):
         chord = Chord([0, 4, 7], [0], 0)
@@ -125,17 +115,11 @@ class TestChordGetChord:
 class TestChordGetBass:
     """Test bass note generation."""
 
-    def test_bass_returns_single_note(self):
+    def test_bass_root_in_key_of_c(self):
         chord = Chord([0, 4, 7], [0], 0)
         state_module.state.key.value = 0
         bass = chord.get_bass()
-        assert isinstance(bass, int)
         assert 21 <= bass <= 108
-
-    def test_bass_pitch_class_matches_root(self):
-        chord = Chord([0, 4, 7], [0], 0)
-        state_module.state.key.value = 0
-        bass = chord.get_bass()
         assert bass % 12 == 0  # Root is C
 
     def test_bass_in_key_of_d(self):
@@ -148,8 +132,7 @@ class TestChordGetBass:
         chord = Chord([0, 4, 7], [0], 0)
         state_module.state.key.value = 0
         state_module.state.bass_position.value = 0
-        chord.get_bass()
-        state_module.state.bass_position.value = 1
-        bass1 = chord.get_bass()
-        # Different bass positions should produce different notes (or same at boundary)
-        assert isinstance(bass1, int)
+        bass0 = chord.get_bass()
+        state_module.state.bass_position.value = 2
+        bass2 = chord.get_bass()
+        assert bass0 != bass2

@@ -43,11 +43,11 @@ class TestSecondary:
         pitch_classes = sorted({n % 12 for n in chord})
         assert pitch_classes == [3, 7, 10]
 
-    def test_get_bass(self):
+    def test_get_bass_pitch_class(self):
         sec = Secondary([0, 4, 7], [0], 0)
         bass = sec.get_bass(0)
-        assert isinstance(bass, int)
         assert 21 <= bass <= 108
+        assert bass % 12 == 0  # Root at interval 0 from target 0 = C
 
 
 class TestParseSecondaries:

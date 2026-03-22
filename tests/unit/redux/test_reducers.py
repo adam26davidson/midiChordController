@@ -1,5 +1,7 @@
 """Tests for Redux reducers — each is a pure (state, action) → state function."""
 
+from typing import Any, cast
+
 from pyrsistent import thaw
 
 from redux.actions import controller_coupler as cc_actions
@@ -8,6 +10,7 @@ from redux.reducers import controller_coupler as cc_reducer
 from redux.reducers import controller_manager as cm_reducer
 from redux.reducers import display as display_reducer
 from redux.reducers import music_engine as me_reducer
+from redux.types import ReduxAction
 
 
 class TestMusicEngineReducer:
@@ -207,7 +210,7 @@ class TestControllerManagerReducer:
 
     def test_add_controller(self):
         state = self._init_state()
-        action = {
+        action: ReduxAction = {
             "type": "controllerManager/controllerAdded",
             "data": {
                 "id": "ctrl1",
@@ -219,14 +222,14 @@ class TestControllerManagerReducer:
             },
         }
         state = cm_reducer.reducer(state, action)
-        controllers = thaw(state["controllers"])
+        controllers = cast("list[Any]", thaw(state["controllers"]))
         assert len(controllers) == 1
         assert controllers[0]["id"] == "ctrl1"
         assert controllers[0]["name"] == "DualShock4"
 
     def test_remove_controller(self):
         state = self._init_state()
-        add_action = {
+        add_action: ReduxAction = {
             "type": "controllerManager/controllerAdded",
             "data": {
                 "id": "ctrl1",
@@ -238,16 +241,16 @@ class TestControllerManagerReducer:
             },
         }
         state = cm_reducer.reducer(state, add_action)
-        remove_action = {
+        remove_action: ReduxAction = {
             "type": "controllerManager/controllerRemoved",
             "data": {"id": "ctrl1"},
         }
         state = cm_reducer.reducer(state, remove_action)
-        assert len(thaw(state["controllers"])) == 0
+        assert len(cast("list[Any]", thaw(state["controllers"]))) == 0
 
     def test_remove_nonexistent_controller(self):
         state = self._init_state()
-        action = {
+        action: ReduxAction = {
             "type": "controllerManager/controllerRemoved",
             "data": {"id": "nonexistent"},
         }
@@ -256,16 +259,16 @@ class TestControllerManagerReducer:
 
     def test_started_waiting(self):
         state = self._init_state()
-        action = {"type": "controllerManager/startedWaitingForConnection"}
+        action: ReduxAction = {"type": "controllerManager/startedWaitingForConnection"}
         state = cm_reducer.reducer(state, action)
         assert thaw(state)["waitingForConnection"] is True
 
     def test_stopped_waiting(self):
         state = self._init_state()
-        action = {"type": "controllerManager/startedWaitingForConnection"}
+        action: ReduxAction = {"type": "controllerManager/startedWaitingForConnection"}
         state = cm_reducer.reducer(state, action)
-        action = {"type": "controllerManager/stoppedWaitingForConnection"}
-        state = cm_reducer.reducer(state, action)
+        action2: ReduxAction = {"type": "controllerManager/stoppedWaitingForConnection"}
+        state = cm_reducer.reducer(state, action2)
         assert thaw(state)["waitingForConnection"] is False
 
 
@@ -279,7 +282,7 @@ class TestDisplayReducer:
 
     def test_change_frame(self):
         state = self._init_state()
-        action = {
+        action: ReduxAction = {
             "type": "ui/activeFrameChanged",
             "data": {"activeFrame": "SETTINGS"},
         }

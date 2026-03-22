@@ -1,4 +1,8 @@
-from redux import store
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from redux import get_music_engine_state, store
 from redux.actions import music_engine as me_actions
 from redux.settings_storage import settings_storage_utility
 
@@ -8,10 +12,13 @@ from ..components.settings_container import SettingsContainer
 from ..components.settings_page import SettingsPage
 from ..components.slider import Slider
 
+if TYPE_CHECKING:
+    import tkinter as tk
+
 
 class MidiSettingsFrame(SettingsPage):
 
-    def __init__(self, container):
+    def __init__(self, container: tk.Misc) -> None:
         super().__init__(
             container, 'MIDI SETTINGS')
 
@@ -86,17 +93,17 @@ class MidiSettingsFrame(SettingsPage):
 
         self.velocityFrame.grid(row=2, column=0, sticky='new', padx=(5, 5))
 
-        self._dirty = False
+        self._dirty: bool = False
         store.subscribe(self.__handle_store_update)
 
-    def __handle_store_update(self):
+    def __handle_store_update(self) -> None:
         self._dirty = True
 
-    def check_state(self):
+    def check_state(self) -> None:
         if not self._dirty:
             return
         self._dirty = False
-        me_state = store.get_state()['musicEngine']
+        me_state = get_music_engine_state()
 
         if me_state['velocity'] != self.velocity.get_value():
             self.velocity.set_value(me_state['velocity'])
@@ -114,15 +121,15 @@ class MidiSettingsFrame(SettingsPage):
             self.aftertouchMode.set_value(me_state['aftertouchMode'])
 
 
-    def set_bass_channel(self, channel):
+    def set_bass_channel(self, channel: int) -> None:
         store.dispatch(me_actions.change_bass_channel(channel - 1))
         settings_storage_utility.save_settings()
 
-    def set_chord_channel(self, channel):
+    def set_chord_channel(self, channel: int) -> None:
         store.dispatch(me_actions.change_chord_channel(channel - 1))
         settings_storage_utility.save_settings()
 
-    def set_distribute_channels(self, value):
+    def set_distribute_channels(self, value: bool) -> None:
         store.dispatch(me_actions.change_distribute_channels(value))
         if (value):
             self.chordChannel.set_disabled()
@@ -130,7 +137,7 @@ class MidiSettingsFrame(SettingsPage):
             self.chordChannel.set_enabled()
         settings_storage_utility.save_settings()
 
-    def set_velocity_mode(self, mode):
+    def set_velocity_mode(self, mode: str) -> None:
         if mode == 'constant':
             self.velocityDeviation.set_disabled()
         if mode == 'random':
@@ -138,14 +145,14 @@ class MidiSettingsFrame(SettingsPage):
         store.dispatch(me_actions.change_velocity_mode(mode))
         settings_storage_utility.save_settings()
 
-    def set_velocity(self, velocity):
+    def set_velocity(self, velocity: float) -> None:
         store.dispatch(me_actions.change_velocity(velocity))
         settings_storage_utility.save_settings()
 
-    def set_velocity_deviation(self, deviation):
+    def set_velocity_deviation(self, deviation: float) -> None:
         store.dispatch(me_actions.change_velocity_deviation(deviation))
         settings_storage_utility.save_settings()
 
-    def set_aftertouch_mode(self, mode):
+    def set_aftertouch_mode(self, mode: str) -> None:
         store.dispatch(me_actions.change_aftertouch_mode(mode))
         settings_storage_utility.save_settings()
