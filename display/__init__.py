@@ -23,6 +23,10 @@ from .settings_pages.strum_settings import StrumSettingsFrame
 logger = logging.getLogger(__name__)
 
 
+FULLSCREEN_RETRY_ATTEMPTS = 5
+FULLSCREEN_RETRY_DELAY_MS = 500
+
+
 class Display:
     def __init__(self) -> None:
         self.root = tk.Tk()
@@ -32,9 +36,7 @@ class Display:
         self.root['cursor'] = 'none'
 
         if FULLSCREEN:
-            self.root.attributes("-fullscreen", True)
-            self.root.wm_attributes("-topmost", 1)
-            self.root.focus_set()
+            self._apply_fullscreen()
         else:
             self.root.geometry("800x480")
 
@@ -68,8 +70,53 @@ class Display:
         redux_utils.add_app_parameters(self.get_parameters())
 
         self._dirty: bool = False
+        self._fullscreen_retries: int = 0
         self._settings_frames: set[str] = {'CHORD', 'STRUM', 'MIDI'}
         store.subscribe(self.__handle_store_update)
+
+    def _apply_fullscreen(self) -> None:
+        """Apply fullscreen with retry logic for Wayland/Xwayland compositors.
+
+        On fast restarts the compositor may not have released the previous
+        fullscreen window yet, causing the new window to open in windowed mode.
+        This retries fullscreen with delays to handle that race condition.
+        """
+        self.root.attributes("-fullscreen", True)
+        self.root.wm_attributes("-topmost", 1)
+        self.root.focus_set()
+        self._fullscreen_retries = 0
+        self.root.after(FULLSCREEN_RETRY_DELAY_MS, self._check_fullscreen)
+
+    def _check_fullscreen(self) -> None:
+        """Verify fullscreen took effect by checking window size vs screen size."""
+        self.root.update_idletasks()
+        screen_w = self.root.winfo_screenwidth()
+        screen_h = self.root.winfo_screenheight()
+        win_w = self.root.winfo_width()
+        win_h = self.root.winfo_height()
+
+        if win_w >= screen_w and win_h >= screen_h:
+            logger.info("Fullscreen confirmed (%dx%d)", win_w, win_h)
+            return
+
+        self._fullscreen_retries += 1
+        if self._fullscreen_retries >= FULLSCREEN_RETRY_ATTEMPTS:
+            logger.warning(
+                "Fullscreen failed after %d attempts (window: %dx%d, screen: %dx%d)",
+                FULLSCREEN_RETRY_ATTEMPTS, win_w, win_h, screen_w, screen_h,
+            )
+            return
+
+        logger.info(
+            "Fullscreen not yet active (attempt %d, window: %dx%d), retrying...",
+            self._fullscreen_retries, win_w, win_h,
+        )
+        self.root.attributes("-fullscreen", False)
+        self.root.update_idletasks()
+        self.root.attributes("-fullscreen", True)
+        self.root.wm_attributes("-topmost", 1)
+        self.root.focus_set()
+        self.root.after(FULLSCREEN_RETRY_DELAY_MS, self._check_fullscreen)
 
     def start(self) -> None:
         _task = asyncio.ensure_future(self.__main_loop())

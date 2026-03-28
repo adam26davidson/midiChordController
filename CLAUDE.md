@@ -9,10 +9,13 @@ MidiChordController is a Python GUI application that generates MIDI chords based
 ## Running the Application
 
 ```bash
-python3 main.py              # Fullscreen on HyperPixel display
-python3 main.py --window     # Windowed mode on another display
-python3 main.py --no-display # Headless (no GUI)
+python3 main.py                  # Fullscreen on HyperPixel display
+python3 main.py --window         # Windowed mode on another display
+python3 main.py --no-display     # Headless (no GUI)
+python3 main.py --remote-control # Enable TCP remote control server (port 9999)
 ```
+
+Only one instance of the app can run at a time — a PID lock file (`/tmp/midichordcontroller.lock`) prevents duplicates.
 
 ## Running Tests
 
@@ -105,6 +108,29 @@ Controller buttons/axes map to AppParameters via `controller_coupler/`. Paramete
 | `music_engine/chord_engine/chord_engine.py` | Abstract base class for both chord engines                      |
 | `controller_coupler/__init__.py`            | Maps controller events to parameters and commands               |
 | `display/__init__.py`                       | Tkinter GUI, settings UI, performance view                      |
+
+## Pi Deployment & Debugging
+
+All Pi scripts read connection details from `tools/pi_config.sh` (gitignored). The unified `pi.sh` script manages the full lifecycle.
+
+### Lifecycle
+
+```bash
+./tools/deploy/pi.sh up                  # One-shot sync + start app
+./tools/deploy/pi.sh down                # Stop app + any running daemons
+./tools/deploy/pi.sh restart             # One-shot re-sync + restart app
+./tools/deploy/pi.sh status              # Show app status on Pi
+./tools/deploy/pi.sh logs [app|start|sync] [n]  # View logs (default: app 50)
+./tools/deploy/pi.sh ping                # Check if Pi is reachable
+```
+
+**Important**: Always use one-shot mode (no `--autosync`). Auto-sync causes the app to restart whenever a file changes, which interferes with testing — the main agent may edit a file while the pi-tester is mid-test. Use `deploy/pi.sh restart` to explicitly re-sync and restart when needed.
+
+### Testing on the Pi
+
+For controller simulation, UI touch testing, functional tests, screenshots, and MIDI verification, use:
+- **`/pi-testing` skill** — loads full reference docs (event types, UI coordinates, step types) into the conversation
+- **`pi-tester` agent** — autonomous QA agent that can run tests, investigate bugs, and verify features on the Pi
 
 ## Project Tools
 

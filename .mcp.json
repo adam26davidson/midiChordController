@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pi-tools": {
+      "command": "uv",
+      "args": ["run", "python", "tools/pi_mcp_server.py"]
+    }
+  }
+}

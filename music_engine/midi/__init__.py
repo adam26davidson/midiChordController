@@ -22,6 +22,7 @@ from rtmidi.midiconstants import (
 )
 
 from constants import MIDI_OUTPUT_STEP
+from music_engine.midi.midi_history import MidiHistory
 from music_engine.midi.midi_input_message import MidiInputMessage, MidiInputMessageType
 from redux import get_music_engine_state, store
 from redux.actions import music_engine as actions
@@ -65,6 +66,7 @@ class Midi:
         self.midi_out_instances: list[MidiOut] = []
         self.midi_in_instances: list[MidiIn] = []
         self.subscriber_callbacks: list[Callable[[MidiInputMessage], None]] = []
+        self.history = MidiHistory()
 
         self.midi_input_message_queue: list[MidiInputMessage] = []
 
@@ -342,7 +344,7 @@ class Midi:
         self.state['aftertouchMode'] = aftertouch_mode
 
     def __send_midi_message(self, message: list[int]) -> None:
-        # self.midiOut.send_message(message)
+        self.history.record(message)
         for midi_out in self.midi_out_instances:
             midi_out.send_message(message)
 

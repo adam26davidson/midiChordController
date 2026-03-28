@@ -1,0 +1,52 @@
+{
+  "name": "Velocity Mode Toggle via Touch",
+  "description": "Change velocity from RAND to CONST via settings, verify MIDI output, restore",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"press": "SOUTH_BUTTON"},
+    {"delay": 200},
+    {"midi": {"types": ["note_on"], "count": 5}},
+
+    {"press": "START_BUTTON"},
+    {"delay": 500},
+    {"touch_tap": "400,96"},
+    {"delay": 300},
+    {"screenshot": "1_midi_settings_rand"},
+
+    {"touch_tap": "55,280"},
+    {"delay": 200},
+    {"screenshot": "2_midi_settings_const"},
+
+    {"press": "START_BUTTON"},
+    {"delay": 300},
+    {"touch_tap": "400,240"},
+    {"delay": 200},
+
+    {"press": "SOUTH_BUTTON"},
+    {"delay": 200},
+    {"midi": {"types": ["note_on"], "count": 10}},
+    {"screenshot": "3_chord_const_velocity"},
+
+    {"press": "START_BUTTON"},
+    {"delay": 300},
+    {"touch_tap": "400,96"},
+    {"delay": 300},
+    {"touch_tap": "150,280"},
+    {"delay": 200},
+    {"screenshot": "4_restored_rand"},
+
+    {"press": "START_BUTTON"},
+    {"delay": 300},
+    {"touch_tap": "400,240"},
+    {"delay": 200}
+  ],
+  "assertions": [
+    "Screenshot 1: RAND button highlighted purple",
+    "Screenshot 2: CONST button highlighted purple",
+    "MIDI from first chord (RAND): velocities vary (not all the same)",
+    "MIDI from second chord (CONST): all velocities exactly 100",
+    "Screenshot 4: RAND button highlighted again (restored)"
+  ]
+}

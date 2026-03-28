@@ -1,2 +1,3 @@
 venv
 *__pycache__*
+tools/pi_config.sh

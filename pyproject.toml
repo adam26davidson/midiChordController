@@ -3,7 +3,7 @@ name = "midishock3"
 version = "0.1.0"
 description = "Music theory based chord instrument using a game controller"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "evdev>=1.9.3 ; sys_platform == 'linux'",
     "music21==8.3.0",
@@ -19,6 +19,7 @@ dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
     "ty>=0.0.24",
+    "mcp",
 ]
 
 [tool.pytest.ini_options]

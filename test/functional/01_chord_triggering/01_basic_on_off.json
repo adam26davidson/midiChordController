@@ -1,0 +1,48 @@
+{
+  "name": "Basic Chord On/Off",
+  "description": "Verify each chord button plays and stops correctly with matching MIDI events",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"event": "SOUTH_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "south_on"},
+    {"midi": {"types": ["note_on"], "count": 5}},
+
+    {"event": "SOUTH_BUTTON OFF"},
+    {"delay": 300},
+    {"screenshot": "south_off"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 10}},
+
+    {"event": "WEST_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "west_on"},
+
+    {"event": "WEST_BUTTON OFF"},
+    {"delay": 300},
+
+    {"event": "NORTH_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "north_on"},
+
+    {"event": "NORTH_BUTTON OFF"},
+    {"delay": 300},
+
+    {"event": "EAST_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "east_on"},
+
+    {"event": "EAST_BUTTON OFF"},
+    {"delay": 300},
+    {"screenshot": "all_off"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 40}}
+  ],
+  "assertions": [
+    "Each chord button shows different notes in screenshots",
+    "S/W/N/E buttons highlight purple when ON",
+    "All buttons return to outline when OFF",
+    "Every note_on has a matching note_off in MIDI history",
+    "Final screenshot shows idle state (no filled circles)"
+  ]
+}

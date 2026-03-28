@@ -1,0 +1,40 @@
+{
+  "name": "Hold Mode Sustain and Release",
+  "description": "Verify hold sustains chord after button release and stops on toggle off",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"event": "RIGHT_OPTION ON"},
+    {"delay": 100},
+    {"event": "RIGHT_OPTION OFF"},
+    {"delay": 200},
+    {"screenshot": "1_hold_enabled"},
+
+    {"press": "SOUTH_BUTTON", "duration": 150},
+    {"delay": 500},
+    {"screenshot": "2_chord_sustained"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 10}},
+
+    {"press": "WEST_BUTTON", "duration": 150},
+    {"delay": 500},
+    {"screenshot": "3_west_replaced_south"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 20}},
+
+    {"event": "RIGHT_OPTION ON"},
+    {"delay": 100},
+    {"event": "RIGHT_OPTION OFF"},
+    {"delay": 300},
+    {"screenshot": "4_hold_off_stopped"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 30}}
+  ],
+  "assertions": [
+    "Screenshot 1: hold icon visible in status bar, no chord playing",
+    "Screenshot 2: chord notes filled (sustaining), S button NOT highlighted (released)",
+    "MIDI after step 2: only note_on events, no note_off (chord sustained)",
+    "Screenshot 3: different chord notes (WEST replaced SOUTH)",
+    "MIDI after step 3: SOUTH note_offs then WEST note_ons",
+    "Screenshot 4: no filled circles, hold icon gone",
+    "MIDI after step 4: WEST note_offs present (toggle off stopped sustained chord)"
+  ]
+}

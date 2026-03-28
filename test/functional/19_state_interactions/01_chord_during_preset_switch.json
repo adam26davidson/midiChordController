@@ -1,0 +1,38 @@
+{
+  "name": "Chord Playing During Preset Switch",
+  "description": "Verify chord stops cleanly when switching presets, new preset loads correctly",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"event": "SOUTH_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "1_chord_playing_preset_A"},
+    {"midi": {"types": ["note_on"], "count": 5}},
+
+    {"press": "RIGHT_STICK_BUTTON"},
+    {"delay": 500},
+    {"screenshot": "2_preset_switched"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 15}},
+
+    {"event": "SOUTH_BUTTON OFF"},
+    {"delay": 200},
+
+    {"press": "SOUTH_BUTTON"},
+    {"delay": 300},
+    {"screenshot": "3_new_preset_chord"},
+    {"midi": {"types": ["note_on"], "count": 20}},
+
+    {"press": "LEFT_STICK_BUTTON"},
+    {"delay": 500},
+    {"screenshot": "4_back_to_original_preset"}
+  ],
+  "assertions": [
+    "Screenshot 1: chord playing, preset name shown (e.g. 'Default')",
+    "Screenshot 2: different preset name displayed, chord may have stopped or changed",
+    "MIDI: note_off events for old chord before or during preset switch",
+    "Screenshot 3: new preset's SOUTH chord (different notes than screenshot 1)",
+    "No stuck notes between preset switches",
+    "Screenshot 4: original preset name restored"
+  ]
+}

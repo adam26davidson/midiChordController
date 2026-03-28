@@ -1,0 +1,52 @@
+{
+  "name": "Inversion Control and Lock",
+  "description": "Verify inversion changes chord voicing, and lock prevents further changes",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"event": "SOUTH_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "1_default_inversion"},
+    {"midi": {"types": ["note_on"], "count": 5}},
+
+    {"analog": "GYRO_PITCH 0.7"},
+    {"delay": 300},
+    {"screenshot": "2_inversion_changed"},
+    {"midi": {"types": ["note_on"], "count": 10}},
+
+    {"event": "SOUTH_BUTTON OFF"},
+    {"delay": 200},
+
+    {"event": "LEFT_OPTION ON"},
+    {"delay": 100},
+    {"event": "LEFT_OPTION OFF"},
+    {"delay": 200},
+    {"screenshot": "3_lock_icon_visible"},
+
+    {"event": "SOUTH_BUTTON ON"},
+    {"delay": 300},
+    {"analog": "GYRO_PITCH 0.2"},
+    {"delay": 300},
+    {"screenshot": "4_locked_inversion_unchanged"},
+    {"midi": {"types": ["note_on"], "count": 15}},
+
+    {"event": "SOUTH_BUTTON OFF"},
+    {"delay": 200},
+
+    {"event": "LEFT_OPTION ON"},
+    {"delay": 100},
+    {"event": "LEFT_OPTION OFF"},
+    {"delay": 200},
+
+    {"analog": "GYRO_PITCH 0.0"},
+    {"delay": 200}
+  ],
+  "assertions": [
+    "Screenshot 2: inversion slider moved, chord notes in different octave arrangement vs screenshot 1",
+    "MIDI: same pitch classes but different octaves between default and changed inversion",
+    "Screenshot 3: lock icon visible in status bar",
+    "Screenshot 4: inversion unchanged despite analog input (locked)",
+    "MIDI at step 4: same notes as step 2 (lock prevented change)"
+  ]
+}

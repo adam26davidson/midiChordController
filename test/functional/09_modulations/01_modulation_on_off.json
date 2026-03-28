@@ -1,0 +1,38 @@
+{
+  "name": "Modulation On/Off with MIDI Verification",
+  "description": "Verify right modulation changes chord notes and reverts on release",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"press": "SOUTH_BUTTON"},
+    {"delay": 200},
+    {"screenshot": "1_unmodulated"},
+    {"midi": {"types": ["note_on"], "count": 5}},
+
+    {"event": "RIGHT_BUMPER ON"},
+    {"delay": 100},
+    {"screenshot": "2_modulation_active"},
+
+    {"press": "SOUTH_BUTTON"},
+    {"delay": 200},
+    {"screenshot": "3_modulated_chord"},
+    {"midi": {"types": ["note_on"], "count": 10}},
+
+    {"event": "RIGHT_BUMPER OFF"},
+    {"delay": 100},
+
+    {"press": "SOUTH_BUTTON"},
+    {"delay": 200},
+    {"screenshot": "4_back_to_normal"},
+    {"midi": {"types": ["note_on"], "count": 15}}
+  ],
+  "assertions": [
+    "Screenshot 1: unmodulated chord, no M2 indicator",
+    "Screenshot 2: M2 indicator highlighted purple, chord circle positions shifted",
+    "Screenshot 3: modulated chord playing — different notes than screenshot 1",
+    "Screenshot 4: back to original chord (same notes as screenshot 1)",
+    "MIDI: notes in step 3 differ from steps 1 and 4",
+    "MIDI: notes in steps 1 and 4 are identical (same pitch classes)"
+  ]
+}

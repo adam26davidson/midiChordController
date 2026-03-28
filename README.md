@@ -37,6 +37,51 @@ cd MidiChordController
 python3 main.py --no-display
 ```
 
+### With remote control enabled
+
+Starts a TCP server (port 9999) that accepts JSON-encoded controller events, allowing external tools to simulate button presses and joystick input.
+
+```bash
+python3 main.py --remote-control
+```
+
+Only one instance of the app can run at a time (enforced via a PID lock file).
+
+## Development Tools
+
+Scripts in `tools/` automate syncing code to the Pi, managing the app lifecycle, and remote debugging. They are organized into `tools/deploy/` (lifecycle) and `tools/test/` (simulation and verification). All scripts read Pi connection details from `tools/pi_config.sh` (gitignored — create it with `PI_USER`, `PI_HOST`, and `PI_SSH` variables).
+
+### Lifecycle
+
+The unified `pi.sh` script manages the full lifecycle:
+
+```bash
+./tools/deploy/pi.sh up             # Sync code + start app (idempotent)
+./tools/deploy/pi.sh down           # Stop everything (app, sync, start)
+./tools/deploy/pi.sh restart        # Stop app, re-sync, restart app
+./tools/deploy/pi.sh status         # Show status of sync, start, and app
+./tools/deploy/pi.sh logs [src] [n] # View logs (src: start|sync, default: start 50)
+./tools/deploy/pi.sh ping           # Check if Pi is reachable
+```
+
+### Screenshots & Remote Control
+
+```bash
+./tools/test/pi_screenshot.sh                           # Capture Pi display (timestamped, saved to /tmp/)
+./tools/test/pi_record.sh --frames 10 --interval 100    # Capture frames, output as grid (--no-grid for individual files)
+./tools/test/pi_send_event.sh press SOUTH_BUTTON        # Simulate button press (ON + 100ms + OFF)
+./tools/test/pi_send_event.sh analog GYRO_PITCH 0.5     # Simulate analog input (value -1.0 to 1.0)
+./tools/test/pi_send_event.sh event SOUTH_BUTTON ON     # Send a single raw event
+./tools/test/pi_send_event.sh midi --types note_on,note_off  # Query MIDI output history
+./tools/test/pi_send_event.sh midi_in note_on 60 100    # Send MIDI input (for external chord engine)
+./tools/test/pi_send_event.sh reset                     # Release all buttons, zero all analogs
+./tools/test/pi_touch.sh --tap 400,240                  # Simulate tap, return annotated screenshot
+./tools/test/pi_touch.sh --from 200,300 --to 600,100    # Simulate drag, return annotated screenshot
+python3 tools/test/run_sequence.py '[...]'               # Run a multi-step test sequence (JSON)
+```
+
+The remote control server must be enabled with `--remote-control` (included by default via `pi.sh up`). Events are sent over TCP — no SSH required for event delivery. Touch simulation uses `xdotool` through Xwayland.
+
 ## Writing Settings
 
 settings.json holds an array of presets for the controller.  Each preset contains the following properties:

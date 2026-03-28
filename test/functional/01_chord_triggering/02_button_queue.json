@@ -1,0 +1,36 @@
+{
+  "name": "Button Queue (Multi-press)",
+  "description": "Verify chord button stacking: last pressed wins, releasing returns to previous",
+  "steps": [
+    {"reset": true},
+    {"delay": 300},
+
+    {"event": "SOUTH_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "1_south_playing"},
+    {"midi": {"types": ["note_on"], "count": 5}},
+
+    {"event": "WEST_BUTTON ON"},
+    {"delay": 300},
+    {"screenshot": "2_west_takes_over"},
+    {"midi": {"types": ["note_on"], "count": 10}},
+
+    {"event": "WEST_BUTTON OFF"},
+    {"delay": 300},
+    {"screenshot": "3_south_resumes"},
+    {"midi": {"types": ["note_on"], "count": 15}},
+
+    {"event": "SOUTH_BUTTON OFF"},
+    {"delay": 300},
+    {"screenshot": "4_silence"},
+    {"midi": {"types": ["note_on", "note_off"], "count": 30}}
+  ],
+  "assertions": [
+    "Screenshot 1: S button purple, chord playing",
+    "Screenshot 2: W button purple, S still purple, different chord notes",
+    "Screenshot 3: S button purple, W not purple, SOUTH chord resumed (same notes as screenshot 1)",
+    "Screenshot 4: no buttons highlighted, no filled circles",
+    "MIDI: SOUTH note_offs before WEST note_ons, WEST note_offs before SOUTH resumes",
+    "Final MIDI: all note_on events have matching note_off events"
+  ]
+}

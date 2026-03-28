@@ -10,6 +10,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--display", dest="display", action="store_true")
     parser.add_argument("--no-display", dest="display", action="store_false")
     parser.set_defaults(display=True)
+    parser.add_argument("--remote-control", dest="remote_control", action="store_true", default=False)
     return parser.parse_args()
 
 
