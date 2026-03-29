@@ -113,6 +113,22 @@ def cmd_midi_in(args: argparse.Namespace) -> None:
     send_lines(args.host, args.port, [json.dumps(msg)])
 
 
+def cmd_load_preset(args: argparse.Namespace) -> None:
+    query: dict[str, object] = {"query": "load_preset"}
+    # Try to interpret as integer index, otherwise use as name
+    try:
+        query["preset"] = int(args.preset)
+    except ValueError:
+        query["preset"] = args.preset
+    result = send_query(args.host, args.port, query)
+    print(result)
+
+
+def cmd_preset_list(args: argparse.Namespace) -> None:
+    result = send_query(args.host, args.port, {"query": "preset_list"})
+    print(result)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Send events to the remote control server")
     parser.add_argument("--host", default=DEFAULT_HOST, help=f"Server host (default: {DEFAULT_HOST})")
@@ -145,6 +161,11 @@ def main() -> None:
     p_midi_in.add_argument("velocity", type=int, nargs="?", default=100, help="Velocity for note_on (default: 100)")
     p_midi_in.add_argument("--channel", type=int, default=0, help="MIDI channel (default: 0)")
 
+    p_load_preset = subparsers.add_parser("load_preset", help="Load a preset by index or name")
+    p_load_preset.add_argument("preset", help="Preset index (0-based) or name")
+
+    subparsers.add_parser("preset_list", help="List available presets")
+
     args = parser.parse_args()
 
     try:
@@ -160,6 +181,10 @@ def main() -> None:
             cmd_midi(args)
         elif args.command == "midi_in":
             cmd_midi_in(args)
+        elif args.command == "load_preset":
+            cmd_load_preset(args)
+        elif args.command == "preset_list":
+            cmd_preset_list(args)
     except ConnectionRefusedError:
         print(f"Error: could not connect to {args.host}:{args.port}. Is the app running with --remote-control?", file=sys.stderr)
         sys.exit(1)

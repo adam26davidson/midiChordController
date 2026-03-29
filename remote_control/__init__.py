@@ -9,6 +9,7 @@ from controller_manager.models.control_event import ControlEvent
 from controller_manager.models.mappable_control_event import MappableControlEvent
 
 if TYPE_CHECKING:
+    from music_engine.chord_engine.internal_chord_engine import InternalChordEngine
     from music_engine.midi import Midi
     from music_engine.midi.midi_history import MidiHistory
 
@@ -20,6 +21,7 @@ REMOTE_CONTROL_DEFAULT_PORT = 9999
 class RemoteControlServer:
 
     _callback: Callable[[ControlEvent], None]
+    _internal_chord_engine: InternalChordEngine | None
     _midi: Midi | None
     _midi_history: MidiHistory | None
     _port: int
@@ -31,12 +33,14 @@ class RemoteControlServer:
         port: int = REMOTE_CONTROL_DEFAULT_PORT,
         midi_history: MidiHistory | None = None,
         midi: Midi | None = None,
+        internal_chord_engine: InternalChordEngine | None = None,
     ) -> None:
         self._callback = callback
         self._port = port
         self._server = None
         self._midi_history = midi_history
         self._midi = midi
+        self._internal_chord_engine = internal_chord_engine
 
     def start(self) -> None:
         asyncio.ensure_future(self._start_server())
@@ -163,6 +167,82 @@ class RemoteControlServer:
         logger.debug("Remote control MIDI in: %s note=%d ch=%d", midi_type, note, channel)
         self._midi.handle_midi_in((midi_message, 0.0), "remote")
 
+    def _handle_reset_engine_state(self) -> dict[str, object]:
+        """Reset all engine state to defaults (voice count, spread, octave, key,
+        inversion, bass position, hold, locks). Also stops any playing notes
+        and reloads preset 0."""
+        if self._internal_chord_engine is None:
+            return {"error": "Internal chord engine not available"}
+
+        from constants import SPREAD_STEPS_PER_OCTAVE
+        from music_engine.chord_engine.chord_engine_state import state
+        from redux import store
+        from redux.actions import music_engine as actions
+
+        # Stop any playing chord/bass first
+        self._internal_chord_engine.stop_chord_and_bass()
+
+        # Reset scalar state
+        state.key.value = 0
+        state.chord_octave = 0
+        state.spread = SPREAD_STEPS_PER_OCTAVE
+        state.voice_count = 4
+        state.hold = False
+
+        # Reset inversion
+        state.inversion.value = 0
+        state.inversion.range = 4
+        state.inversion.locked = False
+
+        # Reset bass position
+        state.bass_position.value = 0
+        state.bass_position.range = 4
+        state.bass_position.locked = False
+
+        # Reset modulation/secondary/alternate
+        state.alternate = False
+
+        # Sync Redux store with reset state
+        store.dispatch(actions.change_key(0))
+        store.dispatch(actions.change_chord_octave(0))
+        store.dispatch(actions.change_spread(SPREAD_STEPS_PER_OCTAVE))
+        store.dispatch(actions.change_voice_count(4))
+        store.dispatch(actions.change_hold(False))
+        store.dispatch(actions.change_inversion(0))
+        store.dispatch(actions.change_inversion_range(4))
+        store.dispatch(actions.change_inversion_lock(False))
+        store.dispatch(actions.change_bass_position(0))
+        store.dispatch(actions.change_bass_range(4))
+
+        # Reload preset 0 to reset scale/chords/modulations/secondaries
+        self._internal_chord_engine.load_setting(0)
+
+        return {"status": "ok"}
+
+    def _handle_load_preset(self, data: dict[str, object]) -> dict[str, object]:
+        if self._internal_chord_engine is None:
+            return {"error": "Internal chord engine not available"}
+
+        from constants import SETTINGS
+
+        # Accept index (int) or name (str)
+        raw_preset = data.get("preset")
+        if isinstance(raw_preset, (int, float)):
+            index = int(raw_preset)
+        elif isinstance(raw_preset, str):
+            matching = [i for i, s in enumerate(SETTINGS) if s["name"] == raw_preset]
+            if not matching:
+                return {"error": f"Unknown preset name: {raw_preset}"}
+            index = matching[0]
+        else:
+            return {"error": "Missing 'preset' field (index or name)"}
+
+        if not (0 <= index < len(SETTINGS)):
+            return {"error": f"Preset index {index} out of range (0-{len(SETTINGS) - 1})"}
+
+        self._internal_chord_engine.load_setting(index)
+        return {"status": "ok", "preset": {"index": index, "name": SETTINGS[index]["name"]}}
+
     def _handle_query(self, data: dict[str, object]) -> dict[str, object]:
         query = data.get("query")
 
@@ -183,5 +263,15 @@ class RemoteControlServer:
                 return {"error": "MIDI history not available"}
             self._midi_history.clear()
             return {"status": "cleared"}
+
+        if query == "load_preset":
+            return self._handle_load_preset(data)
+
+        if query == "preset_list":
+            from constants import SETTINGS
+            return {"presets": [{"index": i, "name": s["name"]} for i, s in enumerate(SETTINGS)]}
+
+        if query == "reset_engine_state":
+            return self._handle_reset_engine_state()
 
         return {"error": f"Unknown query: {query}"}

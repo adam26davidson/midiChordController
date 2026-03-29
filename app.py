@@ -68,6 +68,7 @@ class App:
                 self.controller_coupler.event_handler,
                 midi_history=self.music_engine.midi.history,
                 midi=self.music_engine.midi,
+                internal_chord_engine=self.music_engine.internal_chord_engine,
             )
         else:
             self.remote_control_server = None
